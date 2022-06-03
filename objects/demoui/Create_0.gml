@@ -5,13 +5,13 @@ my_ui = new LUI_Base();
 my_panel = new LUI_Panel(LUI_AUTO, LUI_AUTO, 220, 400);
 my_ui.add_content(my_panel);
 my_panel.add_content([
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64),
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64),
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64),
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64),
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64),
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64),
-	new LUI_Panel(LUI_AUTO, LUI_AUTO, 64, 64)
+	new LUI_Panel( , , 64, 64),
+	new LUI_Panel( , , 64, 64),
+	new LUI_Panel( , , 64, 64),
+	new LUI_Panel( , , 64, 64),
+	new LUI_Panel( , , 64, 64),
+	new LUI_Panel( , , 64, 64),
+	new LUI_Panel( , , 64, 64)
 ]);
 
 my_panel2 = new LUI_Panel(LUI_AUTO, LUI_AUTO, 420, 256);
@@ -32,7 +32,7 @@ panel_in_panel = new LUI_Panel(LUI_AUTO, LUI_AUTO, 256, 256);
 
 my_panel3.add_content([
 	panel_in_panel,
-	new LUI_Button(,,,,"Нажми меня", function() {print("Нажал меня! :3")}),
+	new LUI_Button(,,,,"Нажми меня", function() {print("*КАКОЕ-ТО ДЕЙСТВИЕ ПРИ НАЖАТИИ*")}),
 	new LUI_Button(,my_panel3.height - 32,,,"Принять"),
 	new LUI_Button(my_panel3.x + my_panel3.width - 128 - 32, my_panel3.height - 32,,,"Отмена")
 ]);

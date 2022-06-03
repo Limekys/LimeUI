@@ -1,3 +1,6 @@
+//Info
+#macro LIMEUI_VERSION "Alpha 0.1"
+
 //Font
 #macro LUI_FONT_BUTTONS fArial_ru
 //Design
@@ -115,7 +118,7 @@ function LUI_Base() constructor {
 			_element.draw();
 			_element.render();
 			_element.step();
-			_element.render_debug();
+			if LUI_DEBUG_MODE _element.render_debug();
 		}
 		//self.render_debug();
 	}

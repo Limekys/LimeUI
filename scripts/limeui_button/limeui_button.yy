@@ -6,7 +6,7 @@
     "path": "folders/FreshL by Limekys.yy",
   },
   "resourceVersion": "1.0",
-  "name": "FreshL_CORE",
+  "name": "LimeUI_Button",
   "tags": [],
   "resourceType": "GMScript",
 }

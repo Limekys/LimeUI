@@ -8,7 +8,7 @@ function LUI_Button(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text =
 	self.button_color = c_white;
 	
 	if callback == undefined {
-		self.callback = function() {print("callback")};
+		self.callback = function() {print(self.text)};
 	} else {
 		self.callback = method(self, callback);
 	}
