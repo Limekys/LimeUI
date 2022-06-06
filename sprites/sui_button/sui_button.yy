@@ -93,8 +93,8 @@
     "resourceType": "GMNineSliceData",
   },
   "parent": {
-    "name": "FreshL by Limekys",
-    "path": "folders/FreshL by Limekys.yy",
+    "name": "Graphics",
+    "path": "folders/LimeUI/Graphics.yy",
   },
   "resourceVersion": "1.0",
   "name": "sUI_button",

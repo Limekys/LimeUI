@@ -1,4 +1,4 @@
-function LUI_Panel(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 64, name = "panel") : LUI_Base() constructor {
+function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = 256, height = 256, name = "panel") : LuiBase() constructor {
 	self.name = name;
 	self.x = x;
 	self.y = y;

@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "FreshL by Limekys",
-    "path": "folders/FreshL by Limekys.yy",
+    "name": "LimeUI",
+    "path": "folders/LimeUI.yy",
   },
   "resourceVersion": "1.0",
-  "name": "LimeUI_Panel",
+  "name": "LuiProgressBar",
   "tags": [],
   "resourceType": "GMScript",
 }

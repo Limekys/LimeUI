@@ -1,4 +1,4 @@
-function LUI_Button(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = "button", callback = undefined) : LUI_Base() constructor {
+function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = "button", callback = undefined) : LuiBase() constructor {
 	self.text = text;
 	self.x = x;
 	self.y = y;
