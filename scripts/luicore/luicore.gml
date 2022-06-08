@@ -14,10 +14,9 @@
 #macro LUI_PADDING						16
 
 //System (Dont touch)
-#macro LUI_AUTO                         ptr(0)
-#macro LUI_INLINE                       ptr(1)
-#macro LUI_BASE                         ptr(2)
-#macro LUI_AUTO_NO_SPACING              ptr(3)
+#macro LUI_AUTO							ptr(0)
+#macro LUI_AUTO_NO_SPACING				ptr(1)
+#macro LUI_STRETCH						ptr(2)
 
 #macro LUI_OVERLAY						_LuiGetOverlay()
 
@@ -29,8 +28,10 @@ function LuiBase() constructor {
 	self.name = undefined;
 	self.value = undefined;
 	
-	self.x = 0;
-	self.y = 0;
+	self.x = 0;	//Actual x position on the screen
+	self.y = 0;	//Actual y position on the screen
+	self.pos_x = 0;	//Offset x position this element relative parent
+	self.pos_y = 0;	//Offset y position this element relative parent
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.root = undefined;
@@ -52,45 +53,44 @@ function LuiBase() constructor {
 		    var _element = elements[i];
 			_element.root = self;
 			
+			
 			//Move X
-			if (is_ptr(_element.x) && _element.x == LUI_AUTO) {
+			if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO) {
 				var _last = self.get_last();
 				if (_last) {
-					_element.x = _last.x + _last.width + LUI_PADDING;
-					if _element.x + _element.width > self.x + self.width {
-						_element.x = self.x + LUI_PADDING;
-						_y_offset += _element.height + LUI_PADDING;
+					//For next element
+					_element.pos_x = _last.pos_x + _last.width + LUI_PADDING;
+					if _element.pos_x + _element.width > self.width {
+						_element.pos_x = LUI_PADDING;
+						_y_offset += _last.height + LUI_PADDING;
 					}
 				} else {
-					_element.x = self.x + LUI_PADDING;
-					if _element.x + _element.width > self.x + self.width {
-						_element.x = self.x;
-						_y_offset += _element.height;
-					}
+					//For first element
+					_element.pos_x = LUI_PADDING;
 				}
-			} else if (is_ptr(_element.x) && _element.x == LUI_AUTO_NO_SPACING) {
+			} else if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_SPACING) {
 				var _last = self.get_last();
 				if (_last) {
-					_element.x = _last.x + _last.width;
-					if _element.x + _element.width > self.x + self.width {
-						_element.x = self.x;
-						_y_offset += _element.height;
+					//For next element
+					_element.pos_x = _last.pos_x + _last.width;
+					if _element.pos_x + _element.width > self.width {
+						_element.pos_x = 0;
+						_y_offset += _last.height;
 					}
 				} else {
-					_element.x = self.x;
-					if _element.x + _element.width > self.x + self.width {
-						_element.x = self.x;
-						_y_offset += _element.height;
-					}
+					//For first element
+					_element.pos_x = 0;
 				}
 			}
 			
 			//Move Y
-			if (is_ptr(_element.y) && _element.y == LUI_AUTO) {
-				_element.y = self.y + LUI_PADDING + _y_offset;
-            } else if (is_ptr(_element.y) && _element.y == LUI_AUTO_NO_SPACING) {
-                _element.y = self.y + _y_offset;
+			if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO) {
+				_element.pos_y = LUI_PADDING + _y_offset;
+            } else if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_SPACING) {
+                _element.pos_y = 0 + _y_offset;
             }
+			
+			
 			
 			array_push(self.contents, _element);
 		}
@@ -124,32 +124,37 @@ function LuiBase() constructor {
 	
 	self.callback = undefined;
 	
-	//
+	//Interactivity
 	self.mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-		return (_mouse_x > self.x && _mouse_x < self.x + self.width && _mouse_y > self.y && _mouse_y < self.y + self.height)
+		return point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width, self.y + self.height)
 	}
 	
-	//step
+	//Update
 	self.step = function() { }
+	self.update_position = function(x_offset ,y_offset) {
+		self.x = self.pos_x + x_offset;
+		self.y = self.pos_y + y_offset;
+	}
 	
 	//render
 	self.draw = function() { }
-	self.render = function() {
+	self.render = function(base_x = 0, base_y = 0) {
 		if is_array(self.contents)
 		for (var i = 0, _number_of_elements = array_length(self.contents); i < _number_of_elements; ++i) {
 			var _element = self.contents[i];
-			_element.draw();
-			_element.render();
+			_element.update_position(base_x + self.pos_x, base_y + self.pos_y);
 			_element.step();
+			_element.draw();
+			_element.render(base_x + self.pos_x, base_y + self.pos_y);
 			if global.LUI_DEBUG_MODE _element.render_debug();
 		}
-		//self.render_debug();
+		//self.render_debug(); //Not necessary since the first element will be the main container
 	}
 	self.render_debug = function() {
 		if global.LUI_DEBUG_MODE == 1 {
-			draw_set_alpha(0.25);
+			draw_set_alpha(0.5);
 			draw_set_color(c_red);
 			
 			draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, true);
@@ -158,19 +163,13 @@ function LuiBase() constructor {
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
-			draw_text(x, y, string(x) + "," + string(y));
+			draw_text(x, y, string(x) + ";" + string(y) + "(" + string(pos_x) + ";" + string(pos_y) + ")");
 			draw_text(x, y + 16, string(self.value));
 			
 			if self.mouse_hover() {
 				draw_set_alpha(0.75);
 				draw_set_color(c_blue);
 				draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, true);
-			}
-			
-			if is_array(self.contents)
-			for (var i = 0, _number_of_elements = array_length(self.contents); i < _number_of_elements; ++i) {
-				var _element = self.contents[i];
-				_element.render_debug();
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = 256, height = 256, name = "panel") : LuiBase() constructor {
 	self.name = name;
-	self.x = x;
-	self.y = y;
+	self.pos_x = x;
+	self.pos_y = y;
 	self.width = width;
 	self.height = height;
 	

@@ -1,7 +1,7 @@
 function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, text = "sample text") : LuiBase() constructor {
 	self.text = text;
-	self.x = x;
-	self.y = y;
+	self.pos_x = x;
+	self.pos_y = y;
 	self.width = width;
 	self.height = height;
 	
