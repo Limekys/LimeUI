@@ -24,10 +24,10 @@ my_panel.add_content([
 	demo_loading,
 	
 	
-	new LuiButton(my_panel.pos_x + 16, my_panel.height - 32, , , "Показать", function() {
+	new LuiButton( , my_panel.height - 32 - 16, , , "Показать", function() {
 			var _msg = new LuiMessage( , , "TEST TEST TEST TEST");
 		}),
-	new LuiButton(my_panel.pos_x + my_panel.width - 128 - 16, my_panel.height - 32, , , "Выход", function() {game_end()})
+	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Выход", function() {game_end()})
 ]);
 my_panel_3 = new LuiPanel(LUI_AUTO, LUI_AUTO, 256, 256);
 

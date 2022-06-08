@@ -21,11 +21,10 @@
 #macro LUI_OVERLAY						_LuiGetOverlay()
 
 //Globals
-global.LUI_OVERLAY_INSTANCE = undefined;
 global.LUI_DEBUG_MODE =	0;
 
 function LuiBase() constructor {
-	self.name = undefined;
+	self.name = "LuiBase";
 	self.value = undefined;
 	
 	self.x = 0;	//Actual x position on the screen
@@ -182,7 +181,7 @@ function LuiBase() constructor {
 				_element.destroy();
 			}
 		}
-		print("element destroyed");
+		print("element destroyed", self.name);
 		delete _element;
 	}
 }

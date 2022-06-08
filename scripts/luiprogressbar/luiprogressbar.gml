@@ -1,4 +1,5 @@
 function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, value_min, value_max, draggable, value, callback) : LuiBase() constructor {
+	self.name = "LuiProgressBar";
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
