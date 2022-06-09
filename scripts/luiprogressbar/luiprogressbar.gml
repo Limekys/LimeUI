@@ -49,8 +49,9 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, va
 		draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, c_gray, 1);
 		
 		if self.draggable {
-			var _knob_x = clamp(x + width * _bar_value - height div 2, x, x + width - height);
-			draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, _knob_x, y, height, height, c_dkgray, 1);
+			var _knob_width = height;
+			var _knob_x = clamp(x + width * _bar_value - _knob_width div 2, x, x + width - _knob_width);
+			draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, _knob_x, y, _knob_width, height, c_dkgray, 1);
 		}
 	}
 }

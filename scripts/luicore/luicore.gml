@@ -96,8 +96,6 @@ function LuiBase() constructor {
                 _element.pos_y = 0 + _y_offset;
             }
 			
-			
-			
 			array_push(self.contents, _element);
 		}
 		return self;
@@ -107,24 +105,24 @@ function LuiBase() constructor {
     self.get = function() { return value; }
     self.set = function(value) { self.value = value; }
 	self.center = function() {
-		var _x = root == undefined ? 0 : root.x;
-		var _y = root == undefined ? 0 : root.y;
+		var _x = root == undefined ? 0 : root.pos_x;
+		var _y = root == undefined ? 0 : root.pos_y;
 		var _width = root == undefined ? display_get_gui_width() : root.width;
 		var _height = root == undefined ? display_get_gui_height() : root.height;
-		self.x = _x + _width div 2 - self.width div 2;
-		self.y = _y + _height div 2 - self.height div 2;
+		self.pos_x = _x + _width div 2 - self.width div 2;
+		self.pos_y = _y + _height div 2 - self.height div 2;
 		return self;
 	}
 	self.center_vertically = function() {
-		var _y = root == undefined ? 0 : root.y;
+		var _y = root == undefined ? 0 : root.pos_y;
 		var _height = root == undefined ? display_get_gui_height() : root.height;
-		self.y = _y + _height div 2 - self.height div 2;
+		self.pos_y = _y + _height div 2 - self.height div 2;
 		return self;
 	}
 	self.center_horizontally = function() {
-		var _x = root == undefined ? 0 : root.x;
+		var _x = root == undefined ? 0 : root.pos_x;
 		var _width = root == undefined ? display_get_gui_width() : root.width;
-		self.x = _x + _width div 2 - self.width div 2;
+		self.pos_x = _x + _width div 2 - self.width div 2;
 		return self;
 	}
 	self.stretch_horizontally = function(padding) {

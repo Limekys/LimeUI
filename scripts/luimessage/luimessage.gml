@@ -1,19 +1,19 @@
 function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel() constructor {
 	self.name = "LuiMessage";
 	self.text = text;
-	self.x = LUI_OVERLAY.width div 2 - width div 2;
-	self.y = LUI_OVERLAY.height div 2 - height div 2;
+	self.pos_x = LUI_OVERLAY.width div 2 - width div 2;
+	self.pos_y = LUI_OVERLAY.height div 2 - height div 2;
 	self.width = width;
 	self.height = height;
 	
 	LUI_OVERLAY.add_content(self);
 	
 	self.add_content([
-		new LuiText( , , self.width, , self.text).center_horizontally(),
-		new LuiButton( , , , , "OK", function(){
+		new LuiText( , , LUI_STRETCH, , self.text),
+		new LuiButton( , self.height - 32 - LUI_PADDING, LUI_STRETCH, , "OK", function(){
 			//self.root.destroy();
 			LUI_OVERLAY.contents = [];
-		}).center()
+		})
 	]);
 	
 	//self.draw = function() {
