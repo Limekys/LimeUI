@@ -7,6 +7,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = 
 	self.height = height;
 	
 	self.button_color = c_white;
+	self.can_pressed = false;
 	
 	if callback == undefined {
 		self.callback = function() {print(self.text)};
@@ -31,14 +32,18 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = 
 	self.step = function() {
 		if mouse_hover() { 
 			self.button_color = c_ltgray;
+			if mouse_check_button_pressed(mb_left) {
+				self.can_pressed = true;
+			}
 			if mouse_check_button(mb_left) {
 				self.button_color = c_gray;
 			}
-			if mouse_check_button_released(mb_left) {
+			if mouse_check_button_released(mb_left) && self.can_pressed {
 				self.callback();
 			}
 		} else {
 			self.button_color = c_white;
+			self.can_pressed = false;
 		}
 		
 	}

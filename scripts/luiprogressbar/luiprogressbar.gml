@@ -22,8 +22,8 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, va
 	    var x2 = x1 + self.width;
 	    var y2 = y1 + self.height;
 		
-		if self.draggable && mouse_hover() {
-            if mouse_check_button_pressed(mb_left) {
+		if self.draggable {
+            if mouse_check_button_pressed(mb_left) && mouse_hover() {
                 self.dragging = true;
             }
             
@@ -48,7 +48,9 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, va
 		draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, c_green, 1);
 		draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, c_gray, 1);
 		
-		if self.draggable
-		draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x + width * _bar_value - 8, y, height, height, c_dkgray, 1);
+		if self.draggable {
+			var _knob_x = clamp(x + width * _bar_value - height div 2, x, x + width - height);
+			draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, _knob_x, y, height, height, c_dkgray, 1);
+		}
 	}
 }

@@ -8,13 +8,13 @@
   "collisionTolerance": 0,
   "swfPrecision": 2.525,
   "bbox_left": 0,
-  "bbox_right": 13,
+  "bbox_right": 11,
   "bbox_top": 0,
   "bbox_bottom": 13,
   "HTile": false,
   "VTile": false,
   "For3D": false,
-  "width": 14,
+  "width": 12,
   "height": 14,
   "textureGroupId": {
     "name": "Default",
@@ -68,9 +68,9 @@
     {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"e06ed5b3-d1f1-4951-bb12-bd1cd27b161e","tags":[],"resourceType":"GMImageLayer",},
   ],
   "nineSlice": {
-    "left": 6,
+    "left": 5,
     "top": 5,
-    "right": 6,
+    "right": 5,
     "bottom": 7,
     "guideColour": [
       4294902015,

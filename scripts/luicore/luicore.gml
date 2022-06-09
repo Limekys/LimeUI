@@ -15,7 +15,7 @@
 
 //System (Dont touch)
 #macro LUI_AUTO							ptr(0)
-#macro LUI_AUTO_NO_SPACING				ptr(1)
+#macro LUI_AUTO_NO_PADDING				ptr(1)
 #macro LUI_STRETCH						ptr(2)
 
 #macro LUI_OVERLAY						_LuiGetOverlay()
@@ -33,7 +33,7 @@ function LuiBase() constructor {
 	self.pos_y = 0;	//Offset y position this element relative parent
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
-	self.root = undefined;
+	self.root = self;
 	
 	self.contents = [];
 	
@@ -52,14 +52,17 @@ function LuiBase() constructor {
 		    var _element = elements[i];
 			_element.root = self;
 			
-			
 			//Move X
 			if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO) {
+				//Width
+				if (is_ptr(_element.width) && _element.width == LUI_STRETCH)
+				_element.stretch_horizontally(LUI_PADDING);
+				//Move
 				var _last = self.get_last();
 				if (_last) {
 					//For next element
 					_element.pos_x = _last.pos_x + _last.width + LUI_PADDING;
-					if _element.pos_x + _element.width > self.width {
+					if _element.pos_x + _element.width > self.width - LUI_PADDING {
 						_element.pos_x = LUI_PADDING;
 						_y_offset += _last.height + LUI_PADDING;
 					}
@@ -67,7 +70,11 @@ function LuiBase() constructor {
 					//For first element
 					_element.pos_x = LUI_PADDING;
 				}
-			} else if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_SPACING) {
+			} else if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_PADDING) {
+				//Width
+				if (is_ptr(_element.width) && _element.width == LUI_STRETCH)
+				_element.stretch_horizontally(0);
+				//Move
 				var _last = self.get_last();
 				if (_last) {
 					//For next element
@@ -85,7 +92,7 @@ function LuiBase() constructor {
 			//Move Y
 			if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO) {
 				_element.pos_y = LUI_PADDING + _y_offset;
-            } else if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_SPACING) {
+            } else if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_PADDING) {
                 _element.pos_y = 0 + _y_offset;
             }
 			
@@ -119,6 +126,16 @@ function LuiBase() constructor {
 		var _width = root == undefined ? display_get_gui_width() : root.width;
 		self.x = _x + _width div 2 - self.width div 2;
 		return self;
+	}
+	self.stretch_horizontally = function(padding) {
+		var _last = root.get_last();
+		if (_last) && (_last.pos_x + _last.width < root.width - padding) {
+			//For next element
+			self.width = root.width - (_last.pos_x + _last.width) - padding*2;
+		} else {
+			//For first element
+			self.width = root.width - padding*2;
+		}
 	}
 	
 	self.callback = undefined;
