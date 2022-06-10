@@ -215,3 +215,7 @@ function print() {
 	var result = time+caller+": "+msg;
 	show_debug_message(result);
 }
+
+function range(value, old_min, old_max, new_min, new_max) {
+	return ((value - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min;
+}

@@ -15,17 +15,17 @@ my_ui.add_content([
 ]);
 
 
-demo_loading = new LuiProgressBar( , , LUI_STRETCH, , 0, 100, false, 0, function(){});
+demo_loading = new LuiProgressBar( , , LUI_STRETCH, , 0, 100, true, 0);
 demo_loading_state = false;
 
 my_panel.add_content([
 	new LuiText( , , LUI_STRETCH, , "First panel"),
 	new LuiText( , , 128, 32, "Slider"),
-	new LuiProgressBar( , , LUI_STRETCH, 32, 0, 100, true, 25, function(){print("Slider value: ", self.value)}),
+	new LuiSlider( , , LUI_STRETCH, 32, 0, 100, 25, function(){print("Slider value: ", self.value)}),
 	new LuiText( , , 128, , "Second panel X"),
-	new LuiProgressBar( , , LUI_STRETCH, , my_panel_2.pos_x, 800, true, my_panel_2.pos_x, function(){oDemo.my_panel_2.pos_x = self.value}),
+	new LuiSlider( , , LUI_STRETCH, , my_panel_2.pos_x, 800, my_panel_2.pos_x, function(){oDemo.my_panel_2.pos_x = self.value}),
 	new LuiText( , , 128, , "Second panel Y"),
-	new LuiProgressBar( , , LUI_STRETCH, , my_panel_2.pos_y, 200, true, 16, function(){oDemo.my_panel_2.pos_y = self.value}),
+	new LuiSlider( , , LUI_STRETCH, , my_panel_2.pos_y, 200, 16, function(){oDemo.my_panel_2.pos_y = self.value}),
 	demo_loading,
 	new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value}),
 	new LuiText( , , , 32, "Progress loading"),
@@ -35,6 +35,7 @@ my_panel.add_content([
 		}),
 	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Exit", function() {game_end()})
 ]);
+
 my_panel_in_second_1 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 200);
 my_panel_in_second_2 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 200);
 

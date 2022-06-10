@@ -24,7 +24,7 @@
 global.LUI_DEBUG_MODE =	0;
 
 function LuiBase() constructor {
-	self.name = "LuiBase";
+	self.name = "-unnamed-";
 	self.value = undefined;
 	
 	self.x = 0;	//Actual x position on the screen
@@ -36,6 +36,7 @@ function LuiBase() constructor {
 	self.min_width = 32;
 	self.min_height = 32;
 	self.root = self;
+	self.callback = undefined;
 	
 	self.contents = [];
 	
@@ -121,7 +122,13 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	self.callback = undefined;
+	static set_callback = function(callback) {
+		if callback == undefined {
+			self.callback = function() {print(self.name)};
+		} else {
+			self.callback = method(self, callback);
+		}
+	}
 	
 	//Interactivity
 	self.mouse_hover = function() {
