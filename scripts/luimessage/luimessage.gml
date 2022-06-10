@@ -1,8 +1,6 @@
 function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel() constructor {
 	self.name = "LuiMessage";
 	self.text = text;
-	self.pos_x = LUI_OVERLAY.width div 2 - width div 2;
-	self.pos_y = LUI_OVERLAY.height div 2 - height div 2;
 	self.width = width;
 	self.height = height;
 	
@@ -15,6 +13,8 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 			LUI_OVERLAY.contents = [];
 		})
 	]);
+	
+	self.center();
 	
 	//self.draw = function() {
 	//	draw_set_alpha(1);

@@ -5,6 +5,8 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = 
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
+	draw_set_font(LUI_FONT_BUTTONS);
+	self.min_width = string_width(text);
 	
 	self.button_color = c_white;
 	self.can_pressed = false;

@@ -33,6 +33,8 @@ function LuiBase() constructor {
 	self.pos_y = 0;	//Offset y position this element relative parent
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
+	self.min_width = 32;
+	self.min_height = 32;
 	self.root = self;
 	
 	self.contents = [];
@@ -48,52 +50,44 @@ function LuiBase() constructor {
 		//adding
 		var _x_offset = 0;
 		var _y_offset = 0;
+		
 		for (var i = 0, count = array_length(elements); i < count; i++) {
 		    var _element = elements[i];
 			_element.root = self;
 			
+			//Paddings
+			var _x_padding = LUI_PADDING;
+			var _y_padding = LUI_PADDING;
+			if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_PADDING) _x_padding = 0;
+			if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_PADDING) _y_padding = 0;
+			
+			var _last = self.get_last();
 			//Move X
-			if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO) {
+			if is_ptr(_element.pos_x) {
 				//Width
 				if (is_ptr(_element.width) && _element.width == LUI_STRETCH)
-				_element.stretch_horizontally(LUI_PADDING);
+				_element.stretch_horizontally(_x_padding);
 				//Move
-				var _last = self.get_last();
 				if (_last) {
 					//For next element
-					_element.pos_x = _last.pos_x + _last.width + LUI_PADDING;
-					if _element.pos_x + _element.width > self.width - LUI_PADDING {
-						_element.pos_x = LUI_PADDING;
-						_y_offset += _last.height + LUI_PADDING;
+					_element.pos_x = _last.pos_x + _last.width + _x_padding;
+					if _element.pos_x + _element.width > self.width - _x_padding {
+						_element.pos_x = _x_padding;
+						if is_ptr(_element.pos_y) _element.pos_y = _last.pos_y + _last.height + _y_padding;
 					}
 				} else {
 					//For first element
-					_element.pos_x = LUI_PADDING;
-				}
-			} else if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_PADDING) {
-				//Width
-				if (is_ptr(_element.width) && _element.width == LUI_STRETCH)
-				_element.stretch_horizontally(0);
-				//Move
-				var _last = self.get_last();
-				if (_last) {
-					//For next element
-					_element.pos_x = _last.pos_x + _last.width;
-					if _element.pos_x + _element.width > self.width {
-						_element.pos_x = 0;
-						_y_offset += _last.height;
-					}
-				} else {
-					//For first element
-					_element.pos_x = 0;
+					_element.pos_x = _x_padding;
 				}
 			}
 			
 			//Move Y
-			if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO) {
-				_element.pos_y = LUI_PADDING + _y_offset;
-            } else if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_PADDING) {
-                _element.pos_y = 0 + _y_offset;
+			if is_ptr(_element.pos_y) {
+				if (_last) {
+					_element.pos_y = _last.pos_y;
+				} else {
+					_element.pos_y = _y_padding;
+				}
             }
 			
 			array_push(self.contents, _element);
@@ -105,35 +99,26 @@ function LuiBase() constructor {
     self.get = function() { return value; }
     self.set = function(value) { self.value = value; }
 	self.center = function() {
-		var _x = root == undefined ? 0 : root.pos_x;
-		var _y = root == undefined ? 0 : root.pos_y;
-		var _width = root == undefined ? display_get_gui_width() : root.width;
-		var _height = root == undefined ? display_get_gui_height() : root.height;
-		self.pos_x = _x + _width div 2 - self.width div 2;
-		self.pos_y = _y + _height div 2 - self.height div 2;
+		self.pos_x = root.width div 2 - self.width div 2;
+		self.pos_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	self.center_vertically = function() {
-		var _y = root == undefined ? 0 : root.pos_y;
-		var _height = root == undefined ? display_get_gui_height() : root.height;
-		self.pos_y = _y + _height div 2 - self.height div 2;
+		self.pos_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	self.center_horizontally = function() {
-		var _x = root == undefined ? 0 : root.pos_x;
-		var _width = root == undefined ? display_get_gui_width() : root.width;
-		self.pos_x = _x + _width div 2 - self.width div 2;
+		self.pos_x = root.width div 2 - self.width div 2;
 		return self;
 	}
 	self.stretch_horizontally = function(padding) {
 		var _last = root.get_last();
-		if (_last) && (_last.pos_x + _last.width < root.width - padding) {
-			//For next element
+		if (_last) && (_last.pos_x + _last.width < root.width - self.min_width - padding) {
 			self.width = root.width - (_last.pos_x + _last.width) - padding*2;
 		} else {
-			//For first element
 			self.width = root.width - padding*2;
 		}
+		return self;
 	}
 	
 	self.callback = undefined;
