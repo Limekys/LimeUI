@@ -20,6 +20,7 @@
     {"id":{"name":"spr_icon_animation","path":"sprites/spr_icon_animation/spr_icon_animation.yy",},"order":1,},
     {"id":{"name":"spr_icon_preloader","path":"sprites/spr_icon_preloader/spr_icon_preloader.yy",},"order":18,},
     {"id":{"name":"oSteadyDeltaTime","path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},"order":2,},
+    {"id":{"name":"LuiSpriteButton","path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},"order":8,},
     {"id":{"name":"spr_icon_debug","path":"sprites/spr_icon_debug/spr_icon_debug.yy",},"order":8,},
     {"id":{"name":"spr_icon_exit","path":"sprites/spr_icon_exit/spr_icon_exit.yy",},"order":11,},
     {"id":{"name":"sLogoDemo","path":"sprites/sLogoDemo/sLogoDemo.yy",},"order":3,},
