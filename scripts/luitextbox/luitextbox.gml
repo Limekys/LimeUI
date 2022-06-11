@@ -1,4 +1,4 @@
-function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_text = "", max_length = 32) : LuiBase() constructor {
+function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_text = "", hint = "", is_password = false, max_length = 32) : LuiBase() constructor {
 	self.name = "LuiTextbox";
 	self.value = start_text;
 	self.pos_x = x;
@@ -8,6 +8,8 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 	draw_set_font(LUI_FONT_BUTTONS);
 	self.min_width = string_width(value);
 	
+	self.hint = hint;
+	self.is_password = is_password;
 	self.max_length = max_length;
 	self.is_pressed = false;
 	self.cursor_pointer = "";
@@ -29,12 +31,22 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_middle);
 		draw_set_font(LUI_FONT_BUTTONS);
-		var _margin = 4;
+		var _margin = 6;
 		var _txt_x = self.x + _margin;
 		var _txt_y = self.y + self.height / 2;
-		
 		var _display_text = self.value + self.cursor_pointer;
+		
+		if self.is_password {
+			_display_text = string_length(self.value)*LUI_TEXTBOX_PASSWORD + self.cursor_pointer;
+		}
+		
 		draw_text(_txt_x, _txt_y, _display_text);
+		
+		if self.value == "" {
+			draw_set_alpha(0.5);
+			draw_set_color(LUI_COLOR_FONT_HINT);
+			draw_text(_txt_x, _txt_y, self.hint);
+		}
 		
 		//When mouse hover
 		if !has_focus && mouse_hover() {

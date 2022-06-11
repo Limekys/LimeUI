@@ -198,22 +198,3 @@ function LuiBase() constructor {
 		delete _element;
 	}
 }
-
-function _LuiGetOverlay() {
-	static LuiOverlay = function() : LuiBase() constructor {
-		self.baseRender = self.render;
-		self.render = function() {
-			if array_length(self.contents) > 0 {
-				self.width = window_get_width();
-	            self.height = window_get_height();
-				draw_set_alpha(0.5);
-				draw_set_color(c_black);
-				draw_rectangle(0, 0, self.width, self.height, false);
-				self.baseRender();
-			}
-		}
-	}
-	static inst = new LuiOverlay();
-    return inst;
-}
-

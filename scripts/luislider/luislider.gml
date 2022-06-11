@@ -39,7 +39,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, value_m
 		//Bar
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
 		draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, LUI_COLOR_MAIN, 1);
-		draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, c_green, 1);
+		draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, LUI_COLOR_SLIDER, 1);
 		draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
 		//Slider knob
 		var _knob_width = height;

@@ -30,7 +30,9 @@ my_panel.add_content([
 	new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value}),
 	new LuiText( , , LUI_STRETCH, 24, "Progress loading"),
 	new LuiText( , , , 32, "Textbox"),
-	new LuiTextbox(,, LUI_STRETCH,,"test", ),
+	new LuiTextbox(,, LUI_STRETCH,,"some text in textbox", , , ),
+	new LuiTextbox(,, LUI_STRETCH,,"", "login", , ),
+	new LuiTextbox(,, LUI_STRETCH,,"", "password", true, ),
 	
 	new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 			var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
@@ -61,5 +63,5 @@ for (var i = 0; i < 12; ++i) {
 }
 
 my_panel_3.add_content([
-	new LuiTextbox(,, LUI_STRETCH,,"Sample text", )
+	new LuiTextbox(,, LUI_STRETCH,,"example", "hint", , )
 ]);
