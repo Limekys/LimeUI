@@ -1,28 +1,3 @@
-//Info
-#macro LIMEUI_VERSION "Alpha 0.1"
-
-//Fonts
-#macro LUI_FONT_BUTTONS					fArial_ru
-//Colors
-#macro LUI_FONT_COLOR					c_black
-//Sprites
-#macro LUI_SPRITE_PANEL					sUI_panel
-#macro LUI_SPRITE_PANEL_BORDER			sUI_panel_border
-#macro LUI_SPRITE_BUTTON				sUI_button
-#macro LUI_SPRITE_BUTTON_BORDER			sUI_button_border
-//Settings
-#macro LUI_PADDING						16
-
-//System (Dont touch)
-#macro LUI_AUTO							ptr(0)
-#macro LUI_AUTO_NO_PADDING				ptr(1)
-#macro LUI_STRETCH						ptr(2)
-
-#macro LUI_OVERLAY						_LuiGetOverlay()
-
-//Globals
-global.LUI_DEBUG_MODE =	0;
-
 function LuiBase() constructor {
 	self.name = "-unnamed-";
 	self.value = undefined;
@@ -134,7 +109,7 @@ function LuiBase() constructor {
 	self.mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-		return point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width, self.y + self.height)
+		return point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
 	}
 	
 	//Update
@@ -169,7 +144,7 @@ function LuiBase() constructor {
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
-			draw_text(x, y, string(x) + ";" + string(y) + "(" + string(pos_x) + ";" + string(pos_y) + ")");
+			draw_text(x, y, string(pos_x) + ":" + string(pos_y));
 			draw_text(x, y + 16, string(self.value));
 			
 			if self.mouse_hover() {

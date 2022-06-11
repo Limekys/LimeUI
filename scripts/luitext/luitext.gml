@@ -10,7 +10,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = undefined, height = 16, tex
 	
 	self.draw = function() {
 		draw_set_alpha(1);
-		draw_set_color(LUI_FONT_COLOR);
+		draw_set_color(LUI_COLOR_FONT);
 		draw_set_halign(self.text_halign);
 		draw_set_valign(fa_middle);
 		draw_set_font(LUI_FONT_BUTTONS);

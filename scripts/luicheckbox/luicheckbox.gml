@@ -1,4 +1,4 @@
-function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = 32, height = 32, value = false, callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = 24, height = 24, value = false, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiButton";
 	self.value = value;
 	self.pos_x = x;
@@ -6,7 +6,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = 32, height = 32, value 
 	self.width = width;
 	self.height = height;
 	
-	self.checkbox_color = c_white;
+	self.checkbox_color = LUI_COLOR_MAIN;
 	self.can_pressed = false;
 	
 	if callback == undefined {
@@ -17,8 +17,9 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = 32, height = 32, value 
 	
 	self.draw = function() {
 		var _color = self.value ? c_green : self.checkbox_color;
-		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x, y, width, height, _color, 1);
-		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, width, height, c_gray, 1);
+		var _pin_margin = 6;
+		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x + _pin_margin, y + _pin_margin, width - _pin_margin*2, height - _pin_margin*2, _color, 1);
+		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
 	}
 	
 	self.step = function() {
@@ -35,7 +36,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = 32, height = 32, value 
 				self.callback();
 			}
 		} else {
-			self.checkbox_color = c_white;
+			self.checkbox_color = LUI_COLOR_MAIN;
 			self.can_pressed = false;
 		}
 		

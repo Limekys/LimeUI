@@ -8,7 +8,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = 
 	draw_set_font(LUI_FONT_BUTTONS);
 	self.min_width = string_width(text);
 	
-	self.button_color = c_white;
+	self.button_color = LUI_COLOR_MAIN;
 	self.is_pressed = false;
 	
 	if callback == undefined {
@@ -19,10 +19,10 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = 
 	
 	self.draw = function() {
 		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x, y, width, height, self.button_color, 1);
-		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, width, height, c_gray, 1);
+		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
 		//Text
 		draw_set_alpha(1);
-		draw_set_color(LUI_FONT_COLOR);
+		draw_set_color(LUI_COLOR_FONT);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_set_font(LUI_FONT_BUTTONS);
@@ -44,7 +44,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, text = 
 				self.callback();
 			}
 		} else {
-			self.button_color = c_white;
+			self.button_color = LUI_COLOR_MAIN;
 			self.is_pressed = false;
 		}
 		

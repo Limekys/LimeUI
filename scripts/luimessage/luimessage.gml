@@ -18,7 +18,7 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 	
 	//self.draw = function() {
 	//	draw_set_alpha(1);
-	//	draw_set_color(LUI_FONT_COLOR);
+	//	draw_set_color(LUI_COLOR_FONT);
 	//	draw_set_halign(fa_center);
 	//	draw_set_valign(fa_middle);
 	//	draw_set_font(LUI_FONT_BUTTONS);
