@@ -6,7 +6,7 @@ my_ui = new LuiBase();
 my_panel = new LuiPanel(LUI_AUTO, LUI_AUTO, 512, 512);
 my_panel_2 = new LuiPanel(LUI_AUTO, LUI_AUTO, 512, 512);
 my_panel_3 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 512);
-my_panel_4 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 208);
+my_panel_4 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, LUI_STRETCH);
 my_ui.add_content([
 	my_panel,
 	my_panel_2,
@@ -28,7 +28,9 @@ my_panel.add_content([
 	new LuiSlider( , , LUI_STRETCH, , my_panel_2.pos_y, 200, 16, function(){oDemo.my_panel_2.pos_y = self.value}),
 	demo_loading,
 	new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value}),
-	new LuiText( , , , 24, "Progress loading"),
+	new LuiText( , , LUI_STRETCH, 24, "Progress loading"),
+	new LuiText( , , , 32, "Textbox"),
+	new LuiTextbox(,, LUI_STRETCH,,"test", ),
 	
 	new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 			var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
@@ -57,3 +59,7 @@ my_panel_in_second_2.add_content(new LuiText( , , LUI_STRETCH, , "Panel with spr
 for (var i = 0; i < 12; ++i) {
     my_panel_in_second_2.add_content(new LuiSpriteButton(, , sLogoDemo, 0, 1, choose(c_white, c_lime, c_aqua), ));
 }
+
+my_panel_3.add_content([
+	new LuiTextbox(,, LUI_STRETCH,,"Sample text", )
+]);
