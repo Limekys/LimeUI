@@ -2,6 +2,7 @@
 #macro LIMEUI_VERSION "Alpha 0.1"
 
 //Fonts
+#macro LUI_FONT_DEFAULT					fArial
 #macro LUI_FONT_BUTTONS					fArial
 //Colors
 #macro LUI_COLOR_FONT					c_black

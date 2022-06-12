@@ -6,7 +6,7 @@
     "path": "folders/LimeUI.yy",
   },
   "resourceVersion": "1.0",
-  "name": "LuiCore",
+  "name": "LuiBase",
   "tags": [],
   "resourceType": "GMScript",
 }

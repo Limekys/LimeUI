@@ -14,6 +14,7 @@ function LuiBase() constructor {
 	self.callback = undefined;
 	self.contents = [];
 	
+	//Focusing
 	self.has_focus = false;
 	static set_focus = function() {
 		self.has_focus = true;
@@ -22,6 +23,7 @@ function LuiBase() constructor {
 		self.has_focus = false;
 	}
 	
+	//Add content
 	static get_last = function() {
         if (array_length(self.contents) == 0) return undefined;
         return self.contents[array_length(self.contents) - 1];

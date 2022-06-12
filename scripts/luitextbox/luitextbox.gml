@@ -5,7 +5,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	draw_set_font(LUI_FONT_BUTTONS);
+	draw_set_font(LUI_FONT_DEFAULT);
 	self.min_width = string_width(value);
 	
 	self.hint = hint;
@@ -25,23 +25,30 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 		var _border_color = has_focus ? LUI_COLOR_BORDER : LUI_COLOR_TEXTBOXBORDER;
 		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, self.x, self.y, self.width, self.height, LUI_COLOR_MAIN, 1);
 		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, self.x, self.y, self.width, self.height, _border_color, 1);
-		//Text
+		//Set text
 		draw_set_alpha(1);
 		draw_set_color(LUI_COLOR_FONT);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_middle);
-		draw_set_font(LUI_FONT_BUTTONS);
+		draw_set_font(LUI_FONT_DEFAULT);
 		var _margin = 6;
 		var _txt_x = self.x + _margin;
 		var _txt_y = self.y + self.height / 2;
-		var _display_text = self.value + self.cursor_pointer;
+		var _display_text = self.value;
 		
+		//Password dots
 		if self.is_password {
-			_display_text = string_length(self.value)*LUI_TEXTBOX_PASSWORD + self.cursor_pointer;
+			_display_text = string_length(self.value)*LUI_TEXTBOX_PASSWORD;
 		}
 		
-		draw_text(_txt_x, _txt_y, _display_text);
+		//Cut
+		while(string_width(_display_text) > (self.width - (2 * _margin)))
+		_display_text = string_delete(_display_text, 1, 1);
 		
+		//Final text
+		draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
+		
+		//Show hint
 		if self.value == "" {
 			draw_set_alpha(0.5);
 			draw_set_color(LUI_COLOR_FONT_HINT);
