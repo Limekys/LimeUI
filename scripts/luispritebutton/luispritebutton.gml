@@ -1,4 +1,4 @@
-function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, sprite, index = 0, scale = 1, color_blend = c_white, callback = undefined) : LuiBase() constructor {
+function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, sprite, index = 0, scale = 1, blend_color = c_white, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;
@@ -6,12 +6,12 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, sprite, index = 0, scale = 
 	self.sprite = sprite;
 	self.index = index;
 	self.scale = scale;
-	self.color_blend = color_blend;
+	self.blend_color = blend_color;
 	
 	self.width = sprite_get_width(sprite) * self.scale;
 	self.height = sprite_get_height(sprite) * self.scale;
 	
-	self.button_color = self.color_blend;
+	self.button_color = self.blend_color;
 	self.is_pressed = false;
 	
 	if callback == undefined {
@@ -35,9 +35,10 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, sprite, index = 0, scale = 
 			}
 			if mouse_check_button_released(mb_left) && self.is_pressed {
 				self.callback();
+				if LUI_CLICK_SOUND != undefined audio_play_sound(LUI_CLICK_SOUND, 1, false);
 			}
 		} else {
-			self.button_color = self.color_blend;
+			self.button_color = self.blend_color;
 			self.is_pressed = false;
 		}
 		

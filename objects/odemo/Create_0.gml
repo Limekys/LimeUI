@@ -36,7 +36,7 @@ my_panel.add_content([
 	
 	new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 			var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
-		}),
+		}).set_blend_color(c_red),
 	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Exit", function() {game_end()})
 ]);
 
@@ -49,12 +49,14 @@ my_panel_2.add_content([
 	my_panel_in_second_2
 ]);
 
+deactivated_button = new LuiButton(LUI_AUTO, LUI_AUTO, , , "DEACTIVATED", ).deactivate();
+
 my_panel_in_second_1.add_content([
 	new LuiText( , , LUI_STRETCH, , "Stretched panel"),
-	new LuiButton(LUI_AUTO, LUI_AUTO, , , "DOG", ),
+	new LuiButton(LUI_AUTO, LUI_AUTO, , , "DOG", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = ":)"}),
 	new LuiButton(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Stretched button", ),
 	new LuiButton(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Stretched button 2", ),
-	new LuiButton(LUI_AUTO, LUI_AUTO, , , "CAT", ),
+	deactivated_button,
 ]);
 
 my_panel_in_second_2.add_content(new LuiText( , , LUI_STRETCH, , "Panel with sprites buttons"));

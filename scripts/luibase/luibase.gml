@@ -13,6 +13,7 @@ function LuiBase() constructor {
 	self.root = self;
 	self.callback = undefined;
 	self.contents = [];
+	self.blend_color = undefined;
 	
 	//Focusing
 	self.has_focus = false;
@@ -127,6 +128,13 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	//Design
+	static set_blend_color = function(color) {
+		self.blend_color = color;
+		return self;
+	}
+	
+	//Interactivity
 	static set_callback = function(callback) {
 		if callback == undefined {
 			self.callback = function() {print(self.name)};
@@ -135,7 +143,6 @@ function LuiBase() constructor {
 		}
 	}
 	
-	//Interactivity
 	static mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
@@ -169,22 +176,21 @@ function LuiBase() constructor {
 	static render_debug = function() {
 		if global.LUI_DEBUG_MODE == 1 {
 			draw_set_alpha(0.5);
-			draw_set_color(c_red);
 			
-			draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, true);
-			draw_line(self.x, self.y, self.x + self.width, self.y + self.height);
-			draw_line(self.x, self.y + self.height, self.x + self.width, self.y);
+			if self.mouse_hover() {
+				draw_set_color(c_blue);
+			} else {
+				draw_set_color(c_red);
+			}
+			
+			draw_rectangle(self.x, self.y, self.x + self.width - 1, self.y + self.height - 1, true);
+			draw_line(self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
+			draw_line(self.x, self.y + self.height, self.x + self.width - 1, self.y - 1);
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
 			draw_text(x, y, string(pos_x) + ":" + string(pos_y));
 			draw_text(x, y + 16, string(self.value));
-			
-			if self.mouse_hover() {
-				draw_set_alpha(0.75);
-				draw_set_color(c_blue);
-				draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, true);
-			}
 		}
 	}
 	
@@ -194,6 +200,7 @@ function LuiBase() constructor {
 			for (var i = 0, _number_of_elements = array_length(self.contents); i < _number_of_elements; ++i) {
 			    var _element = self.contents[i];
 				_element.destroy();
+				self.contents[i] = undefined;
 			}
 		}
 		print("element destroyed", self.name);

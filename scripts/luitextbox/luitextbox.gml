@@ -23,8 +23,8 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 	self.draw = function() {
 		//Textbox field
 		var _border_color = has_focus ? LUI_COLOR_BORDER : LUI_COLOR_TEXTBOXBORDER;
-		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, self.x, self.y, self.width, self.height, LUI_COLOR_MAIN, 1);
-		draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, self.x, self.y, self.width, self.height, _border_color, 1);
+		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, self.x, self.y, self.width, self.height, LUI_COLOR_MAIN, 1);
+		if LUI_SPRITE_BUTTON_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, self.x, self.y, self.width, self.height, _border_color, 1);
 		//Set text
 		draw_set_alpha(1);
 		draw_set_color(LUI_COLOR_FONT);
@@ -57,7 +57,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 		
 		//When mouse hover
 		if !has_focus && mouse_hover() {
-			draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, self.x, self.y, self.width, self.height, c_white, 0.3);
+			if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, self.x, self.y, self.width, self.height, c_white, 0.3);
 		}
 	}
 	

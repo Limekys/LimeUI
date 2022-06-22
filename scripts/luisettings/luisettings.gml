@@ -11,13 +11,15 @@
 #macro LUI_COLOR_BORDER					c_gray
 #macro LUI_COLOR_SLIDER					#45C952
 #macro LUI_COLOR_TEXTBOXBORDER			c_ltgray
-//Sprites
+//Sprites (set undefined if you do not want to draw it)
 #macro LUI_SPRITE_PANEL					sUI_panel
 #macro LUI_SPRITE_PANEL_BORDER			sUI_panel_border
 #macro LUI_SPRITE_BUTTON				sUI_button
 #macro LUI_SPRITE_BUTTON_BORDER			sUI_button_border
 #macro LUI_SPRITE_SLIDER_KNOB			sUI_slider_knob
 #macro LUI_SPRITE_SLIDER_KNOB_BORDER	sUI_slider_knob_border
+//Sounds (set undefined if you do not want to play sound)
+#macro LUI_CLICK_SOUND					sndBasicClick
 //Settings
 #macro LUI_PADDING						16
 #macro LUI_TEXTBOX_CURSOR				"|"
