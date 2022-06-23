@@ -1,4 +1,4 @@
-function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, sprite, index = 0, scale = 1, blend_color = c_white, callback = undefined) : LuiBase() constructor {
+function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, blend_color = c_white, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;

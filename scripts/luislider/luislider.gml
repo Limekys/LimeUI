@@ -1,4 +1,4 @@
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 16, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSlider";
 	self.pos_x = x;
 	self.pos_y = y;

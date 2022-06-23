@@ -1,4 +1,4 @@
-function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = undefined, height = 16, text = "sample text") : LuiBase() constructor {
+function LuiText(x, y, width = undefined, height = 16, text = "sample text") : LuiBase() constructor {
 	self.name = "LuiText";
 	self.pos_x = x;
 	self.pos_y = y;

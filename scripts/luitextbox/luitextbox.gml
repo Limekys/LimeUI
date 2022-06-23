@@ -1,4 +1,4 @@
-function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_text = "", hint = "", is_password = false, max_length = 32) : LuiBase() constructor {
+function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", is_password = false, max_length = 32) : LuiBase() constructor {
 	self.name = "LuiTextbox";
 	self.value = start_text;
 	self.pos_x = x;
@@ -38,7 +38,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 		
 		//Password dots
 		if self.is_password {
-			_display_text = string_length(self.value)*LUI_TEXTBOX_PASSWORD;
+			_display_text = string_repeat(LUI_TEXTBOX_PASSWORD, string_length(self.value));
 		}
 		
 		//Cut
@@ -108,7 +108,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = 128, height = 32, start_
 	
 	self.destroy_main = method(self, self.destroy);
 	self.destroy = function() {
-		time_source_destroy(self.cursor_timer);
+		if time_source_exists(self.cursor_timer) time_source_destroy(self.cursor_timer);
 		self.destroy_main();
 	}
 }

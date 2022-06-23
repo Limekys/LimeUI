@@ -7,8 +7,8 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 	LUI_OVERLAY.add_content(self);
 	
 	self.add_content([
-		new LuiText( , , LUI_STRETCH, , self.text),
-		new LuiButton( , self.height - 32 - LUI_PADDING, LUI_STRETCH, , "OK", function(){
+		new LuiText(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , self.text),
+		new LuiButton(LUI_AUTO, self.height - 32 - LUI_PADDING, LUI_STRETCH, , "OK", function(){
 			//self.root.destroy();
 			LUI_OVERLAY.contents = [];
 		})

@@ -1,4 +1,4 @@
-function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = 24, height = 24, value = false, callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x, y, width = 24, height = 24, value = false, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiButton";
 	self.value = value;
 	self.pos_x = x;

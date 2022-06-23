@@ -37,7 +37,7 @@ function LuiBase() constructor {
 		var _x_offset = 0;
 		var _y_offset = 0;
 		
-		for (var i = 0, count = array_length(elements); i < count; i++) {
+		for (var i = 0; i < array_length(elements); i++) {
 		    var _element = elements[i];
 			_element.root = self;
 			
@@ -162,7 +162,7 @@ function LuiBase() constructor {
 	
 	static render = function(base_x = 0, base_y = 0) {
 		if is_array(self.contents)
-		for (var i = 0, _number_of_elements = array_length(self.contents); i < _number_of_elements; ++i) {
+		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			var _element = self.contents[i];
 			_element.update(base_x + self.pos_x, base_y + self.pos_y);
 			_element.step();
@@ -195,9 +195,9 @@ function LuiBase() constructor {
 	}
 	
 	//Clean up
-	static destroy = function() {
+	self.destroy = function() {
 		if is_array(self.contents) {
-			for (var i = 0, _number_of_elements = array_length(self.contents); i < _number_of_elements; ++i) {
+			for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			    var _element = self.contents[i];
 				_element.destroy();
 				self.contents[i] = undefined;
