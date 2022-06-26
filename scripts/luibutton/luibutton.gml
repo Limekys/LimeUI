@@ -28,7 +28,7 @@ function LuiButton(x, y, width = 128, height = 32, text = "button", callback = u
 		return self;
 	}
 	
-	self.draw = function() {
+	self.draw = function(x = self.x, y = self.y) {
 		if LUI_SPRITE_BUTTON != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x, y, width, height, self.button_color, 1);
 		if LUI_SPRITE_BUTTON_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
 		//Text
@@ -37,8 +37,8 @@ function LuiButton(x, y, width = 128, height = 32, text = "button", callback = u
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_set_font(LUI_FONT_BUTTONS);
-		var _txt_x = self.x + self.width / 2;
-		var _txt_y = self.y + self.height / 2;
+		var _txt_x = x + self.width / 2;
+		var _txt_y = y + self.height / 2;
 		draw_text(_txt_x, _txt_y, self.text);
 	}
 	

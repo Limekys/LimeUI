@@ -6,6 +6,8 @@ function LuiBase() constructor {
 	self.y = 0;	//Actual y position on the screen
 	self.pos_x = 0;	//Offset x position this element relative parent
 	self.pos_y = 0;	//Offset y position this element relative parent
+	self.start_x = self.pos_x;
+	self.start_y = self.pos_y;
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.min_width = 32;
@@ -19,9 +21,11 @@ function LuiBase() constructor {
 	self.has_focus = false;
 	static set_focus = function() {
 		self.has_focus = true;
+		return self;
 	}
 	static remove_focus = function() {
 		self.has_focus = false;
+		return self;
 	}
 	
 	//Add content
@@ -82,6 +86,11 @@ function LuiBase() constructor {
 				}
             }
 			
+			//Save new start x y position
+			_element.start_x = _element.pos_x;
+			_element.start_y = _element.pos_y;
+			
+			//Add to content array
 			array_push(self.contents, _element);
 		}
 		return self;
@@ -89,7 +98,7 @@ function LuiBase() constructor {
 	
 	//Setter and getter
 	static get = function() { return self.value; }
-	static set = function(value) { self.value = value; }
+	static set = function(value) { self.value = value; return self}
 	
 	//Alignment and sizes
 	static center = function() {
@@ -141,12 +150,15 @@ function LuiBase() constructor {
 		} else {
 			self.callback = method(self, callback);
 		}
+		return self;
 	}
 	
 	static mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-		return point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
+		var _on_element = point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
+		var _on_root = point_in_rectangle(_mouse_x, _mouse_y, self.root.x, self.root.y, self.root.x + self.root.width - 1, self.root.y + self.root.height - 1);
+		return _on_element && _on_root;
 	}
 	
 	//Update

@@ -15,7 +15,7 @@ function LuiCheckbox(x, y, width = 24, height = 24, value = false, callback = un
 		self.callback = method(self, callback);
 	}
 	
-	self.draw = function() {
+	self.draw = function(x = self.x, y = self.y) {
 		var _color = self.value ? c_green : self.checkbox_color;
 		var _pin_margin = 6;
 		if LUI_SPRITE_BUTTON != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x + _pin_margin, y + _pin_margin, width - _pin_margin*2, height - _pin_margin*2, _color, 1);

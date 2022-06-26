@@ -20,8 +20,8 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, blend_color = c_whi
 		self.callback = method(self, callback);
 	}
 	
-	self.draw = function() {
-		draw_sprite_ext(self.sprite, self.index, self.x, self.y, self.scale, self.scale, 0, self.button_color, 1);
+	self.draw = function(x = self.x, y = self.y) {
+		draw_sprite_ext(self.sprite, self.index, x, y, self.scale, self.scale, 0, self.button_color, 1);
 	}
 	
 	self.step = function() {

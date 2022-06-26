@@ -22,6 +22,7 @@
 #macro LUI_CLICK_SOUND					sndBasicClick
 //Settings
 #macro LUI_PADDING						16
+#macro LUI_SCROLL_SIZE					32
 #macro LUI_TEXTBOX_CURSOR				"|"
 #macro LUI_TEXTBOX_PASSWORD				"•"
 

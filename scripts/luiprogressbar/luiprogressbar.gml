@@ -10,7 +10,7 @@ function LuiProgressBar(x, y, width = 128, height = 16, value_min = 0, value_max
 	self.value = value;
 	self.show_value = show_value;
 	
-	self.draw = function() {
+	self.draw = function(x = self.x, y = self.y) {
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
 		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, LUI_COLOR_MAIN, 1);
 		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, LUI_COLOR_SLIDER, 1);

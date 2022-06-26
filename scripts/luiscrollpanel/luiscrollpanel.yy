@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Limekys Useful Functions",
-    "path": "folders/Limekys Useful Functions.yy",
+    "name": "LimeUI",
+    "path": "folders/LimeUI.yy",
   },
   "resourceVersion": "1.0",
-  "name": "UsefulFunctions",
+  "name": "LuiScrollPanel",
   "tags": [],
   "resourceType": "GMScript",
 }

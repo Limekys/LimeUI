@@ -67,3 +67,15 @@ for (var i = 0; i < 12; ++i) {
 my_panel_3.add_content([
 	new LuiTextbox(LUI_AUTO,LUI_AUTO, LUI_STRETCH,,"example", "hint", , )
 ]);
+
+scroll_panel = new LuiScrollPanel(LUI_AUTO, LUI_AUTO, , , );
+my_panel_4.add_content([
+	scroll_panel
+]);
+
+scroll_panel.add_content([
+	new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Scroll panel")
+]);
+for (var i = 0; i < 20; ++i) {
+    scroll_panel.add_content(new LuiButton(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Button_" + string(i), ));
+}
