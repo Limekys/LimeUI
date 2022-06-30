@@ -15,7 +15,7 @@ function LuiBase() constructor {
 	self.root = self;
 	self.callback = undefined;
 	self.contents = [];
-	self.blend_color = undefined;
+	self.blend_color = LUI_COLOR_MAIN;
 	
 	//Focusing
 	self.has_focus = false;

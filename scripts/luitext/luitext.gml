@@ -5,7 +5,7 @@ function LuiText(x, y, width = undefined, height = 16, text = "sample text") : L
 	self.width = (width == undefined) ? string_width(text) : width;
 	self.height = height;
 	
-	self.text = text;
+	self.value = text;
 	self.text_halign = fa_center;
 	
 	self.draw = function(x = self.x, y = self.y) {
@@ -16,7 +16,7 @@ function LuiText(x, y, width = undefined, height = 16, text = "sample text") : L
 		draw_set_font(LUI_FONT_BUTTONS);
 		var _txt_x = x + self.width / 2;
 		var _txt_y = y + self.height / 2;
-		draw_text(_txt_x, _txt_y, self.text);
+		draw_text(_txt_x, _txt_y, self.value);
 	}
 	
 	self.set_halign = function(align) {

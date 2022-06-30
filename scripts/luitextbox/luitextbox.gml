@@ -23,8 +23,7 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 	self.draw = function(x = self.x, y = self.y) {
 		//Textbox field
 		var _border_color = has_focus ? LUI_COLOR_BORDER : LUI_COLOR_TEXTBOXBORDER;
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, self.width, self.height, LUI_COLOR_MAIN, 1);
-		if LUI_SPRITE_BUTTON_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, self.width, self.height, _border_color, 1);
+		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, self.width, self.height, self.blend_color, 1);
 		//Set text
 		draw_set_alpha(1);
 		draw_set_color(LUI_COLOR_FONT);
@@ -57,8 +56,10 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 		
 		//When mouse hover
 		if !has_focus && mouse_hover() {
-			if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x, y, self.width, self.height, c_white, 0.3);
+			if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x, y, self.width, self.height, merge_colour(self.blend_color, c_white, 0.5), 0.3);
 		}
+		
+		if LUI_SPRITE_BUTTON_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, self.width, self.height, _border_color, 1);
 	}
 	
 	static set_focus = function() {
@@ -76,12 +77,8 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 	
 	self.step = function() {
 		if mouse_hover() { 
-			self.button_color = c_ltgray;
 			if mouse_check_button_pressed(mb_left) {
 				self.is_pressed = true;
-			}
-			if mouse_check_button(mb_left) {
-				self.button_color = c_gray;
 			}
 			if mouse_check_button_released(mb_left) && self.is_pressed {
 				set_focus();
@@ -90,7 +87,6 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 			if mouse_check_button_pressed(mb_left) {
 				remove_focus();
 			}
-			self.button_color = LUI_COLOR_MAIN;
 			self.is_pressed = false;
 		}
 		

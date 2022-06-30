@@ -38,14 +38,14 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 	self.draw = function(x = self.x, y = self.y) {
 		//Bar
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, LUI_COLOR_MAIN, 1);
+		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, self.blend_color, 1);
 		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, LUI_COLOR_SLIDER, 1);
 		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
 		//Slider knob
 		var _knob_width = height;
 		var _knob_x = clamp(x + width * _bar_value - _knob_width div 2, x, x + width - _knob_width);
 		var _knob_extender = 1;
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, LUI_COLOR_MAIN, 1);
+		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.blend_color, 1);
 		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, LUI_COLOR_BORDER, 1);
 	}
 }
