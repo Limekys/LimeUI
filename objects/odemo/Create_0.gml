@@ -65,12 +65,15 @@ for (var i = 0; i < 12; ++i) {
 }
 
 my_panel_3.add_content([
-	new LuiTextbox(LUI_AUTO,LUI_AUTO, LUI_STRETCH,,"example", "hint", , )
+	new LuiTextbox(LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,"example", "hint", , )
 ]);
 
 scroll_panel = new LuiScrollPanel(LUI_AUTO, LUI_AUTO, , , );
+simple_sprite = new LuiSprite(LUI_AUTO, LUI_AUTO, 256, , sCar, 0, 1, c_white, 1);
 my_panel_4.add_content([
-	scroll_panel
+	scroll_panel,
+	simple_sprite,
+	new LuiSprite(LUI_AUTO, LUI_AUTO, 128, , sCarFlip, 0, 1, c_white, 1)
 ]);
 
 scroll_panel.add_content([

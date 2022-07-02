@@ -1,9 +1,9 @@
-function LuiText(x, y, width = undefined, height = 16, text = "sample text") : LuiBase() constructor {
+function LuiText(x, y, width, height, text = "sample text") : LuiBase() constructor {
 	self.name = "LuiText";
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = (width == undefined) ? string_width(text) : width;
-	self.height = height;
+	self.height = (height == undefined) ? max(self.min_height, string_height(text)) : height;
 	
 	self.value = text;
 	self.text_halign = fa_center;
