@@ -69,11 +69,11 @@ my_panel_3.add_content([
 ]);
 
 scroll_panel = new LuiScrollPanel(LUI_AUTO, LUI_AUTO, , , );
-simple_sprite = new LuiSprite(LUI_AUTO, LUI_AUTO, 256, , sCar, 0, 1, c_white, 1);
+simple_sprite = new LuiSprite(LUI_AUTO, LUI_AUTO, 200, 400, sCar, 0, 1, c_white, 1);
 my_panel_4.add_content([
 	scroll_panel,
 	simple_sprite,
-	new LuiSprite(LUI_AUTO, LUI_AUTO, 128, , sCarFlip, 0, 1, c_white, 1)
+	new LuiSprite(LUI_AUTO, LUI_AUTO, 600, 100, sCarFlip, 0, 1, c_white, 1)
 ]);
 
 scroll_panel.add_content([
