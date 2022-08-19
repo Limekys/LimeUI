@@ -1,7 +1,4 @@
 /// @description  README / SETUP
-
-#macro DT global.dt_steady
-
 // Global value which holds the managed delta time.
 // If you want, you can change the naming convention or use 'globalvar' instead of 'global.'
 // Be sure to also update the step event if you modify the naming convention.

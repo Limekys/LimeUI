@@ -75,7 +75,7 @@ function LuiScrollPanel(x, y, width = 256, height = 256, name = "LuiScrollPanel"
 				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -_contents_height + self.height - LUI_PADDING, 0);
 			}
 		}
-		self.scroll_offset_y = ReachTween(self.scroll_offset_y, self.scroll_target_offset_y, 2);
+		self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2);
 	}
 	
 	self.destroy_main = method(self, self.destroy);

@@ -16,6 +16,7 @@ function LuiBase() constructor {
 	self.callback = undefined;
 	self.contents = [];
 	self.blend_color = LUI_COLOR_MAIN;
+	self.marked_to_delete = false;
 	
 	//Focusing
 	self.has_focus = false;
@@ -34,6 +35,7 @@ function LuiBase() constructor {
         return self.contents[array_length(self.contents) - 1];
     };
 	
+	///@arg {array} elements
 	static add_content = function(elements) {
 		//convert to array if one
 		if !is_array(elements) elements = [elements];
@@ -167,6 +169,14 @@ function LuiBase() constructor {
 	static update = function(x_offset ,y_offset) {
 		self.x = self.pos_x + x_offset;
 		self.y = self.pos_y + y_offset;
+		
+		//Delete marked to delete elements
+		for (var i = array_length(contents); i > 0; --i) {
+		    if contents[i-1].marked_to_delete {
+				delete contents[i-1];
+				array_delete(contents, i-1, 1);
+			}
+		}
 	}
 	
 	//render
@@ -208,14 +218,13 @@ function LuiBase() constructor {
 	
 	//Clean up
 	self.destroy = function() {
-		if is_array(self.contents) {
+		if array_length(self.contents) > 0 {
 			for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			    var _element = self.contents[i];
 				_element.destroy();
 				self.contents[i] = undefined;
 			}
 		}
-		print("element destroyed", self.name);
-		delete _element;
+		self.marked_to_delete = true;
 	}
 }

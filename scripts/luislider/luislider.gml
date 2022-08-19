@@ -13,10 +13,10 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 	self.set_callback(callback);
 	
 	self.step = function() {
-		var x1 = x;
-	    var y1 = y;
-	    var x2 = x1 + self.width;
-	    var y2 = y1 + self.height;
+		var x1 = self.x;
+		var y1 = self.y;
+		var x2 = x1 + self.width;
+		var y2 = y1 + self.height;
 		
 		if mouse_check_button_pressed(mb_left) && mouse_hover() {
 			self.dragging = true;
@@ -41,6 +41,11 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, self.blend_color, 1);
 		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, LUI_COLOR_SLIDER, 1);
 		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
+		//Text value
+		draw_set_font(LUI_FONT_SLIDERS);
+		draw_set_halign(fa_center);
+		draw_set_valign(fa_middle);
+		draw_text(x + self.width div 2, y + self.height div 2, string(self.value));
 		//Slider knob
 		var _knob_width = height;
 		var _knob_x = clamp(x + width * _bar_value - _knob_width div 2, x, x + width - _knob_width);

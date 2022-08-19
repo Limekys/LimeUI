@@ -1,4 +1,4 @@
-function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel() constructor {
+function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(0,0) constructor {
 	self.name = "LuiMessage";
 	self.text = text;
 	self.width = width;

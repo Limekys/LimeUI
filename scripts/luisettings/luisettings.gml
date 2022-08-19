@@ -1,16 +1,17 @@
 //Info
-#macro LIMEUI_VERSION "2022.06.30"
+#macro LIMEUI_VERSION "2022.08.19"
 
 //Fonts
 #macro LUI_FONT_DEFAULT					fArial
 #macro LUI_FONT_BUTTONS					fArial
+#macro LUI_FONT_SLIDERS					fArial
 //Colors
 #macro LUI_COLOR_FONT					c_black
 #macro LUI_COLOR_FONT_HINT				c_gray
 #macro LUI_COLOR_MAIN					c_white
 #macro LUI_COLOR_BORDER					merge_colour(self.blend_color, c_black, 0.5)
-#macro LUI_COLOR_CHECKBOX_PIN			#45C952 //lite green
-#macro LUI_COLOR_SLIDER					#45C952 //lite green
+#macro LUI_COLOR_CHECKBOX_PIN			#45C952
+#macro LUI_COLOR_SLIDER					#45C952
 #macro LUI_COLOR_TEXTBOXBORDER			merge_colour(self.blend_color, c_dkgray, 0.5)
 //Sprites (set undefined if you do not want to draw it)
 #macro LUI_SPRITE_PANEL					sUI_panel
