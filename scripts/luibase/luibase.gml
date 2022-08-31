@@ -20,21 +20,25 @@ function LuiBase() constructor {
 	
 	//Focusing
 	self.has_focus = false;
+	///@func set_focus()
 	static set_focus = function() {
 		self.has_focus = true;
 		return self;
 	}
+	///@func remove_focus()
 	static remove_focus = function() {
 		self.has_focus = false;
 		return self;
 	}
 	
 	//Add content
+	///@func get_last()
 	static get_last = function() {
         if (array_length(self.contents) == 0) return undefined;
         return self.contents[array_length(self.contents) - 1];
     };
 	
+	///@func add_content(elements)
 	///@arg {array} elements
 	static add_content = function(elements) {
 		//convert to array if one
@@ -99,26 +103,32 @@ function LuiBase() constructor {
 	}
 	
 	//Setter and getter
+	///@func get()
 	static get = function() { return self.value; }
+	///@func set()
 	static set = function(value) { self.value = value; return self}
 	
 	//Alignment and sizes
+	///@func center()
 	static center = function() {
 		self.pos_x = root.width div 2 - self.width div 2;
 		self.pos_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	
+	///@func center_vertically()
 	static center_vertically = function() {
 		self.pos_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	
+	///@func center_horizontally()
 	static center_horizontally = function() {
 		self.pos_x = root.width div 2 - self.width div 2;
 		return self;
 	}
 	
+	///@func stretch_horizontally(padding)
 	static stretch_horizontally = function(padding) {
 		var _last = root.get_last();
 		if (_last) && (_last.pos_x + _last.width < root.width - self.min_width - padding) {
@@ -129,6 +139,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@func stretch_vertically(padding)
 	static stretch_vertically = function(padding) {
 		var _last = root.get_last();
 		if (_last) && (_last.pos_y + _last.height < root.height - self.min_height - padding) {
@@ -140,12 +151,14 @@ function LuiBase() constructor {
 	}
 	
 	//Design
+	///@func set_blend_color(color)
 	static set_blend_color = function(color) {
 		self.blend_color = color;
 		return self;
 	}
 	
 	//Interactivity
+	///@func set_callback(callback)
 	static set_callback = function(callback) {
 		if callback == undefined {
 			self.callback = function() {print(self.name)};
@@ -155,6 +168,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@func mouse_hover()
 	static mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
@@ -164,9 +178,11 @@ function LuiBase() constructor {
 	}
 	
 	//Update
-	self.step = function() { }
+	///@func step()
+	step = function() { }
 	
-	static update = function(x_offset ,y_offset) {
+	///@func update(x_offset, y_offset)
+	static update = function(x_offset, y_offset) {
 		self.x = self.pos_x + x_offset;
 		self.y = self.pos_y + y_offset;
 		
@@ -180,8 +196,10 @@ function LuiBase() constructor {
 	}
 	
 	//render
-	self.draw = function() { }
+	///@func draw()
+	draw = function() { }
 	
+	///@func render(base_x, base_y)
 	static render = function(base_x = 0, base_y = 0) {
 		if is_array(self.contents)
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
@@ -195,6 +213,7 @@ function LuiBase() constructor {
 		//self.render_debug(); //Not necessary since the first element will be the main container
 	}
 	
+	///@func render_debug()
 	static render_debug = function() {
 		if global.LUI_DEBUG_MODE == 1 {
 			draw_set_alpha(0.5);
@@ -211,13 +230,14 @@ function LuiBase() constructor {
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
-			draw_text(x, y, string(pos_x) + ":" + string(pos_y));
-			draw_text(x, y + 16, string(self.value));
+			draw_text(self.x, self.y, string(self.pos_x) + ":" + string(self.pos_y));
+			draw_text(self.x, self.y + 16, string(self.value));
 		}
 	}
 	
 	//Clean up
-	self.destroy = function() {
+	///@func destroy()
+	destroy = function() {
 		if array_length(self.contents) > 0 {
 			for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			    var _element = self.contents[i];

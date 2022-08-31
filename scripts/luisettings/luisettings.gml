@@ -1,5 +1,5 @@
 //Info
-#macro LIMEUI_VERSION "2022.08.19"
+#macro LIMEUI_VERSION "2022.08.30"
 
 //Fonts
 #macro LUI_FONT_DEFAULT					fArial

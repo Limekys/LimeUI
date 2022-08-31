@@ -1,4 +1,4 @@
-#macro USEFUL_FUNCTIONS_SCRIPT_VERSION "2022.07.26"
+#macro USEFUL_FUNCTIONS_SCRIPT_VERSION "2022.08.28"
 
 #macro DT global.dt_steady
 
@@ -344,11 +344,12 @@ function Range(value, old_min, old_max, new_min, new_max) {
 ///@arg {String} name
 ///@arg {Real} seconds
 ///@arg {Function} _function
-function IntervalUpdateFunction(name, seconds, _function) {
+///@arg {Real} start_from
+function IntervalUpdateFunction(name, seconds, _function, start_from = -1) {
 	var n1 = name + "_interval";
 	var n2 = name + "_interval_lenght";
 	if !variable_instance_exists(self, n1) self[$ n1] = 0;
-	if !variable_instance_exists(self, n2) self[$ n2] = seconds;
+	if !variable_instance_exists(self, n2) self[$ n2] = start_from == -1 ? seconds : start_from;
 	
 	self[$ n1] += DT;
 	if self[$ n1] >= self[$ n2] {
