@@ -37,7 +37,7 @@ my_panel.add_content([
 	new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 			var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
 		}).set_blend_color(merge_color(c_red, c_white, 0.5)),
-	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Exit", function() {game_end()})
+	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Exit", function() {game_end()})
 ]);
 
 my_panel_in_second_1 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 200);

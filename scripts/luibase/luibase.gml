@@ -6,6 +6,8 @@ function LuiBase() constructor {
 	self.y = 0;	//Actual y position on the screen
 	self.pos_x = 0;	//Offset x position this element relative parent
 	self.pos_y = 0;	//Offset y position this element relative parent
+	self.target_x = 0; //Target x position this element for animation
+	self.target_y = 0; //Target y position this element for animation
 	self.start_x = self.pos_x;
 	self.start_y = self.pos_y;
 	self.width = display_get_gui_width();
@@ -96,6 +98,10 @@ function LuiBase() constructor {
 			_element.start_x = _element.pos_x;
 			_element.start_y = _element.pos_y;
 			
+			//Position to target position
+			//_element.target_x = _element.pos_x;
+			//_element.target_y = _element.pos_y;
+			
 			//Add to content array
 			array_push(self.contents, _element);
 		}
@@ -111,20 +117,24 @@ function LuiBase() constructor {
 	//Alignment and sizes
 	///@func center()
 	static center = function() {
-		self.pos_x = root.width div 2 - self.width div 2;
-		self.pos_y = root.height div 2 - self.height div 2;
+		//self.pos_x = root.width div 2 - self.width div 2;
+		//self.pos_y = root.height div 2 - self.height div 2;
+		self.target_x = root.width div 2 - self.width div 2;
+		self.target_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	
 	///@func center_vertically()
 	static center_vertically = function() {
-		self.pos_y = root.height div 2 - self.height div 2;
+		//self.pos_y = root.height div 2 - self.height div 2;
+		self.target_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	
 	///@func center_horizontally()
 	static center_horizontally = function() {
-		self.pos_x = root.width div 2 - self.width div 2;
+		//self.pos_x = root.width div 2 - self.width div 2;
+		self.target_x = root.width div 2 - self.width div 2;
 		return self;
 	}
 	
@@ -183,6 +193,10 @@ function LuiBase() constructor {
 	
 	///@func update(x_offset, y_offset)
 	static update = function(x_offset, y_offset) {
+		
+		//Position
+		//self.pos_x = SmoothApproach(self.pos_x, self.target_x, 2);
+		//self.pos_y = SmoothApproach(self.pos_y, self.target_y, 2);
 		self.x = self.pos_x + x_offset;
 		self.y = self.pos_y + y_offset;
 		

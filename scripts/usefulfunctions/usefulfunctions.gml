@@ -1,4 +1,5 @@
-#macro USEFUL_FUNCTIONS_SCRIPT_VERSION "2022.08.28"
+//Useful functions by Limekys (This script has MIT Licence)
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2022.12.03"
 
 #macro DT global.dt_steady
 
@@ -16,8 +17,8 @@ function ApproachDelta(_value, _dest, _amount) {
 ///@arg {Real} threshold
 ///@returns {Real}
 function SmoothApproach(value, destination, smoothness, threshold = 0.01) {
-	var difference = destination - value;
-    if (abs(difference) < threshold) return destination;
+	var _difference = destination - value;
+    if (abs(_difference) < threshold) return destination;
 	return lerp(value, destination, 1/smoothness);
 }
 
@@ -27,13 +28,14 @@ function SmoothApproach(value, destination, smoothness, threshold = 0.01) {
 ///@arg {Real} threshold
 ///@returns {Real}
 function SmoothApproachDelta(value, destination, smoothness, threshold = 0.01) {
-	var difference = destination - value;
-    if (abs(difference) < threshold) return destination;
+	var _difference = destination - value;
+    if (abs(_difference) < threshold) return destination;
 	return lerp(value, destination, 1/smoothness*DT*60); // 1/_smoothness*DT*60 // 1 - power(1 / _smoothness, DT)
 }
 
-function Chance(_value) {
-	return _value>random(1);
+///@func Chance(value)
+function Chance(value) {
+	return value > random(1);
 }
 
 ///@desc Wave(from, to, duration, offset)
@@ -44,12 +46,12 @@ function Chance(_value) {
 /// Or here is a fun one! Make an object be all squishy!! ^u^
 /// image_xscale = Wave(0.5, 2.0, 1.0, 0.0)
 /// image_yscale = Wave(2.0, 0.5, 1.0, 0.0)
-function Wave(_from, _dest, _duration, _offset) {
-	var a4 = (_dest - _from) * 0.5;
-	return _from + a4 + sin((((current_time * 0.001) + _duration * _offset) / _duration) * (pi*2)) * a4;
+function Wave(value, destination, duration, offset) {
+	var _a = (destination - value) * 0.5;
+	return value + _a + sin((((current_time * 0.001) + duration * offset) / duration) * (pi*2)) * _a;
 }
 
-function DrawSetText(_color, _font, _haling, _valing, _alpha) {
+function DrawSetText(_color = undefined, _font = undefined, _haling = undefined, _valing = undefined, _alpha = undefined) {
 	if _color != undefined draw_set_colour(_color);
 	if _font != undefined draw_set_font(_font);
 	if _haling != undefined draw_set_halign(_haling);
@@ -65,13 +67,12 @@ function DrawSetText(_color, _font, _haling, _valing, _alpha) {
 ///outcol: Colour of outline (main text draws with regular set colour)
 ///outfidelity: Fidelity of outline (recommended: 4 for small, 8 for medium, 16 for larger. Watch your performance!)
 function DrawTextOutline(_x, _y, _string, _outwidth, _outcolor, _outfidelity) {
-	var dto_dcol=draw_get_color();
+	var _dto_dcol = draw_get_color();
 	draw_set_color(_outcolor);
-	for(var dto_i=45; dto_i<405; dto_i+=360/_outfidelity)
-	{
-	    draw_text(_x+lengthdir_x(_outwidth,dto_i),_y+lengthdir_y(_outwidth,dto_i),_string);
+	for(var dto_i = 45; dto_i < 405; dto_i += 360/_outfidelity) {
+	    draw_text(_x + lengthdir_x(_outwidth, dto_i), _y + lengthdir_y(_outwidth, dto_i), _string);
 	}
-	draw_set_color(dto_dcol);
+	draw_set_color(_dto_dcol);
 	draw_text(_x,_y,_string);
 }
 
@@ -84,13 +85,12 @@ function DrawTextOutline(_x, _y, _string, _outwidth, _outcolor, _outfidelity) {
 ///outcol: Colour of outline (main text draws with regular set colour)
 ///outfidelity: Fidelity of outline (recommended: 4 for small, 8 for medium, 16 for larger. Watch your performance!)
 function DrawTextOutlineTransformed(_x, _y, _string, _xscale, _yscale, _outwidth, _outcolor, _outfidelity) {
-	var dto_dcol=draw_get_color();
+	var _dto_dcol = draw_get_color();
 	draw_set_color(_outcolor);
-	for(var dto_i=45; dto_i<405; dto_i+=360/_outfidelity)
-	{
-	    draw_text_transformed(_x+lengthdir_x(_outwidth,dto_i),_y+lengthdir_y(_outwidth,dto_i),_string,_xscale,_yscale,0);
+	for(var dto_i = 45; dto_i < 405; dto_i += 360/_outfidelity) {
+	    draw_text_transformed(_x + lengthdir_x(_outwidth, dto_i), _y + lengthdir_y(_outwidth, dto_i), _string, _xscale, _yscale, 0);
 	}
-	draw_set_color(dto_dcol);
+	draw_set_color(_dto_dcol);
 	draw_text_transformed(_x,_y,_string,_xscale,_yscale,0);
 }
 
@@ -105,16 +105,16 @@ function DrawTextShadow(_x, _y, _string) {
 ///@desc example: DrawTextSoftShadow(10,10,"Hello World!", font_name, c_white, c_black, 0,5,6,0.01, );
 function DrawTextSoftShadow(_x, _y, _string, _font, _offset_x, _offset_y, _blurfactor, _shadow_colour, _shadow_strenght, _text_colour) {
 	draw_set_font(_font);
-	var shadow_strenght_calc = _shadow_strenght/(_blurfactor * _blurfactor)
-	draw_set_alpha(shadow_strenght_calc);
+	var _shadow_strenght_calc = _shadow_strenght/(_blurfactor * _blurfactor)
+	draw_set_alpha(_shadow_strenght_calc);
 	draw_set_colour(_shadow_colour);
 	
-	var bx = _blurfactor/2;
-	var by = _blurfactor/2;
+	var _bx = _blurfactor/2;
+	var _by = _blurfactor/2;
 
 	for (var ix = 0; ix < _blurfactor; ix++) {
 	    for (var iy = 0; iy < _blurfactor; iy++) {
-	        draw_text((_x-bx) +_offset_x + ix, (_y-by) +_offset_y + iy, _string);
+	        draw_text((_x-_bx) +_offset_x + ix, (_y-_by) +_offset_y + iy, _string);
 	    }
 	}
 	draw_set_alpha(1);
@@ -139,12 +139,12 @@ function DrawRectangleWidth(x1, y1, x2, y2, _width, _inside, _outline) {
 ///StringZeroes(mins,2)+":"+StringZeroes(secs,2) might return "21:02"
 ///Created by Andrew McCluskey, use it freely
 function StringZeroes(_string, _nubmer) {
-	var str = "";
+	var _str = "";
 	if string_length(string(_string)) < _nubmer {
-	    repeat(_nubmer-string_length(string(_string))) str += "0";
+	    repeat(_nubmer-string_length(string(_string))) _str += "0";
 	}
-	str += string(_string);
-	return str;
+	_str += string(_string);
+	return _str;
 }
 
 ///@desc DrawCircleCurve(x,y,r,bones,ang,angadd,width,outline)
@@ -355,5 +355,20 @@ function IntervalUpdateFunction(name, seconds, _function, start_from = -1) {
 	if self[$ n1] >= self[$ n2] {
 		self[$ n1] -= self[$ n2];
 		_function();
+	}
+}
+
+///@arg {Array} _array
+function array_shuffle(_array) {
+	var _size = array_length(_array), i, j, k;
+	for (i = 0; i < _size; i++)
+	{
+	    j = irandom_range(i, _size - 1);
+	    if (i != j)
+	    {
+	        k = _array[i];
+	        _array[i] = _array[j];
+	        _array[j] = k;
+	    }
 	}
 }
