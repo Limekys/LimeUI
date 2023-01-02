@@ -2,9 +2,9 @@
 ///@desc Style for UI
 function LuiStyle(style) constructor {
 	//Fonts
-	font_default = style[$ "font_default"] ?? fArial;
-	font_buttons = style[$ "font_buttons"] ?? fArial;
-	font_sliders = style[$ "font_sliders"] ?? fArial;
+	font_default = style[$ "font_default"] ?? undefined;
+	font_buttons = style[$ "font_buttons"] ?? undefined;
+	font_sliders = style[$ "font_sliders"] ?? undefined;
 	//Colors
 	color_font = style[$ "color_font"] ?? c_black;
 	color_font_hint = style[$ "color_font_hint"] ?? c_gray;

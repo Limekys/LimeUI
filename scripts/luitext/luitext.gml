@@ -10,7 +10,7 @@ function LuiText(x, y, width, height, text = "sample text") : LuiBase() construc
 	self.text_valign = fa_middle;
 	
 	self.draw = function(x = self.x, y = self.y) {
-		draw_set_font(self.style.font_default);
+		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 		draw_set_color(self.style.color_font);
 		draw_set_alpha(1);
 		draw_set_halign(self.text_halign);

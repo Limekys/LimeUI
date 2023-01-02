@@ -5,7 +5,7 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	draw_set_font(self.style.font_default);
+	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 	self.min_width = string_width(value);
 	
 	self.hint = hint;
@@ -25,11 +25,11 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 		var _border_color = has_focus ? self.style.color_border : self.style.color_textbox_border;
 		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, self.width, self.height, self.style.color_main, 1);
 		//Set text
+		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 		draw_set_alpha(1);
 		draw_set_color(self.style.color_font);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_middle);
-		draw_set_font(self.style.font_default);
 		var _margin = 6;
 		var _txt_x = x + _margin;
 		var _txt_y = y + self.height / 2;

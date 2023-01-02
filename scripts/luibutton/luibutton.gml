@@ -1,6 +1,6 @@
 function LuiButton(x, y, width, height = 32, text = "button", callback = undefined) : LuiBase() constructor {
 	
-	draw_set_font(self.style.font_buttons); //Need to be called for right calculations
+	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
 	
 	self.name = "LuiButton";
 	self.text = text;
@@ -34,11 +34,11 @@ function LuiButton(x, y, width, height = 32, text = "button", callback = undefin
 		if self.style.sprite_button != undefined draw_sprite_stretched_ext(self.style.sprite_button, 0, x, y, width, height, self.button_color, 1);
 		
 		//Text
+		if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
 		draw_set_alpha(1);
 		if self.deactivated draw_set_color(c_dkgray) else draw_set_color(self.style.color_font);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		draw_set_font(self.style.font_buttons);
 		var _txt_x = x + self.width / 2;
 		var _txt_y = y + self.height / 2;
 		draw_text(_txt_x, _txt_y, self.text);

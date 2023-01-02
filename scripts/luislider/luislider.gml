@@ -50,7 +50,7 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
 		//Text value
 		var _value = render_mode == 0 ? string(self.value) : string(round(self.value));
-		draw_set_font(self.style.font_sliders);
+		if !is_undefined(self.style.font_sliders) draw_set_font(self.style.font_sliders);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_text(x + self.width div 2, y + self.height div 2, _value);
