@@ -96,7 +96,7 @@ my_panel_in_second_1.add_content([
 
 my_panel_in_second_2.add_content(new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Panel with sprites buttons"));
 for (var i = 0; i < 12; ++i) {
-    var _button = new LuiSpriteButton(LUI_AUTO, LUI_AUTO, sLogoDemo, 0, 1, choose(c_red, c_lime, c_aqua), );
+    var _button = new LuiSpriteButton(LUI_AUTO, LUI_AUTO, sLogoDemo, 0, 1, );
 	my_panel_in_second_2.add_content(_button);
 	_button.style.color_main = choose(c_red, c_lime, c_aqua);
 }
@@ -106,11 +106,11 @@ my_panel_3.add_content([
 ]);
 
 scroll_panel = new LuiScrollPanel(LUI_AUTO, LUI_AUTO, , , );
-simple_sprite = new LuiSprite(LUI_AUTO, LUI_AUTO, 200, 400, sCar, 0, 1, c_white, 1);
+simple_sprite = new LuiSprite(LUI_AUTO, LUI_AUTO, 200, 400, sCar, 0, 1, 1);
 my_panel_4.add_content([
 	scroll_panel,
 	simple_sprite,
-	new LuiSprite(LUI_AUTO, LUI_AUTO, 600, 100, sCarFlip, 0, 1, c_white, 1)
+	new LuiSprite(LUI_AUTO, LUI_AUTO, 600, 100, sCarFlip, 0, 1, 1)
 ]);
 
 scroll_panel.add_content([

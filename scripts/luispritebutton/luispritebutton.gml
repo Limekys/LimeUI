@@ -1,4 +1,4 @@
-function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, blend_color = c_white, callback = undefined) : LuiBase() constructor {
+function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;
@@ -6,7 +6,6 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, blend_color = c_whi
 	self.sprite = sprite;
 	self.index = index;
 	self.scale = scale;
-	self.style.color_main = blend_color;
 	
 	self.width = sprite_get_width(sprite) * self.scale;
 	self.height = sprite_get_height(sprite) * self.scale;

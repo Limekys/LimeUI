@@ -1,4 +1,4 @@
-function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, blend_color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;
@@ -8,7 +8,6 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, blend_colo
 	self.sprite_real_height = sprite_get_height(self.value);
 	self.index = index;
 	self.scale = scale;
-	self.style.color_main = blend_color;
 	self.alpha = alpha;
 	self.maintain_aspect = maintain_aspect;
 	self.aspect = self.sprite_real_width / self.sprite_real_height;
