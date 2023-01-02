@@ -6,12 +6,12 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, blend_color = c_whi
 	self.sprite = sprite;
 	self.index = index;
 	self.scale = scale;
-	self.blend_color = blend_color;
+	self.style.color_main = blend_color;
 	
 	self.width = sprite_get_width(sprite) * self.scale;
 	self.height = sprite_get_height(sprite) * self.scale;
 	
-	self.button_color = self.blend_color;
+	self.button_color = self.style.color_main;
 	self.is_pressed = false;
 	
 	if callback == undefined {
@@ -35,10 +35,10 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, blend_color = c_whi
 			}
 			if mouse_check_button_released(mb_left) && self.is_pressed {
 				self.callback();
-				if LUI_CLICK_SOUND != undefined audio_play_sound(LUI_CLICK_SOUND, 1, false);
+				if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 			}
 		} else {
-			self.button_color = self.blend_color;
+			self.button_color = self.style.color_main;
 			self.is_pressed = false;
 		}
 		

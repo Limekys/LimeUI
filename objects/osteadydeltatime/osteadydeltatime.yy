@@ -1,8 +1,8 @@
 {
-  "spriteId": {
-    "name": "spr_icon_timer",
-    "path": "sprites/spr_icon_timer/spr_icon_timer.yy",
-  },
+  "resourceType": "GMObject",
+  "resourceVersion": "1.0",
+  "name": "oSteadyDeltaTime",
+  "spriteId": null,
   "solid": false,
   "visible": false,
   "managed": true,
@@ -22,18 +22,14 @@
   "physicsKinematic": false,
   "physicsShapePoints": [],
   "eventList": [
-    {"isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
-    {"isDnD":false,"eventNum":1,"eventType":3,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
-    {"isDnD":false,"eventNum":75,"eventType":8,"collisionObjectId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMEvent",},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":0,"eventType":0,"collisionObjectId":null,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":1,"eventType":3,"collisionObjectId":null,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","isDnD":false,"eventNum":75,"eventType":8,"collisionObjectId":null,},
   ],
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "LimeUI",
-    "path": "LimeUI.yyp",
+    "name": "DEMO",
+    "path": "folders/DEMO.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "oSteadyDeltaTime",
-  "tags": [],
-  "resourceType": "GMObject",
 }

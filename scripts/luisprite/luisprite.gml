@@ -8,7 +8,7 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, blend_colo
 	self.sprite_real_height = sprite_get_height(self.value);
 	self.index = index;
 	self.scale = scale;
-	self.blend_color = blend_color;
+	self.style.color_main = blend_color;
 	self.alpha = alpha;
 	self.maintain_aspect = maintain_aspect;
 	self.aspect = self.sprite_real_width / self.sprite_real_height;
@@ -37,6 +37,6 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, blend_colo
 		}
 		draw_sprite_stretched_ext(self.value, self.index, 
 									x + self.width/2 - _width/2, y + self.height/2 - _height/2, _width, _height, 
-									self.blend_color, self.alpha);
+									self.style.color_main, self.alpha);
 	}
 }

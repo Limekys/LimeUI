@@ -8,7 +8,7 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 	
 	self.add_content([
 		new LuiText(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , self.text),
-		new LuiButton(LUI_AUTO, self.height - 32 - LUI_PADDING, LUI_STRETCH, , "Close", function(){
+		new LuiButton(LUI_AUTO, self.height - 32 - self.style.padding, LUI_STRETCH, , "Close", function(){
 			LUI_OVERLAY.close();
 		})
 	]);

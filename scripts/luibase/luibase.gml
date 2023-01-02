@@ -1,6 +1,7 @@
-function LuiBase() constructor {
+function LuiBase(style = {}) constructor {
 	self.name = "-unnamed-";
 	self.value = undefined;
+	self.style = new LuiStyle(style);
 	
 	self.x = 0;	//Actual x position on the screen
 	self.y = 0;	//Actual y position on the screen
@@ -17,7 +18,6 @@ function LuiBase() constructor {
 	self.root = self;
 	self.callback = undefined;
 	self.contents = [];
-	self.blend_color = LUI_COLOR_MAIN;
 	self.marked_to_delete = false;
 	
 	//Focusing
@@ -53,9 +53,12 @@ function LuiBase() constructor {
 		    var _element = elements[i];
 			_element.root = self;
 			
+			_element.style = new LuiStyle(self.style);
+
+			
 			//Paddings
-			var _x_padding = LUI_PADDING;
-			var _y_padding = LUI_PADDING;
+			var _x_padding = self.style.padding;
+			var _y_padding = self.style.padding;
 			if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_PADDING) _x_padding = 0;
 			if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_PADDING) _y_padding = 0;
 			
@@ -157,13 +160,6 @@ function LuiBase() constructor {
 		} else {
 			self.height = root.height - padding*2;
 		}
-		return self;
-	}
-	
-	//Design
-	///@func set_blend_color(color)
-	static set_blend_color = function(color) {
-		self.blend_color = color;
 		return self;
 	}
 	

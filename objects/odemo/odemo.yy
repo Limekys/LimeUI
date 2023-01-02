@@ -32,7 +32,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "LimeUI",
-    "path": "LimeUI.yyp",
+    "name": "DEMO",
+    "path": "folders/DEMO.yy",
   },
 }

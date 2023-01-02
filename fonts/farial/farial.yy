@@ -1,4 +1,7 @@
 {
+  "resourceType": "GMFont",
+  "resourceVersion": "1.0",
+  "name": "fArial",
   "hinting": 0,
   "glyphOperations": 0,
   "interpreter": 0,
@@ -340,10 +343,6 @@
   "maintainGms1Font": false,
   "parent": {
     "name": "Fonts",
-    "path": "folders/Graphics/Fonts.yy",
+    "path": "folders/DEMO/Fonts.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "fArial",
-  "tags": [],
-  "resourceType": "GMFont",
 }

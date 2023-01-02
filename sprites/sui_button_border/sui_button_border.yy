@@ -92,7 +92,7 @@
     "resourceType": "GMNineSliceData",
   },
   "parent": {
-    "name": "Graphics",
-    "path": "folders/LimeUI/Graphics.yy",
+    "name": "Sprites",
+    "path": "folders/DEMO/Sprites.yy",
   },
 }

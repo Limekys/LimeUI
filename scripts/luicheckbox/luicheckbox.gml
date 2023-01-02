@@ -6,7 +6,7 @@ function LuiCheckbox(x, y, width = 24, height = 24, value = false, callback = un
 	self.width = width;
 	self.height = height;
 	
-	self.checkbox_color = self.blend_color;
+	self.checkbox_color = self.style.color_main;
 	self.can_pressed = false;
 	
 	if callback == undefined {
@@ -16,28 +16,28 @@ function LuiCheckbox(x, y, width = 24, height = 24, value = false, callback = un
 	}
 	
 	self.draw = function(x = self.x, y = self.y) {
-		var _color = self.value ? LUI_COLOR_CHECKBOX_PIN : self.checkbox_color;
+		var _color = self.value ? self.style.color_checkbox_pin : self.checkbox_color;
 		var _pin_margin = 6;
-		if LUI_SPRITE_BUTTON != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON, 0, x + _pin_margin, y + _pin_margin, width - _pin_margin*2, height - _pin_margin*2, _color, 1);
-		if LUI_SPRITE_BUTTON_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_BUTTON_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
+		if self.style.sprite_button != undefined draw_sprite_stretched_ext(self.style.sprite_button, 0, x + _pin_margin, y + _pin_margin, width - _pin_margin*2, height - _pin_margin*2, _color, 1);
+		if self.style.sprite_button_border != undefined draw_sprite_stretched_ext(self.style.sprite_button_border, 0, x, y, width, height, self.style.color_border, 1);
 	}
 	
 	self.step = function() {
 		if mouse_hover() { 
-			self.checkbox_color = merge_colour(self.blend_color, c_gray, 0.5);
+			self.checkbox_color = merge_colour(self.style.color_main, c_gray, 0.5);
 			if mouse_check_button_pressed(mb_left) {
 				self.can_pressed = true;
 			}
 			if mouse_check_button(mb_left) {
-				self.checkbox_color = merge_colour(self.blend_color, c_black, 0.5);
+				self.checkbox_color = merge_colour(self.style.color_main, c_black, 0.5);
 			}
 			if mouse_check_button_released(mb_left) && self.can_pressed {
 				self.set(!self.get());
 				self.callback();
-				if LUI_CLICK_SOUND != undefined audio_play_sound(LUI_CLICK_SOUND, 1, false);
+				if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 			}
 		} else {
-			self.checkbox_color = self.blend_color;
+			self.checkbox_color = self.style.color_main;
 			self.can_pressed = false;
 		}
 		

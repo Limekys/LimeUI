@@ -6,7 +6,7 @@ function LuiPanel(x, y, width = 256, height = 256, name = "LuiPanel") : LuiBase(
 	self.height = height;
 	
 	self.draw = function(x = self.x, y = self.y) {
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, self.blend_color, 1);
-		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
+		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
+		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
 	}
 }

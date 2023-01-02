@@ -1,7 +1,40 @@
 show_debug_overlay(true);
 randomize();
 
-my_ui = new LuiBase();
+var _demo_style = {
+	//Fonts
+	font_default : fArial,
+	font_buttons : fArial,
+	font_sliders : fArial,
+	//Colors
+	color_font : c_black,
+	color_font_hint : c_gray,
+	color_main : c_white,
+	color_border : merge_colour(c_white, c_black, 0.5),
+	color_button : c_white,
+	color_button_border : merge_colour(c_white, c_black, 0.5),
+	color_checkbox_pin : #45C952,
+	color_slider : #45C952,
+	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
+	//Sprites
+	sprite_panel : sUI_panel,
+	sprite_panel_border : sUI_panel_border,
+	sprite_button : sUI_button,
+	sprite_button_border : sUI_button_border,
+	sprite_slider_knob : sUI_slider_knob,
+	sprite_slider_knob_border : sUI_slider_knob_border,
+	//Sounds
+	sound_click : sndBasicClick,
+	//Settings
+	padding : 16,
+	scroll_step : 32,
+	textbox_cursor : "|",
+	textbox_password : "•"
+}
+
+LUI_OVERLAY.style = new LuiStyle(_demo_style);
+
+my_ui = new LuiBase(_demo_style);
 
 my_panel = new LuiPanel(LUI_AUTO, LUI_AUTO, 512, 512);
 my_panel_2 = new LuiPanel(LUI_AUTO, LUI_AUTO, 512, 512);
@@ -36,7 +69,7 @@ my_panel.add_content([
 	
 	new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 			var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
-		}).set_blend_color(merge_color(c_red, c_white, 0.5)),
+		}),
 	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Exit", function() {game_end()})
 ]);
 
@@ -63,7 +96,9 @@ my_panel_in_second_1.add_content([
 
 my_panel_in_second_2.add_content(new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Panel with sprites buttons"));
 for (var i = 0; i < 12; ++i) {
-    my_panel_in_second_2.add_content(new LuiSpriteButton(LUI_AUTO, LUI_AUTO, sLogoDemo, 0, 1, choose(c_white, c_lime, c_aqua), ));
+    var _button = new LuiSpriteButton(LUI_AUTO, LUI_AUTO, sLogoDemo, 0, 1, choose(c_red, c_lime, c_aqua), );
+	my_panel_in_second_2.add_content(_button);
+	_button.style.color_main = choose(c_red, c_lime, c_aqua);
 }
 
 my_panel_3.add_content([

@@ -45,12 +45,12 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 	self.draw = function(x = self.x, y = self.y) {
 		//Bar
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width, height, self.blend_color, 1);
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, LUI_COLOR_SLIDER, 1);
-		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
+		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
+		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width * _bar_value, height, self.style.color_slider, 1);
+		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
 		//Text value
 		var _value = render_mode == 0 ? string(self.value) : string(round(self.value));
-		draw_set_font(LUI_FONT_SLIDERS);
+		draw_set_font(self.style.font_sliders);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		draw_text(x + self.width div 2, y + self.height div 2, _value);
@@ -58,7 +58,7 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 		var _knob_width = height;
 		var _knob_x = clamp(x + width * _bar_value - _knob_width div 2, x, x + width - _knob_width);
 		var _knob_extender = 1;
-		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.blend_color, 1);
-		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, LUI_COLOR_BORDER, 1);
+		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.style.color_main, 1);
+		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.style.color_border, 1);
 	}
 }
