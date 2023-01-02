@@ -52,6 +52,10 @@ function _LuiGetOverlay() {
 				self.baseRender();
 			}
 		}
+		self.close = function() {
+			contents = [];
+			return self;
+		}
 	}
 	static inst = new LuiOverlay();
     return inst;

@@ -64,9 +64,9 @@ function LuiBase() constructor {
 			//Width
 			if (is_ptr(_element.width) && _element.width == LUI_STRETCH)
 			_element.stretch_horizontally(_x_padding);
+			
 			//Move X
 			if is_ptr(_element.pos_x) {
-				
 				//Move
 				if (_last) {
 					//For next element
@@ -84,9 +84,9 @@ function LuiBase() constructor {
 			//Height
 			if (is_ptr(_element.height) && _element.height == LUI_STRETCH)
 			_element.stretch_vertically(_x_padding);
+			
 			//Move Y
 			if is_ptr(_element.pos_y) {
-				
 				if (_last) {
 					_element.pos_y = _last.pos_y;
 				} else {
@@ -117,8 +117,8 @@ function LuiBase() constructor {
 	//Alignment and sizes
 	///@func center()
 	static center = function() {
-		//self.pos_x = root.width div 2 - self.width div 2;
-		//self.pos_y = root.height div 2 - self.height div 2;
+		self.pos_x = root.width div 2 - self.width div 2;
+		self.pos_y = root.height div 2 - self.height div 2;
 		self.target_x = root.width div 2 - self.width div 2;
 		self.target_y = root.height div 2 - self.height div 2;
 		return self;
@@ -126,14 +126,14 @@ function LuiBase() constructor {
 	
 	///@func center_vertically()
 	static center_vertically = function() {
-		//self.pos_y = root.height div 2 - self.height div 2;
+		self.pos_y = root.height div 2 - self.height div 2;
 		self.target_y = root.height div 2 - self.height div 2;
 		return self;
 	}
 	
 	///@func center_horizontally()
 	static center_horizontally = function() {
-		//self.pos_x = root.width div 2 - self.width div 2;
+		self.pos_x = root.width div 2 - self.width div 2;
 		self.target_x = root.width div 2 - self.width div 2;
 		return self;
 	}

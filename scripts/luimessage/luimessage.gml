@@ -1,4 +1,4 @@
-function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(0,0) constructor {
+function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(0, 0) constructor {
 	self.name = "LuiMessage";
 	self.text = text;
 	self.width = width;
@@ -8,9 +8,8 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 	
 	self.add_content([
 		new LuiText(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , self.text),
-		new LuiButton(LUI_AUTO, self.height - 32 - LUI_PADDING, LUI_STRETCH, , "OK", function(){
-			//self.root.destroy();
-			LUI_OVERLAY.contents = [];
+		new LuiButton(LUI_AUTO, self.height - 32 - LUI_PADDING, LUI_STRETCH, , "Close", function(){
+			LUI_OVERLAY.close();
 		})
 	]);
 	

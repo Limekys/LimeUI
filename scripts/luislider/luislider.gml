@@ -12,6 +12,13 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 	self.value = value;
 	self.set_callback(callback);
 	
+	self.render_mode = 1;
+	///@desc 0 - raw value, 1 - integer only
+	set_render_mode = function(mode) {
+		render_mode = mode;
+		return self;
+	}
+	
 	self.step = function() {
 		var x1 = self.x;
 		var y1 = self.y;
@@ -42,10 +49,11 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 		if LUI_SPRITE_PANEL != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL, 0, x, y, width * _bar_value, height, LUI_COLOR_SLIDER, 1);
 		if LUI_SPRITE_PANEL_BORDER != undefined draw_sprite_stretched_ext(LUI_SPRITE_PANEL_BORDER, 0, x, y, width, height, LUI_COLOR_BORDER, 1);
 		//Text value
+		var _value = render_mode == 0 ? string(self.value) : string(round(self.value));
 		draw_set_font(LUI_FONT_SLIDERS);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		draw_text(x + self.width div 2, y + self.height div 2, string(self.value));
+		draw_text(x + self.width div 2, y + self.height div 2, _value);
 		//Slider knob
 		var _knob_width = height;
 		var _knob_x = clamp(x + width * _bar_value - _knob_width div 2, x, x + width - _knob_width);
