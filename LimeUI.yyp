@@ -57,9 +57,9 @@
   ],
   "Folders": [
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DEMO","folderPath":"folders/DEMO.yy","order":1,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/DEMO/Sprites.yy","order":2,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Fonts","folderPath":"folders/DEMO/Fonts.yy","order":1,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sounds","folderPath":"folders/DEMO/Sounds.yy","order":0,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/DEMO/Sprites.yy","order":2,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LimeUI","folderPath":"folders/LimeUI.yy","order":0,},
   ],
   "AudioGroups": [

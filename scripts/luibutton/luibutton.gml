@@ -10,7 +10,7 @@ function LuiButton(x, y, width, height = 32, text = "button", callback = undefin
 	self.height = height;
 	self.min_width = string_width(text);
 	
-	self.button_color = self.style.color_button;
+	self.button_color = self.style.color_main;
 	self.is_pressed = false;
 	self.deactivated = false;
 	
@@ -44,7 +44,7 @@ function LuiButton(x, y, width, height = 32, text = "button", callback = undefin
 		draw_text(_txt_x, _txt_y, self.text);
 		
 		//Border
-		if self.style.sprite_button_border != undefined draw_sprite_stretched_ext(self.style.sprite_button_border, 0, x, y, width, height, self.style.color_button_border, 1);
+		if self.style.sprite_button_border != undefined draw_sprite_stretched_ext(self.style.sprite_button_border, 0, x, y, width, height, self.style.color_border, 1);
 	}
 	
 	self.step = function() {
@@ -52,19 +52,19 @@ function LuiButton(x, y, width, height = 32, text = "button", callback = undefin
 			self.button_color = c_gray;
 		} else {
 			if mouse_hover() { 
-				self.button_color = merge_colour(self.style.color_button, c_gray, 0.5);
+				self.button_color = merge_colour(self.style.color_main, c_gray, 0.5);
 				if mouse_check_button_pressed(mb_left) {
 					self.is_pressed = true;
 				}
 				if mouse_check_button(mb_left) {
-					self.button_color = merge_colour(self.style.color_button, c_black, 0.5);
+					self.button_color = merge_colour(self.style.color_main, c_black, 0.5);
 				}
 				if mouse_check_button_released(mb_left) && self.is_pressed {
 					self.callback();
 					if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 				}
 			} else {
-				self.button_color = self.style.color_button;
+				self.button_color = self.style.color_main;
 				self.is_pressed = false;
 			}
 		}

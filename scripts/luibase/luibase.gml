@@ -19,6 +19,7 @@ function LuiBase(style = {}) constructor {
 	self.callback = undefined;
 	self.contents = [];
 	self.marked_to_delete = false;
+	self.is_mouse_hovered = false;
 	
 	//Focusing
 	self.has_focus = false;
@@ -163,6 +164,14 @@ function LuiBase(style = {}) constructor {
 		return self;
 	}
 	
+	//Design
+	///@func set_color(main, border)
+	set_color = function(main = undefined, border = undefined) {
+		if !is_undefined(main) self.style.color_main = main;
+		if !is_undefined(border) self.style.color_border = border;
+		return self;
+	}
+	
 	//Interactivity
 	///@func set_callback(callback)
 	static set_callback = function(callback) {
@@ -178,9 +187,9 @@ function LuiBase(style = {}) constructor {
 	static mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-		var _on_element = point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
+		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
 		var _on_root = point_in_rectangle(_mouse_x, _mouse_y, self.root.x, self.root.y, self.root.x + self.root.width - 1, self.root.y + self.root.height - 1);
-		return _on_element && _on_root;
+		return _on_this && _on_root;
 	}
 	
 	//Update
@@ -196,16 +205,17 @@ function LuiBase(style = {}) constructor {
 		self.x = self.pos_x + x_offset;
 		self.y = self.pos_y + y_offset;
 		
-		//Delete marked to delete elements
+		//Update all elements
 		for (var i = array_length(contents); i > 0; --i) {
-		    if contents[i-1].marked_to_delete {
+			//Delete marked to delete elements
+			if contents[i-1].marked_to_delete {
 				delete contents[i-1];
 				array_delete(contents, i-1, 1);
 			}
 		}
 	}
 	
-	//render
+	//Render
 	///@func draw()
 	draw = function() { }
 	
@@ -214,6 +224,7 @@ function LuiBase(style = {}) constructor {
 		if is_array(self.contents)
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			var _element = self.contents[i];
+			//Render
 			_element.update(base_x + self.pos_x, base_y + self.pos_y);
 			_element.step();
 			_element.draw();
@@ -228,7 +239,7 @@ function LuiBase(style = {}) constructor {
 		if global.LUI_DEBUG_MODE == 1 {
 			draw_set_alpha(0.5);
 			
-			if self.mouse_hover() {
+			if mouse_hover() {
 				draw_set_color(c_blue);
 			} else {
 				draw_set_color(c_red);
@@ -241,7 +252,7 @@ function LuiBase(style = {}) constructor {
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
 			draw_text(self.x, self.y, string(self.pos_x) + ":" + string(self.pos_y));
-			draw_text(self.x, self.y + 16, string(self.value));
+			draw_text(self.x, self.y + 16, string(self.value) + ": " + string(self.value));
 		}
 	}
 	

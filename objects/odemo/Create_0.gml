@@ -1,7 +1,7 @@
 show_debug_overlay(true);
 randomize();
 
-var _demo_style = {
+global.demo_style = {
 	//Fonts
 	font_default : fArial,
 	font_buttons : fArial,
@@ -11,8 +11,6 @@ var _demo_style = {
 	color_font_hint : c_gray,
 	color_main : c_white,
 	color_border : merge_colour(c_white, c_black, 0.5),
-	color_button : c_white,
-	color_button_border : merge_colour(c_white, c_black, 0.5),
 	color_checkbox_pin : #45C952,
 	color_slider : #45C952,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
@@ -32,9 +30,9 @@ var _demo_style = {
 	textbox_password : "•"
 }
 
-LUI_OVERLAY.style = new LuiStyle(_demo_style);
+LUI_OVERLAY.style = new LuiStyle(global.demo_style);
 
-my_ui = new LuiBase(_demo_style);
+my_ui = new LuiBase(global.demo_style);
 
 my_panel = new LuiPanel(LUI_AUTO, LUI_AUTO, 512, 512);
 my_panel_2 = new LuiPanel(LUI_AUTO, LUI_AUTO, 512, 512);
@@ -50,6 +48,9 @@ my_ui.add_content([
 
 demo_loading = new LuiProgressBar( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , 0, 100, true, 0);
 demo_loading_state = false;
+show_msg_btn = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
+	var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
+})
 
 my_panel.add_content([
 	new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "First panel"),
@@ -66,12 +67,11 @@ my_panel.add_content([
 	new LuiTextbox(LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,"some text in textbox", , , ),
 	new LuiTextbox(LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,"", "login", , ),
 	new LuiTextbox(LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,"", "password", true, ),
-	
-	new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
-			var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
-		}),
+	show_msg_btn,
 	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Exit", function() {game_end()})
 ]);
+
+show_msg_btn.set_color(merge_color(c_red, c_white, 0.5));
 
 my_panel_in_second_1 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 200);
 my_panel_in_second_2 = new LuiPanel(LUI_AUTO, LUI_AUTO, LUI_STRETCH, 220);
@@ -98,7 +98,7 @@ my_panel_in_second_2.add_content(new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,
 for (var i = 0; i < 12; ++i) {
     var _button = new LuiSpriteButton(LUI_AUTO, LUI_AUTO, sLogoDemo, 0, 1, );
 	my_panel_in_second_2.add_content(_button);
-	_button.style.color_main = choose(c_red, c_lime, c_aqua);
+	_button.set_color(choose(c_red, c_lime, c_aqua));
 }
 
 my_panel_3.add_content([
