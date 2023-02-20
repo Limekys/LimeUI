@@ -1,3 +1,8 @@
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Any} width
+///@arg {Any} height
+///@arg {String} text
 function LuiText(x, y, width, height, text = "sample text") : LuiBase() constructor {
 	self.name = "LuiText";
 	self.pos_x = x;

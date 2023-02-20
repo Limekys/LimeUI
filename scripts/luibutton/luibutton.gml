@@ -1,4 +1,10 @@
-function LuiButton(x, y, width, height = 32, text = "button", callback = undefined) : LuiBase() constructor {
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Any} width
+///@arg {Any} height
+///@arg {String} text
+///@arg {Function} callback
+function LuiButton(x, y, width = 128, height = 32, text = "button", callback = undefined) : LuiBase() constructor {
 	
 	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
 	

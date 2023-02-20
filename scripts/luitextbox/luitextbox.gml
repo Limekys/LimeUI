@@ -1,4 +1,13 @@
-function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", is_password = false, max_length = 32) : LuiBase() constructor {
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Any} width
+///@arg {Any} height
+///@arg {String} start_text
+///@arg {String} hint
+///@arg {Bool} is_password
+///@arg {Real} max_length
+///@arg {Function} callback
+function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiTextbox";
 	self.value = start_text;
 	self.pos_x = x;
@@ -19,6 +28,12 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 		else
 		self.cursor_pointer = "";
 	}, [], -1);
+	
+	if callback == undefined {
+		self.callback = function() {print(self.text)};
+	} else {
+		self.callback = method(self, callback);
+	}
 	
 	self.draw = function(x = self.x, y = self.y) {
 		//Textbox field
@@ -91,7 +106,10 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 		}
 		
 		if has_focus {
-			self.set(keyboard_string);
+			if keyboard_check_pressed(vk_anykey) {
+				self.set(keyboard_string);
+				self.callback();
+			}
 			if (keyboard_check_pressed(vk_enter)) {
 				remove_focus();
 			}

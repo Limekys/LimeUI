@@ -1,3 +1,12 @@
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Any} width
+///@arg {Any} height
+///@arg {Asset.GMSprite} sprite
+///@arg {Real} index
+///@arg {Real} scale
+///@arg {Real} alpha
+///@arg {Bool} maintain_aspect
 function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;

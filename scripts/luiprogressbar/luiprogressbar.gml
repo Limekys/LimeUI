@@ -1,3 +1,11 @@
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Any} width
+///@arg {Any} height
+///@arg {Real} value_min
+///@arg {Real} value_max
+///@arg {Bool} show_value
+///@arg {Real} value
 function LuiProgressBar(x, y, width = 128, height = 16, value_min = 0, value_max = 100, show_value = true, value = 0) : LuiBase() constructor {
 	self.name = "LuiProgressBar";
 	self.pos_x = x;

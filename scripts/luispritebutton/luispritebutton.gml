@@ -1,3 +1,9 @@
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Asset.GMSprite} sprite
+///@arg {Real} index
+///@arg {Real} scale
+///@arg {Function} callback
 function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
