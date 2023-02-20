@@ -1,5 +1,5 @@
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.02.20"
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.01.26"
 
 #macro DT global.dt_steady
 
@@ -319,9 +319,8 @@ function MakeScreenshot() {
 
 function DrawSpriteOffset(sprite, subimg, pos_x, pos_y, xscale = 1, yscale = 1, rotation = 0, color = c_white, alpha = 1, x_offset = 0, y_offset = 0) {
 	//Calculate rotation
-	var _str_ang = rotation;
-	var _c = dcos(_str_ang);
-	var _s = dsin(_str_ang);
+	var _c = dcos(rotation);
+	var _s = dsin(rotation);
 	var _rot_x = _c * x_offset + _s * y_offset;
 	var _rot_y = _c * y_offset - _s * x_offset;
 	//Draw
