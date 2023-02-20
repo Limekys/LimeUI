@@ -1,5 +1,5 @@
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2022.12.03"
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.02.20"
 
 #macro DT global.dt_steady
 

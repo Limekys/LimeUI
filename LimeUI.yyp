@@ -2,6 +2,26 @@
   "resourceType": "GMProject",
   "resourceVersion": "1.6",
   "name": "LimeUI",
+  "AudioGroups": [
+    {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
+  ],
+  "configs": {
+    "children": [],
+    "name": "Default",
+  },
+  "defaultScriptType": 1,
+  "Folders": [
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DEMO","folderPath":"folders/DEMO.yy","order":1,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Fonts","folderPath":"folders/DEMO/Fonts.yy","order":1,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sounds","folderPath":"folders/DEMO/Sounds.yy","order":0,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/DEMO/Sprites.yy","order":2,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LimeUI","folderPath":"folders/LimeUI.yy","order":0,},
+  ],
+  "IncludedFiles": [],
+  "isEcma": false,
+  "MetaData": {
+    "IDEVersion": "2023.1.1.62",
+  },
   "resources": [
     {"id":{"name":"LuiPanel","path":"scripts/LuiPanel/LuiPanel.yy",},"order":5,},
     {"id":{"name":"sUI_panel_border","path":"sprites/sUI_panel_border/sUI_panel_border.yy",},"order":3,},
@@ -35,42 +55,11 @@
     {"id":{"name":"sUI_button_border","path":"sprites/sUI_button_border/sUI_button_border.yy",},"order":7,},
     {"id":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},"order":7,},
   ],
-  "Options": [
-    {"name":"Amazon Fire","path":"options/amazonfire/options_amazonfire.yy",},
-    {"name":"Android","path":"options/android/options_android.yy",},
-    {"name":"iOS","path":"options/ios/options_ios.yy",},
-    {"name":"Linux","path":"options/linux/options_linux.yy",},
-    {"name":"macOS","path":"options/mac/options_mac.yy",},
-    {"name":"tvOS","path":"options/tvos/options_tvos.yy",},
-    {"name":"Windows","path":"options/windows/options_windows.yy",},
-    {"name":"operagx","path":"options/operagx/options_operagx.yy",},
-    {"name":"Main","path":"options/main/options_main.yy",},
-  ],
-  "defaultScriptType": 1,
-  "isEcma": false,
-  "configs": {
-    "name": "Default",
-    "children": [],
-  },
   "RoomOrderNodes": [
     {"roomId":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},},
   ],
-  "Folders": [
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"DEMO","folderPath":"folders/DEMO.yy","order":1,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Fonts","folderPath":"folders/DEMO/Fonts.yy","order":1,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sounds","folderPath":"folders/DEMO/Sounds.yy","order":0,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Sprites","folderPath":"folders/DEMO/Sprites.yy","order":2,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"LimeUI","folderPath":"folders/LimeUI.yy","order":0,},
-  ],
-  "AudioGroups": [
-    {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},
-  ],
   "TextureGroups": [
-    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","isScaled":true,"compressFormat":"bz2","loadType":"default","directory":"","autocrop":true,"border":2,"mipsToGenerate":0,"groupParent":null,"targets":-1,},
-    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"tgDev","isScaled":true,"compressFormat":"bz2","loadType":"default","directory":"","autocrop":true,"border":2,"mipsToGenerate":0,"groupParent":null,"targets":-1,},
+    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"Default","autocrop":true,"border":2,"compressFormat":"bz2","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"targets":-1,},
+    {"resourceType":"GMTextureGroup","resourceVersion":"1.3","name":"tgDev","autocrop":true,"border":2,"compressFormat":"bz2","directory":"","groupParent":null,"isScaled":true,"loadType":"default","mipsToGenerate":0,"targets":-1,},
   ],
-  "IncludedFiles": [],
-  "MetaData": {
-    "IDEVersion": "2022.11.1.56",
-  },
 }
