@@ -47,7 +47,7 @@ function LuiScrollPanel(x, y, width = 256, height = 256, name = "LuiScrollPanel"
 			_element.update(base_x + self.pos_x, base_y + self.pos_y + self.scroll_offset_y + self.surface_offset.top);
 			_element.step();
 			_element.draw(_element.pos_x, _element.pos_y + self.scroll_offset_y);
-			_element.render(self.x, self.y);
+			_element.render(0, 0 + self.scroll_offset_y);
 			if global.LUI_DEBUG_MODE _element.render_debug();
 		}
 		

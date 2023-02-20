@@ -113,9 +113,15 @@ my_panel_4.add_content([
 	new LuiSprite(LUI_AUTO, LUI_AUTO, 600, 100, sCarFlip, 0, 1, 1)
 ]);
 
-scroll_panel.add_content([
-	new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Scroll panel")
-]);
-for (var i = 0; i < 20; ++i) {
+scroll_panel.add_content(new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Scroll panel"));
+for (var i = 0; i < 3; ++i) {
     scroll_panel.add_content(new LuiButton(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Button_" + string(i), ));
 }
+
+var _panel_in_scroll = new LuiPanel( LUI_AUTO, LUI_AUTO, LUI_STRETCH, 128, "Panel in scroll panel");
+
+_panel_in_scroll.add_content(
+	new LuiText(LUI_AUTO, LUI_AUTO, , , "TEST TEST TEST")
+);
+
+scroll_panel.add_content(_panel_in_scroll);

@@ -42,7 +42,7 @@ function LuiBase(style = {}) constructor {
     };
 	
 	///@func add_content(elements)
-	///@arg {array} elements
+	///@arg {Any} elements
 	static add_content = function(elements) {
 		//convert to array if one
 		if !is_array(elements) elements = [elements];
