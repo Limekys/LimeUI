@@ -68,7 +68,7 @@ my_panel.add_content([
 	new LuiTextbox(LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,"", "login", , ),
 	new LuiTextbox(LUI_AUTO, LUI_AUTO, LUI_STRETCH, ,"", "password", true, ),
 	show_msg_btn,
-	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Exit", function() {game_end()})
+	new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Restart", function() {game_restart()})
 ]);
 
 show_msg_btn.set_color(merge_color(c_red, c_white, 0.5));
@@ -88,7 +88,7 @@ deactivated_button = new LuiButton(LUI_AUTO, LUI_AUTO, , , "DEACTIVATED", functi
 
 my_panel_in_second_1.add_content([
 	new LuiText( LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Stretched panel"),
-	new LuiButton(LUI_AUTO, LUI_AUTO, , , "DOG", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = ":)"}),
+	new LuiButton(LUI_AUTO, LUI_AUTO, , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
 	new LuiButton(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Stretched button", ),
 	new LuiButton(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , "Stretched button 2", ),
 	deactivated_button,

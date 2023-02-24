@@ -15,7 +15,7 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 	self.width = width;
 	self.height = height;
 	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
-	self.min_width = string_width(value);
+	self.min_width = string_width(self.value);
 	
 	self.hint = hint;
 	self.is_password = is_password;
@@ -30,7 +30,7 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 	}, [], -1);
 	
 	if callback == undefined {
-		self.callback = function() {print(self.text)};
+		self.callback = function() {print(self.value)};
 	} else {
 		self.callback = method(self, callback);
 	}

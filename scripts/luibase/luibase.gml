@@ -3,14 +3,14 @@ function LuiBase(style = {}) constructor {
 	self.value = undefined;
 	self.style = new LuiStyle(style);
 	
-	self.x = 0;	//Actual x position on the screen
-	self.y = 0;	//Actual y position on the screen
-	self.pos_x = 0;	//Offset x position this element relative parent
-	self.pos_y = 0;	//Offset y position this element relative parent
-	self.target_x = 0; //Target x position this element for animation
-	self.target_y = 0; //Target y position this element for animation
-	self.start_x = self.pos_x;
-	self.start_y = self.pos_y;
+	self.x = 0;					//Actual x position on the screen
+	self.y = 0;					//Actual y position on the screen
+	self.pos_x = 0;				//Offset x position this element relative parent
+	self.pos_y = 0;				//Offset y position this element relative parent
+	self.target_x = 0;			//Target x position this element for animation
+	self.target_y = 0;			//Target y position this element for animation
+	self.start_x = self.pos_x;	//First x position
+	self.start_y = self.pos_y;	//First y position
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.min_width = 32;
@@ -44,19 +44,17 @@ function LuiBase(style = {}) constructor {
 	///@func add_content(elements)
 	///@arg {Any} elements
 	static add_content = function(elements) {
-		//convert to array if one
+		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
-		//adding
+		//
 		var _x_offset = 0;
 		var _y_offset = 0;
-		
+		//Adding
 		for (var i = 0; i < array_length(elements); i++) {
 		    var _element = elements[i];
 			_element.root = self;
-			
 			_element.style = new LuiStyle(self.style);
 
-			
 			//Paddings
 			var _x_padding = self.style.padding;
 			var _y_padding = self.style.padding;
