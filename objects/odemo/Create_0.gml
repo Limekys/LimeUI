@@ -114,19 +114,18 @@ my_panel_4.add_content([
 	new LuiSprite(, , 600, 100, sCarFlip, 0, 1, 1)]
 ]);
 
-var _elements = []
-for (var i = 0; i < 3; ++i) {
-    var _btn = new LuiButton(, , , , "Button_" + string(i), );
-	array_push(_elements, _btn);
-}
 
 var _panel_in_scroll = new LuiPanel( , , , 100, "Panel in scroll panel");
 
 scroll_panel.add_content([
-	new LuiText( , , , , "Scroll panel"),
-	_elements[0], 
-	_elements[1], 
-	_elements[2], 
+	new LuiText( , , , , "Scroll panel")
+]);
+for (var i = 0; i < 3; ++i) {
+    var _btn = new LuiButton(, , , , "Button_" + string(i), );
+	scroll_panel.add_content(_btn);
+}
+
+scroll_panel.add_content([
 	_panel_in_scroll,
 	new LuiSprite(, , 600, 100, sCarFlip, 0, 1, 1)
 ]);

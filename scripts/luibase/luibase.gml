@@ -107,10 +107,17 @@ function LuiBase(style = {}) constructor {
 				//Set position
 				_element.pos_x = self.style.padding;
 				_element.pos_y = self.style.padding + _row_pos_y;
+				
 				if !is_undefined(_last) {
+					//If there are many elements
 					if j != 0 {
 						_element_x = _last.pos_x;
 						_element.pos_x = _element_x + _last.width + self.style.padding;
+					}
+					//If one element
+					if _n == 1 {
+						_element.pos_x = self.style.padding;
+						_element.pos_y = self.style.padding + _last.pos_y + _last.height;
 					}
 				}
 				
