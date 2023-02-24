@@ -89,7 +89,7 @@ function LuiBase(style = {}) constructor {
 				//Set width
 				_element.width = min(_element_width, _element.max_width);
 				if array_length(_ranges) > 0
-				_element.width = _ranges[j] * (self.width - (_n + 1)*self.style.padding);
+				_element.width = floor(_ranges[j] * (self.width - (_n + 1)*self.style.padding));
 				
 				//Set position
 				_element.pos_x = self.style.padding;

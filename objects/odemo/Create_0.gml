@@ -40,9 +40,9 @@ my_panel_3 = new LuiPanel(, , , 512);
 my_panel_4 = new LuiPanel(, , , 432);
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.3, 0.3]],
-	my_panel_4
+	[my_panel_4, [0.75]]
 ]);
-
+my_panel_4.center_horizontally();
 
 demo_loading = new LuiProgressBar( , , , , 0, 100, true, 0);
 demo_loading_state = false;
@@ -124,11 +124,13 @@ var _panel_in_scroll = new LuiPanel( , , , 100, "Panel in scroll panel");
 
 scroll_panel.add_content([
 	new LuiText( , , , , "Scroll panel"),
-	_elements, 
+	_elements[0], 
+	_elements[1], 
+	_elements[2], 
 	_panel_in_scroll,
 	new LuiSprite(, , 600, 100, sCarFlip, 0, 1, 1)
 ]);
 
 _panel_in_scroll.add_content([
-	new LuiText( , , , , "TEST TEST TEST")
+	new LuiText( , , , , "TEST")
 ]);
