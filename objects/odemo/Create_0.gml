@@ -39,7 +39,7 @@ my_panel_2 = new LuiPanel(, , 512, 512);
 my_panel_3 = new LuiPanel(, , , 512);
 my_panel_4 = new LuiPanel(, , , 332);
 my_ui.add_content([
-	[my_panel, my_panel_2, my_panel_3, [0.4, 0.3, 0.3]],
+	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
 	[my_panel_4, [0.75]]
 ]);
 my_panel_4.center_horizontally();
@@ -87,9 +87,9 @@ my_panel_in_second_1.add_content([
 
 var _buttons1 = []
 var _buttons2 = []
-for (var i = 0; i < 6; ++i) {
+for (var i = 0; i < 12; ++i) {
     var _button = new LuiSpriteButton( , , sLogoDemo, 0, 1, function() {self.set_color(choose(c_red, c_lime, c_aqua))});
-	if i < 3 array_push(_buttons1, _button);
+	if i < 6 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);
 }
