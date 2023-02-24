@@ -54,10 +54,7 @@ function LuiBase(style = {}) constructor {
 	static add_content = function(elements) {
 		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
-		//
-		var _x_offset = 0;
-		var _y_offset = 0;
-		//Row position
+		//Other positions
 		var _row_pos_y = 0;
 		var _element_x = 0;
 		//Adding
@@ -67,9 +64,16 @@ function LuiBase(style = {}) constructor {
 			
 			//Convert to array if one element
 			if !is_array(row_elements) row_elements = [row_elements];
+			var _n = array_length(row_elements);
+			
+			//Take ranges from array
+			var _ranges = [];
+			if is_array(row_elements[_n-1]) {
+				_ranges = row_elements[_n-1];
+				_n--;
+			}
 			
 			//Calculate width for each element in row
-			var _n = array_length(row_elements);
 			var _element_width = floor((self.width - (_n + 1)*self.style.padding) / _n);
 			
 			//Adding elements in row
@@ -84,6 +88,8 @@ function LuiBase(style = {}) constructor {
 				
 				//Set width
 				_element.width = min(_element_width, _element.max_width);
+				if array_length(_ranges) > 0
+				_element.width = _ranges[j] * (self.width - (_n + 1)*self.style.padding);
 				
 				//Set position
 				_element.pos_x = self.style.padding;
@@ -91,7 +97,7 @@ function LuiBase(style = {}) constructor {
 				if !is_undefined(_last) {
 					if j != 0 {
 						_element_x = _last.pos_x;
-						_element.pos_x = _element_x + _element_width + self.style.padding;
+						_element.pos_x = _element_x + _last.width + self.style.padding;
 					}
 				}
 				

@@ -39,7 +39,7 @@ my_panel_2 = new LuiPanel(, , 512, 512);
 my_panel_3 = new LuiPanel(, , , 512);
 my_panel_4 = new LuiPanel(, , , 432);
 my_ui.add_content([
-	[my_panel, my_panel_2, my_panel_3],
+	[my_panel, my_panel_2, my_panel_3, [0.4, 0.3, 0.3]],
 	my_panel_4
 ]);
 
@@ -52,11 +52,11 @@ show_msg_btn = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", 
 
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_halign(fa_center),
-	[new LuiText( , , 128, , "Second panel X"), new LuiSlider( , , , , my_panel_2.pos_x, 800, my_panel_2.pos_x, function(){oDemo.my_panel_2.pos_x = self.value})],
-	[new LuiText( , , 128, , "Second panel Y"), new LuiSlider( , , , , my_panel_2.pos_y, 200, 16, function(){oDemo.my_panel_2.pos_y = self.value})],
+	[new LuiText( , , , , "Second panel X"), new LuiSlider( , , , , my_panel_2.pos_x, 800, my_panel_2.pos_x, function(){oDemo.my_panel_2.pos_x = self.value})],
+	[new LuiText( , , , , "Second panel Y"), new LuiSlider( , , , , my_panel_2.pos_y, 200, 16, function(){oDemo.my_panel_2.pos_y = self.value})],
 	[demo_loading],
-	[new LuiText( , , , 24, "Progress loading"),new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value})],
-	[new LuiText( , , , 32, "Textbox"), new LuiTextbox(, , , ,"some text", , , )],
+	[new LuiText( , , , , "Progress loading"),new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value})],
+	[new LuiText( , , , , "Textbox"), new LuiTextbox(, , , ,"some text", , , )],
 	new LuiTextbox(, , , ,"", "login", , ),
 	new LuiTextbox(, , , ,"", "password", true, ),
 	[show_msg_btn, new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Restart", function() {game_restart()})]
@@ -78,10 +78,10 @@ deactivated_button = new LuiButton(, , , , "DEACTIVATED", function() {
 }).deactivate();
 
 my_panel_in_second_1.add_content([
-	new LuiText( , , , , "Stretched panel").set_halign(fa_center),
+	new LuiText( , , , , "Panel in panel").set_halign(fa_center),
 	[new LuiButton(, , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
-	new LuiButton(, , , , "Stretched button", )],
-	new LuiButton(, , , , "Stretched button 2", ),
+	new LuiButton(, , , , "Button", )],
+	new LuiButton(, , , , "Button 2", ),
 	deactivated_button,
 ]);
 
@@ -102,6 +102,7 @@ my_panel_in_second_2.add_content(
 );
 
 my_panel_3.add_content([
+	new LuiText( , , , , "Third panel").set_halign(fa_center),
 	new LuiTextbox(, , , ,"example", "hint", , )
 ]);
 
