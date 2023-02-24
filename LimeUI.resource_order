@@ -14,6 +14,7 @@
     {"name":"LuiText","order":9,"path":"scripts/LuiText/LuiText.yy",},
     {"name":"LuiStyles","order":3,"path":"scripts/LuiStyles/LuiStyles.yy",},
     {"name":"sCarFlip","order":12,"path":"sprites/sCarFlip/sCarFlip.yy",},
+    {"name":"LuiDropDown","order":16,"path":"scripts/LuiDropDown/LuiDropDown.yy",},
     {"name":"oSteadyDeltaTime","order":5,"path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},
     {"name":"LuiSpriteButton","order":12,"path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},
     {"name":"LuiSprite","order":15,"path":"scripts/LuiSprite/LuiSprite.yy",},

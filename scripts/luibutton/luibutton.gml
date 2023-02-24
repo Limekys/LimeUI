@@ -18,21 +18,11 @@ function LuiButton(x, y, width = 128, height = 32, text = "button", callback = u
 	
 	self.button_color = self.style.color_main;
 	self.is_pressed = false;
-	self.deactivated = false;
 	
 	if callback == undefined {
 		self.callback = function() {print(self.text)};
 	} else {
 		self.callback = method(self, callback);
-	}
-	
-	self.activate = function() {
-		self.deactivated = false;
-		return self;
-	}
-	self.deactivate = function() {
-		self.deactivated = true;
-		return self;
 	}
 	
 	self.draw = function(x = self.x, y = self.y) {

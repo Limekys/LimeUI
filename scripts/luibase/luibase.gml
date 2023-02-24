@@ -22,6 +22,7 @@ function LuiBase(style = {}) constructor {
 	self.contents = [];
 	self.marked_to_delete = false;
 	self.is_mouse_hovered = false;
+	self.deactivated = false;
 	
 	//Focusing
 	self.has_focus = false;
@@ -33,6 +34,18 @@ function LuiBase(style = {}) constructor {
 	///@func remove_focus()
 	static remove_focus = function() {
 		self.has_focus = false;
+		return self;
+	}
+	
+	//Funcs
+	///@func activate()
+	static activate = function() {
+		self.deactivated = false;
+		return self;
+	}
+	///@func deactivate()
+	static deactivate = function() {
+		self.deactivated = true;
 		return self;
 	}
 	

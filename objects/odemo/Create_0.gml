@@ -37,7 +37,7 @@ my_ui = new LuiBase(global.demo_style);
 my_panel = new LuiPanel(, , 512, 512);
 my_panel_2 = new LuiPanel(, , 512, 512);
 my_panel_3 = new LuiPanel(, , , 512);
-my_panel_4 = new LuiPanel(, , , 432);
+my_panel_4 = new LuiPanel(, , , 332);
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.3, 0.3]],
 	[my_panel_4, [0.75]]
@@ -47,13 +47,13 @@ my_panel_4.center_horizontally();
 demo_loading = new LuiProgressBar( , , , , 0, 100, true, 0);
 demo_loading_state = false;
 show_msg_btn = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
-	var _msg = new LuiMessage( , , "Second panel x:" + string(oDemo.my_panel_2.pos_x) + " y:" + string(oDemo.my_panel_2.pos_y));
+	var _msg = new LuiMessage( , , "This is just a simple message!");
 })
 
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_halign(fa_center),
-	[new LuiText( , , , , "Second panel X"), new LuiSlider( , , , , my_panel_2.pos_x, 800, my_panel_2.pos_x, function(){oDemo.my_panel_2.pos_x = self.value})],
-	[new LuiText( , , , , "Second panel Y"), new LuiSlider( , , , , my_panel_2.pos_y, 200, 16, function(){oDemo.my_panel_2.pos_y = self.value})],
+	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 64, my_panel_4.pos_x + 64, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
+	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 64, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
 	[demo_loading],
 	[new LuiText( , , , , "Progress loading"),new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value})],
 	[new LuiText( , , , , "Textbox"), new LuiTextbox(, , , ,"some text", , , )],
@@ -103,11 +103,11 @@ my_panel_in_second_2.add_content(
 
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_halign(fa_center),
-	new LuiTextbox(, , , ,"example", "hint", , )
+	new LuiDropDown( , , , , ["first", "second", "third"], "select element", )
 ]);
 
 scroll_panel = new LuiScrollPanel( , , , , );
-simple_sprite = new LuiSprite(, , 200, 400, sCar, 0, 1, 1);
+simple_sprite = new LuiSprite(, , 200, 300, sCar, 0, 1, 1);
 my_panel_4.add_content([
 	[scroll_panel,
 	simple_sprite,

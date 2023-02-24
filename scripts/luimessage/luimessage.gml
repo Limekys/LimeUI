@@ -10,8 +10,8 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 	LUI_OVERLAY.add_content(self);
 	
 	self.add_content([
-		new LuiText(LUI_AUTO, LUI_AUTO, LUI_STRETCH, , self.text),
-		new LuiButton(LUI_AUTO, self.height - 32 - self.style.padding, LUI_STRETCH, , "Close", function(){
+		new LuiText(, , , , self.text).set_halign(fa_center),
+		new LuiButton(, , , , "Close", function() {
 			LUI_OVERLAY.close();
 		})
 	]);
