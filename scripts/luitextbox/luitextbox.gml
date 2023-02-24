@@ -125,4 +125,6 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 		if time_source_exists(self.cursor_timer) time_source_destroy(self.cursor_timer);
 		self.destroy_main();
 	}
+	
+	return self;
 }

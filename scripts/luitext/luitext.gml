@@ -3,7 +3,7 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} text
-function LuiText(x, y, width, height, text = "sample text") : LuiBase() constructor {
+function LuiText(x, y, width = 128, height = 32, text = "sample text") : LuiBase() constructor {
 	self.name = "LuiText";
 	self.pos_x = x;
 	self.pos_y = y;
@@ -55,4 +55,6 @@ function LuiText(x, y, width, height, text = "sample text") : LuiBase() construc
 		self.text_valign = valign;
 		return self;
 	}
+	
+	return self;
 }

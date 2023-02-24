@@ -6,12 +6,13 @@
 ///@arg {Real} value_max
 ///@arg {Real} value
 ///@arg {Function} callback
-function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x, y, width = 128, height = 32, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSlider";
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
+	self.max_height = height;
 	
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
@@ -69,4 +70,6 @@ function LuiSlider(x, y, width = 128, height = 16, value_min = 0, value_max = 10
 		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.style.color_main, 1);
 		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.style.color_border, 1);
 	}
+	
+	return self;
 }

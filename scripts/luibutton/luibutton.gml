@@ -75,4 +75,6 @@ function LuiButton(x, y, width = 128, height = 32, text = "button", callback = u
 			}
 		}
 	}
+	
+	return self;
 }

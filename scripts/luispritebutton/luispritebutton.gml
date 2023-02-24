@@ -15,6 +15,10 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	
 	self.width = sprite_get_width(sprite) * self.scale;
 	self.height = sprite_get_height(sprite) * self.scale;
+	self.min_width = self.width;
+	self.min_height = self.height;
+	self.max_width = self.width;
+	self.max_height = self.height;
 	
 	self.button_color = self.style.color_main;
 	self.is_pressed = false;
@@ -48,4 +52,6 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 		}
 		
 	}
+	
+	return self;
 }

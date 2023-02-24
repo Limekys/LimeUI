@@ -4,13 +4,15 @@
 ///@arg {Any} height
 ///@arg {Real} value
 ///@arg {Function} callback
-function LuiCheckbox(x, y, width = 24, height = 24, value = false, callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x, y, width = 32, height = 32, value = false, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiButton";
 	self.value = value;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
+	self.max_width = width;
+	self.max_height = height;
 	
 	self.checkbox_color = self.style.color_main;
 	self.can_pressed = false;
@@ -48,4 +50,6 @@ function LuiCheckbox(x, y, width = 24, height = 24, value = false, callback = un
 		}
 		
 	}
+	
+	return self;
 }

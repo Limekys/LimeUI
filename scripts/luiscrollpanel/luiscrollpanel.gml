@@ -88,4 +88,6 @@ function LuiScrollPanel(x, y, width = 256, height = 256, name = "LuiScrollPanel"
 		if surface_exists(self.panel_surface) surface_free(self.panel_surface);
 		self.destroy_main();
 	}
+	
+	return self;
 }

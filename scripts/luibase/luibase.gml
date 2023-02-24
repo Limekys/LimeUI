@@ -15,7 +15,9 @@ function LuiBase(style = {}) constructor {
 	self.height = display_get_gui_height();
 	self.min_width = 32;
 	self.min_height = 32;
-	self.root = self;
+	self.max_width = self.width;
+	self.max_height = self.height;
+	self.parent = self;
 	self.callback = undefined;
 	self.contents = [];
 	self.marked_to_delete = false;
@@ -35,6 +37,12 @@ function LuiBase(style = {}) constructor {
 	}
 	
 	//Add content
+	///@func get_first()
+	static get_first = function() {
+        if (array_length(self.contents) == 0) return undefined;
+        return self.contents[0];
+    };
+	
 	///@func get_last()
 	static get_last = function() {
         if (array_length(self.contents) == 0) return undefined;
@@ -49,63 +57,57 @@ function LuiBase(style = {}) constructor {
 		//
 		var _x_offset = 0;
 		var _y_offset = 0;
+		//Row position
+		var _row_pos_y = 0;
+		var _element_x = 0;
 		//Adding
 		for (var i = 0; i < array_length(elements); i++) {
-		    var _element = elements[i];
-			_element.root = self;
-			_element.style = new LuiStyle(self.style);
-
-			//Paddings
-			var _x_padding = self.style.padding;
-			var _y_padding = self.style.padding;
-			if (is_ptr(_element.pos_x) && _element.pos_x == LUI_AUTO_NO_PADDING) _x_padding = 0;
-			if (is_ptr(_element.pos_y) && _element.pos_y == LUI_AUTO_NO_PADDING) _y_padding = 0;
+		    //Get
+			var row_elements = elements[i];
 			
-			var _last = self.get_last();
+			//Convert to array if one element
+			if !is_array(row_elements) row_elements = [row_elements];
 			
-			//Width
-			if (is_ptr(_element.width) && _element.width == LUI_STRETCH)
-			_element.stretch_horizontally(_x_padding);
+			//Calculate width for each element in row
+			var _n = array_length(row_elements);
+			var _element_width = floor((self.width - (_n + 1)*self.style.padding) / _n);
 			
-			//Move X
-			if is_ptr(_element.pos_x) {
-				//Move
-				if (_last) {
-					//For next element
-					_element.pos_x = _last.pos_x + _last.width + _x_padding;
-					if _element.pos_x + _element.width > self.width - _x_padding {
-						_element.pos_x = _x_padding;
-						if is_ptr(_element.pos_y) _element.pos_y = _last.pos_y + _last.height + _y_padding;
+			//Adding elements in row
+			for (var j = 0; j < _n; j++) {
+				//Get
+				var _element = row_elements[j];
+				var _last = get_last();
+				
+				//Set parent and style
+				_element.parent = self;
+				_element.style = new LuiStyle(self.style);
+				
+				//Set width
+				_element.width = min(_element_width, _element.max_width);
+				
+				//Set position
+				_element.pos_x = self.style.padding;
+				_element.pos_y = self.style.padding + _row_pos_y;
+				if !is_undefined(_last) {
+					if j != 0 {
+						_element_x = _last.pos_x;
+						_element.pos_x = _element_x + _element_width + self.style.padding;
 					}
-				} else {
-					//For first element
-					_element.pos_x = _x_padding;
+				}
+				
+				//Save new start x y position
+				_element.start_x = _element.pos_x;
+				_element.start_y = _element.pos_y;
+				
+				//Add to content array
+				array_push(self.contents, _element);
+				
+				//If last element in row
+				if j == _n-1 {
+					_element_x = 0;
+					_row_pos_y += self.style.padding + _element.height;
 				}
 			}
-			
-			//Height
-			if (is_ptr(_element.height) && _element.height == LUI_STRETCH)
-			_element.stretch_vertically(_x_padding);
-			
-			//Move Y
-			if is_ptr(_element.pos_y) {
-				if (_last) {
-					_element.pos_y = _last.pos_y;
-				} else {
-					_element.pos_y = _y_padding;
-				}
-            }
-			
-			//Save new start x y position
-			_element.start_x = _element.pos_x;
-			_element.start_y = _element.pos_y;
-			
-			//Position to target position
-			//_element.target_x = _element.pos_x;
-			//_element.target_y = _element.pos_y;
-			
-			//Add to content array
-			array_push(self.contents, _element);
 		}
 		return self;
 	}
@@ -119,52 +121,52 @@ function LuiBase(style = {}) constructor {
 	//Alignment and sizes
 	///@func center()
 	static center = function() {
-		self.pos_x = root.width div 2 - self.width div 2;
-		self.pos_y = root.height div 2 - self.height div 2;
-		self.target_x = root.width div 2 - self.width div 2;
-		self.target_y = root.height div 2 - self.height div 2;
+		self.pos_x = parent.width div 2 - self.width div 2;
+		self.pos_y = parent.height div 2 - self.height div 2;
+		self.target_x = parent.width div 2 - self.width div 2;
+		self.target_y = parent.height div 2 - self.height div 2;
 		return self;
 	}
 	
 	///@func center_vertically()
 	static center_vertically = function() {
-		self.pos_y = root.height div 2 - self.height div 2;
-		self.target_y = root.height div 2 - self.height div 2;
+		self.pos_y = parent.height div 2 - self.height div 2;
+		self.target_y = parent.height div 2 - self.height div 2;
 		return self;
 	}
 	
 	///@func center_horizontally()
 	static center_horizontally = function() {
-		self.pos_x = root.width div 2 - self.width div 2;
-		self.target_x = root.width div 2 - self.width div 2;
+		self.pos_x = parent.width div 2 - self.width div 2;
+		self.target_x = parent.width div 2 - self.width div 2;
 		return self;
 	}
 	
 	///@func stretch_horizontally(padding)
 	static stretch_horizontally = function(padding) {
-		var _last = root.get_last();
-		if (_last) && (_last.pos_x + _last.width < root.width - self.min_width - padding) {
-			self.width = root.width - (_last.pos_x + _last.width) - padding*2;
+		var _last = parent.get_last();
+		if (_last) && (_last.pos_x + _last.width < parent.width - self.min_width - padding) {
+			self.width = parent.width - (_last.pos_x + _last.width) - padding*2;
 		} else {
-			self.width = root.width - padding*2;
+			self.width = parent.width - padding*2;
 		}
 		return self;
 	}
 	
 	///@func stretch_vertically(padding)
 	static stretch_vertically = function(padding) {
-		var _last = root.get_last();
-		if (_last) && (_last.pos_y + _last.height < root.height - self.min_height - padding) {
-			self.height = root.height - (_last.pos_y + _last.height) - padding*2;
+		var _last = parent.get_last();
+		if (_last) && (_last.pos_y + _last.height < parent.height - self.min_height - padding) {
+			self.height = parent.height - (_last.pos_y + _last.height) - padding*2;
 		} else {
-			self.height = root.height - padding*2;
+			self.height = parent.height - padding*2;
 		}
 		return self;
 	}
 	
 	//Design
 	///@func set_color(main, border)
-	set_color = function(main = undefined, border = undefined) {
+	static set_color = function(main = undefined, border = undefined) {
 		if !is_undefined(main) self.style.color_main = main;
 		if !is_undefined(border) self.style.color_border = border;
 		return self;
@@ -186,8 +188,8 @@ function LuiBase(style = {}) constructor {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
-		var _on_root = point_in_rectangle(_mouse_x, _mouse_y, self.root.x, self.root.y, self.root.x + self.root.width - 1, self.root.y + self.root.height - 1);
-		return _on_this && _on_root;
+		var _on_parent = point_in_rectangle(_mouse_x, _mouse_y, self.parent.x, self.parent.y, self.parent.x + self.parent.width - 1, self.parent.y + self.parent.height - 1);
+		return _on_this && _on_parent;
 	}
 	
 	//Update
@@ -235,7 +237,8 @@ function LuiBase(style = {}) constructor {
 	///@func render_debug()
 	static render_debug = function() {
 		if global.LUI_DEBUG_MODE == 1 {
-			draw_set_alpha(0.5);
+			draw_set_alpha(0.25);
+			if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 			
 			if mouse_hover() {
 				draw_set_color(c_blue);
@@ -249,8 +252,10 @@ function LuiBase(style = {}) constructor {
 			
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_top);
-			draw_text(self.x, self.y, string(self.pos_x) + ":" + string(self.pos_y));
-			draw_text(self.x, self.y + 16, string(self.value) + ": " + string(self.value));
+			var _y_offset = !is_undefined(self.style.font_default) ? font_get_size(self.style.font_default) : 16;
+			draw_text(self.x, self.y, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
+			draw_text(self.x, self.y + _y_offset*1, "w: " + string(self.width) + " h: " + string(self.height));
+			draw_text(self.x, self.y + _y_offset*2, "v: " + string(self.value));
 		}
 	}
 	

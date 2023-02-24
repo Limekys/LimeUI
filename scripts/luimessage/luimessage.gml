@@ -28,4 +28,6 @@ function LuiMessage(width = 256, height = 128, text = "sample text") : LuiPanel(
 	//	var _txt_y = self.y + self.height / 2;
 	//	draw_text(_txt_x, _txt_y, self.text);
 	//}
+	
+	return self;
 }

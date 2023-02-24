@@ -14,4 +14,6 @@ function LuiPanel(x, y, width = 256, height = 256, name = "LuiPanel") : LuiBase(
 		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
 		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
 	}
+	
+	return self;
 }
