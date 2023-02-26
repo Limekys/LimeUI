@@ -5,6 +5,7 @@ function LuiStyle(style) constructor {
 	font_default = style[$ "font_default"] ?? undefined;
 	font_buttons = style[$ "font_buttons"] ?? undefined;
 	font_sliders = style[$ "font_sliders"] ?? undefined;
+	font_debug = style[$ "font_debug"] ?? undefined;
 	//Colors
 	color_font = style[$ "color_font"] ?? c_black;
 	color_font_hint = style[$ "color_font_hint"] ?? c_gray;

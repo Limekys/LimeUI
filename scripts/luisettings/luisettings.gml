@@ -14,6 +14,8 @@ global.LUI_DEBUG_MODE =	0;
 //Overlay
 function _LuiGetOverlay() {
 	static LuiOverlay = function() : LuiBase() constructor {
+		global.lui_main_ui = undefined;
+		self.name = "LUI_OVERLAY";
 		self.baseRender = self.render;
 		self.render = function() {
 			if array_length(self.contents) > 0 {

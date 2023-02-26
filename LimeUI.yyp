@@ -35,6 +35,7 @@
     {"id":{"name":"sCarFlip","path":"sprites/sCarFlip/sCarFlip.yy",},"order":12,},
     {"id":{"name":"LuiDropDown","path":"scripts/LuiDropDown/LuiDropDown.yy",},"order":16,},
     {"id":{"name":"oSteadyDeltaTime","path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},"order":5,},
+    {"id":{"name":"fDebug","path":"fonts/fDebug/fDebug.yy",},"order":1,},
     {"id":{"name":"LuiSpriteButton","path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},"order":12,},
     {"id":{"name":"LuiSprite","path":"scripts/LuiSprite/LuiSprite.yy",},"order":15,},
     {"id":{"name":"sLogoDemo","path":"sprites/sLogoDemo/sLogoDemo.yy",},"order":6,},

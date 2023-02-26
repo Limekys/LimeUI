@@ -1,5 +1,9 @@
+global.lui_main_ui = undefined;
+
 function LuiBase(style = {}) constructor {
-	self.name = "-unnamed-";
+	global.lui_main_ui ??= self;
+	
+	self.name = "LuiBase";
 	self.value = undefined;
 	self.style = new LuiStyle(style);
 	
@@ -24,6 +28,9 @@ function LuiBase(style = {}) constructor {
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
 	
+	self.halign = undefined;
+	self.valign = undefined;
+	
 	//Focusing
 	self.has_focus = false;
 	///@func set_focus()
@@ -47,6 +54,17 @@ function LuiBase(style = {}) constructor {
 	static deactivate = function() {
 		self.deactivated = true;
 		return self;
+	}
+	///@func point_on_element()
+	static point_on_element = function(point_x, point_y) {
+		var _on_element = false;
+		for (var i = 0; i < array_length(self.parent.contents); ++i) {
+		    var _element = self.parent.contents[i];
+			if _element == self continue;
+			_on_element = point_in_rectangle(point_x, point_y, _element.pos_x, _element.pos_y, _element.pos_x + _element.width, _element.pos_y + _element.height);
+			if _on_element break;
+		}
+		return _on_element;
 	}
 	
 	//Add content
@@ -137,6 +155,7 @@ function LuiBase(style = {}) constructor {
 				}
 			}
 		}
+		align_all_elements();
 		return self;
 	}
 	
@@ -147,29 +166,6 @@ function LuiBase(style = {}) constructor {
 	static set = function(value) { self.value = value; return self}
 	
 	//Alignment and sizes
-	///@func center()
-	static center = function() {
-		self.pos_x = parent.width div 2 - self.width div 2;
-		self.pos_y = parent.height div 2 - self.height div 2;
-		self.target_x = parent.width div 2 - self.width div 2;
-		self.target_y = parent.height div 2 - self.height div 2;
-		return self;
-	}
-	
-	///@func center_vertically()
-	static center_vertically = function() {
-		self.pos_y = parent.height div 2 - self.height div 2;
-		self.target_y = parent.height div 2 - self.height div 2;
-		return self;
-	}
-	
-	///@func center_horizontally()
-	static center_horizontally = function() {
-		self.pos_x = parent.width div 2 - self.width div 2;
-		self.target_x = parent.width div 2 - self.width div 2;
-		return self;
-	}
-	
 	///@func stretch_horizontally(padding)
 	static stretch_horizontally = function(padding) {
 		var _last = parent.get_last();
@@ -190,6 +186,56 @@ function LuiBase(style = {}) constructor {
 			self.height = parent.height - padding*2;
 		}
 		return self;
+	}
+	
+	///@func set_halign()
+	static set_halign = function(halign) {
+		self.halign = halign;
+		return self;
+	}
+	
+	///@func set_valign()
+	static set_valign = function(valign) {
+		self.valign = valign;
+		return self;
+	}
+	
+	///@func align_all_elements() //???//
+	static align_all_elements = function() {
+		if array_length(self.contents) > 0
+		for (var i = 0; i < array_length(self.contents); i++) {
+			var _element = self.contents[i];
+			switch(_element.halign) {
+				case fa_left:
+					//while(_element.pos_x > _element.parent.style.padding) {
+					//	_element.pos_x--;
+					//}
+					_element.pos_x = _element.style.padding;
+				break;
+				case fa_center:
+					_element.pos_x = floor(_element.parent.width / 2 - _element.width / 2);
+				break;
+				case fa_right:
+					_element.pos_x = _element.parent.width - _element.width - _element.style.padding;
+				break;
+				default:
+				break;
+			}
+			switch(_element.valign) {
+				case fa_top:
+					_element.pos_y = _element.style.padding;
+				break;
+				case fa_middle:
+					_element.pos_y = floor(_element.parent.height / 2 - _element.height / 2);
+				break;
+				case fa_bottom:
+					_element.pos_y = _element.parent.height - _element.height - _element.style.padding;
+				break;
+				default:
+				break;
+			}
+			_element.align_all_elements();
+		}
 	}
 	
 	//Design
@@ -241,7 +287,30 @@ function LuiBase(style = {}) constructor {
 				array_delete(contents, i-1, 1);
 			}
 		}
+		
+		//Hover
+		//self.is_mouse_hovered = false;
+		//if get_topmost_element() == self {
+		//	self.is_mouse_hovered = true;
+		//}
 	}
+	
+	///@func get_topmost_element()
+	///@desc Returns the element that is above all the ones the mouse cursor is on
+	//static get_topmost_element = function() {
+	//	var _topmost = undefined;
+	//	var _last_i = undefined;
+	//	for (var i = array_length(global.lui_main_ui.contents)-1; i > 0; i--) {
+	//	    var _element = global.lui_main_ui.contents[i];
+	//		if _element.mouse_hover() {
+	//			if _topmost == undefined || _last_i < i {
+	//				_topmost = _element;
+	//				_last_i = i;
+	//			}
+	//		}
+	//	}
+	//	return _topmost;
+	//}
 	
 	//Render
 	///@func draw()
@@ -266,25 +335,35 @@ function LuiBase(style = {}) constructor {
 	static render_debug = function() {
 		if global.LUI_DEBUG_MODE == 1 {
 			draw_set_alpha(0.25);
-			if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
-			
 			if mouse_hover() {
 				draw_set_color(c_blue);
 			} else {
 				draw_set_color(c_red);
 			}
-			
+			//Rectangles
 			draw_rectangle(self.x, self.y, self.x + self.width - 1, self.y + self.height - 1, true);
 			draw_line(self.x, self.y, self.x + self.width - 1, self.y + self.height - 1);
 			draw_line(self.x, self.y + self.height, self.x + self.width - 1, self.y - 1);
-			
-			draw_set_halign(fa_left);
-			draw_set_valign(fa_top);
-			var _y_offset = !is_undefined(self.style.font_default) ? font_get_size(self.style.font_default) : 16;
-			draw_text(self.x, self.y, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
-			draw_text(self.x, self.y + _y_offset*1, "w: " + string(self.width) + " h: " + string(self.height));
-			draw_text(self.x, self.y + _y_offset*2, "v: " + string(self.value));
+			//Text
+			var _y_offset = !is_undefined(self.style.font_debug) ? font_get_size(self.style.font_debug) : 8;
+			_lui_draw_text_debug(self.x, self.y, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
+			_lui_draw_text_debug(self.x, self.y + _y_offset*1, "w: " + string(self.width) + " h: " + string(self.height));
+			_lui_draw_text_debug(self.x, self.y + _y_offset*2, "v: " + string(self.value));
+			_lui_draw_text_debug(self.x, self.y + _y_offset*3, "hl: " + string(self.halign) + " vl: " + string(self.valign));
 		}
+	}
+	
+	static _lui_draw_text_debug = function(x, y, text) {
+		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
+		var _text_width = string_width(text);
+		var _text_height = string_height(text);
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_top);
+		draw_set_alpha(1);
+		draw_set_color(c_black);
+		draw_rectangle(x, y, x + _text_width, y + _text_height, false);
+		draw_set_color(c_red);
+		draw_text(x, y, text);
 	}
 	
 	//Clean up

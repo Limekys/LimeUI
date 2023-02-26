@@ -16,6 +16,7 @@
     {"name":"sCarFlip","order":12,"path":"sprites/sCarFlip/sCarFlip.yy",},
     {"name":"LuiDropDown","order":16,"path":"scripts/LuiDropDown/LuiDropDown.yy",},
     {"name":"oSteadyDeltaTime","order":5,"path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},
+    {"name":"fDebug","order":1,"path":"fonts/fDebug/fDebug.yy",},
     {"name":"LuiSpriteButton","order":12,"path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},
     {"name":"LuiSprite","order":15,"path":"scripts/LuiSprite/LuiSprite.yy",},
     {"name":"sLogoDemo","order":6,"path":"sprites/sLogoDemo/sLogoDemo.yy",},

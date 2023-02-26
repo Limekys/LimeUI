@@ -48,11 +48,11 @@ function LuiText(x, y, width, height = 32, text = "sample text") : LuiBase() con
 		draw_text(_txt_x, _txt_y, self.value);
 	}
 	
-	self.set_halign = function(halign) {
+	self.set_text_halign = function(halign) {
 		self.text_halign = halign;
 		return self;
 	}
-	self.set_valign = function(valign) {
+	self.set_text_valign = function(valign) {
 		self.text_valign = valign;
 		return self;
 	}

@@ -6,6 +6,7 @@ global.demo_style = {
 	font_default : fArial,
 	font_buttons : fArial,
 	font_sliders : fArial,
+	font_debug : fDebug,
 	//Colors
 	color_font : c_black,
 	color_font_hint : c_gray,
@@ -37,21 +38,20 @@ my_ui = new LuiBase(global.demo_style);
 my_panel = new LuiPanel(, , , 512);
 my_panel_2 = new LuiPanel(, , , 512);
 my_panel_3 = new LuiPanel(, , , 512);
-my_panel_4 = new LuiPanel(, , , 332);
+my_panel_4 = new LuiPanel(, , , 332).set_halign(fa_center);
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
 	[my_panel_4, [0.75]]
 ]);
-my_panel_4.center_horizontally();
 
 demo_loading = new LuiProgressBar( , , , , 0, 100, true, 0);
 demo_loading_state = false;
 show_msg_btn = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 	var _msg = new LuiMessage( , , "This is just a simple message!");
-})
+}).set_valign(fa_bottom)
 
 my_panel.add_content([
-	new LuiText( , , , , "First panel").set_halign(fa_center),
+	new LuiText( , , , , "First panel").set_text_halign(fa_center),
 	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 64, my_panel_4.pos_x + 64, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
 	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 64, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
 	[demo_loading],
@@ -59,7 +59,7 @@ my_panel.add_content([
 	[new LuiText( , , , , "Textbox"), new LuiTextbox(, , , ,"some text", , , )],
 	new LuiTextbox(, , , ,"", "login", , ),
 	new LuiTextbox(, , , ,"", "password", true, ),
-	[show_msg_btn, new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Restart", function() {game_restart()})]
+	[show_msg_btn, new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Restart", function() {game_restart()}).set_valign(fa_bottom)]
 ]);
 
 show_msg_btn.set_color(merge_color(c_red, c_white, 0.5));
@@ -68,7 +68,7 @@ my_panel_in_second_1 = new LuiPanel(, , , 200);
 my_panel_in_second_2 = new LuiPanel(, , , 220);
 
 my_panel_2.add_content([
-	new LuiText( , , , , "Second panel").set_halign(fa_center),
+	new LuiText( , , , , "Second panel").set_text_halign(fa_center),
 	my_panel_in_second_1,
 	my_panel_in_second_2
 ]);
@@ -78,7 +78,7 @@ deactivated_button = new LuiButton(, , , , "DEACTIVATED", function() {
 }).deactivate();
 
 my_panel_in_second_1.add_content([
-	new LuiText( , , , , "Panel in panel").set_halign(fa_center),
+	new LuiText( , , , , "Panel in panel").set_text_halign(fa_center),
 	[new LuiButton(, , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
 	new LuiButton(, , , , "Button", )],
 	new LuiButton(, , , , "Button 2", ),
@@ -102,7 +102,7 @@ my_panel_in_second_2.add_content(
 );
 
 my_panel_3.add_content([
-	new LuiText( , , , , "Third panel").set_halign(fa_center),
+	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
 	new LuiDropDown( , , , , ["first", "second", "third"], "select element", )
 ]);
 
