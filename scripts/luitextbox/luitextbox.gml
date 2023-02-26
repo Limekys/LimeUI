@@ -7,7 +7,7 @@
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiTextbox(x, y, width, height = 32, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiTextbox";
 	self.value = start_text;
 	self.pos_x = x;
@@ -29,11 +29,7 @@ function LuiTextbox(x, y, width = 128, height = 32, start_text = "", hint = "", 
 		self.cursor_pointer = "";
 	}, [], -1);
 	
-	if callback == undefined {
-		self.callback = function() {print(self.value)};
-	} else {
-		self.callback = method(self, callback);
-	}
+	set_callback(callback);
 	
 	self.draw = function(x = self.x, y = self.y) {
 		//Textbox field

@@ -6,7 +6,7 @@
 ///@arg {Real} value_max
 ///@arg {Bool} show_value
 ///@arg {Real} value
-function LuiProgressBar(x, y, width = 128, height = 32, value_min = 0, value_max = 100, show_value = true, value = 0) : LuiBase() constructor {
+function LuiProgressBar(x, y, width, height = 32, value_min = 0, value_max = 100, show_value = true, value = 0) : LuiBase() constructor {
 	self.name = "LuiProgressBar";
 	self.pos_x = x;
 	self.pos_y = y;

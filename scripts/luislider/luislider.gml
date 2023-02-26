@@ -6,7 +6,7 @@
 ///@arg {Real} value_max
 ///@arg {Real} value
 ///@arg {Function} callback
-function LuiSlider(x, y, width = 128, height = 32, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x, y, width, height = 32, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSlider";
 	self.pos_x = x;
 	self.pos_y = y;
@@ -19,7 +19,8 @@ function LuiSlider(x, y, width = 128, height = 32, value_min = 0, value_max = 10
 	self.integers_only = false;
 	self.dragging = false;
 	self.value = value;
-	self.set_callback(callback);
+	
+	set_callback(callback);
 	
 	self.render_mode = 1;
 	///@desc 0 - raw value, 1 - integer only

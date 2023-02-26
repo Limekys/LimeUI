@@ -7,24 +7,25 @@
 ///@arg {Real} scale
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiSprite(x, y, width = 32, height = 32, sprite, index = 0, scale = 1, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+function LuiSprite(x, y, width, height = 32, sprite, index = 0, scale = 1, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;
 	
 	self.value = sprite;
-	self.sprite_real_width = sprite_get_width(self.value);
-	self.sprite_real_height = sprite_get_height(self.value);
 	self.index = index;
 	self.scale = scale;
 	self.alpha = alpha;
+	
+	self.sprite_real_width = sprite_get_width(self.value);
+	self.sprite_real_height = sprite_get_height(self.value);
 	self.maintain_aspect = maintain_aspect;
 	self.aspect = self.sprite_real_width / self.sprite_real_height;
 	
-	self.width = width == undefined ? self.sprite_real_width : width;
+	self.width = width;
 	self.height = height == undefined ? self.sprite_real_height : height;
-	self.max_width = self.width;
-	self.max_height = self.height;
+	self.min_width = width == undefined ? self.sprite_real_width : width;
+	self.min_height = height == undefined ? self.sprite_real_height : height;
 	
 	static set = function(value) {
 		self.value = value;

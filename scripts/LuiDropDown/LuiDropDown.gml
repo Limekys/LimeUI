@@ -5,7 +5,7 @@
 ///@arg {Array} elements
 ///@arg {String} hint
 ///@arg {Function} callback
-function LuiDropDown(x, y, width = 128, height = 32, elements = [], hint = "drop list", callback = undefined) : LuiBase() constructor {
+function LuiDropDown(x, y, width, height = 32, elements = [], hint = "drop list", callback = undefined) : LuiBase() constructor {
 	
 	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
 	
@@ -15,17 +15,14 @@ function LuiDropDown(x, y, width = 128, height = 32, elements = [], hint = "drop
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
+	self.min_width = (width == undefined) ? string_width(hint) + self.style.padding : width;
 	
 	self.is_pressed = false;
 	self.hint = hint;
 	self.drop_elements = elements;
 	self.dropped = false;
 	
-	if callback == undefined {
-		self.callback = function() {print(self.value)};
-	} else {
-		self.callback = method(self, callback);
-	}
+	set_callback(callback);
 	
 	self.draw = function(x = self.x, y = self.y) {
 		//Base

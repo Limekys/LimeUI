@@ -17,11 +17,7 @@ function LuiCheckbox(x, y, width = 32, height = 32, value = false, callback = un
 	self.checkbox_color = self.style.color_main;
 	self.can_pressed = false;
 	
-	if callback == undefined {
-		self.callback = function() {print(self.value)};
-	} else {
-		self.callback = method(self, callback);
-	}
+	set_callback(callback);
 	
 	self.draw = function(x = self.x, y = self.y) {
 		var _color = self.value ? self.style.color_checkbox_pin : self.checkbox_color;

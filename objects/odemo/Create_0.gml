@@ -34,8 +34,8 @@ LUI_OVERLAY.style = new LuiStyle(global.demo_style);
 
 my_ui = new LuiBase(global.demo_style);
 
-my_panel = new LuiPanel(, , 512, 512);
-my_panel_2 = new LuiPanel(, , 512, 512);
+my_panel = new LuiPanel(, , , 512);
+my_panel_2 = new LuiPanel(, , , 512);
 my_panel_3 = new LuiPanel(, , , 512);
 my_panel_4 = new LuiPanel(, , , 332);
 my_ui.add_content([
@@ -59,7 +59,7 @@ my_panel.add_content([
 	[new LuiText( , , , , "Textbox"), new LuiTextbox(, , , ,"some text", , , )],
 	new LuiTextbox(, , , ,"", "login", , ),
 	new LuiTextbox(, , , ,"", "password", true, ),
-	[show_msg_btn, new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, 128, , "Restart", function() {game_restart()})]
+	[show_msg_btn, new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Restart", function() {game_restart()})]
 ]);
 
 show_msg_btn.set_color(merge_color(c_red, c_white, 0.5));
@@ -107,11 +107,11 @@ my_panel_3.add_content([
 ]);
 
 scroll_panel = new LuiScrollPanel( , , , , );
-simple_sprite = new LuiSprite(, , 200, 300, sCar, 0, 1, 1);
+simple_sprite = new LuiSprite(, , , 300, sCar, 0, 1, 1, 1);
 my_panel_4.add_content([
 	[scroll_panel,
 	simple_sprite,
-	new LuiSprite(, , 600, 100, sCarFlip, 0, 1, 1)]
+	new LuiSprite(, , , 100, sCarFlip, 0, 1, 1, 1)]
 ]);
 
 
@@ -127,7 +127,7 @@ for (var i = 0; i < 3; ++i) {
 
 scroll_panel.add_content([
 	_panel_in_scroll,
-	new LuiSprite(, , 600, 100, sCarFlip, 0, 1, 1)
+	new LuiSprite(, , , 100, sCarFlip, 0, 1, 1, 1)
 ]);
 
 _panel_in_scroll.add_content([

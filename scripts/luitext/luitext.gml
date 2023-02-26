@@ -3,12 +3,13 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} text
-function LuiText(x, y, width = 128, height = 32, text = "sample text") : LuiBase() constructor {
+function LuiText(x, y, width, height = 32, text = "sample text") : LuiBase() constructor {
 	self.name = "LuiText";
 	self.pos_x = x;
 	self.pos_y = y;
-	self.width = (width == undefined) ? string_width(text) : width;
+	self.width = width;
 	self.height = (height == undefined) ? max(self.min_height, string_height(text)) : height;
+	self.min_width = (width == undefined) ? string_width(text) : width;
 	
 	self.value = text;
 	self.text_halign = fa_left;

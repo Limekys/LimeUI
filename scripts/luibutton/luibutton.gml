@@ -4,7 +4,7 @@
 ///@arg {Any} height
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiButton(x, y, width = 128, height = 32, text = "button", callback = undefined) : LuiBase() constructor {
+function LuiButton(x, y, width, height = 32, text = "button", callback = undefined) : LuiBase() constructor {
 	
 	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
 	
@@ -12,18 +12,14 @@ function LuiButton(x, y, width = 128, height = 32, text = "button", callback = u
 	self.text = text;
 	self.pos_x = x;
 	self.pos_y = y;
-	self.width = (width == undefined) ? string_width(text) + self.style.padding : width;
+	self.width = width;
 	self.height = height;
-	self.min_width = string_width(text);
+	self.min_width = (width == undefined) ? string_width(text) + self.style.padding : width;
 	
 	self.button_color = self.style.color_main;
 	self.is_pressed = false;
 	
-	if callback == undefined {
-		self.callback = function() {print(self.text)};
-	} else {
-		self.callback = method(self, callback);
-	}
+	set_callback(callback);
 	
 	self.draw = function(x = self.x, y = self.y) {
 		//Base

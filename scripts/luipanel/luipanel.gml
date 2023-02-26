@@ -3,7 +3,7 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} name
-function LuiPanel(x, y, width = 256, height = 256, name = "LuiPanel") : LuiBase() constructor {
+function LuiPanel(x, y, width, height = 256, name = "LuiPanel") : LuiBase() constructor {
 	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;

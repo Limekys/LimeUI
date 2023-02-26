@@ -13,21 +13,15 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	self.index = index;
 	self.scale = scale;
 	
-	self.width = sprite_get_width(sprite) * self.scale;
+	self.width = undefined;
 	self.height = sprite_get_height(sprite) * self.scale;
-	self.min_width = self.width;
-	self.min_height = self.height;
-	self.max_width = self.width;
-	self.max_height = self.height;
+	self.min_width = sprite_get_width(sprite) * self.scale;
+	self.min_height = sprite_get_height(sprite) * self.scale;
 	
 	self.button_color = self.style.color_main;
 	self.is_pressed = false;
 	
-	if callback == undefined {
-		self.callback = function() {print(self.name)};
-	} else {
-		self.callback = method(self, callback);
-	}
+	set_callback(callback);
 	
 	self.draw = function(x = self.x, y = self.y) {
 		draw_sprite_ext(self.sprite, self.index, x, y, self.scale, self.scale, 0, self.button_color, 1);
