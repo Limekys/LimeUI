@@ -1,11 +1,11 @@
 global.lui_main_ui = undefined;
 
-function LuiBase(style = {}) constructor {
+function LuiBase(_style = {}) constructor {
 	global.lui_main_ui ??= self;
 	
 	self.name = "LuiBase";
 	self.value = undefined;
-	self.style = new LuiStyle(style);
+	self.style = new LuiStyle(_style);
 	
 	self.x = 0;					//Actual x position on the screen
 	self.y = 0;					//Actual y position on the screen
@@ -250,7 +250,7 @@ function LuiBase(style = {}) constructor {
 	///@func set_callback(callback)
 	static set_callback = function(callback) {
 		if callback == undefined {
-			self.callback = function() {print(self.name)};
+			self.callback = function() {show_debug_message(self.name)};
 		} else {
 			self.callback = method(self, callback);
 		}
