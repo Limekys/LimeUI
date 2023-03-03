@@ -13,11 +13,12 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	self.index = index;
 	self.scale = scale;
 	
-	self.width = undefined;
+	self.width = sprite_get_width(sprite) * self.scale;
 	self.height = sprite_get_height(sprite) * self.scale;
 	self.min_width = sprite_get_width(sprite) * self.scale;
 	self.min_height = sprite_get_height(sprite) * self.scale;
 	
+	self.style.color_main = c_white;
 	self.button_color = self.style.color_main;
 	self.is_pressed = false;
 	

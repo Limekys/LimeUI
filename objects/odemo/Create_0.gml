@@ -35,10 +35,10 @@ LUI_OVERLAY.style = new LuiStyle(global.demo_style);
 
 my_ui = new LuiBase(global.demo_style);
 
-my_panel = new LuiPanel(, , , 512);
-my_panel_2 = new LuiPanel(, , , 512);
-my_panel_3 = new LuiPanel(, , , 512);
-my_panel_4 = new LuiPanel(, , , 332).set_halign(fa_center);
+my_panel = new LuiPanel( , , , 512);
+my_panel_2 = new LuiPanel( , , , 512);
+my_panel_3 = new LuiPanel( , , , 512);
+my_panel_4 = new LuiPanel( , , , 332).set_halign(fa_center);
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
 	[my_panel_4, [0.75]]
@@ -57,9 +57,9 @@ my_panel.add_content([
 	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 64, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
 	[demo_loading],
 	[new LuiText( , , , , "Progress loading"),new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value})],
-	[new LuiText( , , , , "Textbox"), new LuiTextbox(, , , ,"some text", , , )],
-	new LuiTextbox(, , , ,"", "login", , ),
-	new LuiTextbox(, , , ,"", "password", true, ),
+	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , )],
+	new LuiTextbox( , , , ,"", "login", , ),
+	new LuiTextbox( , , , ,"", "password", true, ),
 	[btn_show_msg, btn_restart]
 ]);
 

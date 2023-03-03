@@ -58,10 +58,13 @@ function LuiBase(_style = {}) constructor {
 	///@func point_on_element()
 	static point_on_element = function(point_x, point_y) {
 		var _on_element = false;
-		for (var i = 0; i < array_length(self.parent.contents); ++i) {
-		    var _element = self.parent.contents[i];
+		var _n = array_length(self.contents);
+		if _n > 0
+		for (var i = 0; i < _n; ++i) {
+		    var _element = self.contents[i];
 			if _element == self continue;
-			_on_element = point_in_rectangle(point_x, point_y, _element.pos_x, _element.pos_y, _element.pos_x + _element.width, _element.pos_y + _element.height);
+			_on_element = point_in_rectangle(point_x, point_y, _element.pos_x, _element.pos_y, _element.pos_x + _element.width, _element.pos_y + _element.height) || point_on_element(_element.pos_x, _element.pos_y);
+			
 			if _on_element break;
 		}
 		return _on_element;
@@ -188,13 +191,13 @@ function LuiBase(_style = {}) constructor {
 		return self;
 	}
 	
-	///@func set_halign()
+	///@func set_halign(halign)
 	static set_halign = function(halign) {
 		self.halign = halign;
 		return self;
 	}
 	
-	///@func set_valign()
+	///@func set_valign(valign)
 	static set_valign = function(valign) {
 		self.valign = valign;
 		return self;
@@ -207,7 +210,7 @@ function LuiBase(_style = {}) constructor {
 			var _element = self.contents[i];
 			switch(_element.halign) {
 				case fa_left:
-					//while(_element.pos_x > _element.parent.style.padding) {
+					//while(_element.pos_x > _element.parent.style.padding || !point_on_element(_element.parent.pos_x, _element.parent.pos_y)) {
 					//	_element.pos_x--;
 					//}
 					_element.pos_x = _element.style.padding;

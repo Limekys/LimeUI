@@ -10,6 +10,7 @@ function LuiButton(x, y, width, height = 32, text = "button", callback = undefin
 	
 	self.name = "LuiButton";
 	self.text = text;
+	self.value = text;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
