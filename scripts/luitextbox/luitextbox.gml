@@ -102,11 +102,14 @@ function LuiTextbox(x, y, width, height = 32, start_text = "", hint = "", is_pas
 		}
 		
 		if has_focus {
-			if keyboard_check_pressed(vk_anykey) {
+			if keyboard_check(vk_anykey) {
 				self.set(keyboard_string);
+			}
+			if keyboard_check_released(vk_anykey) {
 				self.callback();
 			}
 			if (keyboard_check_pressed(vk_enter)) {
+				self.callback();
 				remove_focus();
 			}
 			if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {

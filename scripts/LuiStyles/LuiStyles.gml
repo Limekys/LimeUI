@@ -11,6 +11,8 @@ function LuiStyle(_style) constructor {
 	color_font_hint = _style[$ "color_font_hint"] ?? c_gray;
 	color_main = _style[$ "color_main"] ?? c_white;
 	color_border = _style[$ "color_border"] ?? c_gray;
+	color_button = _style[$ "color_button"] ?? c_white;
+	color_button_border = _style[$ "color_button_border"] ?? c_gray;
 	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
 	color_slider = _style[$ "color_slider"] ?? #45C952;
 	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;

@@ -1,6 +1,8 @@
 show_debug_overlay(true);
 randomize();
 
+/*
+//Light theme
 global.demo_style = {
 	//Fonts
 	font_default : fArial,
@@ -12,9 +14,45 @@ global.demo_style = {
 	color_font_hint : c_gray,
 	color_main : c_white,
 	color_border : merge_colour(c_white, c_black, 0.5),
+	color_button : c_white,
+	color_button_border : merge_colour(c_white, c_black, 0.5),
 	color_checkbox_pin : #45C952,
 	color_slider : #45C952,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
+	//Sprites
+	sprite_panel : sUI_panel,
+	sprite_panel_border : sUI_panel_border,
+	sprite_button : sUI_button,
+	sprite_button_border : sUI_button_border,
+	sprite_slider_knob : sUI_slider_knob,
+	sprite_slider_knob_border : sUI_slider_knob_border,
+	//Sounds
+	sound_click : sndBasicClick,
+	//Settings
+	padding : 16,
+	scroll_step : 32,
+	textbox_cursor : "|",
+	textbox_password : "•"
+}
+*/
+
+//Dark theme
+global.demo_style = {
+	//Fonts
+	font_default : fArial,
+	font_buttons : fArial,
+	font_sliders : fArial,
+	font_debug : fDebug,
+	//Colors
+	color_font : merge_color(c_white, #393c4f, 0.1),
+	color_font_hint : #77726e,
+	color_main : #393c4f,
+	color_border : #191a24,
+	color_button : #393c4f,
+	color_button_border : #191a24,
+	color_checkbox_pin : #3a7d44,
+	color_slider : #3a7d44,
+	color_textbox_border : #191a24,
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
@@ -90,7 +128,7 @@ my_panel_in_second_1.add_content([
 var _buttons1 = []
 var _buttons2 = []
 for (var i = 0; i < 12; ++i) {
-    var _button = new LuiSpriteButton( , , sLogoDemo, 0, 1, function() {self.set_color(choose(c_red, c_lime, c_aqua))});
+    var _button = new LuiSpriteButton( , , sLogoDemo, 0, 1, function() {self.set_color_blend(choose(#231b2a, #4e2640, #52466c))});
 	if i < 6 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);

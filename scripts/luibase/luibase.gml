@@ -253,7 +253,7 @@ function LuiBase(_style = {}) constructor {
 	///@func set_callback(callback)
 	static set_callback = function(callback) {
 		if callback == undefined {
-			self.callback = function() {show_debug_message(self.name)};
+			self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
 		} else {
 			self.callback = method(self, callback);
 		}
