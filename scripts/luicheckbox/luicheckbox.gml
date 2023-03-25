@@ -2,15 +2,15 @@
 ///@arg {Any} y
 ///@arg {Any} width
 ///@arg {Any} height
-///@arg {Real} value
+///@arg {Bool} value
 ///@arg {Function} callback
-function LuiCheckbox(x, y, width = 32, height = 32, value = false, callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x, y, width, height, value = false, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiButton";
 	self.value = value;
 	self.pos_x = x;
 	self.pos_y = y;
-	self.width = width;
-	self.height = height;
+	self.width = width ?? self.min_width;
+	self.height = height ?? self.min_height;
 	self.max_width = width;
 	self.max_height = height;
 	

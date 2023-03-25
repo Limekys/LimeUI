@@ -6,13 +6,13 @@
 ///@arg {Real} value_max
 ///@arg {Real} value
 ///@arg {Function} callback
-function LuiSlider(x, y, width, height = 32, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x, y, width, height, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSlider";
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
-	self.height = height;
-	self.max_height = height;
+	self.height = height ?? self.min_height;
+	self.max_height = self.height;
 	
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
@@ -65,11 +65,11 @@ function LuiSlider(x, y, width, height = 32, value_min = 0, value_max = 100, val
 		draw_set_valign(fa_middle);
 		draw_text(x + self.width div 2, y + self.height div 2, _value);
 		//Slider knob
-		var _knob_width = height;
-		var _knob_x = clamp(x + width * _bar_value - _knob_width div 2, x, x + width - _knob_width);
+		var _knob_width = self.style.sprite_panel != undefined ? sprite_get_width(self.style.sprite_panel) : self.height;
+		var _knob_x = clamp(x + self.width * _bar_value - _knob_width div 2, x, x + self.width - _knob_width);
 		var _knob_extender = 1;
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.style.color_main, 1);
-		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, height + _knob_extender*2, self.style.color_border, 1);
+		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_main, 1);
+		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_border, 1);
 	}
 	
 	return self;

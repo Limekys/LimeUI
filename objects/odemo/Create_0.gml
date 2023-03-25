@@ -146,7 +146,7 @@ my_panel_3.add_content([
 	new LuiDropDown( , , , , ["first", "second", "third"], "select element", )
 ]);
 
-scroll_panel = new LuiScrollPanel( , , , , );
+scroll_panel = new LuiScrollPanel( , , , 256, );
 simple_sprite = new LuiSprite( , , , 300, sCar, 0, 1, 1, 1);
 my_panel_4.add_content([
 	[scroll_panel,

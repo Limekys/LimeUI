@@ -3,12 +3,12 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} name
-function LuiScrollPanel(x, y, width = 256, height = 256, name = "LuiScrollPanel") : LuiBase() constructor {
+function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase() constructor {
 	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
-	self.height = height;
+	self.height = height ?? self.min_height;
 	
 	self.panel_surface = -1;
 	self.scroll_offset_y = 0;

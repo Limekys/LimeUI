@@ -7,15 +7,17 @@
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiTextbox(x, y, width, height = 32, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+	
+	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
+	
 	self.name = "LuiTextbox";
 	self.value = start_text;
 	self.pos_x = x;
 	self.pos_y = y;
-	self.width = width;
-	self.height = height;
-	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 	self.min_width = string_width(self.value);
+	self.width = width;
+	self.height = height ?? max(self.min_height, string_height(self.value));
 	
 	self.hint = hint;
 	self.is_password = is_password;

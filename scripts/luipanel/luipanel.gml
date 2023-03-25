@@ -3,12 +3,12 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} name
-function LuiPanel(x, y, width, height = 256, name = "LuiPanel") : LuiBase() constructor {
+function LuiPanel(x, y, width, height, name = "LuiPanel") : LuiBase() constructor {
 	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
-	self.height = height;
+	self.height = height ?? self.min_height;
 	
 	self.draw = function(x = self.x, y = self.y) {
 		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
