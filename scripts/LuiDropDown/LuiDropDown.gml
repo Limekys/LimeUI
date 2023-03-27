@@ -24,9 +24,9 @@ function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", cal
 	
 	set_callback(callback);
 	
-	self.draw = function(x = self.x, y = self.y) {
+	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
+		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
 		
 		//Text
 		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
@@ -34,8 +34,8 @@ function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", cal
 		if self.deactivated draw_set_color(c_dkgray) else draw_set_color(self.style.color_font);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		var _txt_x = x + self.width / 2;
-		var _txt_y = y + self.height / 2;
+		var _txt_x = draw_x + self.width / 2;
+		var _txt_y = draw_y + self.height / 2;
 		draw_text(_txt_x, _txt_y, string(self.value));
 		if value == "" {
 			draw_set_alpha(0.5);
@@ -43,20 +43,20 @@ function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", cal
 		}
 		
 		//Border
-		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
+		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
 		
 		//Drop list
 		if dropped {
 			for (var i = 0; i < array_length(drop_elements); ++i) {
 			    //Base
-				if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y + height + i*height, width, height, self.style.color_main, 1);
+				if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y + height + i*height, width, height, self.style.color_main, 1);
 				//Text
 				draw_set_alpha(1);
-				var _txt_x = x + width / 2;
-				var _txt_y = y + height / 2 + height + i*height;
+				var _txt_x = draw_x + width / 2;
+				var _txt_y = draw_y + height / 2 + height + i*height;
 				draw_text(_txt_x, _txt_y, string(drop_elements[i]));
 				//Border
-				if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y + height + i*height, width, height, self.style.color_border, 1);
+				if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y + height + i*height, width, height, self.style.color_border, 1);
 			}
 		}
 		
@@ -89,8 +89,8 @@ function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", cal
 					var _mouse_x = device_mouse_x_to_gui(0);
 					var _mouse_y = device_mouse_y_to_gui(0);
 					var _on_this = point_in_rectangle(_mouse_x, _mouse_y, 
-						self.x, self.y + height + i*height, 
-						self.x + self.width - 1, self.y + height + i*height + self.height - 1);
+						self.get_absolute_x(), self.get_absolute_y() + height + i*height, 
+						self.get_absolute_x() + self.width - 1, self.get_absolute_y() + height + i*height + self.height - 1);
 					if _on_this && mouse_check_button_pressed(mb_left) {
 						value = _element;
 						dropped = false;

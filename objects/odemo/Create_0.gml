@@ -91,8 +91,8 @@ btn_restart = new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16
 
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_text_halign(fa_center),
-	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 64, my_panel_4.pos_x + 64, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
-	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 64, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
+	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 128, my_panel_4.pos_x + 128, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
+	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 96, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
 	[demo_loading],
 	[new LuiText( , , , , "Progress loading"),new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value})],
 	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , )],
@@ -155,7 +155,7 @@ my_panel_4.add_content([
 ]);
 
 
-var _panel_in_scroll = new LuiPanel( , , , 100, "Panel in scroll panel");
+var _panel_in_scroll = new LuiPanel( , , , 128, "Panel in scroll panel");
 
 scroll_panel.add_content([
 	new LuiText( , , , , "Scroll panel")
@@ -171,5 +171,6 @@ scroll_panel.add_content([
 ]);
 
 _panel_in_scroll.add_content([
-	new LuiText( , , , , "TEST")
+	new LuiText( 16, 16, , , "Nested panel"),
+	new LuiButton( , , , , "Nested button")
 ]);

@@ -33,10 +33,11 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 	
 	set_callback(callback);
 	
-	self.draw = function(x = self.x, y = self.y) {
+	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Textbox field
 		var _border_color = has_focus ? self.style.color_border : self.style.color_textbox_border;
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, self.width, self.height, self.style.color_main, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
+		
 		//Set text
 		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 		draw_set_alpha(1);
@@ -44,8 +45,8 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_middle);
 		var _margin = 6;
-		var _txt_x = x + _margin;
-		var _txt_y = y + self.height / 2;
+		var _txt_x = draw_x + _margin;
+		var _txt_y = draw_y + self.height / 2;
 		var _display_text = self.value;
 		
 		//Password dots
@@ -69,10 +70,11 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		
 		//When mouse hover
 		if !has_focus && mouse_hover() {
-			if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, self.width, self.height, merge_colour(self.style.color_main, c_white, 0.5), 0.3);
+			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, merge_colour(self.style.color_main, c_white, 0.5), 0.3);
 		}
 		
-		if self.style.sprite_button_border != undefined draw_sprite_stretched_ext(self.style.sprite_button_border, 0, x, y, self.width, self.height, _border_color, 1);
+		//Border
+		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
 	}
 	
 	static set_focus = function() {

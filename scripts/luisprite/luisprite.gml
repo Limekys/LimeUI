@@ -37,7 +37,7 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1,
 		return self
 	}
 	
-	self.draw = function(x = self.x, y = self.y) {
+	self.draw = function(draw_x = 0, draw_y = 0) {
 		var _width = self.width;
 		var _height = self.height;
 		if self.maintain_aspect {
@@ -48,7 +48,7 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1,
 			}
 		}
 		draw_sprite_stretched_ext(self.value, self.index, 
-									x + self.width/2 - _width/2, y + self.height/2 - _height/2, _width, _height, 
+									draw_x + self.width/2 - _width/2, draw_y + self.height/2 - _height/2, _width, _height, 
 									self.color_blend, self.alpha);
 	}
 	

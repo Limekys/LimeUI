@@ -30,8 +30,8 @@ function LuiSlider(x, y, width, height, value_min = 0, value_max = 100, value = 
 	}
 	
 	self.step = function() {
-		var x1 = self.x;
-		var y1 = self.y;
+		var x1 = self.get_absolute_x();
+		var y1 = self.get_absolute_y();
 		var x2 = x1 + self.width;
 		var y2 = y1 + self.height;
 		
@@ -52,24 +52,24 @@ function LuiSlider(x, y, width, height, value_min = 0, value_max = 100, value = 
 		}
 	}
 	
-	self.draw = function(x = self.x, y = self.y) {
+	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Bar
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width * _bar_value, height, self.style.color_slider, 1);
-		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width * _bar_value, height, self.style.color_slider, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
 		//Text value
 		var _value = render_mode == 0 ? string(self.value) : string(round(self.value));
 		if !is_undefined(self.style.font_sliders) draw_set_font(self.style.font_sliders);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		draw_text(x + self.width div 2, y + self.height div 2, _value);
+		draw_text(draw_x + self.width div 2, draw_y + self.height div 2, _value);
 		//Slider knob
 		var _knob_width = self.style.sprite_panel != undefined ? sprite_get_width(self.style.sprite_panel) : self.height;
-		var _knob_x = clamp(x + self.width * _bar_value - _knob_width div 2, x, x + self.width - _knob_width);
+		var _knob_x = clamp(draw_x + self.width * _bar_value - _knob_width div 2, draw_x, draw_x + self.width - _knob_width);
 		var _knob_extender = 1;
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_main, 1);
-		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, _knob_x - _knob_extender, y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_border, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_main, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_border, 1);
 	}
 	
 	return self;

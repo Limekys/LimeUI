@@ -1,13 +1,13 @@
 {
   "FolderOrderSettings": [
-    {"name":"DEMO","order":1,"path":"folders/DEMO.yy",},
+    {"name":"DEMO","order":2,"path":"folders/DEMO.yy",},
     {"name":"Fonts","order":1,"path":"folders/DEMO/Fonts.yy",},
     {"name":"Sprites","order":2,"path":"folders/DEMO/Sprites.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"LuiPanel","order":5,"path":"scripts/LuiPanel/LuiPanel.yy",},
     {"name":"sUI_panel_border","order":1,"path":"sprites/sUI_panel_border/sUI_panel_border.yy",},
-    {"name":"UsefulFunctions","order":4,"path":"scripts/UsefulFunctions/UsefulFunctions.yy",},
+    {"name":"UsefulFunctions","order":1,"path":"scripts/UsefulFunctions/UsefulFunctions.yy",},
     {"name":"LuiProgressBar","order":8,"path":"scripts/LuiProgressBar/LuiProgressBar.yy",},
     {"name":"LuiSlider","order":7,"path":"scripts/LuiSlider/LuiSlider.yy",},
     {"name":"sndDeniedClick","order":1,"path":"sounds/sndDeniedClick/sndDeniedClick.yy",},
@@ -15,7 +15,7 @@
     {"name":"LuiStyles","order":3,"path":"scripts/LuiStyles/LuiStyles.yy",},
     {"name":"sCarFlip","order":5,"path":"sprites/sCarFlip/sCarFlip.yy",},
     {"name":"LuiDropDown","order":16,"path":"scripts/LuiDropDown/LuiDropDown.yy",},
-    {"name":"oSteadyDeltaTime","order":5,"path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},
+    {"name":"oSteadyDeltaTime","order":2,"path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},
     {"name":"fDebug","order":1,"path":"fonts/fDebug/fDebug.yy",},
     {"name":"LuiSpriteButton","order":12,"path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},
     {"name":"LuiSprite","order":15,"path":"scripts/LuiSprite/LuiSprite.yy",},

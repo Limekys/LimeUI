@@ -10,8 +10,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "DEMO",
-    "path": "folders/DEMO.yy",
+    "name": "Limekys",
+    "path": "folders/Limekys.yy",
   },
   "parentObjectId": null,
   "persistent": true,

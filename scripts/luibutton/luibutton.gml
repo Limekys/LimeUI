@@ -22,9 +22,9 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 	
 	set_callback(callback);
 	
-	self.draw = function(x = self.x, y = self.y) {
+	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
-		if self.style.sprite_button != undefined draw_sprite_stretched_ext(self.style.sprite_button, 0, x, y, width, height, self.button_color, 1);
+		draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, width, height, self.button_color, 1);
 		
 		//Text
 		if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
@@ -32,12 +32,12 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 		if self.deactivated draw_set_color(merge_color(self.style.color_font, c_black, 0.5)) else draw_set_color(self.style.color_font);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		var _txt_x = x + self.width / 2;
-		var _txt_y = y + self.height / 2;
+		var _txt_x = draw_x + self.width / 2;
+		var _txt_y = draw_y + self.height / 2;
 		draw_text(_txt_x, _txt_y, self.text);
 		
 		//Border
-		if self.style.sprite_button_border != undefined draw_sprite_stretched_ext(self.style.sprite_button_border, 0, x, y, width, height, self.style.color_button_border, 1);
+		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, width, height, self.style.color_button_border, 1);
 	}
 	
 	self.step = function() {

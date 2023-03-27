@@ -10,9 +10,9 @@ function LuiPanel(x, y, width, height, name = "LuiPanel") : LuiBase() constructo
 	self.width = width;
 	self.height = height ?? self.min_height;
 	
-	self.draw = function(x = self.x, y = self.y) {
-		if self.style.sprite_panel != undefined draw_sprite_stretched_ext(self.style.sprite_panel, 0, x, y, width, height, self.style.color_main, 1);
-		if self.style.sprite_panel_border != undefined draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, x, y, width, height, self.style.color_border, 1);
+	self.draw = function(draw_x = 0, draw_y = 0) {
+		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
+		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
 	}
 	
 	return self;

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "LimeUI",
-    "path": "folders/LimeUI.yy",
+    "path": "folders/Limekys/LimeUI.yy",
   },
 }
