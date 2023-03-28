@@ -58,8 +58,8 @@ global.demo_style = {
 	sprite_panel_border : sUI_panel_border,
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
-	sprite_slider_knob : sUI_slider_knob,
-	sprite_slider_knob_border : sUI_slider_knob_border,
+	sprite_slider_knob : sUI_panel,
+	sprite_slider_knob_border : sUI_panel_border,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
@@ -94,8 +94,8 @@ my_panel.add_content([
 	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 128, my_panel_4.pos_x + 128, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
 	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 96, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
 	[demo_loading],
-	[new LuiText( , , , , "Progress loading"),new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value})],
-	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , )],
+	[new LuiText( , , , , "Progress loading"), new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value}), [0.3, 0.7]],
+	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , ), [0.3, 0.7]],
 	new LuiTextbox( , , , ,"", "login", , ),
 	new LuiTextbox( , , , ,"", "password", true, ),
 	[btn_show_msg, btn_restart]
