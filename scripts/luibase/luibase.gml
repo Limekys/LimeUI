@@ -1,5 +1,6 @@
 global.lui_main_ui = undefined;
 
+///@arg {Struct} _style
 function LuiBase(_style = {}) constructor {
 	global.lui_main_ui ??= self;
 	
@@ -285,11 +286,28 @@ function LuiBase(_style = {}) constructor {
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _element_x = self.get_absolute_x();
 		var _element_y = self.get_absolute_y();
+		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
+		if !_on_this return false;
+		return self.hover_parent();
+	}
+	
+	///@func hover_parent()
+	static hover_parent = function() {
+		if is_undefined(self.parent) return false;
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
 		var _parent_x = self.parent.get_absolute_x();
 		var _parent_y = self.parent.get_absolute_y();
-		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
 		var _on_parent = point_in_rectangle(_mouse_x, _mouse_y, _parent_x, _parent_y, _parent_x + self.parent.width - 1, _parent_y + self.parent.height - 1);
-		return _on_this && _on_parent;
+		if _on_parent {
+			if !is_undefined(self.parent.parent) {
+				return self.parent.hover_parent();
+			} else {
+				return true
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	//Update

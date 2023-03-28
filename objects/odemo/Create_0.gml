@@ -73,7 +73,7 @@ LUI_OVERLAY.style = new LuiStyle(global.demo_style);
 
 my_ui = new LuiBase(global.demo_style);
 
-my_panel = new LuiPanel( , , , 512);
+my_panel = new LuiPanel( , , , 512, );
 my_panel_2 = new LuiPanel( , , , 512);
 my_panel_3 = new LuiPanel( , , , 512);
 my_panel_4 = new LuiPanel( , , , 332).set_halign(fa_center);
