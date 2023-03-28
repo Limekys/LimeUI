@@ -364,18 +364,27 @@ function LuiBase(_style = {}) constructor {
 	static render = function(base_x = 0, base_y = 0) {
 		if array_length(self.contents) > 0
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
+			//Get element
 			var _element = self.contents[i];
+			//Calculate absolute position
+			var _e_x = _element.get_absolute_x();
+			var _e_y = _element.get_absolute_y();
+			var _p_x = _element.parent.get_absolute_x();
+			var _p_y = _element.parent.get_absolute_y();
+			//Check if the element is in the area of its parent and draw
+			if rectangle_in_rectangle(
+				_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+				_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height)
 			if _element.draw_relative == false {
-				_element.draw(_element.get_absolute_x(), _element.get_absolute_y());
+				_element.draw(_e_x, _e_y);
 				_element.render(base_x, base_y);
-				if global.LUI_DEBUG_MODE _element.render_debug(_element.get_absolute_x(), _element.get_absolute_y());
+				if global.LUI_DEBUG_MODE _element.render_debug(_e_x, _e_y);
 			} else {
 				_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
 				_element.render(_element.pos_x, _element.pos_y);
 				if global.LUI_DEBUG_MODE _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
 			}
 		}
-		//self.render_debug(); //Not necessary since the first element will be the main container
 	}
 	
 	///@func render_debug()

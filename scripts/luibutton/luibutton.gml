@@ -30,7 +30,7 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 		//Text
 		if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
 		draw_set_alpha(1);
-		if self.deactivated draw_set_color(merge_color(self.style.color_font, c_black, 0.5)) else draw_set_color(self.style.color_font);
+		if self.deactivated draw_set_color(merge_color(self.style.color_font, c_gray, 0.5)) else draw_set_color(self.style.color_font);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		var _txt_x = draw_x + self.width / 2;
@@ -63,6 +63,13 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 				self.is_pressed = false;
 			}
 		}
+	}
+	
+	///@func set_color(main, border)
+	self.set_color = function(main = undefined, border = undefined) {
+		if !is_undefined(main) self.style.color_button = main;
+		if !is_undefined(border) self.style.color_button_border = border;
+		return self;
 	}
 	
 	return self;

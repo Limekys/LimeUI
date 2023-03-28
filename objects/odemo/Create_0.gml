@@ -101,8 +101,8 @@ my_panel.add_content([
 	[btn_show_msg, btn_restart]
 ]);
 
-btn_show_msg.set_color(merge_color(c_yellow, c_white, 0.5));
-btn_restart.set_color(merge_color(c_red, c_white, 0.5));
+btn_show_msg.set_color(merge_color(#ffff77, c_black, 0.5));
+btn_restart.set_color(merge_color(#ff7777, c_black, 0.5));
 
 my_panel_in_second_1 = new LuiPanel( , , , 200);
 my_panel_in_second_2 = new LuiPanel( , , , 220);
