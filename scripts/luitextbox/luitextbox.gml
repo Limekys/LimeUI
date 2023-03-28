@@ -36,7 +36,7 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Textbox field
 		var _border_color = has_focus ? self.style.color_border : self.style.color_textbox_border;
-		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
+		if !is_undefined(self.style.sprite_panel) draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
 		
 		//Set text
 		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
@@ -74,6 +74,7 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		}
 		
 		//Border
+		if !is_undefined(self.style.sprite_panel_border)
 		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
 	}
 	

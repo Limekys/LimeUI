@@ -22,8 +22,8 @@ function LuiCheckbox(x, y, width, height, value = false, callback = undefined) :
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		var _color = self.value ? self.style.color_checkbox_pin : self.checkbox_color;
 		var _pin_margin = 6;
-		draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x + _pin_margin, draw_y + _pin_margin, width - _pin_margin*2, height - _pin_margin*2, _color, 1);
-		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
+		if !is_undefined(self.style.sprite_button) draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x + _pin_margin, draw_y + _pin_margin, width - _pin_margin*2, height - _pin_margin*2, _color, 1);
+		if !is_undefined(self.style.sprite_button_border) draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
 	}
 	
 	self.step = function() {

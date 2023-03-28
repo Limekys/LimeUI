@@ -56,11 +56,13 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Panel
+		if !is_undefined(self.style.sprite_panel)
 		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
 		//Surface
 		if surface_exists(self.panel_surface)
 		draw_surface(self.panel_surface, draw_x, draw_y + self.surface_offset.top);
 		//Panel border
+		if !is_undefined(self.style.sprite_panel_border)
 		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_border, 1);
 	}
 	

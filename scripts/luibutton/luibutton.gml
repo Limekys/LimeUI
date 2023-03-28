@@ -24,6 +24,7 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
+		if !is_undefined(self.style.sprite_button)
 		draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, width, height, self.button_color, 1);
 		
 		//Text
@@ -37,6 +38,7 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 		draw_text(_txt_x, _txt_y, self.text);
 		
 		//Border
+		if !is_undefined(self.style.sprite_button_border)
 		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, width, height, self.style.color_button_border, 1);
 	}
 	

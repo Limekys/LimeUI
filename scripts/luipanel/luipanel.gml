@@ -11,7 +11,9 @@ function LuiPanel(x, y, width, height, name = "LuiPanel") : LuiBase() constructo
 	self.height = height ?? self.min_height;
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
+		if !is_undefined(self.style.sprite_panel)
 		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
+		if !is_undefined(self.style.sprite_panel_border)
 		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
 	}
 	
