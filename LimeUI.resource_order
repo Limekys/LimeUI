@@ -30,6 +30,7 @@
     {"name":"LuiBase","order":4,"path":"scripts/LuiBase/LuiBase.yy",},
     {"name":"LuiMessage","order":10,"path":"scripts/LuiMessage/LuiMessage.yy",},
     {"name":"LuiButton","order":6,"path":"scripts/LuiButton/LuiButton.yy",},
+    {"name":"shPremultiplyAlpha","order":17,"path":"shaders/shPremultiplyAlpha/shPremultiplyAlpha.yy",},
     {"name":"LuiScrollPanel","order":14,"path":"scripts/LuiScrollPanel/LuiScrollPanel.yy",},
     {"name":"sUI_slider_knob","order":6,"path":"sprites/sUI_slider_knob/sUI_slider_knob.yy",},
     {"name":"sUI_button_border","order":3,"path":"sprites/sUI_button_border/sUI_button_border.yy",},

@@ -20,12 +20,12 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 		bottom : 3
 	};
 	
-	//
+	//Slightly change the function of adding elements for the Scroll Panel so that all elements are drawn relative
 	self.add_content_main = method(self, self.add_content);
 	self.add_content = function(elements) {
 		self.add_content_main(elements);
-		if !is_array(elements) elements = [elements];
-		array_foreach(elements, function(_elm) {
+		if array_length(self.contents) > 0
+		array_foreach(self.contents, function(_elm) {
 			_elm.draw_relative = true;
 		})
 	}
@@ -50,7 +50,11 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 		//Draw on surface
 		surface_set_target(self.panel_surface);
 		draw_clear_alpha(c_white, 0);
+		//shader_set(shPremultiplyAlpha);
+		//gpu_set_blendmode_ext(bm_one, bm_inv_src_alpha);
 		self.render_main();
+		//gpu_set_blendmode(bm_normal);
+		//shader_reset();
 		surface_reset_target();
 	}
 	
@@ -59,8 +63,9 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 		if !is_undefined(self.style.sprite_panel)
 		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
 		//Surface
-		if surface_exists(self.panel_surface)
-		draw_surface(self.panel_surface, draw_x, draw_y + self.surface_offset.top);
+		if surface_exists(self.panel_surface) {
+			draw_surface(self.panel_surface, draw_x, draw_y + self.surface_offset.top);
+		}
 		//Panel border
 		if !is_undefined(self.style.sprite_panel_border)
 		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_border, 1);

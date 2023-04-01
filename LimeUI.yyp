@@ -53,6 +53,7 @@
     {"id":{"name":"LuiBase","path":"scripts/LuiBase/LuiBase.yy",},},
     {"id":{"name":"LuiMessage","path":"scripts/LuiMessage/LuiMessage.yy",},},
     {"id":{"name":"LuiButton","path":"scripts/LuiButton/LuiButton.yy",},},
+    {"id":{"name":"shPremultiplyAlpha","path":"shaders/shPremultiplyAlpha/shPremultiplyAlpha.yy",},},
     {"id":{"name":"sndBasicClick","path":"sounds/sndBasicClick/sndBasicClick.yy",},},
     {"id":{"name":"LuiScrollPanel","path":"scripts/LuiScrollPanel/LuiScrollPanel.yy",},},
     {"id":{"name":"sUI_slider_knob","path":"sprites/sUI_slider_knob/sUI_slider_knob.yy",},},
