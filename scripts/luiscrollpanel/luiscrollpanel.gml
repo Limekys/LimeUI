@@ -76,7 +76,7 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 			var _wheel = mouse_wheel_up() - mouse_wheel_down();
 			if _wheel != 0 {
 				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
-				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -self.get_last().start_y + self.get_last().height + self.style.padding*2, 0);
+				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0);
 			}
 		}
 		if self.scroll_offset_y != self.scroll_target_offset_y {
