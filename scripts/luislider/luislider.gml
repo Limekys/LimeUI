@@ -70,7 +70,7 @@ function LuiSlider(x, y, width, height, value_min = 0, value_max = 100, value = 
 		var _knob_extender = 1;
 		if !is_undefined(self.style.sprite_slider_knob) {
 			var _blend_color = self.style.color_main;
-			if self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.25);
+			if self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_color, 1);
 		}
 		if !is_undefined(self.style.sprite_slider_knob_border) draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_border, 1);

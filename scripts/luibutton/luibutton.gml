@@ -47,7 +47,7 @@ function LuiButton(x, y, width, height, text = "button", callback = undefined) :
 			self.button_color = merge_color(self.style.color_button, c_black, 0.5);
 		} else {
 			if mouse_hover() { 
-				self.button_color = merge_colour(self.style.color_button, self.style.color_hover, 0.25);
+				self.button_color = merge_colour(self.style.color_button, self.style.color_hover, 0.5);
 				if mouse_check_button_pressed(mb_left) {
 					self.is_pressed = true;
 				}

@@ -28,7 +28,7 @@ function LuiCheckbox(x, y, width, height, value = false, callback = undefined) :
 	
 	self.step = function() {
 		if mouse_hover() { 
-			self.checkbox_color = merge_colour(self.style.color_main, c_gray, 0.5);
+			self.checkbox_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
 			if mouse_check_button_pressed(mb_left) {
 				self.can_pressed = true;
 			}

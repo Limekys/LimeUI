@@ -13,7 +13,7 @@ function LuiStyle(_style) constructor {
 	color_border = _style[$ "color_border"] ?? c_gray;
 	color_button = _style[$ "color_button"] ?? c_white;
 	color_button_border = _style[$ "color_button_border"] ?? c_gray;
-	color_hover = _style[$ "color_hover"] ?? c_gray;	//mixes the color of the main color of this element by 25%
+	color_hover = _style[$ "color_hover"] ?? c_gray;	//mixes the color of the main color of this element by 50%
 	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
 	color_slider = _style[$ "color_slider"] ?? #45C952;
 	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;

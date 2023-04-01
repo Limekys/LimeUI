@@ -50,7 +50,7 @@ global.demo_style = {
 	color_border : #191a24,
 	color_button : #393c4f,
 	color_button_border : #191a24,
-	color_button_hover : c_gray,
+	color_hover : c_gray,
 	color_checkbox_pin : #3a7d44,
 	color_slider : #3a7d44,
 	color_textbox_border : #191a24,
