@@ -70,7 +70,7 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		
 		//When mouse hover
 		if !has_focus && mouse_hover() {
-			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, merge_colour(self.style.color_main, c_white, 0.5), 0.3);
+			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, merge_colour(self.style.color_main, self.style.color_hover, 0.25), 0.5);
 		}
 		
 		//Border

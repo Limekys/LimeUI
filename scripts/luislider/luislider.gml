@@ -68,7 +68,11 @@ function LuiSlider(x, y, width, height, value_min = 0, value_max = 100, value = 
 		var _knob_width = !is_undefined(self.style.sprite_slider_knob) ? sprite_get_nineslice(self.style.sprite_slider_knob).left + sprite_get_nineslice(self.style.sprite_slider_knob).right : self.height;
 		var _knob_x = clamp(draw_x + self.width * _bar_value - _knob_width div 2, draw_x, draw_x + self.width - _knob_width);
 		var _knob_extender = 1;
-		if !is_undefined(self.style.sprite_slider_knob) draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_main, 1);
+		if !is_undefined(self.style.sprite_slider_knob) {
+			var _blend_color = self.style.color_main;
+			if self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.25);
+			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_color, 1);
+		}
 		if !is_undefined(self.style.sprite_slider_knob_border) draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_border, 1);
 	}
 	

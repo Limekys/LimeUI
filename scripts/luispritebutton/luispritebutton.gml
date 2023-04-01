@@ -34,7 +34,7 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	
 	self.step = function() {
 		if mouse_hover() { 
-			self.button_color = merge_colour(self.color_blend, c_gray, 0.5);
+			self.button_color = merge_colour(self.color_blend, self.style.color_hover, 0.25);
 			if mouse_check_button_pressed(mb_left) {
 				self.is_pressed = true;
 			}
