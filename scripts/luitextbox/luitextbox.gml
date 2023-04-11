@@ -107,6 +107,9 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		
 		if has_focus {
 			if keyboard_check(vk_anykey) {
+				if string_length(keyboard_string) > self.max_length {
+				    keyboard_string = string_copy(keyboard_string, 1, self.max_length);
+				}
 				self.set(keyboard_string);
 			}
 			if keyboard_check_released(vk_anykey) {
