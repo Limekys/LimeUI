@@ -1,5 +1,5 @@
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.03.11"
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.04.10"
 
 #macro DT global.dt_steady
 
@@ -347,8 +347,8 @@ function Range(value, old_min, old_max, new_min, new_max) {
 function IntervalUpdateFunction(name, seconds, _function, start_from = -1) {
 	var n1 = name + "_interval";
 	var n2 = name + "_interval_lenght";
-	if !variable_instance_exists(self, n1) self[$ n1] = 0;
-	if !variable_instance_exists(self, n2) self[$ n2] = start_from == -1 ? seconds : start_from;
+	if !variable_instance_exists(self, n1) self[$ n1] = start_from == -1 ? 0 : start_from;
+	if !variable_instance_exists(self, n2) self[$ n2] = seconds;
 	
 	self[$ n1] += DT;
 	if self[$ n1] >= self[$ n2] {
