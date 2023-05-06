@@ -360,7 +360,7 @@ function LuiBase(_style = {}) constructor {
 	draw = function() { }
 	
 	///@func render(base_x, base_y)
-	///@desc This function draws all nested elements except itself!
+	///@desc This function draws all nested elements inside parent except itself!
 	static render = function(base_x = 0, base_y = 0) {
 		if array_length(self.contents) > 0
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
