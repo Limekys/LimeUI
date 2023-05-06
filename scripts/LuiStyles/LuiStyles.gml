@@ -17,6 +17,8 @@ function LuiStyle(_style) constructor {
 	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
 	color_slider = _style[$ "color_slider"] ?? #45C952;
 	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
+	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_white;
+	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
 	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
@@ -24,6 +26,8 @@ function LuiStyle(_style) constructor {
 	sprite_button_border = _style[$ "sprite_button_border"] ?? undefined;
 	sprite_slider_knob = _style[$ "sprite_slider_knob"] ?? undefined;
 	sprite_slider_knob_border = _style[$ "sprite_slider_knob_border"] ?? undefined;
+	sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
+	sprite_scroll_slider_back = _style[$ "sprite_scroll_slider_back"] ?? undefined;
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
@@ -31,4 +35,6 @@ function LuiStyle(_style) constructor {
 	scroll_step = _style[$ "scroll_step"] ?? 32;
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
+	//Animations
+	
 }

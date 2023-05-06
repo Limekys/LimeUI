@@ -19,13 +19,17 @@ global.demo_style = {
 	color_checkbox_pin : #45C952,
 	color_slider : #45C952,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
+	color_scroll_slider : c_white,
+	color_scroll_slider_back : c_gray,
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
-	sprite_slider_knob : sUI_slider_knob,
-	sprite_slider_knob_border : sUI_slider_knob_border,
+	sprite_slider_knob : sUI_panel,
+	sprite_slider_knob_border : sUI_panel_border,
+	sprite_scroll_slider : sUI_scroll_slider,
+	sprite_scroll_slider_back : sUI_scroll_slider,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
@@ -54,6 +58,8 @@ global.demo_style = {
 	color_checkbox_pin : #3a7d44,
 	color_slider : #3a7d44,
 	color_textbox_border : #191a24,
+	color_scroll_slider : #393c4f,
+	color_scroll_slider_back : #191a24,
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
@@ -61,6 +67,8 @@ global.demo_style = {
 	sprite_button_border : sUI_button_border,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
+	sprite_scroll_slider : sUI_scroll_slider,
+	sprite_scroll_slider_back : sUI_scroll_slider,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings

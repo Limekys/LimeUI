@@ -25,6 +25,7 @@
     "IDEVersion": "2023.4.0.84",
   },
   "resources": [
+    {"id":{"name":"LuiContainer","path":"scripts/LuiContainer/LuiContainer.yy",},},
     {"id":{"name":"LuiPanel","path":"scripts/LuiPanel/LuiPanel.yy",},},
     {"id":{"name":"sUI_panel_border","path":"sprites/sUI_panel_border/sUI_panel_border.yy",},},
     {"id":{"name":"UsefulFunctions","path":"scripts/UsefulFunctions/UsefulFunctions.yy",},},
@@ -41,6 +42,7 @@
     {"id":{"name":"LuiSpriteButton","path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},},
     {"id":{"name":"LuiSprite","path":"scripts/LuiSprite/LuiSprite.yy",},},
     {"id":{"name":"sLogoDemo","path":"sprites/sLogoDemo/sLogoDemo.yy",},},
+    {"id":{"name":"sUI_scroll_slider","path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},},
     {"id":{"name":"LuiCheckbox","path":"scripts/LuiCheckbox/LuiCheckbox.yy",},},
     {"id":{"name":"sUI_slider_knob_border","path":"sprites/sUI_slider_knob_border/sUI_slider_knob_border.yy",},},
     {"id":{"name":"sCar","path":"sprites/sCar/sCar.yy",},},
