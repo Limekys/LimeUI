@@ -12,7 +12,7 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 	
 	self.name = "LuiTextbox";
-	self.value = start_text;
+	self.value = string(start_text);
 	self.pos_x = x;
 	self.pos_y = y;
 	self.min_width = string_width(self.value);

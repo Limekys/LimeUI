@@ -65,6 +65,7 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 		}
 		//Surface
 		if surface_exists(self.panel_surface) {
+			draw_set_alpha(1);
 			draw_surface(self.panel_surface, draw_x, draw_y + self.surface_offset.top);
 		}
 		//Scroll slider //???//

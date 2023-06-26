@@ -14,10 +14,10 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	self.scale = scale;
 	self.color_blend = c_white;
 	
-	self.width = sprite_get_width(sprite) * self.scale;
-	self.height = sprite_get_height(sprite) * self.scale;
-	self.min_width = sprite_get_width(sprite) * self.scale;
-	self.min_height = sprite_get_height(sprite) * self.scale;
+	self.width = sprite_get_width(self.sprite) * self.scale;
+	self.height = sprite_get_height(self.sprite) * self.scale;
+	self.min_width = sprite_get_width(self.sprite) * self.scale;
+	self.min_height = sprite_get_height(self.sprite) * self.scale;
 	
 	self.button_color = self.color_blend;
 	self.is_pressed = false;
@@ -29,7 +29,7 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		draw_sprite_ext(self.sprite, self.index, draw_x, draw_y, self.scale, self.scale, 0, self.button_color, 1);
+		draw_sprite_stretched_ext(self.sprite, self.index, draw_x, draw_y, self.width, self.height, self.button_color, 1);
 	}
 	
 	self.step = function() {
