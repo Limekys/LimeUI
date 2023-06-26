@@ -68,14 +68,15 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 			draw_set_alpha(1);
 			draw_surface(self.panel_surface, draw_x, draw_y + self.surface_offset.top);
 		}
-		//Scroll slider //???//
+		//Scroll slider
 		var _scroll_slider_offset = 8;
 		var _scroll_slider_x = draw_x + self.width - _scroll_slider_offset - _scroll_slider_offset div 2;
 		if !is_undefined(self.style.sprite_scroll_slider_back) {
-			draw_sprite_stretched_ext(self.style.sprite_scroll_slider_back, 0, _scroll_slider_x, draw_y + _scroll_slider_offset, 8, self.height - _scroll_slider_offset*2, self.style.color_scroll_slider_back, 1);
+			draw_sprite_stretched_ext(self.style.sprite_scroll_slider_back, 0, _scroll_slider_x, draw_y + _scroll_slider_offset, _scroll_slider_offset, self.height - _scroll_slider_offset*2, self.style.color_scroll_slider_back, 1);
 		}
 		if !is_undefined(self.style.sprite_scroll_slider) {
-			draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, draw_y + _scroll_slider_offset - self.scroll_offset_y, 8, 8, self.style.color_scroll_slider, 1);
+			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
+			draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, draw_y + _scroll_slider_offset + _scroll_slider_y, _scroll_slider_offset, _scroll_slider_offset, self.style.color_scroll_slider, 1);
 		}
 		//Panel border
 		if !is_undefined(self.style.sprite_panel_border)

@@ -176,7 +176,10 @@ for (var i = 0; i < 3; ++i) {
 
 scroll_panel.add_content([
 	_panel_in_scroll,
-	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1)
+	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1),
+	new LuiSprite( , , , 100, sCar, 0, 1, 1, 1),
+	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1),
+	new LuiSprite( , , , 100, sCar, 0, 1, 1, 1),
 ]);
 
 _panel_in_scroll.add_content([
