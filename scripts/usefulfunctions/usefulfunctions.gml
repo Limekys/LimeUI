@@ -1,7 +1,5 @@
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.04.10"
-
-#macro DT global.dt_steady
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2023.08.05"
 
 function Approach(_value, _dest, _amount) {
 	return (_value + clamp(_dest-_value, -_amount, _amount));
@@ -344,10 +342,10 @@ function Range(value, old_min, old_max, new_min, new_max) {
 ///@arg {Real} seconds
 ///@arg {Function} _function
 ///@arg {Real} start_from
-function IntervalUpdateFunction(name, seconds, _function, start_from = -1) {
+function IntervalUpdateFunction(name, seconds, _function, start_from = 0) {
 	var n1 = name + "_interval";
 	var n2 = name + "_interval_lenght";
-	if !variable_instance_exists(self, n1) self[$ n1] = start_from == -1 ? 0 : start_from;
+	if !variable_instance_exists(self, n1) self[$ n1] = start_from;
 	if !variable_instance_exists(self, n2) self[$ n2] = seconds;
 	
 	self[$ n1] += DT;
