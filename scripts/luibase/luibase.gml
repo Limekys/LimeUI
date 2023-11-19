@@ -34,29 +34,29 @@ function LuiBase(_style = {}) constructor {
 	self.draw_relative = false;
 	
 	//Focusing
-	///@func set_focus()
+	///@desc set_focus
 	static set_focus = function() {
 		self.has_focus = true;
 		return self;
 	}
-	///@func remove_focus()
+	///@desc remove_focus
 	static remove_focus = function() {
 		self.has_focus = false;
 		return self;
 	}
 	
 	//Funcs
-	///@func activate()
+	///@desc activate
 	static activate = function() {
 		self.deactivated = false;
 		return self;
 	}
-	///@func deactivate()
+	///@desc deactivate
 	static deactivate = function() {
 		self.deactivated = true;
 		return self;
 	}
-	///@func point_on_element()
+	///@desc point_on_element
 	static point_on_element = function(point_x, point_y) {
 		var _on_element = false;
 		var _n = array_length(self.contents);
@@ -72,19 +72,19 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Add content
-	///@func get_first()
+	///@desc get_first
 	static get_first = function() {
         if (array_length(self.contents) == 0) return undefined;
         return self.contents[0];
     };
 	
-	///@func get_last()
+	///@desc get_last
 	static get_last = function() {
         if (array_length(self.contents) == 0) return undefined;
         return self.contents[array_length(self.contents) - 1];
     };
 	
-	///@func add_content(elements)
+	///@desc add_content(elements)
 	///@arg {Any} elements
 	static add_content = function(elements) {
 		//Convert to array if one element
@@ -167,13 +167,13 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Setter and getter
-	///@func get()
+	///@desc get()
 	static get = function() { return self.value; }
-	///@func set()
+	///@desc set()
 	static set = function(value) { self.value = value; return self}
 	
 	//Alignment and sizes
-	///@func stretch_horizontally(padding)
+	///@desc stretch_horizontally(padding)
 	static stretch_horizontally = function(padding) {
 		var _last = parent.get_last();
 		if (_last) && (_last.pos_x + _last.width < parent.width - self.min_width - padding) {
@@ -184,7 +184,7 @@ function LuiBase(_style = {}) constructor {
 		return self;
 	}
 	
-	///@func stretch_vertically(padding)
+	///@desc stretch_vertically(padding)
 	static stretch_vertically = function(padding) {
 		var _last = parent.get_last();
 		if (_last) && (_last.pos_y + _last.height < parent.height - self.min_height - padding) {
@@ -195,19 +195,19 @@ function LuiBase(_style = {}) constructor {
 		return self;
 	}
 	
-	///@func set_halign(halign)
+	///@desc set_halign(halign)
 	static set_halign = function(halign) {
 		self.halign = halign;
 		return self;
 	}
 	
-	///@func set_valign(valign)
+	///@desc set_valign(valign)
 	static set_valign = function(valign) {
 		self.valign = valign;
 		return self;
 	}
 	
-	///@func align_all_elements() //???//
+	///@desc align_all_elements() //???//
 	static align_all_elements = function() {
 		if array_length(self.contents) > 0
 		for (var i = 0; i < array_length(self.contents); i++) {
@@ -246,7 +246,7 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Design
-	///@func set_color(main, border)
+	///@desc set_color(main, border)
 	static set_color = function(main = undefined, border = undefined) {
 		if !is_undefined(main) self.style.color_main = main;
 		if !is_undefined(border) self.style.color_border = border;
@@ -254,7 +254,7 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Interactivity
-	///@func set_callback(callback)
+	///@desc set_callback(callback)
 	static set_callback = function(callback) {
 		if callback == undefined {
 			self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
@@ -264,7 +264,7 @@ function LuiBase(_style = {}) constructor {
 		return self;
 	}
 	
-	///@func get_absolute_x()
+	///@desc get_absolute_x()
 	static get_absolute_x = function() {
 		if self.parent != undefined
 		return self.pos_x + self.parent.get_absolute_x();
@@ -272,7 +272,7 @@ function LuiBase(_style = {}) constructor {
 		return self.pos_x;
 	}
 	
-	///@func get_absolute_y()
+	///@desc get_absolute_y()
 	static get_absolute_y = function() {
 		if self.parent != undefined
 		return self.pos_y + self.parent.get_absolute_y();
@@ -280,7 +280,7 @@ function LuiBase(_style = {}) constructor {
 		return self.pos_y;
 	}
 	
-	///@func mouse_hover()
+	///@desc mouse_hover()
 	static mouse_hover = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
@@ -291,7 +291,7 @@ function LuiBase(_style = {}) constructor {
 		return self.hover_parent();
 	}
 	
-	///@func hover_parent()
+	///@desc hover_parent()
 	static hover_parent = function() {
 		if is_undefined(self.parent) return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
@@ -311,10 +311,10 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Update
-	///@func step()
+	///@desc step()
 	step = function() { }
 	
-	///@func update()
+	///@desc update()
 	static update = function() {
 		self.step();
 		//Update all elements
@@ -356,10 +356,9 @@ function LuiBase(_style = {}) constructor {
 	//}
 	
 	//Render
-	///@func draw()
+	///@desc draw()
 	draw = function() { }
 	
-	///@func render(base_x, base_y)
 	///@desc This function draws all nested elements inside parent except itself!
 	static render = function(base_x = 0, base_y = 0) {
 		if array_length(self.contents) > 0
@@ -387,7 +386,7 @@ function LuiBase(_style = {}) constructor {
 		}
 	}
 	
-	///@func render_debug()
+	///@desc render_debug()
 	static render_debug = function(_x = self.get_absolute_x(), _y = self.get_absolute_y()) {
 		if global.LUI_DEBUG_MODE == 1 {
 			draw_set_alpha(0.25);
@@ -409,7 +408,7 @@ function LuiBase(_style = {}) constructor {
 		}
 	}
 	
-	///@func _lui_draw_text_debug(x, y, text)
+	///@desc _lui_draw_text_debug(x, y, text)
 	static _lui_draw_text_debug = function(x, y, text) {
 		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
 		var _text_width = string_width(text);
@@ -424,7 +423,7 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Clean up
-	///@func destroy()
+	///@desc destroy()
 	static destroy = function() {
 		if array_length(self.contents) > 0 {
 			for (var i = 0, n = array_length(self.contents); i < n; i++) {
