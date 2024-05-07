@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "LuiStyles",
-  "isCompatibility": false,
-  "isDnD": false,
-  "parent": {
-    "name": "LimeUI",
-    "path": "folders/Limekys/LimeUI.yy",
+  "$GMScript":"",
+  "%Name":"LuiStyles",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"LuiStyles",
+  "parent":{
+    "name":"LimeUI",
+    "path":"folders/Limekys/LimeUI.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }
