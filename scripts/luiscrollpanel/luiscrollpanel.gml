@@ -74,7 +74,7 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 		if !is_undefined(self.style.sprite_scroll_slider_back) {
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider_back, 0, _scroll_slider_x, draw_y + _scroll_slider_offset, _scroll_slider_offset, self.height - _scroll_slider_offset*2, self.style.color_scroll_slider_back, 1);
 		}
-		if !is_undefined(self.style.sprite_scroll_slider) {
+		if !is_undefined(self.style.sprite_scroll_slider) && array_length(self.contents) > 0 {
 			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, draw_y + _scroll_slider_offset + _scroll_slider_y, _scroll_slider_offset, _scroll_slider_offset, self.style.color_scroll_slider, 1);
 		}
@@ -84,7 +84,7 @@ function LuiScrollPanel(x, y, width, height, name = "LuiScrollPanel") : LuiBase(
 	}
 	
 	self.step = function() {
-		if mouse_hover() {
+		if mouse_hover() && array_length(self.contents) > 0 {
 			var _wheel = mouse_wheel_up() - mouse_wheel_down();
 			if _wheel != 0 {
 				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
