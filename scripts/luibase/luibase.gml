@@ -49,11 +49,17 @@ function LuiBase(_style = {}) constructor {
 	///@desc activate
 	static activate = function() {
 		self.deactivated = false;
+		array_foreach(self.contents, function(_elm) {
+			_elm.activate();
+		});
 		return self;
 	}
 	///@desc deactivate
 	static deactivate = function() {
 		self.deactivated = true;
+		array_foreach(self.contents, function(_elm) {
+			_elm.deactivate();
+		});
 		return self;
 	}
 	///@desc point_on_element //???//
@@ -332,7 +338,7 @@ function LuiBase(_style = {}) constructor {
 	
 	///@desc update()
 	static update = function() {
-		self.step();
+		if !self.deactivated self.step();
 		//Update all elements
 		if array_length(self.contents) > 0
 		for (var i = array_length(self.contents)-1; i >= 0; --i) {

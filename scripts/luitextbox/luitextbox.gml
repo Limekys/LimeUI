@@ -35,10 +35,10 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Textbox field
-		var _border_color = has_focus ? self.style.color_border : self.style.color_textbox_border;
+		var _border_color = self.has_focus ? self.style.color_border : self.style.color_textbox_border;
 		if !is_undefined(self.style.sprite_panel) {
 			var _blend_color = self.style.color_main;
-			if !has_focus && self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
+			if !self.deactivated && !self.has_focus && self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
 			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
