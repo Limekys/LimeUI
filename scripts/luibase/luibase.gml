@@ -56,7 +56,7 @@ function LuiBase(_style = {}) constructor {
 		self.deactivated = true;
 		return self;
 	}
-	///@desc point_on_element
+	///@desc point_on_element //???//
 	static point_on_element = function(point_x, point_y) {
 		var _on_element = false;
 		var _n = array_length(self.contents);
@@ -287,12 +287,13 @@ function LuiBase(_style = {}) constructor {
 		var _element_x = self.get_absolute_x();
 		var _element_y = self.get_absolute_y();
 		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
-		if !_on_this return false;
-		return self.hover_parent();
+		return _on_this;
+		//if !_on_this return false;
+		//return self.mouse_hover_parent();
 	}
 	
-	///@desc hover_parent()
-	static hover_parent = function() {
+	///@desc mouse_hover_parent()
+	static mouse_hover_parent = function() {
 		if is_undefined(self.parent) return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
@@ -301,13 +302,28 @@ function LuiBase(_style = {}) constructor {
 		var _on_parent = point_in_rectangle(_mouse_x, _mouse_y, _parent_x, _parent_y, _parent_x + self.parent.width - 1, _parent_y + self.parent.height - 1);
 		if _on_parent {
 			if !is_undefined(self.parent.parent) {
-				return self.parent.hover_parent();
+				return self.parent.mouse_hover_parent();
 			} else {
 				return true
 			}
 		} else {
 			return false;
 		}
+	}
+	
+	///@desc mouse_hover_childs()
+	static mouse_hover_childs = function() {
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+		var _on_element = false;
+		var _n = array_length(self.contents);
+		if _n > 0
+		for (var i = 0; i < _n; ++i) {
+		    var _element = self.contents[i];
+			_on_element = _element.mouse_hover();
+			if _on_element break;
+		}
+		return _on_element;
 	}
 	
 	//Update
