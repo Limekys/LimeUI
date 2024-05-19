@@ -82,10 +82,10 @@ LUI_OVERLAY.style = new LuiStyle(global.demo_style);
 
 my_ui = new LuiBase(global.demo_style);
 
-my_panel = new LuiPanel( , , , 512, );
-my_panel_2 = new LuiPanel( , , , 512);
-my_panel_3 = new LuiPanel( , , , 512);
-my_panel_4 = new LuiPanel( , , , 332).set_halign(fa_center);
+my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
+my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
+my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
+my_panel_4 = new LuiPanel( , , , 332, "LuiPanel_4").set_halign(fa_center);
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
 	[my_panel_4, [0.75]]

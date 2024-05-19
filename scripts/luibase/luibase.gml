@@ -1,21 +1,20 @@
-global.lui_main_ui = undefined;
-
 ///@arg {Struct} _style
 function LuiBase(_style = {}) constructor {
+	if !variable_global_exists("lui_main_ui") variable_global_set("lui_main_ui", undefined);
 	global.lui_main_ui ??= self;
 	
 	self.name = "LuiBase";
 	self.value = undefined;
 	self.style = new LuiStyle(_style);
 	
-	self.x = 0;					//Actual x position on the screen
-	self.y = 0;					//Actual y position on the screen
-	self.pos_x = 0;				//Offset x position this element relative parent
-	self.pos_y = 0;				//Offset y position this element relative parent
-	self.target_x = 0;			//Target x position this element for animation
-	self.target_y = 0;			//Target y position this element for animation
-	self.start_x = self.pos_x;	//First x position
-	self.start_y = self.pos_y;	//First y position
+	self.x = 0;									//Actual x position on the screen
+	self.y = 0;									//Actual y position on the screen
+	self.pos_x = 0;								//Offset x position this element relative parent
+	self.pos_y = 0;								//Offset y position this element relative parent
+	self.target_x = 0;							//Target x position this element for animation
+	self.target_y = 0;							//Target y position this element for animation
+	self.start_x = self.pos_x;					//First x position
+	self.start_y = self.pos_y;					//First y position
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.min_width = 32;
@@ -62,33 +61,19 @@ function LuiBase(_style = {}) constructor {
 		});
 		return self;
 	}
-	///@desc point_on_element //???//
-	static point_on_element = function(point_x, point_y) {
-		var _on_element = false;
-		var _n = array_length(self.contents);
-		if _n > 0
-		for (var i = 0; i < _n; ++i) {
-		    var _element = self.contents[i];
-			if _element == self continue;
-			_on_element = point_in_rectangle(point_x, point_y, _element.pos_x, _element.pos_y, _element.pos_x + _element.width, _element.pos_y + _element.height) || point_on_element(_element.pos_x, _element.pos_y);
-			
-			if _on_element break;
-		}
-		return _on_element;
-	}
 	
 	//Add content
 	///@desc get_first
 	static get_first = function() {
-        if (array_length(self.contents) == 0) return undefined;
-        return self.contents[0];
-    };
+		if (array_length(self.contents) == 0) return undefined;
+		return self.contents[0];
+	};
 	
 	///@desc get_last
 	static get_last = function() {
-        if (array_length(self.contents) == 0) return undefined;
-        return self.contents[array_length(self.contents) - 1];
-    };
+		if (array_length(self.contents) == 0) return undefined;
+		return self.contents[array_length(self.contents) - 1];
+	};
 	
 	///@desc add_content(elements)
 	///@arg {Any} elements
@@ -288,14 +273,17 @@ function LuiBase(_style = {}) constructor {
 	
 	///@desc mouse_hover()
 	static mouse_hover = function() {
+		return self.is_mouse_hovered;
+	}
+	
+	///@desc mouse_hover_any()
+	static mouse_hover_any = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _element_x = self.get_absolute_x();
 		var _element_y = self.get_absolute_y();
 		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
 		return _on_this;
-		//if !_on_this return false;
-		//return self.mouse_hover_parent();
 	}
 	
 	///@desc mouse_hover_parent()
@@ -326,10 +314,32 @@ function LuiBase(_style = {}) constructor {
 		if _n > 0
 		for (var i = 0; i < _n; ++i) {
 		    var _element = self.contents[i];
-			_on_element = _element.mouse_hover();
+			_on_element = _element.mouse_hover_any();
 			if _on_element break;
 		}
 		return _on_element;
+	}
+	
+	///@desc point_on_element
+	static point_on_element = function(point_x, point_y) {
+		var _element_x = self.get_absolute_x();
+		var _element_y = self.get_absolute_y();
+		return point_in_rectangle(point_x, point_y, _element_x, _element_y, _element_x + self.width, _element_y + self.height);
+	}
+	///@desc get_topmost_element
+	static get_topmost_element = function(_mouse_x, _mouse_y) {
+		var topmost_element = undefined;
+		for (var i = array_length(self.contents) - 1; i >= 0; --i) {
+			var _element = self.contents[i];
+			if (_element.point_on_element(_mouse_x, _mouse_y)) {
+				topmost_element = _element.get_topmost_element(_mouse_x, _mouse_y);
+				if topmost_element == undefined {
+					topmost_element = _element;
+					break;
+				}
+			}
+		}
+		return topmost_element;
 	}
 	
 	//Update
@@ -352,36 +362,23 @@ function LuiBase(_style = {}) constructor {
 				array_delete(contents, i, 1);
 			}
 		}
-		
-		//Hover
-		//self.is_mouse_hovered = false;
-		//if get_topmost_element() == self {
-		//	self.is_mouse_hovered = true;
-		//}
+		//Mouse hover (check topmost elements on mouse)
+		is_mouse_hovered = false;
+		if self == global.lui_main_ui {
+			var _mouse_x = device_mouse_x_to_gui(0);
+	        var _mouse_y = device_mouse_y_to_gui(0);
+	        var topmost_element = self.get_topmost_element(_mouse_x, _mouse_y);
+	        if (topmost_element != undefined && !topmost_element.deactivated) {
+				topmost_element.is_mouse_hovered = true;
+			}
+		}
 	}
-	
-	///@func get_topmost_element()
-	///@desc Returns the element that is above all the ones the mouse cursor is on
-	//static get_topmost_element = function() {
-	//	var _topmost = undefined;
-	//	var _last_i = undefined;
-	//	for (var i = array_length(global.lui_main_ui.contents)-1; i > 0; i--) {
-	//	    var _element = global.lui_main_ui.contents[i];
-	//		if _element.mouse_hover() {
-	//			if _topmost == undefined || _last_i < i {
-	//				_topmost = _element;
-	//				_last_i = i;
-	//			}
-	//		}
-	//	}
-	//	return _topmost;
-	//}
 	
 	//Render
 	///@desc draw()
 	draw = function() { }
 	
-	///@desc This function draws all nested elements inside parent except itself!
+	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
 		if array_length(self.contents) > 0
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
@@ -455,5 +452,8 @@ function LuiBase(_style = {}) constructor {
 			}
 		}
 		self.marked_to_delete = true;
+		if self == global.lui_main_ui {
+			global.lui_main_ui = undefined;
+		}
 	}
 }
