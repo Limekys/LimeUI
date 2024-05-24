@@ -11,8 +11,8 @@ function LuiBase(_style = {}) constructor {
 	self.y = 0;									//Actual y position on the screen
 	self.pos_x = 0;								//Offset x position this element relative parent
 	self.pos_y = 0;								//Offset y position this element relative parent
-	self.target_x = 0;							//Target x position this element for animation
-	self.target_y = 0;							//Target y position this element for animation
+	self.target_x = 0;							//Target x position this element for animation //???//
+	self.target_y = 0;							//Target y position this element for animation //???//
 	self.start_x = self.pos_x;					//First x position
 	self.start_y = self.pos_y;					//First y position
 	self.width = display_get_gui_width();
@@ -21,6 +21,10 @@ function LuiBase(_style = {}) constructor {
 	self.min_height = 32;
 	self.max_width = self.width;
 	self.max_height = self.height;
+	self.auto_x = false;
+	self.auto_y = false;
+	self.auto_width = false;
+	self.auto_height = false;
 	self.parent = undefined;
 	self.callback = undefined;
 	self.contents = [];
@@ -31,6 +35,24 @@ function LuiBase(_style = {}) constructor {
 	self.halign = undefined;
 	self.valign = undefined;
 	self.draw_relative = false;
+	
+	//Init
+	static init_element = function() {
+		if self.pos_x == LUI_AUTO || self.pos_y == LUI_AUTO {
+			self.auto_x = true;
+			self.auto_y = true;
+			self.pos_x = 0;
+			self.pos_y = 0;
+		}
+		if self.width == LUI_AUTO {
+			self.auto_width = true;
+			self.width = self.min_width;
+		}
+		if self.height == LUI_AUTO {
+			self.auto_height = true;
+			self.height = self.min_height;
+		}
+	}
 	
 	//Focusing
 	///@desc set_focus
@@ -116,26 +138,35 @@ function LuiBase(_style = {}) constructor {
 				_element.draw_relative = _element.parent.draw_relative;
 				
 				//Set width
-				if _element.width == undefined {
+				if _element.auto_width == true {
 					_element.width = min(_element_width, _element.max_width);
-					if array_length(_ranges) > 0
-					_element.width = floor(_ranges[j] * (self.width - (_n + 1)*self.style.padding));
+					if array_length(_ranges) > 0 {
+						_element.width = floor(_ranges[j] * (self.width - (_n + 1)*self.style.padding));
+					}
+					_element.width = min(_element.width, _element.max_width);
+				}
+				
+				//Set height
+				if _element.auto_height == true {
+					_element.height = _element.min_height;
 				}
 				
 				//Set position
-				_element.pos_x = self.style.padding;
-				_element.pos_y = self.style.padding + _row_pos_y;
-				
-				if !is_undefined(_last) {
-					//If there are many elements
-					if j != 0 {
-						_element_x = _last.pos_x;
-						_element.pos_x = _element_x + _last.width + self.style.padding;
-					}
-					//If one element
-					if _n == 1 {
-						_element.pos_x = self.style.padding;
-						_element.pos_y = self.style.padding + _last.pos_y + _last.height;
+				if _element.auto_x == true || _element.auto_y == true {
+					_element.pos_x = self.style.padding;
+					_element.pos_y = self.style.padding + _row_pos_y;
+					
+					if !is_undefined(_last) {
+						//If there are many elements
+						if j != 0 {
+							_element_x = _last.pos_x;
+							_element.pos_x = _element_x + _last.width + self.style.padding;
+						}
+						//If one element
+						if _n == 1 {
+							_element.pos_x = self.style.padding;
+							_element.pos_y = self.style.padding + _last.pos_y + _last.height;
+						}
 					}
 				}
 				
@@ -334,9 +365,9 @@ function LuiBase(_style = {}) constructor {
 			if (_element.point_on_element(_mouse_x, _mouse_y)) {
 				topmost_element = _element.get_topmost_element(_mouse_x, _mouse_y);
 				if topmost_element == undefined {
-					topmost_element = _element;
-					break;
+					return _element;
 				}
+				break;
 			}
 		}
 		return topmost_element;
@@ -364,7 +395,7 @@ function LuiBase(_style = {}) constructor {
 		}
 		//Mouse hover (check topmost elements on mouse)
 		is_mouse_hovered = false;
-		if self == global.lui_main_ui {
+		if self.parent == undefined {
 			var _mouse_x = device_mouse_x_to_gui(0);
 	        var _mouse_y = device_mouse_y_to_gui(0);
 	        var topmost_element = self.get_topmost_element(_mouse_x, _mouse_y);
@@ -445,15 +476,11 @@ function LuiBase(_style = {}) constructor {
 	///@desc destroy()
 	static destroy = function() {
 		if array_length(self.contents) > 0 {
-			for (var i = 0, n = array_length(self.contents); i < n; i++) {
+			for (var i = array_length(self.contents) - 1;  i >= 0; --i) {
 			    var _element = self.contents[i];
 				_element.destroy();
-				self.contents[i] = undefined;
 			}
 		}
 		self.marked_to_delete = true;
-		if self == global.lui_main_ui {
-			global.lui_main_ui = undefined;
-		}
 	}
 }

@@ -4,10 +4,14 @@
 ///@arg {Real} index
 ///@arg {Real} scale
 ///@arg {Function} callback
-function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefined) : LuiBase() constructor {
+function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, sprite, index = 0, scale = 1, callback = undefined) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;
+	self.width = width;
+	self.height = height;
+	init_element();
+	set_callback(callback);
 	
 	self.sprite = sprite;
 	self.index = index;
@@ -21,8 +25,6 @@ function LuiSpriteButton(x, y, sprite, index = 0, scale = 1, callback = undefine
 	
 	self.button_color = self.color_blend;
 	self.is_pressed = false;
-	
-	set_callback(callback);
 	
 	self.set_color_blend = function(color_blend) {
 		self.color_blend = color_blend;

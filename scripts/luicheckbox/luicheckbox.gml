@@ -4,19 +4,24 @@
 ///@arg {Any} height
 ///@arg {Bool} value
 ///@arg {Function} callback
-function LuiCheckbox(x, y, width, height, value = false, callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, value = false, callback = undefined) : LuiBase() constructor {
+	
 	self.name = "LuiButton";
 	self.value = value;
 	self.pos_x = x;
 	self.pos_y = y;
-	self.width = width ?? self.min_width;
-	self.height = height ?? self.min_height;
-	self.max_width = width;
-	self.max_height = height;
+	self.width = width;
+	self.height = height;
+	init_element();
+	set_callback(callback);
+	
+	//Make the maximum size of the checkbox minimal so that it does not stretch at auto size
+	if self.auto_width == true || self.auto_height == true {
+		self.max_width = self.min_width;
+		self.max_height = self.min_height;
+	}
 	
 	self.is_pressed = false;
-	
-	set_callback(callback);
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		var _color = self.value ? self.style.color_checkbox_pin : self.style.color_main;

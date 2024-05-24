@@ -3,7 +3,7 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} text
-function LuiText(x, y, width, height, text = "sample text") : LuiBase() constructor {
+function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "sample text") : LuiBase() constructor {
 	
 	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 	
@@ -11,10 +11,12 @@ function LuiText(x, y, width, height, text = "sample text") : LuiBase() construc
 	self.value = text;
 	self.pos_x = x;
 	self.pos_y = y;
-	self.min_width = (width == undefined) ? string_width(self.value) : width;
 	self.width = width;
-	self.height = (height == undefined) ? max(self.min_height, string_height(self.value)) : height;
+	self.height = height;
+	init_element();
 	
+	self.min_width = self.auto_width == true ? string_width(self.value) : width;
+	self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : height;
 	self.text_halign = fa_left;
 	self.text_valign = fa_middle;
 	

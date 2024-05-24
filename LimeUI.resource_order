@@ -10,6 +10,7 @@
     {"name":"oSteadyDeltaTime","order":2,"path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},
     {"name":"rDemo","order":7,"path":"rooms/rDemo/rDemo.yy",},
     {"name":"LuiBase","order":2,"path":"scripts/LuiBase/LuiBase.yy",},
+    {"name":"LuiBlockArea","order":17,"path":"scripts/LuiBlockArea/LuiBlockArea.yy",},
     {"name":"LuiButton","order":5,"path":"scripts/LuiButton/LuiButton.yy",},
     {"name":"LuiCheckbox","order":10,"path":"scripts/LuiCheckbox/LuiCheckbox.yy",},
     {"name":"LuiContainer","order":3,"path":"scripts/LuiContainer/LuiContainer.yy",},
@@ -30,6 +31,7 @@
     {"name":"sBoxDemo","order":8,"path":"sprites/sBoxDemo/sBoxDemo.yy",},
     {"name":"sCar","order":9,"path":"sprites/sCar/sCar.yy",},
     {"name":"sCarFlip","order":10,"path":"sprites/sCarFlip/sCarFlip.yy",},
+    {"name":"sHamburger","order":11,"path":"sprites/sHamburger/sHamburger.yy",},
     {"name":"sLogoDemo","order":7,"path":"sprites/sLogoDemo/sLogoDemo.yy",},
     {"name":"sUI_button_border","order":3,"path":"sprites/sUI_button_border/sUI_button_border.yy",},
     {"name":"sUI_button","order":2,"path":"sprites/sUI_button/sUI_button.yy",},
@@ -37,5 +39,7 @@
     {"name":"sUI_scroll_slider","order":6,"path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},
     {"name":"sUI_slider_knob_border","order":5,"path":"sprites/sUI_slider_knob_border/sUI_slider_knob_border.yy",},
     {"name":"sUI_slider_knob","order":4,"path":"sprites/sUI_slider_knob/sUI_slider_knob.yy",},
+    {"name":"sUI_textbox_border","order":13,"path":"sprites/sUI_textbox_border/sUI_textbox_border.yy",},
+    {"name":"sUI_textbox","order":12,"path":"sprites/sUI_textbox/sUI_textbox.yy",},
   ],
 }

@@ -21,7 +21,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.4.0.137",
+    "IDEVersion":"2024.4.1.152",
   },
   "name":"LimeUI",
   "resources":[
@@ -31,6 +31,7 @@
     {"id":{"name":"oSteadyDeltaTime","path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},},
     {"id":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},},
     {"id":{"name":"LuiBase","path":"scripts/LuiBase/LuiBase.yy",},},
+    {"id":{"name":"LuiBlockArea","path":"scripts/LuiBlockArea/LuiBlockArea.yy",},},
     {"id":{"name":"LuiButton","path":"scripts/LuiButton/LuiButton.yy",},},
     {"id":{"name":"LuiCheckbox","path":"scripts/LuiCheckbox/LuiCheckbox.yy",},},
     {"id":{"name":"LuiContainer","path":"scripts/LuiContainer/LuiContainer.yy",},},
@@ -53,6 +54,7 @@
     {"id":{"name":"sBoxDemo","path":"sprites/sBoxDemo/sBoxDemo.yy",},},
     {"id":{"name":"sCar","path":"sprites/sCar/sCar.yy",},},
     {"id":{"name":"sCarFlip","path":"sprites/sCarFlip/sCarFlip.yy",},},
+    {"id":{"name":"sHamburger","path":"sprites/sHamburger/sHamburger.yy",},},
     {"id":{"name":"sLogoDemo","path":"sprites/sLogoDemo/sLogoDemo.yy",},},
     {"id":{"name":"sUI_button_border","path":"sprites/sUI_button_border/sUI_button_border.yy",},},
     {"id":{"name":"sUI_button","path":"sprites/sUI_button/sUI_button.yy",},},
@@ -61,6 +63,8 @@
     {"id":{"name":"sUI_scroll_slider","path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},},
     {"id":{"name":"sUI_slider_knob_border","path":"sprites/sUI_slider_knob_border/sUI_slider_knob_border.yy",},},
     {"id":{"name":"sUI_slider_knob","path":"sprites/sUI_slider_knob/sUI_slider_knob.yy",},},
+    {"id":{"name":"sUI_textbox_border","path":"sprites/sUI_textbox_border/sUI_textbox_border.yy",},},
+    {"id":{"name":"sUI_textbox","path":"sprites/sUI_textbox/sUI_textbox.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

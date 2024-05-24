@@ -7,10 +7,13 @@
 ///@arg {Real} scale
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, sprite, index = 0, scale = 1, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;
+	self.width = width;
+	self.height = height;
+	init_element();
 	
 	self.value = sprite;
 	self.index = index;
@@ -23,10 +26,10 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1,
 	self.maintain_aspect = maintain_aspect;
 	self.aspect = self.sprite_real_width / self.sprite_real_height;
 	
-	self.width = width;
-	self.height = height == undefined ? self.sprite_real_height : height;
-	self.min_width = width == undefined ? self.sprite_real_width : width;
-	self.min_height = height == undefined ? self.sprite_real_height : height;
+	//self.width = self.auto_width == true ? self.sprite_real_width : width;
+	//self.height = self.auto_height == true ? self.sprite_real_height : height;
+	//self.min_width = self.auto_width == true ? self.sprite_real_width : width;
+	//self.min_height = self.auto_height == true ? self.sprite_real_height : height;
 	
 	static set = function(value) {
 		self.value = value;
@@ -48,7 +51,9 @@ function LuiSprite(x, y, width, height, sprite, index = 0, scale = 1, alpha = 1,
 			}
 		}
 		draw_sprite_stretched_ext(self.value, self.index, 
-									draw_x + self.width/2 - _width/2, draw_y + self.height/2 - _height/2, _width, _height, 
+									draw_x + self.width/2 - _width/2, 
+									draw_y + self.height/2 - _height/2, 
+									_width, _height, 
 									self.color_blend, self.alpha);
 	}
 	

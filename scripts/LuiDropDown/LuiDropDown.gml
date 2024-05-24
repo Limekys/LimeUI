@@ -5,7 +5,7 @@
 ///@arg {Array} elements
 ///@arg {String} hint
 ///@arg {Function} callback
-function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", callback = undefined) : LuiBase() constructor {
+function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, elements = [], hint = "drop list", callback = undefined) : LuiBase() constructor {
 	
 	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
 	
@@ -15,14 +15,14 @@ function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", cal
 	self.pos_y = y;
 	self.width = width;
 	self.height = height ?? self.min_height;
-	self.min_width = (width == undefined) ? string_width(hint) + self.style.padding : width;
+	init_element();
+	set_callback(callback);
 	
+	self.min_width = self.auto_width == true ? string_width(hint) + self.style.padding : width;
 	self.is_pressed = false;
 	self.hint = hint;
 	self.drop_elements = elements;
 	self.dropped = false;
-	
-	set_callback(callback);
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
@@ -113,4 +113,141 @@ function LuiDropDown(x, y, width, height, elements = [], hint = "drop list", cal
 	}
 	
 	return self;
+}
+
+//???//
+/*
+///@arg {Any} x
+///@arg {Any} y
+///@arg {Any} width
+///@arg {Any} height
+///@arg {String} text
+function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "dropdown") : LuiBase() constructor {
+    
+	self.name = "LuiDropDown";
+    self.text = text;
+    self.pos_x = x;
+    self.pos_y = y;
+    self.width = width;
+    self.height = height;
+	init_element();
+	
+    self.is_open = false;
+    self.items = [];
+
+    self.toggle_dropdown = function() {
+        self.is_open = !self.is_open;
+        return self;
+    }
+
+    self.add_item = function(text, callback = undefined) {
+        var item = new LuiDropDownItem(text, callback);
+        item.parent = self;
+        item.width = self.width;
+        array_push(self.items, item);
+        return self;
+    }
+
+    self.remove_item = function(index) {
+        if (index >= 0 && index < array_length(self.items)) {
+            array_delete(self.items, index, 1);
+        }
+        return self;
+    }
+
+    self.draw = function(draw_x = 0, draw_y = 0) {
+        // Base button
+        if (!is_undefined(self.style.sprite_button)) {
+            var _blend_color = self.style.color_button;
+            if (!self.deactivated && self.mouse_hover()) {
+                _blend_color = merge_colour(self.style.color_button, self.style.color_hover, 0.5);
+            }
+            draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+        }
+
+        // Text
+        if (!is_undefined(self.style.font_buttons)) draw_set_font(self.style.font_buttons);
+        draw_set_alpha(1);
+        draw_set_color(self.style.color_font);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        var _txt_x = draw_x + self.width / 2;
+        var _txt_y = draw_y + self.height / 2;
+        draw_text(_txt_x, _txt_y, self.text);
+
+        // Border
+        if (!is_undefined(self.style.sprite_button_border)) {
+            draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
+        }
+
+        // Draw items if dropdown is open
+        if (self.is_open) {
+            for (var i = 0; i < array_length(self.items); i++) {
+                var item = self.items[i];
+                item.draw(draw_x, draw_y + self.height * (i + 1));
+            }
+        }
+    }
+
+    self.step = function() {
+        if (mouse_hover() && mouse_check_button_pressed(mb_left)) {
+            self.toggle_dropdown();
+        }
+
+        if (self.is_open) {
+            for (var i = 0; i < array_length(self.items); i++) {
+                var item = self.items[i];
+                item.step();
+            }
+        }
+    }
+
+    return self;
+}
+
+///@arg {String} text
+///@arg {Function} callback
+function LuiDropDownItem(text = "", callback = undefined) : LuiBase() constructor {
+    self.name = "LuiDropDownItem";
+    self.text = text;
+    self.value = text;
+	init_element();
+    set_callback(callback);
+
+    self.draw = function(draw_x = 0, draw_y = 0) {
+        // Base
+        if (!is_undefined(self.style.sprite_button)) {
+            var _blend_color = self.style.color_button;
+            if (!self.deactivated && self.mouse_hover()) {
+                _blend_color = merge_colour(self.style.color_button, self.style.color_hover, 0.5);
+            }
+            draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+        }
+
+        // Text
+        if (!is_undefined(self.style.font_buttons)) draw_set_font(self.style.font_buttons);
+        draw_set_alpha(1);
+        draw_set_color(self.style.color_font);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        var _txt_x = draw_x + self.width / 2;
+        var _txt_y = draw_y + self.height / 2;
+        draw_text(_txt_x, _txt_y, self.text);
+
+        // Border
+        if (!is_undefined(self.style.sprite_button_border)) {
+            draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
+        }
+    }
+
+    self.step = function() {
+        if (mouse_hover()) { 
+            if (mouse_check_button_pressed(mb_left)) {
+                self.callback();
+                if (self.style.sound_click != undefined) audio_play_sound(self.style.sound_click, 1, false);
+            }
+        }
+    }
+
+    return self;
 }

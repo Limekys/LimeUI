@@ -22,6 +22,8 @@ function LuiStyle(_style) constructor {
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
 	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
+	sprite_textbox = _style[$ "sprite_textbox"] ?? undefined;
+	sprite_textbox_border = _style[$ "sprite_textbox_border"] ?? undefined;
 	sprite_button = _style[$ "sprite_button"] ?? undefined;
 	sprite_button_border = _style[$ "sprite_button_border"] ?? undefined;
 	sprite_slider_knob = _style[$ "sprite_slider_knob"] ?? undefined;

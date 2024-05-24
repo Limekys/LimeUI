@@ -1,9 +1,7 @@
-show_debug_overlay(true);
 randomize();
 
-/*
 //Light theme
-global.demo_style = {
+global.demo_style_light = {
 	//Fonts
 	font_default : fArial,
 	font_buttons : fArial,
@@ -24,6 +22,8 @@ global.demo_style = {
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
+	sprite_textbox : sUI_textbox,
+	sprite_textbox_border : sUI_textbox_border,
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
 	sprite_slider_knob : sUI_panel,
@@ -38,10 +38,10 @@ global.demo_style = {
 	textbox_cursor : "|",
 	textbox_password : "•"
 }
-*/
+
 
 //Dark theme
-global.demo_style = {
+global.demo_style_dark = {
 	//Fonts
 	font_default : fArial,
 	font_buttons : fArial,
@@ -63,6 +63,8 @@ global.demo_style = {
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
+	sprite_textbox : sUI_textbox,
+	sprite_textbox_border : sUI_textbox_border,
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
 	sprite_slider_knob : sUI_panel,
@@ -78,9 +80,9 @@ global.demo_style = {
 	textbox_password : "•"
 }
 
-LUI_OVERLAY.style = new LuiStyle(global.demo_style);
+//LUI_OVERLAY.style = new LuiStyle(global.demo_style_dark);
 
-my_ui = new LuiBase(global.demo_style);
+my_ui = new LuiBase(global.demo_style_dark);
 
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
@@ -94,16 +96,17 @@ my_ui.add_content([
 demo_loading = new LuiProgressBar( , , , , 0, 100, true, 0);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
-	var _msg = new LuiMessage( , , "This is just a simple message!");
+	//var _msg = new LuiMessage(, , "This is just a simple message!");
+	LuiShowMessage(oDemo.my_ui, 360, 140, "This is just a simple message!");
 }).set_valign(fa_bottom)
-btn_restart = new LuiButton(my_panel.width - 128 - 16, my_panel.height - 32 - 16, , , "Restart", function() {game_restart()}).set_valign(fa_bottom);
+btn_restart = new LuiButton(, , , , "Restart", function() {game_restart()}).set_valign(fa_bottom);
 
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_text_halign(fa_center),
 	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 128, my_panel_4.pos_x + 128, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
 	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 96, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
 	[demo_loading],
-	[new LuiText( , , , , "Progress loading"), new LuiCheckbox( , , , , , function() {oDemo.demo_loading_state = self.value}), [0.3, 0.7]],
+	[new LuiText( , , , , "Progress loading"), new LuiCheckbox( , , 32, 32, false, function() {oDemo.demo_loading_state = self.value}), [0.3, 0.7]],
 	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , ), [0.3, 0.7]],
 	new LuiTextbox( , , , ,"", "login", , ),
 	new LuiTextbox( , , , ,"", "password", true, ),
@@ -150,12 +153,19 @@ my_panel_in_second_2.add_content(
 	]
 );
 
+//Drop down menu
+//var dropdown = new LuiDropDown(, , , , "Select an option");
+//dropdown.add_item("Option 1", function() { show_debug_message("Option 1 selected"); });
+//dropdown.add_item("Option 2", function() { show_debug_message("Option 2 selected"); });
+//dropdown.add_item("Option 3", function() { show_debug_message("Option 3 selected"); });
+
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
+	//dropdown,
 	new LuiDropDown( , , , , ["first", "second", "third"], "select element", )
 ]);
 
-scroll_panel = new LuiScrollPanel( , , , 256, );
+scroll_panel = new LuiScrollPanel( , , , 256, "Scroll panel");
 simple_sprite = new LuiSprite( , , , 300, sCar, 0, 1, 1, 1);
 my_panel_4.add_content([
 	[scroll_panel,
@@ -164,7 +174,7 @@ my_panel_4.add_content([
 ]);
 
 
-var _panel_in_scroll = new LuiPanel( , , , 128, "Panel in scroll panel");
+var _nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
 
 scroll_panel.add_content([
 	new LuiText( , , , , "Scroll panel")
@@ -175,14 +185,23 @@ for (var i = 0; i < 3; ++i) {
 }
 
 scroll_panel.add_content([
-	_panel_in_scroll,
+	new LuiTextbox(, , , , , "textbox in scroll panel"),
+	_nested_panel,
 	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1),
-	new LuiSprite( , , , 100, sCar, 0, 1, 1, 1),
-	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1),
-	new LuiSprite( , , , 100, sCar, 0, 1, 1, 1),
+	new LuiSprite( , , , 256, sHamburger, 0, 1, 1, 1),
+	new LuiSprite( , , , 200, sCar, 0, 1, 1, 1),
+	new LuiSprite( , , , 128, sHamburger, 0, 1, 1, 1),
 ]);
 
-_panel_in_scroll.add_content([
-	new LuiText( 16, 16, , , "Nested panel"),
-	new LuiButton( , , , , "Nested button")
+_nested_panel.add_content([
+	new LuiText(, , , , "Nested panel"),
+	new LuiButton( , , , , "Nested button"),
+	[new LuiCheckbox( , , , , false, function() {
+		if get() == true {
+			LuiShowMessage(oDemo.my_ui, 360, 140, "Checkbox in nested panel of scroll panel!");
+		} else {
+			LuiShowMessage(oDemo.my_ui, 360, 140, ":(");
+		}
+	}),
+	new LuiText(, , , , "Check me!")]
 ]);

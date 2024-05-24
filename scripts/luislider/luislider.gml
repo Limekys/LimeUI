@@ -6,21 +6,21 @@
 ///@arg {Real} value_max
 ///@arg {Real} value
 ///@arg {Function} callback
-function LuiSlider(x, y, width, height, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+	
 	self.name = "LuiSlider";
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
-	self.height = height ?? self.min_height;
-	self.max_height = self.height;
+	self.height = height;
+	init_element();
+	set_callback(callback);
 	
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
 	self.integers_only = false;
 	self.dragging = false;
 	self.value = value;
-	
-	set_callback(callback);
 	
 	self.render_mode = 1;
 	///@desc 0 - raw value, 1 - integer only

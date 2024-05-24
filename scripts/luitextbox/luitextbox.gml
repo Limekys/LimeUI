@@ -7,7 +7,7 @@
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	
 	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 	
@@ -17,8 +17,11 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 	self.pos_y = y;
 	self.min_width = string_width(self.value);
 	self.width = width;
-	self.height = height ?? max(self.min_height, string_height(self.value));
+	self.height = height;
+	init_element();
+	set_callback(callback);
 	
+	self.height = self.auto_height == true ?? max(self.min_height, string_height(self.value));
 	self.hint = hint;
 	self.is_password = is_password;
 	self.max_length = max_length;
@@ -31,15 +34,13 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		self.cursor_pointer = "";
 	}, [], -1);
 	
-	set_callback(callback);
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Textbox field
 		var _border_color = self.has_focus ? self.style.color_border : self.style.color_textbox_border;
-		if !is_undefined(self.style.sprite_panel) {
+		if !is_undefined(self.style.sprite_textbox) {
 			var _blend_color = self.style.color_main;
 			if !self.deactivated && !self.has_focus && self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
-			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Set text
@@ -73,8 +74,8 @@ function LuiTextbox(x, y, width, height, start_text = "", hint = "", is_password
 		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_panel_border)
-		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
+		if !is_undefined(self.style.sprite_textbox_border)
+		draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
 	}
 	
 	static set_focus = function() {

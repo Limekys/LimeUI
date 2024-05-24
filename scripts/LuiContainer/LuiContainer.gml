@@ -3,12 +3,14 @@
 ///@arg {Any} width
 ///@arg {Any} height
 ///@arg {String} name
-function LuiContainer(x, y, width, height, name = "LuiContainer") : LuiBase() constructor {
+function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiContainer") : LuiBase() constructor {
+	
 	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
-	self.height = height ?? self.min_height;
+	self.height = height;
+	init_element();
 	
 	return self;
 }
