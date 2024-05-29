@@ -133,7 +133,7 @@ my_panel_in_second_1.add_content([
 	new LuiText( , , , , "Panel in panel").set_text_halign(fa_center),
 	[new LuiButton( , , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
 	new LuiButton( , , , , "Button", )],
-	new LuiButton( , , , , "Button 2", ),
+	new LuiButton( , , , , "This button with really long text that probably won't fit in this button!", ),
 	deactivated_button,
 ]);
 
@@ -162,8 +162,12 @@ my_panel_in_second_2.add_content(
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
 	//dropdown,
-	new LuiDropDown( , , , , ["first", "second", "third"], "select element", )
+	new LuiDropDown( , , , , ["first", "second", "third"], "select element", ),
 ]);
+
+repeat(5) {
+	my_panel_3.add_content([new LuiText(, , , , "This is a really long text that probably won't fit in this window!")]);
+}
 
 scroll_panel = new LuiScrollPanel( , , , 256, "Scroll panel");
 simple_sprite = new LuiSprite( , , , 300, sCar, 0, 1, 1, 1);

@@ -35,6 +35,7 @@ function LuiBase(_style = {}) constructor {
 	self.halign = undefined;
 	self.valign = undefined;
 	self.draw_relative = false;
+	self.inside_parent = 0;
 	
 	//Init
 	static init_element = function() {
@@ -379,12 +380,32 @@ function LuiBase(_style = {}) constructor {
 	
 	///@desc update()
 	static update = function() {
-		if !self.deactivated self.step();
-		//Update all elements
+		//Check if the element is in the area of its parent and update it
+		if !self.deactivated {
+			if self.draw_relative == false {
+				if self.inside_parent == 1 {
+					self.step();
+				}
+			} else {
+				if self.inside_parent == 1 || self.inside_parent == 2 {
+					self.step();
+				}
+			}
+		}
+		//Update all elements inside
 		if array_length(self.contents) > 0
 		for (var i = array_length(self.contents)-1; i >= 0; --i) {
 			//Get element
 			var _element = self.contents[i];
+			//Get absolute position
+			var _e_x = _element.get_absolute_x();
+			var _e_y = _element.get_absolute_y();
+			var _p_x = _element.parent.get_absolute_x();
+			var _p_y = _element.parent.get_absolute_y();
+			//Check element is inside parent
+			_element.inside_parent = rectangle_in_rectangle(
+				_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+				_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
 			//Update
 			_element.update();
 			//Delete marked to delete elements
@@ -394,8 +415,8 @@ function LuiBase(_style = {}) constructor {
 			}
 		}
 		//Mouse hover (check topmost elements on mouse)
-		is_mouse_hovered = false;
-		if self.parent == undefined {
+		is_mouse_hovered = false; //set false to every element
+		if self.parent == undefined { //check only on main ui
 			var _mouse_x = device_mouse_x_to_gui(0);
 	        var _mouse_y = device_mouse_y_to_gui(0);
 	        var topmost_element = self.get_topmost_element(_mouse_x, _mouse_y);
@@ -415,23 +436,22 @@ function LuiBase(_style = {}) constructor {
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
-			//Calculate absolute position
+			//Get absolute position
 			var _e_x = _element.get_absolute_x();
 			var _e_y = _element.get_absolute_y();
-			var _p_x = _element.parent.get_absolute_x();
-			var _p_y = _element.parent.get_absolute_y();
 			//Check if the element is in the area of its parent and draw
-			if rectangle_in_rectangle(
-				_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
-				_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height)
 			if _element.draw_relative == false {
-				_element.draw(_e_x, _e_y);
-				_element.render(base_x, base_y);
-				if global.LUI_DEBUG_MODE _element.render_debug(_e_x, _e_y);
+				if _element.inside_parent == 1 {
+					_element.draw(_e_x, _e_y);
+					_element.render(base_x, base_y);
+					if global.LUI_DEBUG_MODE _element.render_debug(_e_x, _e_y);
+				}
 			} else {
-				_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
-				_element.render(_element.pos_x, _element.pos_y);
-				if global.LUI_DEBUG_MODE _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
+				if _element.inside_parent == 1 || _element.inside_parent == 2 {
+					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
+					_element.render(_element.pos_x, _element.pos_y);
+					if global.LUI_DEBUG_MODE _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
+				}
 			}
 		}
 	}
@@ -470,6 +490,23 @@ function LuiBase(_style = {}) constructor {
 		draw_rectangle(x, y, x + _text_width, y + _text_height, false);
 		draw_set_color(c_white);
 		draw_text(x, y, text);
+	}
+	
+	///@desc draw text fit to width
+	static draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
+		//Calculate text width to cut off
+		var _str_to_draw = _string;
+		var _str_width = string_width(_str_to_draw);
+		if _str_width >= _width {
+			_str_to_draw += "...";
+			do {
+				_str_to_draw = string_delete(_str_to_draw, string_length(_str_to_draw)-3, 1);
+				_str_width = string_width(_str_to_draw);
+			}
+			until (_str_width < _width);
+		}
+		//Draw text
+		draw_text(_x, _y, _str_to_draw);
 	}
 	
 	//Clean up

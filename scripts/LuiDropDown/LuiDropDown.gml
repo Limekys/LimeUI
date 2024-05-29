@@ -26,8 +26,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
-		if !is_undefined(self.style.sprite_panel)
-		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
+		if !is_undefined(self.style.sprite_button)
+		draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
 		
 		//Text
 		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
@@ -37,15 +37,15 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		draw_set_valign(fa_middle);
 		var _txt_x = draw_x + self.width / 2;
 		var _txt_y = draw_y + self.height / 2;
-		draw_text(_txt_x, _txt_y, string(self.value));
-		if value == "" {
+		draw_text_cutoff(_txt_x, _txt_y, string(self.value), self.width);
+		if self.value == "" {
 			draw_set_alpha(0.5);
-			draw_text(_txt_x, _txt_y, self.hint);
+			draw_text_cutoff(_txt_x, _txt_y, self.hint, self.width);
 		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_panel_border)
-		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
+		if !is_undefined(self.style.sprite_button_border)
+		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
 		
 		//Drop list
 		if dropped {
