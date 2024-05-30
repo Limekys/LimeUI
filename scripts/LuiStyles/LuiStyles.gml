@@ -1,5 +1,6 @@
 ///@func LuiStyle(_style)
 ///@desc Style for UI
+///@arg {Struct} _style
 function LuiStyle(_style) constructor {
 	//Fonts
 	font_default = _style[$ "font_default"] ?? undefined;

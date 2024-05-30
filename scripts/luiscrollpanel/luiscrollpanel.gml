@@ -87,7 +87,9 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.step = function() {
 		if mouse_hover_any() && array_length(self.contents) > 0 {
-			var _wheel = mouse_wheel_up() - mouse_wheel_down();
+			var _wheel_up = mouse_wheel_up() ? 1 : 0;
+			var _wheel_down = mouse_wheel_down() ? 1 : 0;
+			var _wheel = _wheel_up - _wheel_down;
 			if _wheel != 0 {
 				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
 				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0);

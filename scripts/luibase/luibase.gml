@@ -31,6 +31,7 @@ function LuiBase(_style = {}) constructor {
 	self.marked_to_delete = false;
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
+	self.visible = true;
 	self.has_focus = false;
 	self.halign = undefined;
 	self.valign = undefined;
@@ -67,7 +68,7 @@ function LuiBase(_style = {}) constructor {
 		return self;
 	}
 	
-	//Funcs
+	//Functions
 	///@desc activate
 	static activate = function() {
 		self.deactivated = false;
@@ -82,6 +83,11 @@ function LuiBase(_style = {}) constructor {
 		array_foreach(self.contents, function(_elm) {
 			_elm.deactivate();
 		});
+		return self;
+	}
+	///@desc set_visible
+	static set_visible = function(_visible) {
+		self.visible = _visible;
 		return self;
 	}
 	
@@ -275,6 +281,15 @@ function LuiBase(_style = {}) constructor {
 		if !is_undefined(border) self.style.color_border = border;
 		return self;
 	}
+	///@desc set_style(_style)
+	static set_style = function(_style) {
+		self.style = new LuiStyle(_style);
+		for (var i = array_length(self.contents)-1; i >= 0 ; --i) {
+			var _element = self.contents[i];
+			_element.set_style(_style);
+		}
+		return self;
+	}
 	
 	//Interactivity
 	///@desc set_callback(callback)
@@ -288,19 +303,23 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	///@desc get_absolute_x()
+	///@return {Real}
 	static get_absolute_x = function() {
-		if self.parent != undefined
-		return self.pos_x + self.parent.get_absolute_x();
-		else
-		return self.pos_x;
+		if self.parent != undefined {
+			return self.pos_x + self.parent.get_absolute_x();
+		} else {
+			return self.pos_x;
+		}
 	}
 	
 	///@desc get_absolute_y()
+	///@return {Real}
 	static get_absolute_y = function() {
-		if self.parent != undefined
-		return self.pos_y + self.parent.get_absolute_y();
-		else
-		return self.pos_y;
+		if self.parent != undefined {
+			return self.pos_y + self.parent.get_absolute_y();
+		} else {
+			return self.pos_y;
+		}
 	}
 	
 	///@desc mouse_hover()
@@ -363,7 +382,7 @@ function LuiBase(_style = {}) constructor {
 		var topmost_element = undefined;
 		for (var i = array_length(self.contents) - 1; i >= 0; --i) {
 			var _element = self.contents[i];
-			if (_element.point_on_element(_mouse_x, _mouse_y)) {
+			if (_element.point_on_element(_mouse_x, _mouse_y) && _element.visible) {
 				topmost_element = _element.get_topmost_element(_mouse_x, _mouse_y);
 				if topmost_element == undefined {
 					return _element;
@@ -436,18 +455,21 @@ function LuiBase(_style = {}) constructor {
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
-			//Get absolute position
-			var _e_x = _element.get_absolute_x();
-			var _e_y = _element.get_absolute_y();
+			if _element.visible == false continue;
 			//Check if the element is in the area of its parent and draw
 			if _element.draw_relative == false {
 				if _element.inside_parent == 1 {
+					//Get absolute position
+					var _e_x = _element.get_absolute_x();
+					var _e_y = _element.get_absolute_y();
+					//Draw
 					_element.draw(_e_x, _e_y);
 					_element.render(base_x, base_y);
 					if global.LUI_DEBUG_MODE _element.render_debug(_e_x, _e_y);
 				}
 			} else {
 				if _element.inside_parent == 1 || _element.inside_parent == 2 {
+					//Draw
 					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
 					_element.render(_element.pos_x, _element.pos_y);
 					if global.LUI_DEBUG_MODE _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);

@@ -132,7 +132,9 @@ deactivated_button = new LuiButton( , , , , "DEACTIVATED", function() {
 my_panel_in_second_1.add_content([
 	new LuiText( , , , , "Panel in panel").set_text_halign(fa_center),
 	[new LuiButton( , , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
-	new LuiButton( , , , , "Button", )],
+	new LuiButton( , , , , "Visible", function() {
+		oDemo.my_panel_in_second_2.set_visible(!oDemo.my_panel_in_second_2.visible);
+	})],
 	new LuiButton( , , , , "This button with really long text that probably won't fit in this button!", ),
 	deactivated_button,
 ]);
