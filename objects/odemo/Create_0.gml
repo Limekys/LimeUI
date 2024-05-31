@@ -39,7 +39,6 @@ global.demo_style_light = {
 	textbox_password : "•"
 }
 
-
 //Dark theme
 global.demo_style_dark = {
 	//Fonts
@@ -141,9 +140,9 @@ my_panel_in_second_1.add_content([
 
 var _buttons1 = []
 var _buttons2 = []
-for (var i = 0; i < 12; ++i) {
-    var _button = new LuiSpriteButton( , , sLogoDemo, 0, 1, function() {self.set_color_blend(choose(#231b2a, #4e2640, #52466c))});
-	if i < 6 array_push(_buttons1, _button);
+for (var i = 0; i < 10; ++i) {
+    var _button = new LuiSpriteButton( , , , 56, sLogoDemo, 0, c_white, 1, true, function() {self.set_color_blend(choose(#231b2a, #4e2640, #52466c))});
+	if i < 5 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);
 }
@@ -161,22 +160,36 @@ my_panel_in_second_2.add_content(
 //dropdown.add_item("Option 2", function() { show_debug_message("Option 2 selected"); });
 //dropdown.add_item("Option 3", function() { show_debug_message("Option 3 selected"); });
 
+big_button = new LuiButton(, , , 64, "", function() {});
+big_button_2 = new LuiButton(, , , 64, "", function() {});
+big_button_3 = new LuiButton(, , , 64, "", function() {});
+
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
 	//dropdown,
 	new LuiDropDown( , , , , ["first", "second", "third"], "select element", ),
+	new LuiText(, , , , "This is a really long text that probably won't fit in this window!"),
+	big_button,
+	big_button_2,
+	big_button_3
 ]);
 
-repeat(5) {
-	my_panel_3.add_content([new LuiText(, , , , "This is a really long text that probably won't fit in this window!")]);
-}
+big_button.add_content([
+	[new LuiSprite(, , 32, 32, sHamburger), new LuiText(, , , , "Hamburger!"), [0.1, 0.8]]
+])
+big_button_2.add_content([
+	[new LuiSprite(, , 32, 32, sBoxDemo), new LuiText(, , , , "A box!"), [0.1, 0.8]]
+])
+big_button_3.add_content([
+	[new LuiSprite(, , 32, 32, sLogoDemo), new LuiText(, , , , "Game Maker!"), [0.1, 0.8]]
+])
 
 scroll_panel = new LuiScrollPanel( , , , 256, "Scroll panel");
-simple_sprite = new LuiSprite( , , , 300, sCar, 0, 1, 1, 1);
+simple_sprite = new LuiSprite( , , , 300, sCar);
 my_panel_4.add_content([
 	[scroll_panel,
 	simple_sprite,
-	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1)]
+	new LuiSprite( , , , 100, sCarFlip)]
 ]);
 
 
@@ -193,10 +206,10 @@ for (var i = 0; i < 3; ++i) {
 scroll_panel.add_content([
 	new LuiTextbox(, , , , , "textbox in scroll panel"),
 	_nested_panel,
-	new LuiSprite( , , , 100, sCarFlip, 0, 1, 1, 1),
-	new LuiSprite( , , , 256, sHamburger, 0, 1, 1, 1),
-	new LuiSprite( , , , 200, sCar, 0, 1, 1, 1),
-	new LuiSprite( , , , 128, sHamburger, 0, 1, 1, 1),
+	new LuiSprite( , , , 100, sCarFlip),
+	new LuiSprite( , , , 256, sHamburger),
+	new LuiSprite( , , , 200, sCar),
+	new LuiSprite( , , , 128, sHamburger),
 ]);
 
 _nested_panel.add_content([

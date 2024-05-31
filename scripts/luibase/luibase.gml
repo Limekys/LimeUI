@@ -129,7 +129,7 @@ function LuiBase(_style = {}) constructor {
 			}
 			
 			//Calculate width for each element in row
-			var _element_width = floor((self.width - (_n + 1)*self.style.padding) / _n);
+			var _auto_width = floor((self.width - (_n + 1)*self.style.padding) / _n);
 			
 			//Adding elements in row
 			for (var j = 0; j < _n; j++) {
@@ -146,7 +146,7 @@ function LuiBase(_style = {}) constructor {
 				
 				//Set width
 				if _element.auto_width == true {
-					_element.width = min(_element_width, _element.max_width);
+					_element.width = min(_auto_width, _element.max_width);
 					if array_length(_ranges) > 0 {
 						_element.width = floor(_ranges[j] * (self.width - (_n + 1)*self.style.padding));
 					}
@@ -483,9 +483,18 @@ function LuiBase(_style = {}) constructor {
 		if global.LUI_DEBUG_MODE == 1 {
 			draw_set_alpha(0.25);
 			if mouse_hover() {
-				draw_set_color(c_blue);
-			} else {
+				//Get mouse coords
+				var _mx = device_mouse_x_to_gui(0) + 16;
+				var _my = device_mouse_y_to_gui(0);
+				//Text
+				var _y_offset = !is_undefined(self.style.font_debug) ? font_get_size(self.style.font_debug) : 8;
+				_lui_draw_text_debug(_mx, _my, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
+				_lui_draw_text_debug(_mx, _my + _y_offset*1, "w: " + string(self.width) + " h: " + string(self.height));
+				_lui_draw_text_debug(_mx, _my + _y_offset*2, "v: " + string(self.value));
+				_lui_draw_text_debug(_mx, _my + _y_offset*3, "hl: " + string(self.halign) + " vl: " + string(self.valign));
 				draw_set_color(c_red);
+			} else {
+				draw_set_color(c_blue);
 			}
 			//Rectangles
 			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
