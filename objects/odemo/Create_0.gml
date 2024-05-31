@@ -175,13 +175,13 @@ my_panel_3.add_content([
 ]);
 
 big_button.add_content([
-	[new LuiSprite(, , 32, 32, sHamburger), new LuiText(, , , , "Hamburger!"), [0.1, 0.8]]
+	[new LuiSprite(, , 32, 32, sHamburger).ignore_mouse_hover(), new LuiText(, , , , "Hamburger!").ignore_mouse_hover(), [0.1, 0.8]]
 ])
 big_button_2.add_content([
-	[new LuiSprite(, , 32, 32, sBoxDemo), new LuiText(, , , , "A box!"), [0.1, 0.8]]
+	[new LuiSprite(, , 32, 32, sBoxDemo).ignore_mouse_hover(), new LuiText(, , , , "A box!").ignore_mouse_hover(), [0.1, 0.8]]
 ])
 big_button_3.add_content([
-	[new LuiSprite(, , 32, 32, sLogoDemo), new LuiText(, , , , "Game Maker!"), [0.1, 0.8]]
+	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover(), [0.1, 0.8]]
 ])
 
 scroll_panel = new LuiScrollPanel( , , , 256, "Scroll panel");

@@ -37,6 +37,7 @@ function LuiBase(_style = {}) constructor {
 	self.valign = undefined;
 	self.draw_relative = false;
 	self.inside_parent = 0;
+	self.ignore_mouse = false;
 	
 	//Init
 	static init_element = function() {
@@ -85,9 +86,14 @@ function LuiBase(_style = {}) constructor {
 		});
 		return self;
 	}
-	///@desc set_visible
+	///@desc set_visible(true/false)
 	static set_visible = function(_visible) {
 		self.visible = _visible;
+		return self;
+	}
+	///@desc ignore_mouse_hover(true/false)
+	static ignore_mouse_hover = function(_ignore = true) {
+		self.ignore_mouse = _ignore;
 		return self;
 	}
 	
@@ -382,7 +388,7 @@ function LuiBase(_style = {}) constructor {
 		var topmost_element = undefined;
 		for (var i = array_length(self.contents) - 1; i >= 0; --i) {
 			var _element = self.contents[i];
-			if (_element.point_on_element(_mouse_x, _mouse_y) && _element.visible) {
+			if (_element.point_on_element(_mouse_x, _mouse_y) && _element.visible && !_element.ignore_mouse) {
 				topmost_element = _element.get_topmost_element(_mouse_x, _mouse_y);
 				if topmost_element == undefined {
 					return _element;
