@@ -1,12 +1,12 @@
-///@arg {Any} x
-///@arg {Any} y
-///@arg {Any} width
-///@arg {Any} height
+///@arg {Real} x
+///@arg {Real} y
+///@arg {Real} width
+///@arg {Real} height
 ///@arg {Bool} value
 ///@arg {Function} callback
 function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, value = false, callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiButton";
+	self.name = "LuiCheckbox";
 	self.value = value;
 	self.pos_x = x;
 	self.pos_y = y;

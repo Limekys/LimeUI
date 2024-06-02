@@ -31,8 +31,8 @@ function LuiMessage(width = 320, height = 160, text = "sample text") : LuiPanel(
 }
 
 ///@arg {Struct} ui
-///@arg {Any} width
-///@arg {Any} height
+///@arg {Real} width
+///@arg {Real} height
 ///@arg {String} text
 function LuiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "Popup message") {
 	var _block_area = new LuiBlockArea(0, 0, display_get_gui_width(), display_get_gui_height(), "block_area");

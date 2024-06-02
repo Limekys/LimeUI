@@ -1,7 +1,7 @@
-///@arg {Any} x
-///@arg {Any} y
-///@arg {Any} width
-///@arg {Any} height
+///@arg {Real} x
+///@arg {Real} y
+///@arg {Real} width
+///@arg {Real} height
 ///@arg {Array} elements
 ///@arg {String} hint
 ///@arg {Function} callback

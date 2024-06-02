@@ -1,10 +1,10 @@
 //Info
-#macro LIMEUI_VERSION "2024.05.31"
+#macro LIMEUI_VERSION "2024.06.02"
 
 //System (Dont touch)
-#macro LUI_AUTO							ptr(0)
-#macro LUI_AUTO_NO_PADDING				ptr(1)
-#macro LUI_STRETCH						ptr(2)
+#macro LUI_AUTO							-1
+#macro LUI_AUTO_NO_PADDING				-2
+#macro LUI_STRETCH						-3
 
 #macro LUI_OVERLAY						_LuiGetOverlay()
 
