@@ -35,6 +35,8 @@
     {"name":"sLogoDemo","order":7,"path":"sprites/sLogoDemo/sLogoDemo.yy",},
     {"name":"sUI_button_border","order":3,"path":"sprites/sUI_button_border/sUI_button_border.yy",},
     {"name":"sUI_button","order":2,"path":"sprites/sUI_button/sUI_button.yy",},
+    {"name":"sUI_dropdown_border","order":15,"path":"sprites/sUI_dropdown_border/sUI_dropdown_border.yy",},
+    {"name":"sUI_dropdown","order":14,"path":"sprites/sUI_dropdown/sUI_dropdown.yy",},
     {"name":"sUI_panel_border","order":1,"path":"sprites/sUI_panel_border/sUI_panel_border.yy",},
     {"name":"sUI_scroll_slider","order":6,"path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},
     {"name":"sUI_slider_knob_border","order":5,"path":"sprites/sUI_slider_knob_border/sUI_slider_knob_border.yy",},

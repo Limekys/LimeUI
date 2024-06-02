@@ -30,7 +30,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 					_blend_color = merge_colour(self.style.color_button, c_black, 0.5);
 				}
 			}
-			draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, width, height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Text
@@ -45,7 +45,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		
 		//Border
 		if !is_undefined(self.style.sprite_button_border)
-		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, width, height, self.style.color_button_border, 1);
+		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 	}
 	
 	self.step = function() {

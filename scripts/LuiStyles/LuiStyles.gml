@@ -20,6 +20,8 @@ function LuiStyle(_style) constructor {
 	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
 	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_white;
 	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
+	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
+	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
 	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
@@ -31,6 +33,8 @@ function LuiStyle(_style) constructor {
 	sprite_slider_knob_border = _style[$ "sprite_slider_knob_border"] ?? undefined;
 	sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
 	sprite_scroll_slider_back = _style[$ "sprite_scroll_slider_back"] ?? undefined;
+	sprite_dropdown = _style[$ "sprite_dropdown"] ?? undefined;
+	sprite_dropdown_border = _style[$ "sprite_dropdown_border"] ?? undefined;
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings

@@ -19,6 +19,8 @@ global.demo_style_light = {
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
 	color_scroll_slider : c_white,
 	color_scroll_slider_back : c_gray,
+	color_dropdown : c_white,
+	color_dropdown_border : merge_colour(c_white, c_black, 0.5),
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
@@ -30,6 +32,8 @@ global.demo_style_light = {
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
 	sprite_scroll_slider_back : sUI_scroll_slider,
+	sprite_dropdown : sUI_dropdown,
+	sprite_dropdown_border : sUI_dropdown_border,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
@@ -59,6 +63,8 @@ global.demo_style_dark = {
 	color_textbox_border : #191a24,
 	color_scroll_slider : #393c4f,
 	color_scroll_slider_back : #191a24,
+	color_dropdown : #393c4f,
+	color_dropdown_border : #191a24,
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
@@ -70,6 +76,8 @@ global.demo_style_dark = {
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
 	sprite_scroll_slider_back : sUI_scroll_slider,
+	sprite_dropdown : sUI_dropdown,
+	sprite_dropdown_border : sUI_dropdown_border,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
@@ -155,10 +163,10 @@ my_panel_in_second_2.add_content(
 );
 
 //Drop down menu
-//var dropdown = new LuiDropDown(, , , , "Select an option");
-//dropdown.add_item("Option 1", function() { show_debug_message("Option 1 selected"); });
-//dropdown.add_item("Option 2", function() { show_debug_message("Option 2 selected"); });
-//dropdown.add_item("Option 3", function() { show_debug_message("Option 3 selected"); });
+var dropdown = new LuiDropDown(, , , , "Select item...");
+dropdown.add_item("Item 1", function() { show_debug_message("Item 1 selected"); });
+dropdown.add_item("Item 2", function() { show_debug_message("Item 2 selected"); });
+dropdown.add_item("Item 3", function() { show_debug_message("Item 3 selected"); });
 
 big_button = new LuiButton(, , , 64, "", function() {});
 big_button_2 = new LuiButton(, , , 64, "", function() {});
@@ -166,8 +174,7 @@ big_button_3 = new LuiButton(, , , 64, "", function() {});
 
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
-	//dropdown,
-	new LuiDropDown( , , , , ["first", "second", "third"], "select element", ),
+	dropdown,
 	new LuiText(, , , , "This is a really long text that probably won't fit in this window!"),
 	big_button,
 	big_button_2,

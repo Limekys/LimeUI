@@ -58,6 +58,8 @@
     {"id":{"name":"sLogoDemo","path":"sprites/sLogoDemo/sLogoDemo.yy",},},
     {"id":{"name":"sUI_button_border","path":"sprites/sUI_button_border/sUI_button_border.yy",},},
     {"id":{"name":"sUI_button","path":"sprites/sUI_button/sUI_button.yy",},},
+    {"id":{"name":"sUI_dropdown_border","path":"sprites/sUI_dropdown_border/sUI_dropdown_border.yy",},},
+    {"id":{"name":"sUI_dropdown","path":"sprites/sUI_dropdown/sUI_dropdown.yy",},},
     {"id":{"name":"sUI_panel_border","path":"sprites/sUI_panel_border/sUI_panel_border.yy",},},
     {"id":{"name":"sUI_panel","path":"sprites/sUI_panel/sUI_panel.yy",},},
     {"id":{"name":"sUI_scroll_slider","path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},},
