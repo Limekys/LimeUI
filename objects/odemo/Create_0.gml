@@ -124,7 +124,7 @@ btn_show_msg.set_color(merge_color(#ffff77, c_black, 0.5));
 btn_restart.set_color(merge_color(#ff7777, c_black, 0.5));
 
 my_panel_in_second_1 = new LuiPanel( , , , 200);
-my_panel_in_second_2 = new LuiPanel( , , , 220);
+my_panel_in_second_2 = new LuiPanel( , , , 200);
 
 my_panel_2.add_content([
 	new LuiText( , , , , "Second panel").set_text_halign(fa_center),
@@ -191,11 +191,10 @@ big_button_3.add_content([
 	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover(), [0.1, 0.8]]
 ])
 
-scroll_panel = new LuiScrollPanel( , , , 256, "Scroll panel");
-simple_sprite = new LuiSprite( , , , 300, sCar);
+scroll_panel = new LuiScrollPanel( , , , 300, "Scroll panel");
 my_panel_4.add_content([
 	[scroll_panel,
-	simple_sprite,
+	new LuiSprite( , , , 300, sCar),
 	new LuiSprite( , , , 100, sCarFlip)]
 ]);
 

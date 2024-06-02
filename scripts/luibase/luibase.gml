@@ -181,6 +181,11 @@ function LuiBase(_style = {}) constructor {
 							_element.pos_y = self.style.padding + _last.pos_y + _last.height;
 						}
 					}
+					
+					//Extend the height of the parent element if the added element does not fit (Except for scrollbars, as they work on a different principle)
+					if !is_instanceof(self, LuiScrollPanel) && _element.pos_y + _element.height > self.height - self.style.padding {
+						self.height = _element.pos_y + _element.height + self.style.padding;
+					}
 				}
 				
 				//Save new start x y position
@@ -245,7 +250,7 @@ function LuiBase(_style = {}) constructor {
 	///@desc align_all_elements() //???//
 	static align_all_elements = function() {
 		if array_length(self.contents) > 0
-		for (var i = 0; i < array_length(self.contents); i++) {
+		for (var i = array_length(self.contents) - 1; i >= 0 ; --i) {
 			var _element = self.contents[i];
 			switch(_element.halign) {
 				case fa_left:
