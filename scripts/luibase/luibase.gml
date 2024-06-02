@@ -476,14 +476,14 @@ function LuiBase(_style = {}) constructor {
 					//Draw
 					_element.draw(_e_x, _e_y);
 					_element.render(base_x, base_y);
-					if global.LUI_DEBUG_MODE _element.render_debug(_e_x, _e_y);
+					if global.LUI_DEBUG_MODE == 1 _element.render_debug(_e_x, _e_y);
 				}
 			} else {
 				if _element.inside_parent == 1 || _element.inside_parent == 2 {
 					//Draw
 					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
 					_element.render(_element.pos_x, _element.pos_y);
-					if global.LUI_DEBUG_MODE _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
+					if global.LUI_DEBUG_MODE == 1 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
 				}
 			}
 		}
@@ -491,38 +491,38 @@ function LuiBase(_style = {}) constructor {
 	
 	///@desc render_debug()
 	static render_debug = function(_x = self.get_absolute_x(), _y = self.get_absolute_y()) {
-		if global.LUI_DEBUG_MODE == 1 {
-			draw_set_alpha(0.25);
-			if mouse_hover() {
-				//Get mouse coords
-				var _mx = device_mouse_x_to_gui(0) + 16;
-				var _my = device_mouse_y_to_gui(0);
-				//Text
-				var _y_offset = !is_undefined(self.style.font_debug) ? font_get_size(self.style.font_debug) : 8;
-				_lui_draw_text_debug(_mx, _my, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
-				_lui_draw_text_debug(_mx, _my + _y_offset*1, "w: " + string(self.width) + " h: " + string(self.height));
-				_lui_draw_text_debug(_mx, _my + _y_offset*2, "v: " + string(self.value));
-				_lui_draw_text_debug(_mx, _my + _y_offset*3, "hl: " + string(self.halign) + " vl: " + string(self.valign));
-				draw_set_color(c_red);
-			} else {
-				draw_set_color(c_blue);
-			}
-			//Rectangles
-			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
-			draw_line(_x, _y, _x + self.width - 1, _y + self.height - 1);
-			draw_line(_x, _y + self.height, _x + self.width - 1, _y - 1);
+		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
+		var _y_offset = string_height("a");
+		//Rectangles
+		draw_set_alpha(0.5);
+		draw_set_color(mouse_hover() ? c_red : c_blue);
+		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
+		draw_line(_x, _y, _x + self.width - 1, _y + self.height - 1);
+		draw_line(_x, _y + self.height, _x + self.width - 1, _y - 1);
+		//Text
+		_lui_draw_text_debug(_x, _y + _y_offset*0, "name: " + string(self.name));
+		_lui_draw_text_debug(_x, _y + _y_offset*1, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
+		_lui_draw_text_debug(_x, _y + _y_offset*2, "w: " + string(self.width) + " h: " + string(self.height));
+		_lui_draw_text_debug(_x, _y + _y_offset*3, "v: " + string(self.value));
+		_lui_draw_text_debug(_x, _y + _y_offset*4, "hl: " + string(self.halign) + " vl: " + string(self.valign));
+		//Text on mouse
+		if mouse_hover() {
+			//Get mouse coords
+			var _mx = device_mouse_x_to_gui(0) + 16;
+			var _my = device_mouse_y_to_gui(0);
 			//Text
-			var _y_offset = !is_undefined(self.style.font_debug) ? font_get_size(self.style.font_debug) : 8;
-			_lui_draw_text_debug(_x, _y, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
-			_lui_draw_text_debug(_x, _y + _y_offset*1, "w: " + string(self.width) + " h: " + string(self.height));
-			_lui_draw_text_debug(_x, _y + _y_offset*2, "v: " + string(self.value));
-			_lui_draw_text_debug(_x, _y + _y_offset*3, "hl: " + string(self.halign) + " vl: " + string(self.valign));
+			_lui_draw_text_debug(_mx, _my + _y_offset*0, "name: " + string(self.name));
+			_lui_draw_text_debug(_mx, _my + _y_offset*1, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
+			_lui_draw_text_debug(_mx, _my + _y_offset*2, "w: " + string(self.width) + " h: " + string(self.height));
+			_lui_draw_text_debug(_mx, _my + _y_offset*3, "v: " + string(self.value));
+			_lui_draw_text_debug(_mx, _my + _y_offset*4, "hl: " + string(self.halign) + " vl: " + string(self.valign));
 		}
+		draw_set_alpha(1);
+		draw_set_color(c_white);
 	}
 	
 	///@desc _lui_draw_text_debug(x, y, text)
 	static _lui_draw_text_debug = function(x, y, text) {
-		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
 		var _text_width = string_width(text);
 		var _text_height = string_height(text);
 		draw_set_halign(fa_left);

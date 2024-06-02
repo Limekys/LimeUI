@@ -94,7 +94,7 @@ my_ui = new LuiBase(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-my_panel_4 = new LuiPanel( , , , 332, "LuiPanel_4").set_halign(fa_center);
+my_panel_4 = new LuiPanel( , , , 332, "LuiPanel_4");
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
 	[my_panel_4, [0.75]]
@@ -105,13 +105,13 @@ demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
 	//var _msg = new LuiMessage(, , "This is just a simple message!");
 	LuiShowMessage(oDemo.my_ui, 360, 140, "This is just a simple message!");
-}).set_valign(fa_bottom)
-btn_restart = new LuiButton(, , , , "Restart", function() {game_restart()}).set_valign(fa_bottom);
+}).set_valign(fa_bottom).set_halign(fa_left);
+btn_restart = new LuiButton(, , , , "Restart", function() {game_restart()}).set_valign(fa_bottom).set_halign(fa_right);
 
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_text_halign(fa_center),
-	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x - 128, my_panel_4.pos_x + 128, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.3, 0.7]],
-	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, my_panel_4.pos_y + 96, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.3, 0.7]],
+	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x, room_width - my_panel_4.width - my_panel_4.style.padding, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, room_height - my_panel_4.height - my_panel_4.style.padding, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
 	[new LuiText( , , , , "Progress loading"), new LuiCheckbox( , , 32, 32, false, function() {oDemo.demo_loading_state = self.value}), [0.3, 0.7]],
 	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , ), [0.3, 0.7]],
