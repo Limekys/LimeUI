@@ -18,7 +18,7 @@ Features:
 
 In development now:
 - Tabs panel
-- Draggeble windows
+- Draggable windows
 - Animations
 
 ![2024_06_03_00_24_Runner_MSK0gu4HJ6](https://github.com/Limekys/LimeUI/assets/58959645/5fcab87e-4f4d-4fea-a065-cfa3c40f787d)
