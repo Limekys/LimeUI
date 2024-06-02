@@ -14,14 +14,14 @@ Features:
 - Sliders
 - Spriteboxes
 - Sprite buttons
+- Dropdown lists
 
 In development now:
-- Dropdown lists
 - Tabs panel
 - Draggeble windows
 - Animations
 
-![2024_05_24_22_51_Runner_5HoxYWggIn](https://github.com/Limekys/LimeUI/assets/58959645/8ef3dabf-e43f-4b9e-ac8a-114652e4859c)
-![image](https://user-images.githubusercontent.com/58959645/221555844-4c8fb101-3f30-4740-b228-20f07aad436e.png)
-![image](https://user-images.githubusercontent.com/58959645/221555851-6f48f682-f70b-4772-b943-9093cb4383d1.png)
-![image](https://user-images.githubusercontent.com/58959645/227132273-467a90f4-ae7a-47d9-9dd9-41bffb1a3fb9.png)
+![2024_06_03_00_24_Runner_MSK0gu4HJ6](https://github.com/Limekys/LimeUI/assets/58959645/5fcab87e-4f4d-4fea-a065-cfa3c40f787d)
+![2024_06_03_00_43_Runner_HAjKG1P5SS](https://github.com/Limekys/LimeUI/assets/58959645/127503cf-bbb6-4736-a1b1-4e7853fc2b58)
+![2024_06_03_00_43_Runner_QIevzLPvaH](https://github.com/Limekys/LimeUI/assets/58959645/a741e212-bafd-4085-a045-970e1c1013bf)
+![2024_06_03_00_43_Runner_UIoO4DHr2T](https://github.com/Limekys/LimeUI/assets/58959645/cecc6802-3a31-44b4-8588-e7ce937d4c46)
