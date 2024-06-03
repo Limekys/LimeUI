@@ -100,7 +100,7 @@ my_ui = new LuiBase(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-my_panel_4 = new LuiPanel( , , , 332, "LuiPanel_4");
+my_panel_4 = new LuiPanel( , , 1000, 332, "LuiPanel_4");
 
 //Add main panels to main ui container
 my_ui.add_content([

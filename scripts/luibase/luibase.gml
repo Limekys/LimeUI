@@ -345,7 +345,7 @@ function LuiBase(_style = {}) constructor {
 		var _element_x = self.get_absolute_x();
 		var _element_y = self.get_absolute_y();
 		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
-		return _on_this;
+		return _on_this && self.visible;
 	}
 	
 	///@desc mouse_hover_parent()
@@ -373,7 +373,7 @@ function LuiBase(_style = {}) constructor {
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _on_element = false;
 		var _n = array_length(self.contents);
-		if _n > 0
+		if _n > 0 && self.visible
 		for (var i = 0; i < _n; ++i) {
 		    var _element = self.contents[i];
 			_on_element = _element.mouse_hover_any();
@@ -462,7 +462,7 @@ function LuiBase(_style = {}) constructor {
 	
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
-		if array_length(self.contents) > 0
+		if array_length(self.contents) > 0 && self.visible
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
