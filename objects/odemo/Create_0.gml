@@ -89,25 +89,31 @@ global.demo_style_dark = {
 
 //LUI_OVERLAY.style = new LuiStyle(global.demo_style_dark);
 
+//Create the main ui container
 my_ui = new LuiBase(global.demo_style_dark);
 
+//Create main panels
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
 my_panel_4 = new LuiPanel( , , , 332, "LuiPanel_4");
+
+//Add main panels to main ui container
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
-	[my_panel_4, [0.75]]
+	[my_panel_4]
 ]);
 
+//Create some elements
+//set_halign and set_valign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , 0, 100, true, 0);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , "Show message", function() {
-	//var _msg = new LuiMessage(, , "This is just a simple message!");
 	LuiShowMessage(oDemo.my_ui, 360, 140, "This is just a simple message!");
 }).set_valign(fa_bottom).set_halign(fa_left);
 btn_restart = new LuiButton(, , , , "Restart", function() {game_restart()}).set_valign(fa_bottom).set_halign(fa_right);
 
+//Add elements to first panel and init some here
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_text_halign(fa_center),
 	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x, room_width - my_panel_4.width - my_panel_4.style.padding, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.2, 0.8]],
@@ -120,22 +126,29 @@ my_panel.add_content([
 	[btn_show_msg, btn_restart]
 ]);
 
+//Set colors to buttons 
+//Important after adding to panel!
+//Because when we add an element to another element, we assign it the style of the element we are adding it to
 btn_show_msg.set_color(merge_color(#ffff77, c_black, 0.5));
 btn_restart.set_color(merge_color(#ff7777, c_black, 0.5));
 
+//Create some panels
 my_panel_in_second_1 = new LuiPanel( , , , 200);
 my_panel_in_second_2 = new LuiPanel( , , , 200);
 
+//Then add its to second panel
 my_panel_2.add_content([
 	new LuiText( , , , , "Second panel").set_text_halign(fa_center),
 	my_panel_in_second_1,
 	my_panel_in_second_2
 ]);
 
+//Create deactivated button
 deactivated_button = new LuiButton( , , , , "DEACTIVATED", function() {
 	destroy();
 }).deactivate();
 
+//Add elements and init some in first panel of second main panel
 my_panel_in_second_1.add_content([
 	new LuiText( , , , , "Panel in panel").set_text_halign(fa_center),
 	[new LuiButton( , , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
@@ -146,6 +159,7 @@ my_panel_in_second_1.add_content([
 	deactivated_button,
 ]);
 
+//Create to arrays with sprite buttons
 var _buttons1 = []
 var _buttons2 = []
 for (var i = 0; i < 10; ++i) {
@@ -154,6 +168,9 @@ for (var i = 0; i < 10; ++i) {
 	else
 	array_push(_buttons2, _button);
 }
+
+//Add these to arrays to second panel of second main panel
+//Since these are arrays with buttons, they will be added each in a row
 my_panel_in_second_2.add_content(
 	[
 		new LuiText( , , , , "Panel with sprites buttons"), 
@@ -162,16 +179,18 @@ my_panel_in_second_2.add_content(
 	]
 );
 
-//Drop down menu
+//Create drop down menu and some items in it
 var dropdown = new LuiDropDown(, , , , "Select item...");
 dropdown.add_item("Item 1", function() { show_debug_message("Item 1 selected"); });
 dropdown.add_item("Item 2", function() { show_debug_message("Item 2 selected"); });
 dropdown.add_item("Item 3", function() { show_debug_message("Item 3 selected"); });
 
+//Create big empty buttons (see forward why)
 big_button = new LuiButton(, , , 64, "", function() {});
 big_button_2 = new LuiButton(, , , 64, "", function() {});
 big_button_3 = new LuiButton(, , , 64, "", function() {});
 
+//Add elements to third main panel
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
 	dropdown,
@@ -181,6 +200,8 @@ my_panel_3.add_content([
 	big_button_3
 ]);
 
+//In each big button we adding sprite and text with ignore mouse hovering
+//And we get big buttons with icon and text
 big_button.add_content([
 	[new LuiSprite(, , 32, 32, sHamburger).ignore_mouse_hover(), new LuiText(, , , , "Hamburger!").ignore_mouse_hover(), [0.1, 0.8]]
 ])
@@ -191,24 +212,31 @@ big_button_3.add_content([
 	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover(), [0.1, 0.8]]
 ])
 
+//Create scroll panel
 scroll_panel = new LuiScrollPanel( , , , 300, "Scroll panel");
+
+//Add this scroll panel and some new elements to fourth main panel
 my_panel_4.add_content([
 	[scroll_panel,
 	new LuiSprite( , , , 300, sCar),
 	new LuiSprite( , , , 100, sCarFlip)]
 ]);
 
-
+//Create some panel that will be added to the scroll panel
 var _nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
 
+//Add text to scroll panel
 scroll_panel.add_content([
 	new LuiText( , , , , "Scroll panel")
 ]);
+
+//Add 3 new buttons to scroll panel
 for (var i = 0; i < 3; ++i) {
     var _btn = new LuiButton( , , , , "Button_" + string(i), );
 	scroll_panel.add_content(_btn);
 }
 
+//Add moew elements to scroll panel
 scroll_panel.add_content([
 	new LuiTextbox(, , , , , "textbox in scroll panel"),
 	_nested_panel,
@@ -218,6 +246,7 @@ scroll_panel.add_content([
 	new LuiSprite( , , , 128, sHamburger),
 ]);
 
+//And add some elements to panel that is inside of scroll panel
 _nested_panel.add_content([
 	new LuiText(, , , , "Nested panel"),
 	new LuiButton( , , , , "Nested button"),
