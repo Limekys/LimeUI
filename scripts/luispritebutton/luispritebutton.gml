@@ -45,7 +45,8 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 				_width = _height * self.aspect;
 			}
 		}
-		draw_sprite_stretched_ext(self.sprite, self.subimg, 
+		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
+		_sprite_render_function(self.sprite, self.subimg, 
 									draw_x + self.width/2 - _width/2, 
 									draw_y + self.height/2 - _height/2, 
 									_width-1, _height-1, 

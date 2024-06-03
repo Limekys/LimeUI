@@ -42,6 +42,8 @@ function LuiStyle(_style) constructor {
 	scroll_step = _style[$ "scroll_step"] ?? 32;
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
+	//Render functions
+	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined;
 	//Animations
 	
 }

@@ -84,7 +84,11 @@ global.demo_style_dark = {
 	padding : 16,
 	scroll_step : 32,
 	textbox_cursor : "|",
-	textbox_password : "•"
+	textbox_password : "•",
+	//Render functions
+	//sprite_render_function : function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha) {
+	//	draw_sprite_stretched_ext(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha);
+	//}
 }
 
 //LUI_OVERLAY.style = new LuiStyle(global.demo_style_dark);
