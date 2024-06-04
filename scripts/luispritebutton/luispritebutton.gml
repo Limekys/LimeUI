@@ -9,6 +9,7 @@
 ///@arg {Bool} maintain_aspect
 ///@arg {Function} callback
 function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, sprite, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
+	
 	self.name = "LuiSpriteButton";
 	self.pos_x = x;
 	self.pos_y = y;

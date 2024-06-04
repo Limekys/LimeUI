@@ -6,8 +6,6 @@
 ///@arg {Function} callback
 function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "button", callback = undefined) : LuiBase() constructor {
 	
-	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
-	
 	self.name = "LuiButton";
 	self.text = text;
 	self.value = text;

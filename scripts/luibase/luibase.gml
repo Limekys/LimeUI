@@ -121,26 +121,27 @@ function LuiBase(_style = {}) constructor {
 		//Adding
 		for (var i = 0; i < array_length(elements); i++) {
 		    //Get
-			var row_element = elements[i];
+			var _row_elements = elements[i];
 			
 			//Convert to array if one element
-			if !is_array(row_element) row_element = [row_element];
-			var _n = array_length(row_element);
+			if !is_array(_row_elements) _row_elements = [_row_elements];
+			var _row_element_count = array_length(_row_elements);
 			
 			//Take ranges from array
 			var _ranges = [];
-			if is_array(row_element[_n-1]) {
-				_ranges = row_element[_n-1];
-				_n--;
+			if is_array(_row_elements[_row_element_count-1]) {
+				_ranges = _row_elements[_row_element_count-1];
+				_row_element_count--;
 			}
 			
-			//Calculate width for each element in row
-			var _auto_width = floor((self.width - (_n + 1)*self.style.padding) / _n);
+			//Init variable for auto width calculations
+			var _last_in_row = undefined;
+			var _width = self.width;
 			
 			//Adding elements in row
-			for (var j = 0; j < _n; j++) {
+			for (var j = 0; j < _row_element_count; j++) {
 				//Get
-				var _element = row_element[j];
+				var _element = _row_elements[j];
 				var _last = get_last();
 				
 				//Set parent and style
@@ -150,13 +151,23 @@ function LuiBase(_style = {}) constructor {
 				//Set draw_relative if parent has draw_relative too
 				_element.draw_relative = _element.parent.draw_relative;
 				
+				//Calculate width for right auto width calculations for next element
+				if !is_undefined(_last_in_row) {
+					_width -= _last_in_row.width + self.style.padding;
+				}
+				
 				//Set width
 				if _element.auto_width == true {
-					_element.width = min(_auto_width, _element.max_width);
+					//Calculate width by ranges (ranges have high priority)
 					if array_length(_ranges) > 0 {
-						_element.width = floor(_ranges[j] * (self.width - (_n + 1)*self.style.padding));
+						_element.width = floor(_ranges[j] * (self.width - (_row_element_count + 1)*self.style.padding));
+					} else {
+						//Calculate auto width for each element in row
+						var _remaining_element_count = _row_element_count - j;
+						var _auto_width = floor((_width - (_remaining_element_count + 1)*self.style.padding) / _remaining_element_count);
+						//Set width
+						_element.width = min(_auto_width, _element.max_width);
 					}
-					_element.width = min(_element.width, _element.max_width);
 				}
 				
 				//Set height
@@ -176,7 +187,7 @@ function LuiBase(_style = {}) constructor {
 							_element.pos_x = _element_x + _last.width + self.style.padding;
 						}
 						//If one element
-						if _n == 1 {
+						if _row_element_count == 1 {
 							_element.pos_x = self.style.padding;
 							_element.pos_y = self.style.padding + _last.pos_y + _last.height;
 						}
@@ -194,9 +205,10 @@ function LuiBase(_style = {}) constructor {
 				
 				//Add to content array
 				array_push(self.contents, _element);
+				_last_in_row = _element;
 				
 				//If last element in row
-				if j == _n-1 {
+				if j == _row_element_count-1 {
 					_element_x = 0;
 					_row_pos_y += self.style.padding + _element.height;
 				}

@@ -6,14 +6,12 @@
 ///@arg {Function} callback
 function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, hint = "drop list", callback = undefined) : LuiBase() constructor {
 	
-	if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons); //Need to be called for right calculations
-	
 	self.name = "LuiDropDown";
 	self.value = "";
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
-	self.height = height ?? self.min_height;
+	self.height = height;
 	init_element();
 	set_callback(callback);
 	
@@ -120,6 +118,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@arg {String} text
 ///@arg {Function} callback
 function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "dropdown_item", callback = undefined) : LuiBase() constructor {
+	
 	self.name = "LuiDropDownItem";
 	self.text = text;
 	self.value = text;
