@@ -100,13 +100,18 @@ my_ui = new LuiBase(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-my_panel_4 = new LuiPanel( , , 1000, 332, "LuiPanel_4");
+tab_group = new LuiTabGroup( , , 1000, 332, 32, "LuiTabGroup");
 
 //Add main panels to main ui container
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
-	[my_panel_4]
+	[tab_group]
 ]);
+
+//Add content to tabgroup
+tab_1 = new LuiTab("Scroll panel");
+tab_2 = new LuiTab("Sprites");
+tab_group.add_tabs([tab_1, tab_2]);
 
 //Create some elements
 //set_halign and set_valign allow you to set the alignment of elements in the panel
@@ -120,11 +125,11 @@ btn_restart = new LuiButton(, , , , "Restart", function() {game_restart()}).set_
 //Add elements to first panel and init some here
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_text_halign(fa_center),
-	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , my_panel_4.pos_x, room_width - my_panel_4.width - my_panel_4.style.padding, my_panel_4.pos_x, function(){oDemo.my_panel_4.pos_x = self.value}), [0.2, 0.8]],
-	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , my_panel_4.pos_y, room_height - my_panel_4.height - my_panel_4.style.padding, my_panel_4.pos_y, function(){oDemo.my_panel_4.pos_y = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , tab_group.pos_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group.pos_x = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , tab_group.pos_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group.pos_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
-	[new LuiText( , , , , "Progress loading"), new LuiCheckbox( , , 32, 32, false, function() {oDemo.demo_loading_state = self.value}), [0.3, 0.7]],
-	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , ), [0.3, 0.7]],
+	[new LuiCheckbox( , , 32, 32, false, function() {oDemo.demo_loading_state = self.value}), new LuiText( , , , , "Progress loading")],
+	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , ), [0.2, 0.8]],
 	new LuiTextbox( , , , ,"", "login", , ),
 	new LuiTextbox( , , , ,"", "password", true, ),
 	[btn_show_msg, btn_restart]
@@ -167,7 +172,7 @@ my_panel_in_second_1.add_content([
 var _buttons1 = []
 var _buttons2 = []
 for (var i = 0; i < 10; ++i) {
-    var _button = new LuiSpriteButton( , , , 56, sLogoDemo, 0, c_white, 1, true, function() {self.set_color_blend(choose(#231b2a, #4e2640, #52466c))});
+    var _button = new LuiSpriteButton( , , , 56, sLogoDemo, 0, c_white, 1, i < 5 ? true : false, function() {self.set_color_blend(choose(#231b2a, #4e2640, #52466c))});
 	if i < 5 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);
@@ -207,24 +212,25 @@ my_panel_3.add_content([
 //In each big button we adding sprite and text with ignore mouse hovering
 //And we get big buttons with icon and text
 big_button.add_content([
-	[new LuiSprite(, , 32, 32, sHamburger).ignore_mouse_hover(), new LuiText(, , , , "Hamburger!").ignore_mouse_hover(), [0.1, 0.8]]
+	[new LuiSprite(, , 32, 32, sHamburger).ignore_mouse_hover(), new LuiText(, , , , "Hamburger!").ignore_mouse_hover()]
 ])
 big_button_2.add_content([
-	[new LuiSprite(, , 32, 32, sBoxDemo).ignore_mouse_hover(), new LuiText(, , , , "A box!").ignore_mouse_hover(), [0.1, 0.8]]
+	[new LuiSprite(, , 32, 32, sBoxDemo).ignore_mouse_hover(), new LuiText(, , , , "A box!").ignore_mouse_hover()]
 ])
 big_button_3.add_content([
-	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover(), [0.1, 0.8]]
+	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover()]
 ])
 
-//Create scroll panel
-scroll_panel = new LuiScrollPanel( , , , 300, "Scroll panel");
+//Create scroll panel and some sprites
+scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel");
+sprite_car_1 = new LuiSprite( , , , 256, sCar);
+sprite_car_2 = new LuiSprite( , , , 256, sCar, , , , false);
+sprite_car_3 = new LuiSprite( , , , 256, sCarFlip);
+sprite_car_4 = new LuiSprite( , , , 256, sCarFlip, , , , false);
 
-//Add this scroll panel and some new elements to fourth main panel
-my_panel_4.add_content([
-	[scroll_panel,
-	new LuiSprite( , , , 300, sCar),
-	new LuiSprite( , , , 100, sCarFlip)]
-]);
+//Add scroll panel and sprites in different Tabs of TabGroup
+tab_1.add_content([scroll_panel]);
+tab_2.add_content([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
 
 //Create some panel that will be added to the scroll panel
 var _nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");

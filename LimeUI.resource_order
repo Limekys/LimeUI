@@ -23,6 +23,7 @@
     {"name":"LuiSprite","order":14,"path":"scripts/LuiSprite/LuiSprite.yy",},
     {"name":"LuiSpriteButton","order":11,"path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},
     {"name":"LuiStyles","order":1,"path":"scripts/LuiStyles/LuiStyles.yy",},
+    {"name":"LuiTabGroup","order":18,"path":"scripts/LuiTabGroup/LuiTabGroup.yy",},
     {"name":"LuiText","order":8,"path":"scripts/LuiText/LuiText.yy",},
     {"name":"LuiTextbox","order":12,"path":"scripts/LuiTextbox/LuiTextbox.yy",},
     {"name":"UsefulFunctions","order":1,"path":"scripts/UsefulFunctions/UsefulFunctions.yy",},

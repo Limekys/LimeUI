@@ -45,6 +45,7 @@
     {"id":{"name":"LuiSprite","path":"scripts/LuiSprite/LuiSprite.yy",},},
     {"id":{"name":"LuiSpriteButton","path":"scripts/LuiSpriteButton/LuiSpriteButton.yy",},},
     {"id":{"name":"LuiStyles","path":"scripts/LuiStyles/LuiStyles.yy",},},
+    {"id":{"name":"LuiTabGroup","path":"scripts/LuiTabGroup/LuiTabGroup.yy",},},
     {"id":{"name":"LuiText","path":"scripts/LuiText/LuiText.yy",},},
     {"id":{"name":"LuiTextbox","path":"scripts/LuiTextbox/LuiTextbox.yy",},},
     {"id":{"name":"UsefulFunctions","path":"scripts/UsefulFunctions/UsefulFunctions.yy",},},
