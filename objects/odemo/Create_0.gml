@@ -109,7 +109,7 @@ my_ui = new LuiBase(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 1000, 332, 32, "LuiTabGroup");
+tab_group = new LuiTabGroup( , , 500, 332, 32, "LuiTabGroup");
 
 //Add main panels to main ui container
 my_ui.add_content([
@@ -120,7 +120,8 @@ my_ui.add_content([
 //Add content to tabgroup
 tab_1 = new LuiTab("Scroll panel");
 tab_2 = new LuiTab("Sprites");
-tab_group.add_tabs([tab_1, tab_2]);
+tab_3 = new LuiTab("About");
+tab_group.add_tabs([tab_1, tab_2, tab_3]);
 
 //Create some elements
 //set_halign and set_valign allow you to set the alignment of elements in the panel
@@ -277,4 +278,20 @@ _nested_panel.add_content([
 		}
 	}),
 	new LuiText(, , , , "Check me!")]
+]);
+
+//Elements for about tab
+sprite_limekys = new LuiSprite(, , 64, 64, sLimekysAvatar);
+text_about = new LuiText(, , , 64, "Hi, i am Limekys, and this is my UI system!");
+sprite_discord = new LuiSpriteButton(, , 64, 64, sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});
+sprite_telegram = new LuiSpriteButton(, , 64, 64, sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")});
+sprite_twitch = new LuiSpriteButton(, , 64, 64, sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")});
+sprite_twitter = new LuiSpriteButton(, , 64, 64, sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")});
+sprite_vk = new LuiSpriteButton(, , 64, 64, sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")});
+sprite_youtube = new LuiSpriteButton(, , 64, 64, sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")});
+text_version = new LuiText(, , , , "LimeUI version: " + LIMEUI_VERSION).set_valign(fa_bottom);
+tab_3.add_content([
+	[sprite_limekys, text_about],
+	[sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube],
+	text_version
 ]);

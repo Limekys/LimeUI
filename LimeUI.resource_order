@@ -3,6 +3,7 @@
     {"name":"DEMO","order":2,"path":"folders/DEMO.yy",},
     {"name":"Fonts","order":1,"path":"folders/DEMO/Fonts.yy",},
     {"name":"Sprites","order":2,"path":"folders/DEMO/Sprites.yy",},
+    {"name":"Socials","order":27,"path":"folders/DEMO/Sprites/Socials.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"fDebug","order":1,"path":"fonts/fDebug/fDebug.yy",},
@@ -33,7 +34,11 @@
     {"name":"sCar","order":9,"path":"sprites/sCar/sCar.yy",},
     {"name":"sCarFlip","order":10,"path":"sprites/sCarFlip/sCarFlip.yy",},
     {"name":"sHamburger","order":11,"path":"sprites/sHamburger/sHamburger.yy",},
+    {"name":"sLimekysAvatar","order":20,"path":"sprites/sLimekysAvatar/sLimekysAvatar.yy",},
     {"name":"sLogoDemo","order":7,"path":"sprites/sLogoDemo/sLogoDemo.yy",},
+    {"name":"sTelegram_64px","order":1,"path":"sprites/sTelegram_64px/sTelegram_64px.yy",},
+    {"name":"sTwitch_64px","order":2,"path":"sprites/sTwitch_64px/sTwitch_64px.yy",},
+    {"name":"sTwitter_64px","order":3,"path":"sprites/sTwitter_64px/sTwitter_64px.yy",},
     {"name":"sUI_button_border","order":3,"path":"sprites/sUI_button_border/sUI_button_border.yy",},
     {"name":"sUI_button","order":2,"path":"sprites/sUI_button/sUI_button.yy",},
     {"name":"sUI_dropdown_border","order":15,"path":"sprites/sUI_dropdown_border/sUI_dropdown_border.yy",},
@@ -48,5 +53,7 @@
     {"name":"sUI_tabgroup","order":18,"path":"sprites/sUI_tabgroup/sUI_tabgroup.yy",},
     {"name":"sUI_textbox_border","order":13,"path":"sprites/sUI_textbox_border/sUI_textbox_border.yy",},
     {"name":"sUI_textbox","order":12,"path":"sprites/sUI_textbox/sUI_textbox.yy",},
+    {"name":"sVkontakte_64px","order":4,"path":"sprites/sVkontakte_64px/sVkontakte_64px.yy",},
+    {"name":"sYoutube_64px","order":5,"path":"sprites/sYoutube_64px/sYoutube_64px.yy",},
   ],
 }
