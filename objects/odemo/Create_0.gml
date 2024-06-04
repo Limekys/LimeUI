@@ -29,6 +29,9 @@ global.demo_style_light = {
 	sprite_textbox_border : sUI_textbox_border,
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
+	sprite_checkbox : sUI_button,
+	sprite_checkbox_pin : sUI_button,
+	sprite_checkbox_border : sUI_button_border,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
@@ -77,6 +80,9 @@ global.demo_style_dark = {
 	sprite_textbox_border : sUI_textbox_border,
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
+	sprite_checkbox : sUI_button,
+	sprite_checkbox_pin : sUI_button,
+	sprite_checkbox_border : sUI_button_border,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
@@ -243,7 +249,7 @@ tab_1.add_content([scroll_panel]);
 tab_2.add_content([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
 
 //Create some panel that will be added to the scroll panel
-var _nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
+nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
 
 //Add text to scroll panel
 scroll_panel.add_content([
@@ -259,7 +265,7 @@ for (var i = 0; i < 3; ++i) {
 //Add moew elements to scroll panel
 scroll_panel.add_content([
 	new LuiTextbox(, , , , , "textbox in scroll panel"),
-	_nested_panel,
+	nested_panel,
 	new LuiSprite( , , , 100, sCarFlip),
 	new LuiSprite( , , , 256, sHamburger),
 	new LuiSprite( , , , 200, sCar),
@@ -267,7 +273,7 @@ scroll_panel.add_content([
 ]);
 
 //And add some elements to panel that is inside of scroll panel
-_nested_panel.add_content([
+nested_panel.add_content([
 	new LuiText(, , , , "Nested panel"),
 	new LuiButton( , , , , "Nested button"),
 	[new LuiCheckbox( , , , , false, function() {
@@ -276,7 +282,7 @@ _nested_panel.add_content([
 		} else {
 			LuiShowMessage(oDemo.my_ui, 360, 140, ":(");
 		}
-	}),
+	}).set_pin_margin(0),
 	new LuiText(, , , , "Check me!")]
 ]);
 

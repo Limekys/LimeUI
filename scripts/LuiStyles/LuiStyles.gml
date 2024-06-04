@@ -29,6 +29,9 @@ function LuiStyle(_style) constructor {
 	sprite_textbox_border = _style[$ "sprite_textbox_border"] ?? undefined;
 	sprite_button = _style[$ "sprite_button"] ?? undefined;
 	sprite_button_border = _style[$ "sprite_button_border"] ?? undefined;
+	sprite_checkbox = _style[$ "sprite_checkbox"] ?? undefined;
+	sprite_checkbox_pin = _style[$ "sprite_checkbox_pin"] ?? undefined;
+	sprite_checkbox_border = _style[$ "sprite_checkbox_border"] ?? undefined;
 	sprite_slider_knob = _style[$ "sprite_slider_knob"] ?? undefined;
 	sprite_slider_knob_border = _style[$ "sprite_slider_knob_border"] ?? undefined;
 	sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
