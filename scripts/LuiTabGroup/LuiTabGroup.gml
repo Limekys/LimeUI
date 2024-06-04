@@ -36,7 +36,6 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		    //Get tab
 			var _tab = _tabs[i];
 			//Set tab sizes
-			_tab.width = floor(self.width / _tab_count);
 			_tab.height = self.tab_height;
 			//Create tab container
 			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, "tab_container");
@@ -107,6 +106,7 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 	
 	self.name = "LuiTab";
 	self.text = text;
+	self.width = LUI_AUTO;
 	self.pos_x = LUI_AUTO;
 	self.pos_y = LUI_AUTO;
 	init_element();
