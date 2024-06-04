@@ -35,6 +35,10 @@ function LuiStyle(_style) constructor {
 	sprite_scroll_slider_back = _style[$ "sprite_scroll_slider_back"] ?? undefined;
 	sprite_dropdown = _style[$ "sprite_dropdown"] ?? undefined;
 	sprite_dropdown_border = _style[$ "sprite_dropdown_border"] ?? undefined;
+	sprite_tab = _style[$ "sprite_tab"] ?? undefined;
+	sprite_tab_border = _style[$ "sprite_tab_border"] ?? undefined;
+	sprite_tabgroup = _style[$ "sprite_tabgroup"] ?? undefined;
+	sprite_tabgroup_border = _style[$ "sprite_tabgroup_border"] ?? undefined;
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings

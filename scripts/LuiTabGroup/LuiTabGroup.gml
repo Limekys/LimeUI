@@ -76,11 +76,11 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
-		if !is_undefined(self.style.sprite_panel)
-		draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_main, 1);
+		if !is_undefined(self.style.sprite_tabgroup)
+		draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_main, 1);
 		//Border
-		if !is_undefined(self.style.sprite_panel_border)
-		draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
+		if !is_undefined(self.style.sprite_tabgroup_border)
+		draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
 	}
 	
 	self.step = function() {
@@ -132,16 +132,18 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
-		if !is_undefined(self.style.sprite_button) {
+		if !is_undefined(self.style.sprite_tab) {
 			var _blend_color = self.style.color_button;
-			if !self.is_active _blend_color = merge_colour(self.style.color_button, c_black, 0.5);
-			if !self.deactivated && self.mouse_hover() {
-				_blend_color = merge_colour(self.style.color_button, self.style.color_hover, 0.5);
-				if self.is_pressed == true {
-					_blend_color = merge_colour(self.style.color_button, c_black, 0.5);
+			if !self.is_active {
+				_blend_color = merge_colour(self.style.color_button, c_black, 0.25);
+				if !self.deactivated && self.mouse_hover() {
+					_blend_color = merge_colour(self.style.color_button, self.style.color_hover, 0.5);
+					if self.is_pressed == true {
+						_blend_color = merge_colour(self.style.color_button, c_black, 0.5);
+					}
 				}
 			}
-			draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tab, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Text
@@ -155,8 +157,8 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 		draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
 		
 		//Border
-		if !is_undefined(self.style.sprite_button_border) {
-			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
+		if !is_undefined(self.style.sprite_tab_border) {
+			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 		}
 	}
 	

@@ -14,6 +14,7 @@ global.demo_style_light = {
 	color_border : merge_colour(c_white, c_black, 0.5),
 	color_button : c_white,
 	color_button_border : merge_colour(c_white, c_black, 0.5),
+	color_hover : c_ltgray,
 	color_checkbox_pin : #45C952,
 	color_slider : #45C952,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
@@ -34,6 +35,10 @@ global.demo_style_light = {
 	sprite_scroll_slider_back : sUI_scroll_slider,
 	sprite_dropdown : sUI_dropdown,
 	sprite_dropdown_border : sUI_dropdown_border,
+	sprite_tab : sUI_tab,
+	sprite_tab_border : sUI_tab_border,
+	sprite_tabgroup : sUI_tabgroup,
+	sprite_tabgroup_border : sUI_tabgroup_border,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
@@ -78,6 +83,10 @@ global.demo_style_dark = {
 	sprite_scroll_slider_back : sUI_scroll_slider,
 	sprite_dropdown : sUI_dropdown,
 	sprite_dropdown_border : sUI_dropdown_border,
+	sprite_tab : sUI_tab,
+	sprite_tab_border : sUI_tab_border,
+	sprite_tabgroup : sUI_tabgroup,
+	sprite_tabgroup_border : sUI_tabgroup_border,
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
