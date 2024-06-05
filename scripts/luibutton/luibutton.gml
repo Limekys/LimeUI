@@ -32,18 +32,23 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 		
 		//Text
-		if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
-		draw_set_alpha(1);
-		draw_set_color(self.style.color_font);
-		draw_set_halign(fa_center);
-		draw_set_valign(fa_middle);
-		var _txt_x = draw_x + self.width / 2;
-		var _txt_y = draw_y + self.height / 2;
-		draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
+		if self.text != "" {
+			if !is_undefined(self.style.font_buttons) {
+				draw_set_font(self.style.font_buttons);
+			}
+			draw_set_alpha(1);
+			draw_set_color(self.style.color_font);
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			var _txt_x = draw_x + self.width / 2;
+			var _txt_y = draw_y + self.height / 2;
+			draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
+		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_button_border)
-		draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
+		if !is_undefined(self.style.sprite_button_border) {
+			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
+		}
 	}
 	
 	self.step = function() {

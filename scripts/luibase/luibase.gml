@@ -115,9 +115,6 @@ function LuiBase(_style = {}) constructor {
 	static add_content = function(elements) {
 		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
-		//Other positions
-		var _row_pos_y = 0;
-		var _element_x = 0;
 		//Adding
 		for (var i = 0; i < array_length(elements); i++) {
 		    //Get
@@ -146,7 +143,7 @@ function LuiBase(_style = {}) constructor {
 				
 				//Set parent and style
 				_element.parent = self;
-				_element.style = new LuiStyle(self.style);
+				_element.set_style(self.style);
 				
 				//Set draw_relative if parent has draw_relative too
 				_element.draw_relative = _element.parent.draw_relative;
@@ -177,19 +174,23 @@ function LuiBase(_style = {}) constructor {
 				
 				//Set position
 				if _element.auto_x == true || _element.auto_y == true {
-					_element.pos_x = self.style.padding;
-					_element.pos_y = self.style.padding + _row_pos_y;
 					
+					//Add padding for first in row
+					if j == 0 {
+						_element.pos_x = self.style.padding;
+						_element.pos_y = self.style.padding;
+					}
+					
+					//If have last element
 					if !is_undefined(_last) {
-						//If there are many elements
-						if j != 0 {
-							_element_x = _last.pos_x;
-							_element.pos_x = _element_x + _last.width + self.style.padding;
+						//For first element in row
+						if j == 0 {
+							_element.pos_y = _last.pos_y + _last.height + self.style.padding;
 						}
-						//If one element
-						if _row_element_count == 1 {
-							_element.pos_x = self.style.padding;
-							_element.pos_y = self.style.padding + _last.pos_y + _last.height;
+						//For next elements
+						if j != 0 {
+							_element.pos_x = _last.pos_x + _last.width + self.style.padding;
+							_element.pos_y = _last_in_row.pos_y;
 						}
 					}
 					
@@ -206,12 +207,6 @@ function LuiBase(_style = {}) constructor {
 				//Add to content array
 				array_push(self.contents, _element);
 				_last_in_row = _element;
-				
-				//If last element in row
-				if j == _row_element_count-1 {
-					_element_x = 0;
-					_row_pos_y += self.style.padding + _element.height;
-				}
 			}
 		}
 		align_all_elements();

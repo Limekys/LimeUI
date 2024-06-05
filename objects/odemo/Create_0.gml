@@ -15,8 +15,13 @@ global.demo_style_light = {
 	color_button : c_white,
 	color_button_border : merge_colour(c_white, c_black, 0.5),
 	color_hover : c_ltgray,
+	color_checkbox : c_white,
 	color_checkbox_pin : #45C952,
-	color_slider : #45C952,
+	color_checkbox_border : merge_colour(c_white, c_black, 0.5),
+	color_progress_bar : c_white,
+	color_progress_bar_value : #45C952,
+	color_progress_bar_border : merge_colour(c_white, c_black, 0.5),
+	color_textbox : c_white,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
 	color_scroll_slider : c_white,
 	color_scroll_slider_back : c_gray,
@@ -32,6 +37,9 @@ global.demo_style_light = {
 	sprite_checkbox : sUI_button,
 	sprite_checkbox_pin : sUI_button,
 	sprite_checkbox_border : sUI_button_border,
+	sprite_progress_bar : sUI_panel,
+	sprite_progress_bar_value : sUI_panel,
+	sprite_progress_bar_border : sUI_panel_border,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
@@ -66,8 +74,13 @@ global.demo_style_dark = {
 	color_button : #393c4f,
 	color_button_border : #191a24,
 	color_hover : c_gray,
+	color_checkbox : #393c4f,
 	color_checkbox_pin : #3a7d44,
-	color_slider : #3a7d44,
+	color_checkbox_border : #191a24,
+	color_progress_bar : #393c4f,
+	color_progress_bar_value : #3a7d44,
+	color_progress_bar_border : #191a24,
+	color_textbox : #393c4f,
 	color_textbox_border : #191a24,
 	color_scroll_slider : #393c4f,
 	color_scroll_slider_back : #191a24,
@@ -83,6 +96,9 @@ global.demo_style_dark = {
 	sprite_checkbox : sUI_button,
 	sprite_checkbox_pin : sUI_button,
 	sprite_checkbox_border : sUI_button_border,
+	sprite_progress_bar : sUI_panel,
+	sprite_progress_bar_value : sUI_panel,
+	sprite_progress_bar_border : sUI_panel_border,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
@@ -98,6 +114,7 @@ global.demo_style_dark = {
 	//Settings
 	padding : 16,
 	scroll_step : 32,
+	checkbox_pin_margin : 0,
 	textbox_cursor : "|",
 	textbox_password : "•",
 	//Render functions
@@ -198,11 +215,14 @@ for (var i = 0; i < 10; ++i) {
 //Since these are arrays with buttons, they will be added each in a row
 my_panel_in_second_2.add_content(
 	[
-		new LuiText( , , , , "Panel with sprites buttons"), 
-		_buttons1, 
+		new LuiText( , , , , "Panel with sprites buttons"),
+		_buttons1,
 		_buttons2
 	]
 );
+//my_panel_in_second_2.add_content([_buttons1, _buttons2]);
+//my_panel_in_second_2.add_content([_buttons1]);
+//my_panel_in_second_2.add_content([_buttons2]);
 
 //Create drop down menu and some items in it
 var dropdown = new LuiDropDown(, , , , "Select item...");
@@ -239,17 +259,6 @@ big_button_3.add_content([
 
 //Create scroll panel and some sprites
 scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel");
-sprite_car_1 = new LuiSprite( , , , 256, sCar);
-sprite_car_2 = new LuiSprite( , , , 256, sCar, , , , false);
-sprite_car_3 = new LuiSprite( , , , 256, sCarFlip);
-sprite_car_4 = new LuiSprite( , , , 256, sCarFlip, , , , false);
-
-//Add scroll panel and sprites in different Tabs of TabGroup
-tab_1.add_content([scroll_panel]);
-tab_2.add_content([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
-
-//Create some panel that will be added to the scroll panel
-nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
 
 //Add text to scroll panel
 scroll_panel.add_content([
@@ -261,6 +270,9 @@ for (var i = 0; i < 3; ++i) {
     var _btn = new LuiButton( , , , , "Button_" + string(i), );
 	scroll_panel.add_content(_btn);
 }
+
+//Create some panel that will be added to the scroll panel
+nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
 
 //Add moew elements to scroll panel
 scroll_panel.add_content([
@@ -286,7 +298,17 @@ nested_panel.add_content([
 	new LuiText(, , , , "Check me!")]
 ]);
 
-//Elements for about tab
+//Add scroll panel and sprites in different Tabs of TabGroup
+tab_1.add_content([scroll_panel]);
+
+//Add some sprites to tab 2
+sprite_car_1 = new LuiSprite( , , , 256, sCar);
+sprite_car_2 = new LuiSprite( , , , 256, sCar, , , , false);
+sprite_car_3 = new LuiSprite( , , , 256, sCarFlip);
+sprite_car_4 = new LuiSprite( , , , 256, sCarFlip, , , , false);
+tab_2.add_content([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
+
+//Tab 3 About tab
 sprite_limekys = new LuiSprite(, , 64, 64, sLimekysAvatar);
 text_about = new LuiText(, , , 64, "Hi, i am Limekys, and this is my UI system!");
 sprite_discord = new LuiSpriteButton(, , 64, 64, sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});

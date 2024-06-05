@@ -28,23 +28,27 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.is_pressed = false;
 	self.cursor_pointer = "";
 	self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function(){
-		if self.cursor_pointer == ""
-		self.cursor_pointer = self.style.textbox_cursor;
-		else
-		self.cursor_pointer = "";
+		if self.cursor_pointer == "" {
+			self.cursor_pointer = self.style.textbox_cursor;
+		} else {
+			self.cursor_pointer = "";
+		}
 	}, [], -1);
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Textbox field
-		var _border_color = self.has_focus ? self.style.color_border : self.style.color_textbox_border;
 		if !is_undefined(self.style.sprite_textbox) {
-			var _blend_color = self.style.color_main;
-			if !self.deactivated && !self.has_focus && self.mouse_hover() _blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
+			var _blend_color = self.style.color_textbox;
+			if !self.deactivated && !self.has_focus && self.mouse_hover() {
+				_blend_color = merge_colour(self.style.color_textbox, self.style.color_hover, 0.5);
+			}
 			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
-		//Set text
-		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
+		//Text
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
 		draw_set_alpha(1);
 		draw_set_color(self.style.color_font);
 		draw_set_halign(fa_left);
@@ -64,7 +68,9 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		_display_text = string_delete(_display_text, 1, 1);
 		
 		//Final text
-		draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
+		if _display_text != "" || self.has_focus {
+			draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
+		}
 		
 		//Show hint
 		if self.value == "" {
@@ -74,8 +80,13 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_textbox_border)
-		draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
+		if !is_undefined(self.style.sprite_textbox_border) {
+			var _border_color = self.style.color_textbox_border;
+			if self.has_focus {
+				_border_color = self.style.color_hover;
+			}
+			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
+		}
 	}
 	
 	static set_focus = function() {

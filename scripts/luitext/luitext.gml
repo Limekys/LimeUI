@@ -22,7 +22,9 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Set font properties
-		if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
 		draw_set_color(self.style.color_font);
 		draw_set_alpha(1);
 		draw_set_halign(self.text_halign);
@@ -53,7 +55,9 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 			break;
 		}
 		//Draw text
-		self.draw_text_cutoff(_txt_x, _txt_y, self.value, self.width);
+		if self.value != "" {
+			self.draw_text_cutoff(_txt_x, _txt_y, self.value, self.width);
+		}
 	}
 	
 	self.set_text_halign = function(halign) {

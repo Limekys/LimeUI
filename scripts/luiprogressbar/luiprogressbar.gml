@@ -28,10 +28,19 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
-		if !is_undefined(self.style.sprite_panel) draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width, height, self.style.color_main, 1);
-		if !is_undefined(self.style.sprite_panel) draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, width * _bar_value, height, self.style.color_slider, 1);
-		if !is_undefined(self.style.sprite_panel_border) draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, draw_x, draw_y, width, height, self.style.color_border, 1);
+		//Base
+		if !is_undefined(self.style.sprite_progress_bar) {
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, draw_x, draw_y, width, height, self.style.color_progress_bar, 1);
+		}
+		//Value
+		if !is_undefined(self.style.sprite_progress_bar_value) {
+			var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, draw_x, draw_y, width * _bar_value, height, self.style.color_progress_bar_value, 1);
+		}
+		//Border
+		if !is_undefined(self.style.sprite_progress_bar_border) {
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, draw_x, draw_y, width, height, self.style.color_progress_bar_border, 1);
+		}
 		
 		if self.show_value {
 			var _value = render_mode == 0 ? string(self.value) : string(round(self.value));
