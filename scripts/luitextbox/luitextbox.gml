@@ -138,10 +138,10 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 	}
 	
-	self.destroy_main = method(self, self.destroy);
-	self.destroy = function() {
-		if time_source_exists(self.cursor_timer) time_source_destroy(self.cursor_timer);
-		self.destroy_main();
+	self.clean_up = function() {
+		if time_source_exists(self.cursor_timer) {
+			time_source_destroy(self.cursor_timer);
+		}
 	}
 	
 	return self;

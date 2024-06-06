@@ -38,6 +38,7 @@ function LuiBase(_style = {}) constructor {
 	self.draw_relative = false;
 	self.inside_parent = 0;
 	self.ignore_mouse = false;
+	self.render_content_enabled = true;
 	
 	//Init
 	static init_element = function() {
@@ -413,7 +414,9 @@ function LuiBase(_style = {}) constructor {
 	
 	//Update
 	///@desc step()
-	step = function() { }
+	step = function() {
+		//Custom for each element
+	}
 	
 	///@desc update()
 	static update = function() {
@@ -465,7 +468,9 @@ function LuiBase(_style = {}) constructor {
 	
 	//Render
 	///@desc draw()
-	draw = function() { }
+	draw = function() {
+		//Custom for each element
+	}
 	
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
@@ -482,14 +487,14 @@ function LuiBase(_style = {}) constructor {
 					var _e_y = _element.get_absolute_y();
 					//Draw
 					_element.draw(_e_x, _e_y);
-					_element.render(base_x, base_y);
+					if _element.render_content_enabled _element.render(base_x, base_y);
 					if global.LUI_DEBUG_MODE == 1 _element.render_debug(_e_x, _e_y);
 				}
 			} else {
 				if _element.inside_parent == 1 || _element.inside_parent == 2 {
 					//Draw
 					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
-					_element.render(_element.pos_x, _element.pos_y);
+					if _element.render_content_enabled _element.render(_element.pos_x, _element.pos_y);
 					if global.LUI_DEBUG_MODE == 1 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
 				}
 			}
@@ -568,5 +573,20 @@ function LuiBase(_style = {}) constructor {
 			}
 		}
 		self.marked_to_delete = true;
+		self.clean_up();
 	}
+	
+	///@desc destroy_content()
+	static destroy_content = function() {
+		if array_length(self.contents) > 0 {
+			for (var i = array_length(self.contents) - 1;  i >= 0; --i) {
+			    var _element = self.contents[i];
+				_element.destroy();
+			}
+		}
+	}
+	
+	self.clean_up = function() {
+		//Custom for each element
+	};
 }
