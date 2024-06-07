@@ -56,7 +56,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 		//Draw text
 		if self.value != "" {
-			self.draw_text_cutoff(_txt_x, _txt_y, self.value, self.width);
+			self._lui_draw_text_cutoff(_txt_x, _txt_y, self.value, self.width);
 		}
 	}
 	

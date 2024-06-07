@@ -42,7 +42,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_set_valign(fa_middle);
 			var _txt_x = draw_x + self.width / 2;
 			var _txt_y = draw_y + self.height / 2;
-			draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
+			_lui_draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		//Border

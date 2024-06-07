@@ -294,8 +294,8 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Design
-	///@desc set_color(main, border)
-	static set_color = function(main = undefined, border = undefined) {
+	///@desc set_color(main, border) //???//
+	self.set_color = function(main = undefined, border = undefined) {
 		if !is_undefined(main) self.style.color_main = main;
 		if !is_undefined(border) self.style.color_border = border;
 		return self;
@@ -361,18 +361,7 @@ function LuiBase(_style = {}) constructor {
 		if is_undefined(self.parent) return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-		var _parent_x = self.parent.get_absolute_x();
-		var _parent_y = self.parent.get_absolute_y();
-		var _on_parent = point_in_rectangle(_mouse_x, _mouse_y, _parent_x, _parent_y, _parent_x + self.parent.width - 1, _parent_y + self.parent.height - 1);
-		if _on_parent {
-			if !is_undefined(self.parent.parent) {
-				return self.parent.mouse_hover_parent();
-			} else {
-				return true
-			}
-		} else {
-			return false;
-		}
+		return self.parent.point_on_element(_mouse_x, _mouse_y);
 	}
 	
 	///@desc mouse_hover_childs()
@@ -380,9 +369,8 @@ function LuiBase(_style = {}) constructor {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _on_element = false;
-		var _n = array_length(self.contents);
-		if _n > 0 && self.visible
-		for (var i = 0; i < _n; ++i) {
+		if self.visible
+		for (var i = 0, _n = array_length(self.contents); i < _n; ++i) {
 		    var _element = self.contents[i];
 			_on_element = _element.mouse_hover_any();
 			if _on_element break;
@@ -394,7 +382,7 @@ function LuiBase(_style = {}) constructor {
 	static point_on_element = function(point_x, point_y) {
 		var _element_x = self.get_absolute_x();
 		var _element_y = self.get_absolute_y();
-		return point_in_rectangle(point_x, point_y, _element_x, _element_y, _element_x + self.width, _element_y + self.height);
+		return point_in_rectangle(point_x, point_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
 	}
 	///@desc get_topmost_element
 	static get_topmost_element = function(_mouse_x, _mouse_y) {
@@ -414,7 +402,7 @@ function LuiBase(_style = {}) constructor {
 	
 	//Update
 	///@desc step()
-	step = function() {
+	self.step = function() {
 		//Custom for each element
 	}
 	
@@ -468,7 +456,7 @@ function LuiBase(_style = {}) constructor {
 	
 	//Render
 	///@desc draw()
-	draw = function() {
+	self.draw = function() {
 		//Custom for each element
 	}
 	
@@ -502,6 +490,7 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	///@desc render_debug()
+	///@ignore
 	static render_debug = function(_x = self.get_absolute_x(), _y = self.get_absolute_y()) {
 		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
 		var _y_offset = string_height("a");
@@ -534,6 +523,7 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	///@desc _lui_draw_text_debug(x, y, text)
+	///@ignore
 	static _lui_draw_text_debug = function(x, y, text) {
 		var _text_width = string_width(text);
 		var _text_height = string_height(text);
@@ -547,7 +537,8 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	///@desc draw text fit to width
-	static draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
+	///@ignore
+	static _lui_draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
 		//Calculate text width to cut off
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
