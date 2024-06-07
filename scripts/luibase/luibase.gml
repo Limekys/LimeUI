@@ -1,6 +1,9 @@
 function LuiBase() constructor {
 	if !variable_global_exists("lui_main_ui") variable_global_set("lui_main_ui", undefined);
 	global.lui_main_ui ??= self;
+	static _lui_elements_count = 0;
+	
+	self.element_id = _lui_elements_count++;
 	
 	self.name = "LuiBase";
 	self.value = undefined;
@@ -504,6 +507,7 @@ function LuiBase() constructor {
 			if _element.marked_to_delete {
 				delete _element;
 				array_delete(contents, i, 1);
+				global.lui_main_ui._lui_elements_count--;
 			}
 		}
 		//Mouse hover (check topmost elements on mouse)
@@ -554,30 +558,31 @@ function LuiBase() constructor {
 	///@ignore
 	static render_debug = function(_x = self.get_absolute_x(), _y = self.get_absolute_y()) {
 		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
-		var _y_offset = string_height("a");
 		//Rectangles
 		draw_set_alpha(0.5);
-		draw_set_color(mouse_hover() ? c_red : c_blue);
+		draw_set_color(mouse_hover() ? c_red : make_color_hsv(self.element_id % 255, 255, 255));
 		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
-		draw_line(_x, _y, _x + self.width - 1, _y + self.height - 1);
-		draw_line(_x, _y + self.height, _x + self.width - 1, _y - 1);
+		//draw_line(_x, _y, _x + self.width - 1, _y + self.height - 1);
+		//draw_line(_x, _y + self.height, _x + self.width - 1, _y - 1);
 		//Text
-		_lui_draw_text_debug(_x, _y + _y_offset*0, "name: " + string(self.name));
-		_lui_draw_text_debug(_x, _y + _y_offset*1, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
-		_lui_draw_text_debug(_x, _y + _y_offset*2, "w: " + string(self.width) + " h: " + string(self.height));
-		_lui_draw_text_debug(_x, _y + _y_offset*3, "v: " + string(self.value));
-		_lui_draw_text_debug(_x, _y + _y_offset*4, "hl: " + string(self.halign) + " vl: " + string(self.valign));
+		_lui_draw_text_debug(_x, _y, 
+		"name: " + string(self.name) + "\n" +
+		"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
+		"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
+		"v: " + string(self.value) + "\n" +
+		"hl: " + string(self.halign) + " vl: " + string(self.valign));
 		//Text on mouse
 		if mouse_hover() {
 			//Get mouse coords
 			var _mx = device_mouse_x_to_gui(0) + 16;
 			var _my = device_mouse_y_to_gui(0);
 			//Text
-			_lui_draw_text_debug(_mx, _my + _y_offset*0, "name: " + string(self.name));
-			_lui_draw_text_debug(_mx, _my + _y_offset*1, "x: " + string(self.pos_x) + " y: " + string(self.pos_y));
-			_lui_draw_text_debug(_mx, _my + _y_offset*2, "w: " + string(self.width) + " h: " + string(self.height));
-			_lui_draw_text_debug(_mx, _my + _y_offset*3, "v: " + string(self.value));
-			_lui_draw_text_debug(_mx, _my + _y_offset*4, "hl: " + string(self.halign) + " vl: " + string(self.valign));
+			_lui_draw_text_debug(_mx, _my, 
+			"name: " + string(self.name) + "\n" +
+			"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
+			"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
+			"v: " + string(self.value) + "\n" +
+			"hl: " + string(self.halign) + " vl: " + string(self.valign));
 		}
 		draw_set_alpha(1);
 		draw_set_color(c_white);
@@ -590,7 +595,6 @@ function LuiBase() constructor {
 		var _text_height = string_height(text);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);
-		draw_set_alpha(1);
 		draw_set_color(c_black);
 		draw_rectangle(x, y, x + _text_width, y + _text_height, false);
 		draw_set_color(c_white);

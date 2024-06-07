@@ -1,4 +1,5 @@
 randomize();
+debug_overlay = false;
 
 //Light theme
 global.demo_style_light = {
