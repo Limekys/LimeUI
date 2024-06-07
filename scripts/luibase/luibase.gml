@@ -488,7 +488,6 @@ function LuiBase() constructor {
 			}
 		}
 		//Update all elements inside
-		if array_length(self.contents) > 0
 		for (var i = array_length(self.contents)-1; i >= 0; --i) {
 			//Get element
 			var _element = self.contents[i];
@@ -525,7 +524,7 @@ function LuiBase() constructor {
 	//Render
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
-		if array_length(self.contents) > 0 && self.visible
+		if self.visible
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
