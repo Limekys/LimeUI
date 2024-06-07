@@ -13,7 +13,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	init_element();
 	
 	self.create = function() {
-		self.set_draw_relative(true);
 		self.render_content_enabled = false;
 		self.panel_surface = -1;
 		self.scroll_offset_y = 0;
@@ -26,18 +25,11 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		};
 	}
 	
-	///@func set_surface_offset(array:[left,right,top,bottom])
-	static set_surface_offset = function(array) {
-		self.surface_offset = {
-			left : array[0],
-			right : array[1],
-			top : array[2],
-			bottom : array[3]
-		};
-		return self;
+	self.on_content_update = function() {
+		self.set_draw_relative(true);
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.pre_draw = function() {
 		//Create surface
 		if !surface_exists(self.panel_surface) {
 			self.panel_surface = surface_create(self.width, self.height - self.surface_offset.top - self.surface_offset.bottom);
@@ -51,6 +43,9 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		//gpu_set_blendmode(bm_normal);
 		//shader_reset();
 		surface_reset_target();
+	}
+	
+	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Panel
 		if !is_undefined(self.style.sprite_panel) {
 			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
@@ -98,6 +93,17 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if surface_exists(self.panel_surface) {
 			surface_free(self.panel_surface);
 		}
+	}
+	
+	///@func set_surface_offset(array:[left,right,top,bottom])
+	static set_surface_offset = function(array) {
+		self.surface_offset = {
+			left : array[0],
+			right : array[1],
+			top : array[2],
+			bottom : array[3]
+		};
+		return self;
 	}
 	
 	return self;

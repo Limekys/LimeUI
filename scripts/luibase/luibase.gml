@@ -52,6 +52,16 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
+	///@desc on_content_update()
+	self.on_content_update = function() {
+		//Custom for each element
+	}
+	
+	///@desc pre_draw()
+	self.pre_draw = function() {
+		//Custom for each element
+	}
+	
 	///@desc draw()
 	self.draw = function() {
 		//Custom for each element
@@ -173,9 +183,6 @@ function LuiBase() constructor {
 				_element.parent = self;
 				_element.style = self.style;
 				
-				//Set draw_relative if parent has draw_relative too
-				_element.draw_relative = _element.parent.draw_relative;
-				
 				//Calculate width for right auto width calculations for next element
 				if !is_undefined(_last_in_row) {
 					_width -= _last_in_row.width + self.style.padding;
@@ -247,7 +254,8 @@ function LuiBase() constructor {
 				array_push(self.contents, _element);
 			}
 		}
-		align_all_elements();
+		self.align_all_elements();
+		self.on_content_update();
 		return self;
 	}
 	
@@ -362,7 +370,7 @@ function LuiBase() constructor {
 		}
 		return _style;
 	}
-	///@desc Set draw_relative to self and all descendants
+	///@desc Set draw_relative to all descendants
 	static set_draw_relative = function(_relative) {
 		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
 		    self.contents[i].draw_relative = _relative;
@@ -525,6 +533,7 @@ function LuiBase() constructor {
 					var _e_x = _element.get_absolute_x();
 					var _e_y = _element.get_absolute_y();
 					//Draw
+					_element.pre_draw();
 					_element.draw(_e_x, _e_y);
 					if _element.render_content_enabled _element.render(base_x, base_y);
 					if global.LUI_DEBUG_MODE == 1 _element.render_debug(_e_x, _e_y);
@@ -532,6 +541,7 @@ function LuiBase() constructor {
 			} else {
 				if _element.inside_parent == 1 || _element.inside_parent == 2 {
 					//Draw
+					_element.pre_draw();
 					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
 					if _element.render_content_enabled _element.render(_element.pos_x, _element.pos_y);
 					if global.LUI_DEBUG_MODE == 1 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
