@@ -114,7 +114,7 @@ global.demo_style_dark = {
 	//Settings
 	padding : 16,
 	scroll_step : 32,
-	checkbox_pin_margin : 0,
+	checkbox_pin_margin : 6,
 	textbox_cursor : "|",
 	textbox_password : "•",
 	//Render functions
@@ -126,7 +126,7 @@ global.demo_style_dark = {
 //LUI_OVERLAY.style = new LuiStyle(global.demo_style_dark);
 
 //Create the main ui container
-my_ui = new LuiBase(global.demo_style_dark);
+my_ui = new LuiBase().set_style(global.demo_style_dark);
 
 //Create main panels
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
@@ -137,7 +137,7 @@ tab_group = new LuiTabGroup( , , 500, 332, 32, "LuiTabGroup");
 //Add main panels to main ui container
 my_ui.add_content([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
-	[tab_group]
+	tab_group
 ]);
 
 //Add content to tabgroup
@@ -169,8 +169,6 @@ my_panel.add_content([
 ]);
 
 //Set colors to buttons 
-//Important after adding to panel!
-//Because when we add an element to another element, we assign it the style of the element we are adding it to
 btn_show_msg.set_color(merge_color(#ffff77, c_black, 0.5));
 btn_restart.set_color(merge_color(#ff7777, c_black, 0.5));
 
@@ -235,6 +233,18 @@ big_button = new LuiButton(, , , 64, "", function() {});
 big_button_2 = new LuiButton(, , , 64, "", function() {});
 big_button_3 = new LuiButton(, , , 64, "", function() {});
 
+//In each big button we adding sprite and text with ignore mouse hovering
+//And we get big buttons with icon and text
+big_button.add_content([
+	[new LuiSprite(, , 32, 32, sHamburger).ignore_mouse_hover(), new LuiText(, , , , "Hamburger!").ignore_mouse_hover()]
+]);
+big_button_2.add_content([
+	[new LuiSprite(, , 32, 32, sBoxDemo).ignore_mouse_hover(), new LuiText(, , , , "A box!").ignore_mouse_hover()]
+]);
+big_button_3.add_content([
+	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover()]
+]);
+
 //Add elements to third main panel
 my_panel_3.add_content([
 	new LuiText( , , , , "Third panel").set_text_halign(fa_center),
@@ -244,18 +254,6 @@ my_panel_3.add_content([
 	big_button_2,
 	big_button_3
 ]);
-
-//In each big button we adding sprite and text with ignore mouse hovering
-//And we get big buttons with icon and text
-big_button.add_content([
-	[new LuiSprite(, , 32, 32, sHamburger).ignore_mouse_hover(), new LuiText(, , , , "Hamburger!").ignore_mouse_hover()]
-])
-big_button_2.add_content([
-	[new LuiSprite(, , 32, 32, sBoxDemo).ignore_mouse_hover(), new LuiText(, , , , "A box!").ignore_mouse_hover()]
-])
-big_button_3.add_content([
-	[new LuiSprite(, , 32, 32, sLogoDemo).ignore_mouse_hover(), new LuiText(, , , , "Game Maker!").ignore_mouse_hover()]
-])
 
 //Create scroll panel and some sprites
 scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel");
@@ -274,16 +272,6 @@ for (var i = 0; i < 3; ++i) {
 //Create some panel that will be added to the scroll panel
 nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
 
-//Add moew elements to scroll panel
-scroll_panel.add_content([
-	new LuiTextbox(, , , , , "textbox in scroll panel"),
-	nested_panel,
-	new LuiSprite( , , , 100, sCarFlip),
-	new LuiSprite( , , , 256, sHamburger),
-	new LuiSprite( , , , 200, sCar),
-	new LuiSprite( , , , 128, sHamburger),
-]);
-
 //And add some elements to panel that is inside of scroll panel
 nested_panel.add_content([
 	new LuiText(, , , , "Nested panel"),
@@ -294,21 +282,31 @@ nested_panel.add_content([
 		} else {
 			LuiShowMessage(oDemo.my_ui, 360, 140, ":(");
 		}
-	}).set_pin_margin(0),
+	}),
 	new LuiText(, , , , "Check me!")]
 ]);
 
-//Add scroll panel and sprites in different Tabs of TabGroup
+//Add moew elements to scroll panel
+scroll_panel.add_content([
+	new LuiTextbox(, , , , , "textbox in scroll panel"),
+	nested_panel,
+	new LuiSprite( , , , 100, sCarFlip),
+	new LuiSprite( , , , 256, sHamburger),
+	new LuiSprite( , , , 200, sCar),
+	new LuiSprite( , , , 128, sHamburger),
+]);
+
+//Add scroll panel in Tab1
 tab_1.add_content([scroll_panel]);
 
-//Add some sprites to tab 2
+//Add some sprites in Tab 2
 sprite_car_1 = new LuiSprite( , , , 256, sCar);
 sprite_car_2 = new LuiSprite( , , , 256, sCar, , , , false);
 sprite_car_3 = new LuiSprite( , , , 256, sCarFlip);
 sprite_car_4 = new LuiSprite( , , , 256, sCarFlip, , , , false);
 tab_2.add_content([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
 
-//Tab 3 About tab
+//Add info about me in Tab 3
 sprite_limekys = new LuiSprite(, , 64, 64, sLimekysAvatar);
 text_about = new LuiText(, , , 64, "Hi, i am Limekys, and this is my UI system!");
 sprite_discord = new LuiSpriteButton(, , 64, 64, sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});

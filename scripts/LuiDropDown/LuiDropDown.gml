@@ -31,12 +31,14 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _y = self.pos_y + self.height;
 			self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel");
 			self.parent.add_content([self.dropdown_panel]);
+			var _prev_padding = self.dropdown_panel.style.padding;
 			self.dropdown_panel.style.padding = 0;
 			for (var i = 0; i < _items_length; ++i) {
 			    var _item = new LuiDropDownItem(, , , , items[i].text, items[i].callback);
 				_item.dropdown_parent = self;
 				self.dropdown_panel.add_content([_item]);
 			}
+			self.dropdown_panel.style.padding = _prev_padding;
 		} else {
 			self.dropdown_panel.destroy();
 		}

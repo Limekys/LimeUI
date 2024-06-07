@@ -16,7 +16,10 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	set_callback(callback);
 	
 	self.is_pressed = false;
-	self.pin_margin = self.style.checkbox_pin_margin;
+	
+	self.create = function() {
+		self.pin_margin = self.style.checkbox_pin_margin;
+	}
 	
 	//Make the maximum size of the checkbox minimal so that it does not stretch at auto size
 	if self.auto_width == true || self.auto_height == true {

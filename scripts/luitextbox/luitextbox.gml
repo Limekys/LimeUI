@@ -9,8 +9,6 @@
 ///@arg {Function} callback
 function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	
-	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
-	
 	self.name = "LuiTextbox";
 	self.value = string(start_text);
 	self.pos_x = x;
@@ -21,7 +19,6 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	init_element();
 	set_callback(callback);
 	
-	self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : height;
 	self.hint = hint;
 	self.is_password = is_password;
 	self.max_length = max_length;
@@ -34,6 +31,13 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			self.cursor_pointer = "";
 		}
 	}, [], -1);
+	
+	self.create = function() {
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
+		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
+	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Textbox field

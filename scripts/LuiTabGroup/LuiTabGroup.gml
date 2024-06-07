@@ -20,14 +20,12 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.tabgroup_header = undefined;
 	
 	self.add_tabs = function(_tabs) {
-        //First creating header for tabs
+        var _prev_padding = self.style.padding;
+		self.style.padding = 0;
+		//First creating header for tabs
 		if is_undefined(self.tabgroup_header) {
-			var _prev_padding = self.style.padding;
-			self.style.padding = 0;
 			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "tabgroup_header");
 			self.add_content([self.tabgroup_header]);
-			self.tabgroup_header.style.padding = 0;
-			self.style.padding = _prev_padding;
 		}
 		//Add tabs
 		if !is_array(_tabs) _tabs = [_tabs];
@@ -47,6 +45,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 		//Add tab to header of tabgroup
 		self.tabgroup_header.add_content([_tabs]);
+		self.style.padding = _prev_padding;
 		//Add tab to tabgroup array
 		self.tabs = _tabs;
 		//Deactivate all and activate first

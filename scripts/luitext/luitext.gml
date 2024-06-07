@@ -5,8 +5,6 @@
 ///@arg {String} text
 function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "sample text") : LuiBase() constructor {
 	
-	if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
-	
 	self.name = "LuiText";
 	self.value = text;
 	self.pos_x = x;
@@ -15,10 +13,16 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.height = height;
 	init_element();
 	
-	self.min_width = self.auto_width == true ? string_width(self.value) : width;
-	self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : height;
 	self.text_halign = fa_left;
 	self.text_valign = fa_middle;
+	
+	self.create = function() {
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
+		self.min_width = self.auto_width == true ? string_width(self.value) : self.width;
+		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
+	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Set font properties

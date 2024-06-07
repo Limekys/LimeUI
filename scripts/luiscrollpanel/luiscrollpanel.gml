@@ -12,25 +12,18 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.height = height;
 	init_element();
 	
-	self.render_content_enabled = false;
-	self.panel_surface = -1;
-	self.scroll_offset_y = 0;
-	self.scroll_target_offset_y = 0;
-	self.surface_offset = {
-		left : 0,
-		right : 0,
-		top : 1,
-		bottom : 3
-	};
-	
-	//Slightly change the function of adding elements for the Scroll Panel so that all elements are drawn relative
-	self.add_content_main = method(self, self.add_content);
-	self.add_content = function(elements) {
-		self.add_content_main(elements);
-		if array_length(self.contents) > 0
-		array_foreach(self.contents, function(_elm) {
-			_elm.draw_relative = true;
-		})
+	self.create = function() {
+		self.set_draw_relative(true);
+		self.render_content_enabled = false;
+		self.panel_surface = -1;
+		self.scroll_offset_y = 0;
+		self.scroll_target_offset_y = 0;
+		self.surface_offset = {
+			left : 0,
+			right : 0,
+			top : 1,
+			bottom : 3
+		};
 	}
 	
 	///@func set_surface_offset(array:[left,right,top,bottom])

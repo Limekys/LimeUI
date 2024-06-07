@@ -23,7 +23,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.value = value;
 	
 	self.render_mode = 1;
-	///@desc 0 - raw value, 1 - integer only
+	///@desc 0 - raw value, 1 - integer only //???//
 	set_render_mode = function(mode) {
 		render_mode = mode;
 		return self;

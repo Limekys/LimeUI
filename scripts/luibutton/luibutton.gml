@@ -17,15 +17,17 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	set_callback(callback);
 	
 	self.is_pressed = false;
+	self.button_color = undefined;
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_button) {
 			var _blend_color = self.style.color_button;
+			if !is_undefined(self.button_color) _blend_color = self.button_color;
 			if !self.deactivated && self.mouse_hover() {
-				_blend_color = merge_colour(self.style.color_button, self.style.color_hover, 0.5);
+				_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
-					_blend_color = merge_colour(self.style.color_button, c_black, 0.5);
+					_blend_color = merge_colour(_blend_color, c_black, 0.5);
 				}
 			}
 			draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
@@ -66,10 +68,10 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	///@func set_color(main, border)
-	self.set_color = function(main = undefined, border = undefined) {
-		if !is_undefined(main) self.style.color_button = main;
-		if !is_undefined(border) self.style.color_button_border = border;
+	///@func set_color(_button_color)
+	///@arg _button_color
+	self.set_color = function(_button_color) {
+		self.button_color = _button_color;
 		return self;
 	}
 	

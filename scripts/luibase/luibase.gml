@@ -1,11 +1,11 @@
-///@arg {Struct} _style
-function LuiBase(_style = {}) constructor {
+function LuiBase() constructor {
 	if !variable_global_exists("lui_main_ui") variable_global_set("lui_main_ui", undefined);
 	global.lui_main_ui ??= self;
 	
 	self.name = "LuiBase";
 	self.value = undefined;
-	self.style = new LuiStyle(_style);
+	self.style = undefined;
+	self.custom_style_is_setted = false;
 	
 	self.x = 0;									//Actual x position on the screen
 	self.y = 0;									//Actual y position on the screen
@@ -39,6 +39,27 @@ function LuiBase(_style = {}) constructor {
 	self.inside_parent = 0;
 	self.ignore_mouse = false;
 	self.render_content_enabled = true;
+	self.delay_contents = undefined;
+	
+	//Custom functions for elements
+	
+	self.create = function() {
+		//Custom for each element
+	}
+	
+	///@desc step()
+	self.step = function() {
+		//Custom for each element
+	}
+	
+	///@desc draw()
+	self.draw = function() {
+		//Custom for each element
+	}
+	
+	self.clean_up = function() {
+		//Custom for each element
+	};
 	
 	//Init
 	static init_element = function() {
@@ -116,6 +137,12 @@ function LuiBase(_style = {}) constructor {
 	static add_content = function(elements) {
 		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
+		//Check for unordered adding
+		if is_undefined(self.style) {
+			if !is_array(self.delay_contents) self.delay_contents = [];
+			self.delay_contents = array_concat(self.delay_contents, elements);
+			return self;
+		}
 		//Adding
 		for (var i = 0; i < array_length(elements); i++) {
 		    //Get
@@ -144,7 +171,7 @@ function LuiBase(_style = {}) constructor {
 				
 				//Set parent and style
 				_element.parent = self;
-				_element.set_style(self.style);
+				_element.style = self.style;
 				
 				//Set draw_relative if parent has draw_relative too
 				_element.draw_relative = _element.parent.draw_relative;
@@ -205,9 +232,19 @@ function LuiBase(_style = {}) constructor {
 				_element.start_x = _element.pos_x;
 				_element.start_y = _element.pos_y;
 				
+				//Save last in row
+				_last_in_row = _element;
+				
+				//Add delayed contents
+				if !is_undefined(_element.delay_contents) {
+					_element.add_content(_element.delay_contents);
+				}
+				
+				//Call create function
+				_element.create();
+				
 				//Add to content array
 				array_push(self.contents, _element);
-				_last_in_row = _element;
 			}
 		}
 		align_all_elements();
@@ -294,18 +331,42 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Design
-	///@desc set_color(main, border) //???//
-	self.set_color = function(main = undefined, border = undefined) {
-		if !is_undefined(main) self.style.color_main = main;
-		if !is_undefined(border) self.style.color_border = border;
-		return self;
-	}
 	///@desc set_style(_style)
 	static set_style = function(_style) {
 		self.style = new LuiStyle(_style);
+		self.custom_style_is_setted = true;
+		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
+			var _element = self.contents[i];
+			_element.set_style_childs(self.style);
+		}
+		return self;
+	}
+	///@desc set_style_childs(_style)
+	static set_style_childs = function(_style) {
+		if self.custom_style_is_setted == false {
+			self.style = _style;
+		}
 		for (var i = array_length(self.contents)-1; i >= 0 ; --i) {
 			var _element = self.contents[i];
-			_element.set_style(_style);
+			_element.set_style_childs(_style);
+		}
+		return self;
+	}
+	///@desc get style
+	static get_style = function() {
+		var _style = self.style;
+		if !is_undefined(_style) return _style;
+		if !is_undefined(self.parent) {
+			_style = self.parent.get_style();
+			if !is_undefined(_style) return _style;
+		}
+		return _style;
+	}
+	///@desc Set draw_relative to self and all descendants
+	static set_draw_relative = function(_relative) {
+		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
+		    self.contents[i].draw_relative = _relative;
+			self.contents[i].set_draw_relative();
 		}
 		return self;
 	}
@@ -401,11 +462,6 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Update
-	///@desc step()
-	self.step = function() {
-		//Custom for each element
-	}
-	
 	///@desc update()
 	static update = function() {
 		//Check if the element is in the area of its parent and update it
@@ -455,11 +511,6 @@ function LuiBase(_style = {}) constructor {
 	}
 	
 	//Render
-	///@desc draw()
-	self.draw = function() {
-		//Custom for each element
-	}
-	
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
 		if array_length(self.contents) > 0 && self.visible
@@ -576,8 +627,4 @@ function LuiBase(_style = {}) constructor {
 			}
 		}
 	}
-	
-	self.clean_up = function() {
-		//Custom for each element
-	};
 }
