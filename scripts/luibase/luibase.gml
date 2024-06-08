@@ -1,9 +1,9 @@
 function LuiBase() constructor {
 	if !variable_global_exists("lui_main_ui") variable_global_set("lui_main_ui", undefined);
+	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	global.lui_main_ui ??= self;
-	static _lui_elements_count = 0;
 	
-	self.element_id = _lui_elements_count++;
+	self.element_id = global.lui_element_count++;
 	
 	self.name = "LuiBase";
 	self.value = undefined;
@@ -506,7 +506,6 @@ function LuiBase() constructor {
 			if _element.marked_to_delete {
 				delete _element;
 				array_delete(contents, i, 1);
-				global.lui_main_ui._lui_elements_count--;
 			}
 		}
 		//Mouse hover (check topmost elements on mouse)
@@ -629,6 +628,7 @@ function LuiBase() constructor {
 		}
 		self.marked_to_delete = true;
 		self.clean_up();
+		global.lui_element_count--;
 	}
 	
 	///@desc destroy_content()

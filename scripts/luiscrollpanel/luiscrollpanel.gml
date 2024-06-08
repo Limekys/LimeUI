@@ -12,18 +12,16 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.height = height;
 	init_element();
 	
-	self.create = function() {
-		self.render_content_enabled = false;
-		self.panel_surface = -1;
-		self.scroll_offset_y = 0;
-		self.scroll_target_offset_y = 0;
-		self.surface_offset = {
-			left : 0,
-			right : 0,
-			top : 1,
-			bottom : 3
-		};
-	}
+	self.render_content_enabled = false;
+	self.panel_surface = -1;
+	self.scroll_offset_y = 0;
+	self.scroll_target_offset_y = 0;
+	self.surface_offset = {
+		left : 0,
+		right : 0,
+		top : 1,
+		bottom : 3
+	};
 	
 	self.on_content_update = function() {
 		self.set_draw_relative(true);
