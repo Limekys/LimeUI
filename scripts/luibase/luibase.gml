@@ -461,7 +461,7 @@ function LuiBase() constructor {
 		var topmost_element = undefined;
 		for (var i = array_length(self.contents) - 1; i >= 0; --i) {
 			var _element = self.contents[i];
-			if (_element.point_on_element(_mouse_x, _mouse_y) && _element.visible && !_element.ignore_mouse) {
+			if _element.visible && !_element.ignore_mouse && _element.point_on_element(_mouse_x, _mouse_y) {
 				topmost_element = _element.get_topmost_element(_mouse_x, _mouse_y);
 				if topmost_element == undefined {
 					return _element;
