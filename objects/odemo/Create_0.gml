@@ -142,7 +142,7 @@ my_ui.add_content([
 ]);
 
 //Add content to tabgroup
-tab_1 = new LuiTab("Scroll panel");
+tab_1 = new LuiTab("Panels");
 tab_2 = new LuiTab("Sprites");
 tab_3 = new LuiTab("About");
 tab_group.add_tabs([tab_1, tab_2, tab_3]);
@@ -271,11 +271,11 @@ for (var i = 0; i < 3; ++i) {
 }
 
 //Create some panel that will be added to the scroll panel
-nested_panel = new LuiPanel( , , , 160, "Panel in scroll panel");
+nested_panel = new LuiPanel( , , , 330, "Panel in scroll panel");
 
 //And add some elements to panel that is inside of scroll panel
 nested_panel.add_content([
-	new LuiText(, , , , "Nested panel"),
+	new LuiText(, , , , "Nested panel x1"),
 	new LuiButton( , , , , "Nested button"),
 	[new LuiCheckbox( , , , , false, function() {
 		if get() == true {
@@ -284,7 +284,13 @@ nested_panel.add_content([
 			LuiShowMessage(oDemo.my_ui, 360, 140, ":(");
 		}
 	}),
-	new LuiText(, , , , "Check me!")]
+	new LuiText(, , , , "Check me!")],
+	new LuiPanel(, , , 150, "Nested panel x2").add_content([
+		new LuiText(, , , , "Nested panel x2"),
+		new LuiPanel(, , , 75, "Nested panel x3").add_content([
+			new LuiText(, , , , "Nested panel x3")
+		])
+	])
 ]);
 
 //Add moew elements to scroll panel

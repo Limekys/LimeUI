@@ -42,7 +42,8 @@ function LuiBase() constructor {
 	self.inside_parent = 0;
 	self.ignore_mouse = false;
 	self.render_content_enabled = true;
-	self.delay_contents = undefined;
+	self.delayed_content = undefined;
+	self.need_to_update_content = false;
 	
 	//Custom functions for elements
 	
@@ -152,8 +153,8 @@ function LuiBase() constructor {
 		if !is_array(elements) elements = [elements];
 		//Check for unordered adding
 		if is_undefined(self.style) {
-			if !is_array(self.delay_contents) self.delay_contents = [];
-			self.delay_contents = array_concat(self.delay_contents, elements);
+			if !is_array(self.delayed_content) self.delayed_content = [];
+			self.delayed_content = array_concat(self.delayed_content, elements);
 			return self;
 		}
 		//Adding
@@ -232,11 +233,10 @@ function LuiBase() constructor {
 						}
 					}
 					
-					//Extend the height of the parent element if the added element does not fit (Except for scrollbars, as they work on a different principle)
-					if !is_instanceof(self, LuiScrollPanel) && _element.pos_y + _element.height > self.height - self.style.padding {
-						self.height = _element.pos_y + _element.height + self.style.padding;
-					}
+					
 				}
+				
+				
 				
 				//Save new start x y position
 				_element.start_x = _element.pos_x;
@@ -246,19 +246,22 @@ function LuiBase() constructor {
 				_last_in_row = _element;
 				
 				//Add delayed contents
-				if !is_undefined(_element.delay_contents) {
-					_element.add_content(_element.delay_contents);
+				if !is_undefined(_element.delayed_content) {
+					_element.add_content(_element.delayed_content);
 				}
 				
 				//Call create function
 				_element.create();
+				
+				
 				
 				//Add to content array
 				array_push(self.contents, _element);
 			}
 		}
 		self.align_all_elements();
-		self.on_content_update();
+		//self.on_content_update();
+		self.set_need_to_update_content(true);
 		return self;
 	}
 	
@@ -377,7 +380,7 @@ function LuiBase() constructor {
 	static set_draw_relative = function(_relative) {
 		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
 		    self.contents[i].draw_relative = _relative;
-			self.contents[i].set_draw_relative();
+			self.contents[i].set_draw_relative(_relative);
 		}
 		return self;
 	}
@@ -472,10 +475,16 @@ function LuiBase() constructor {
 		return topmost_element;
 	}
 	
+	static set_need_to_update_content = function(_update) {
+		if is_undefined(self.parent) return true;
+		self.need_to_update_content = true;
+		self.parent.set_need_to_update_content(_update);
+	}
+	
 	//Update
 	///@desc update()
 	static update = function() {
-		//Check if the element is in the area of its parent and update it
+		//Check if the element is in the area of its parent and call its step function
 		if !self.deactivated {
 			if self.draw_relative == false {
 				if self.inside_parent == 1 {
@@ -502,6 +511,27 @@ function LuiBase() constructor {
 				_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
 			//Update
 			_element.update();
+			//Update content script
+			if _element.need_to_update_content {
+				_element.on_content_update();
+				_element.need_to_update_content = false;
+				
+				//Extend the height if the added elements does not fit (Except for scrollbars, as they work on a different principle)
+				//var _last_element = self.get_last();
+				//if !is_instanceof(self, LuiScrollPanel) && !is_undefined(_last_element) {
+				//	if _last_element.pos_y + _last_element.height > self.height - self.style.padding {
+				//		self.height = _last_element.pos_y + _last_element.height + _last_element.style.padding;
+				//		self.set_need_to_update_content(true);
+				//	}
+				//}
+				//Extend the height of the parent element if the added element does not fit (Except for scrollbars, as they work on a different principle)
+				//var _last_element = self.get_last();
+				//if !is_undefined(_last_element) {
+				//	if !is_instanceof(_element, LuiScrollPanel) && _element.auto_height == true && _last_element.pos_y + _last_element.height > _element.height - _element.style.padding {
+				//		_element.height = _last_element.pos_y + _last_element.height + _last_element.style.padding;
+				//	}
+				//}
+			}
 			//Delete marked to delete elements
 			if _element.marked_to_delete {
 				delete _element;
@@ -532,20 +562,20 @@ function LuiBase() constructor {
 			if _element.draw_relative == false {
 				if _element.inside_parent == 1 {
 					//Get absolute position
-					var _e_x = _element.get_absolute_x();
-					var _e_y = _element.get_absolute_y();
+					var _absloute_x = _element.get_absolute_x();
+					var _absloute_y = _element.get_absolute_y();
 					//Draw
 					_element.pre_draw();
-					_element.draw(_e_x, _e_y);
-					if _element.render_content_enabled _element.render(base_x, base_y);
-					if global.LUI_DEBUG_MODE == 1 _element.render_debug(_e_x, _e_y);
+					_element.draw(_absloute_x, _absloute_y);
+					if _element.render_content_enabled _element.render(_absloute_x, _absloute_y);
+					if global.LUI_DEBUG_MODE == 1 _element.render_debug(_absloute_x, _absloute_y);
 				}
 			} else {
 				if _element.inside_parent == 1 || _element.inside_parent == 2 {
 					//Draw
 					_element.pre_draw();
 					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
-					if _element.render_content_enabled _element.render(_element.pos_x, _element.pos_y);
+					if _element.render_content_enabled _element.render(base_x +_element.pos_x, base_y + _element.pos_y);
 					if global.LUI_DEBUG_MODE == 1 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
 				}
 			}
