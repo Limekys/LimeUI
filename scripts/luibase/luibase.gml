@@ -193,7 +193,7 @@ function LuiBase() constructor {
 				}
 				
 				//Set width
-				if _element.auto_width == true {
+				if _element.auto_width {
 					//Calculate width by ranges (ranges have high priority)
 					if array_length(_ranges) > 0 {
 						_element.width = floor(_ranges[j] * (self.width - (_row_element_count + 1)*self.style.padding));
@@ -207,12 +207,12 @@ function LuiBase() constructor {
 				}
 				
 				//Set height
-				if _element.auto_height == true {
+				if _element.auto_height {
 					_element.height = _element.min_height;
 				}
 				
 				//Set position
-				if _element.auto_x == true || _element.auto_y == true {
+				if _element.auto_x || _element.auto_y {
 					
 					//Add padding for first in row
 					if j == 0 {
@@ -232,11 +232,12 @@ function LuiBase() constructor {
 							_element.pos_y = _last_in_row.pos_y;
 						}
 					}
-					
-					
 				}
 				
-				
+				//Extend the height of the parent element if the added element does not fit (Except for scrollbars, as they work on a different principle)
+				if !is_instanceof(self, LuiScrollPanel) && self.auto_height && _element.pos_y + _element.height > self.height - self.style.padding {
+					self.height = _element.pos_y + _element.height + self.style.padding;
+				}
 				
 				//Save new start x y position
 				_element.start_x = _element.pos_x;
@@ -253,14 +254,11 @@ function LuiBase() constructor {
 				//Call create function
 				_element.create();
 				
-				
-				
 				//Add to content array
 				array_push(self.contents, _element);
 			}
 		}
 		self.align_all_elements();
-		//self.on_content_update();
 		self.set_need_to_update_content(true);
 		return self;
 	}
@@ -308,7 +306,6 @@ function LuiBase() constructor {
 	
 	///@desc align_all_elements() //???//
 	static align_all_elements = function() {
-		if array_length(self.contents) > 0
 		for (var i = array_length(self.contents) - 1; i >= 0 ; --i) {
 			var _element = self.contents[i];
 			switch(_element.halign) {
@@ -484,6 +481,7 @@ function LuiBase() constructor {
 	//Update
 	///@desc update()
 	static update = function() {
+		var _is_main_ui = (self.parent == undefined);
 		//Check if the element is in the area of its parent and call its step function
 		if !self.deactivated {
 			if self.draw_relative == false {
@@ -500,6 +498,7 @@ function LuiBase() constructor {
 		for (var i = array_length(self.contents)-1; i >= 0; --i) {
 			//Get element
 			var _element = self.contents[i];
+			//var _prev_element = i-1 >= 0 ? self.contents[i-1] : undefined;
 			//Get absolute position
 			var _e_x = _element.get_absolute_x();
 			var _e_y = _element.get_absolute_y();
@@ -511,26 +510,14 @@ function LuiBase() constructor {
 				_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
 			//Update
 			_element.update();
+			//Update pos_y
+			//if !is_undefined(_prev_element) && _element.auto_y {
+			//	_element.pos_y = _prev_element.pos_y + _prev_element.height + _prev_element.style.padding;
+			//}
 			//Update content script
 			if _element.need_to_update_content {
 				_element.on_content_update();
 				_element.need_to_update_content = false;
-				
-				//Extend the height if the added elements does not fit (Except for scrollbars, as they work on a different principle)
-				//var _last_element = self.get_last();
-				//if !is_instanceof(self, LuiScrollPanel) && !is_undefined(_last_element) {
-				//	if _last_element.pos_y + _last_element.height > self.height - self.style.padding {
-				//		self.height = _last_element.pos_y + _last_element.height + _last_element.style.padding;
-				//		self.set_need_to_update_content(true);
-				//	}
-				//}
-				//Extend the height of the parent element if the added element does not fit (Except for scrollbars, as they work on a different principle)
-				//var _last_element = self.get_last();
-				//if !is_undefined(_last_element) {
-				//	if !is_instanceof(_element, LuiScrollPanel) && _element.auto_height == true && _last_element.pos_y + _last_element.height > _element.height - _element.style.padding {
-				//		_element.height = _last_element.pos_y + _last_element.height + _last_element.style.padding;
-				//	}
-				//}
 			}
 			//Delete marked to delete elements
 			if _element.marked_to_delete {
@@ -539,8 +526,8 @@ function LuiBase() constructor {
 			}
 		}
 		//Mouse hover (check topmost elements on mouse)
-		is_mouse_hovered = false; //set false to every element
-		if self.parent == undefined { //check only on main ui
+		is_mouse_hovered = false;
+		if _is_main_ui {
 			var _mouse_x = device_mouse_x_to_gui(0);
 	        var _mouse_y = device_mouse_y_to_gui(0);
 	        var topmost_element = self.get_topmost_element(_mouse_x, _mouse_y);

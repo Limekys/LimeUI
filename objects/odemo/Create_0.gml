@@ -174,22 +174,11 @@ btn_show_msg.set_color(merge_color(#ffff77, c_black, 0.5));
 btn_restart.set_color(merge_color(#ff7777, c_black, 0.5));
 
 //Create some panels
-my_panel_in_second_1 = new LuiPanel( , , , 200);
-my_panel_in_second_2 = new LuiPanel( , , , 200);
-
-//Then add its to second panel
-my_panel_2.add_content([
-	new LuiText( , , , , "Second panel").set_text_halign(fa_center),
-	my_panel_in_second_1,
-	my_panel_in_second_2
-]);
-
+my_panel_in_second_1 = new LuiPanel( , , , );
 //Create deactivated button
 deactivated_button = new LuiButton( , , , , "DEACTIVATED", function() {
 	destroy();
 }).deactivate();
-
-//Add elements and init some in first panel of second main panel
 my_panel_in_second_1.add_content([
 	new LuiText( , , , , "Panel in panel").set_text_halign(fa_center),
 	[new LuiButton( , , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
@@ -199,7 +188,7 @@ my_panel_in_second_1.add_content([
 	new LuiButton( , , , , "This button with really long text that probably won't fit in this button!", ),
 	deactivated_button,
 ]);
-
+my_panel_in_second_2 = new LuiPanel( , , , );
 //Create to arrays with sprite buttons
 var _buttons1 = []
 var _buttons2 = []
@@ -209,7 +198,6 @@ for (var i = 0; i < 10; ++i) {
 	else
 	array_push(_buttons2, _button);
 }
-
 //Add these to arrays to second panel of second main panel
 //Since these are arrays with buttons, they will be added each in a row
 my_panel_in_second_2.add_content(
@@ -222,6 +210,13 @@ my_panel_in_second_2.add_content(
 //my_panel_in_second_2.add_content([_buttons1, _buttons2]);
 //my_panel_in_second_2.add_content([_buttons1]);
 //my_panel_in_second_2.add_content([_buttons2]);
+
+//Then add its to second panel
+my_panel_2.add_content([
+	new LuiText( , , , , "Second panel").set_text_halign(fa_center),
+	my_panel_in_second_1,
+	my_panel_in_second_2
+]);
 
 //Create drop down menu and some items in it
 var dropdown = new LuiDropDown(, , , , "Select item...");
@@ -304,7 +299,9 @@ scroll_panel.add_content([
 ]);
 
 //Add scroll panel in Tab1
-tab_1.add_content([scroll_panel]);
+tab_1.add_content([
+	[scroll_panel, new LuiPanel(, , , 256, "SimplePanel")]
+]);
 
 //Add some sprites in Tab 2
 sprite_car_1 = new LuiSprite( , , , 256, sCar);
