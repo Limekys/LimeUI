@@ -683,14 +683,6 @@ function LuiBase() constructor {
 				_element.on_content_update();
 				_element.need_to_update_content = false;
 			}
-			//Update grid position
-			var _grid_x = floor(_e_x / 32);
-			var _grid_y = floor(_e_y / 32);
-			if _element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y {
-				_element._grid_update();
-			}
-			_element.grid_previous_x = _grid_x;
-			_element.grid_previous_y = _grid_y;
 			//Update current position
 			var _cur_x = floor(_e_x);
 			var _cur_y = floor(_e_y);
@@ -714,6 +706,14 @@ function LuiBase() constructor {
 			}
 			_element.previous_x = _e_x;
 			_element.previous_y = _e_y;
+			//Update grid position
+			var _grid_x = floor(_e_x / 32);
+			var _grid_y = floor(_e_y / 32);
+			if _element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y {
+				_element._grid_update();
+			}
+			_element.grid_previous_x = _grid_x;
+			_element.grid_previous_y = _grid_y;
 			//Delete marked to delete elements
 			if _element.marked_to_delete {
 				delete _element;
