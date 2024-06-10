@@ -137,7 +137,7 @@ my_ui = new LuiBase().set_style(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 500, 332, 32, "LuiTabGroup");
+tab_group = new LuiTabGroup( , , 600, 332, 32, "LuiTabGroup");
 
 //Add main panels to main ui container
 my_ui.add_content([
@@ -265,7 +265,9 @@ scroll_panel.add_content([
 
 //Add some new buttons to scroll panel
 for (var i = 0; i < 5; ++i) {
-    var _btn = new LuiButton( , , , , "Button " + string(i+1), );
+    var _btn = new LuiButton( , , , , "Button " + string(i+1), function() {
+		self.destroy();
+	});
 	scroll_panel.add_content(_btn);
 }
 
@@ -303,8 +305,21 @@ scroll_panel.add_content([
 ]);
 
 //Add scroll panel in Tab1
+control_panel = new LuiPanel(, , , 256, "ControlPanel");
+control_textbox = new LuiTextbox(, , , , , "new element name", false, 32);
+control_btn_add = new LuiButton(, , , , "Add element", function() {
+	var _button_name = oDemo.control_textbox.get();
+	oDemo.control_textbox.set("");
+	oDemo.scroll_panel.add_content(new LuiButton(, , , , _button_name, function(){self.destroy();}))
+});
+control_btn_clear = new LuiButton(, , , , "Clear list", function() {oDemo.scroll_panel.clean_scroll_panel()});
+control_panel.add_content([
+	control_textbox,
+	control_btn_add,
+	control_btn_clear
+]);
 tab_1.add_content([
-	[scroll_panel, new LuiPanel(, , , 256, "SimplePanel")]
+	[scroll_panel, control_panel]
 ]);
 
 //Add some sprites in Tab 2

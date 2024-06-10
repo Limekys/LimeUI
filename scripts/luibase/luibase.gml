@@ -66,7 +66,7 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
-	///@desc Called when adding elements inside
+	///@desc Called when adding or deleting elements inside
 	self.on_content_update = function() {
 		//Custom for each element
 	}
@@ -716,8 +716,8 @@ function LuiBase() constructor {
 			_element.grid_previous_y = _grid_y;
 			//Delete marked to delete elements
 			if _element.marked_to_delete {
+				array_delete(self.contents, i, 1);
 				delete _element;
-				array_delete(contents, i, 1);
 			}
 		}
 		//Mouse hover (check topmost elements on mouse)
@@ -853,6 +853,7 @@ function LuiBase() constructor {
 		self.marked_to_delete = true;
 		self.clean_up();
 		self._grid_clean_up();
+		if !is_undefined(self.parent) self.set_need_to_update_content(true);
 		global.lui_element_count--;
 	}
 	

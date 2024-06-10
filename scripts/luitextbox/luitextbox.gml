@@ -67,6 +67,13 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			_display_text = string_repeat(self.style.textbox_password, string_length(self.value));
 		}
 		
+		//Hint
+		if self.value == "" && !self.has_focus {
+			_display_text = self.hint;
+			draw_set_alpha(0.5);
+			draw_set_color(self.style.color_font_hint);
+		}
+		
 		//Cut
 		while(string_width(_display_text) > (self.width - (2 * _margin)))
 		_display_text = string_delete(_display_text, 1, 1);
@@ -74,13 +81,6 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		//Final text
 		if _display_text != "" || self.has_focus {
 			draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
-		}
-		
-		//Show hint
-		if self.value == "" {
-			draw_set_alpha(0.5);
-			draw_set_color(self.style.color_font_hint);
-			draw_text(_txt_x, _txt_y, self.hint);
 		}
 		
 		//Border

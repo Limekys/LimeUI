@@ -29,6 +29,34 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		return self;
 	}
 	
+	///@ignore
+	static _rearrange_elements = function() {
+		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
+		    var _element = self.contents[i];
+			if i == 0 {
+				_element.pos_y = self.style.padding;
+			} else {
+				var _prev_element = self.contents[i-1];
+				_element.pos_y = _prev_element.pos_y + _prev_element.height + self.style.padding;
+			}
+			_element.start_y = _element.pos_y;
+		}
+		self._apply_scroll();
+	}
+	
+	///@ignore
+	static _apply_scroll = function() {
+		array_foreach(self.contents, function(_elm) {
+			_elm.pos_y = _elm.start_y + self.scroll_offset_y;
+		});
+	}
+	
+	static clean_scroll_panel = function() {
+		self.destroy_content();
+		self.scroll_offset_y = 0;
+		self.scroll_target_offset_y = 0;
+	}
+	
 	self.create = function() {
 		if is_undefined(self.surface_offset) {
 			self.set_surface_offset(self.style.scroll_surface_offset);
@@ -37,6 +65,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.on_content_update = function() {
 		self.set_draw_relative(true);
+		self._rearrange_elements();
 	}
 	
 	self.pre_draw = function() {
@@ -93,9 +122,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 		if self.scroll_offset_y != self.scroll_target_offset_y {
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
-			array_foreach(self.contents, function(_elm) {
-				_elm.pos_y = _elm.start_y + self.scroll_offset_y;
-			});
+			self._apply_scroll();
 		}
 	}
 	
