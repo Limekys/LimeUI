@@ -57,6 +57,8 @@ global.demo_style_light = {
 	//Settings
 	padding : 16,
 	scroll_step : 32,
+	checkbox_pin_margin : 6,
+	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•"
 }
@@ -117,6 +119,7 @@ global.demo_style_dark = {
 	padding : 16,
 	scroll_step : 32,
 	checkbox_pin_margin : 6,
+	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•",
 	//Render functions
@@ -253,7 +256,7 @@ my_panel_3.add_content([
 ]);
 
 //Create scroll panel and some sprites
-scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel").set_surface_offset([0,0,1,3]);
+scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel");
 
 //Add text to scroll panel
 scroll_panel.add_content([
