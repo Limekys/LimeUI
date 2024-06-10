@@ -37,6 +37,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			    var _item = new LuiDropDownItem(, , , , items[i].text, items[i].callback);
 				_item.dropdown_parent = self;
 				self.dropdown_panel.add_content([_item]);
+				_item.set_depth(_item.z + array_last(self.parent.contents).z + i);// += array_last(self.parent.contents).z;
+				print(_item.dropdown_parent.contents)
 			}
 			self.dropdown_panel.style.padding = _prev_padding;
 		} else {
@@ -170,8 +172,9 @@ function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_dropdown_border)
-		draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
+		if !is_undefined(self.style.sprite_dropdown_border) {
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
+		}
 	}
 	
 	self.step = function() {

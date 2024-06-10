@@ -1,6 +1,9 @@
 ///@desc render ui
 my_ui.render();
-//LUI_OVERLAY.render();
+
+if debug_grid {
+	my_ui._draw_screen_grid();
+}
 
 DrawSetText(c_red, fDebug, fa_left, fa_top, 1);
 

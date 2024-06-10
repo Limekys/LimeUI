@@ -42,13 +42,12 @@ function LuiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "Popup m
 		self.parent.parent.destroy();
 	}).set_valign(fa_bottom).set_halign(fa_center);
 	ui.add_content([
-		_block_area,
+		_block_area.add_content([
+			_panel.add_content([
+				_txt, 
+				_btn
+			])
+		])
 	]);
-	_block_area.add_content([
-		_panel
-	]);
-	_panel.add_content([
-		_txt, 
-		_btn
-	]);
+	_block_area.set_depth(1000);
 }

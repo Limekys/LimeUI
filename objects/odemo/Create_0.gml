@@ -1,5 +1,6 @@
 randomize();
 debug_overlay = false;
+debug_grid = false;
 
 //Light theme
 global.demo_style_light = {
@@ -145,7 +146,7 @@ my_ui.add_content([
 tab_1 = new LuiTab("Panels");
 tab_2 = new LuiTab("Sprites");
 tab_3 = new LuiTab("About");
-tab_group.add_tabs([tab_1, tab_2, tab_3]);
+tab_group.add_tabs([tab_1, tab_2, tab_3]).center_horizontally();
 
 //Create some elements
 //set_halign and set_valign allow you to set the alignment of elements in the panel
@@ -159,8 +160,8 @@ btn_restart = new LuiButton(, , , , "Restart", function() {game_restart()}).set_
 //Add elements to first panel and init some here
 my_panel.add_content([
 	new LuiText( , , , , "First panel").set_text_halign(fa_center),
-	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , tab_group.pos_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group.pos_x = self.value}), [0.2, 0.8]],
-	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , tab_group.pos_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group.pos_y = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , "Panel X"), new LuiSlider( , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group.pos_x = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , "Panel Y"), new LuiSlider( , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group.pos_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
 	[new LuiCheckbox( , , 32, 32, false, function() {oDemo.demo_loading_state = self.value}), new LuiText( , , , , "Progress loading")],
 	[new LuiText( , , , , "Textbox"), new LuiTextbox( , , , ,"some text", , , ), [0.2, 0.8]],
@@ -261,7 +262,7 @@ scroll_panel.add_content([
 
 //Add 3 new buttons to scroll panel
 for (var i = 0; i < 3; ++i) {
-    var _btn = new LuiButton( , , , , "Button_" + string(i), );
+    var _btn = new LuiButton( , , , , "Button " + string(i+1), );
 	scroll_panel.add_content(_btn);
 }
 
