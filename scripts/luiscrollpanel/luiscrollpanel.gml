@@ -16,12 +16,24 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.panel_surface = -1;
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
-	self.surface_offset = {
-		left : 0,
-		right : 0,
-		top : 0,
-		bottom : 0
-	};
+	self.surface_offset = undefined;
+	
+	///@func set_surface_offset(array:[left,right,top,bottom])
+	static set_surface_offset = function(array) {
+		self.surface_offset = {
+			left : array[0],
+			right : array[1],
+			top : array[2],
+			bottom : array[3]
+		};
+		return self;
+	}
+	
+	self.create = function() {
+		if is_undefined(self.surface_offset) {
+			self.set_surface_offset(self.style.scroll_surface_offset);
+		}
+	}
 	
 	self.on_content_update = function() {
 		self.set_draw_relative(true);
@@ -80,10 +92,10 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			}
 		}
 		if self.scroll_offset_y != self.scroll_target_offset_y {
-			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2);
+			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
 			array_foreach(self.contents, function(_elm) {
 				_elm.pos_y = _elm.start_y + self.scroll_offset_y;
-			})
+			});
 		}
 	}
 	
@@ -91,17 +103,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if surface_exists(self.panel_surface) {
 			surface_free(self.panel_surface);
 		}
-	}
-	
-	///@func set_surface_offset(array:[left,right,top,bottom])
-	static set_surface_offset = function(array) {
-		self.surface_offset = {
-			left : array[0],
-			right : array[1],
-			top : array[2],
-			bottom : array[3]
-		};
-		return self;
 	}
 	
 	return self;

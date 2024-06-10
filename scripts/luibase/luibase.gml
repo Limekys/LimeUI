@@ -20,8 +20,8 @@ function LuiBase() constructor {
 	self.target_y = 0;							//Target y position this element for animation //???//
 	self.start_x = self.pos_x;					//First x position
 	self.start_y = self.pos_y;					//First y position
-	self.previous_x = 0;
-	self.previous_y = 0;
+	self.previous_x = -1000;
+	self.previous_y = -1000;
 	self.grid_previous_x = -1000;
 	self.grid_previous_y = -1000;
 	self.width = display_get_gui_width();
@@ -46,11 +46,12 @@ function LuiBase() constructor {
 	self.valign = undefined;
 	self.draw_relative = false;
 	self.parent_relative = undefined;
-	self.inside_parent = 0;
+	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.render_content_enabled = true;
 	self.delayed_content = undefined;
 	self.need_to_update_content = false;
+	self.topmost_hovered_element = undefined;
 	
 	//Custom functions for elements
 	
@@ -653,9 +654,9 @@ function LuiBase() constructor {
 	
 	//Update
 	///@desc update()
-	static update = function() {
+	static update = function(base_x = 0, base_y = 0) {
 		//Limit updates
-		if self.visible == false || self.deactivated {
+		if self.visible == false || self.deactivated || self.inside_parent == 0 {
 			return false;
 		}
 		//Check if the element is in the area of its parent and call its step function
@@ -673,24 +674,10 @@ function LuiBase() constructor {
 			//Get element
 			var _element = self.contents[i];
 			//Get absolute position
-			var _e_x = _element.get_absolute_x();
-			var _e_y = _element.get_absolute_y();
-			var _p_x = _element.parent.get_absolute_x();
-			var _p_y = _element.parent.get_absolute_y();
-			//Check element is inside parent
-			if is_undefined(self.parent_relative) {
-				_element.inside_parent = rectangle_in_rectangle(
-					_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
-					_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
-			} else {
-				_p_x = _element.parent_relative.get_absolute_x();
-				_p_y = _element.parent_relative.get_absolute_y();
-				_element.inside_parent = rectangle_in_rectangle(
-					_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
-					_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height);
-			}
+			var _e_x = base_x + _element.pos_x;
+			var _e_y = base_y + _element.pos_y;
 			//Update
-			_element.update();
+			_element.update(_e_x, _e_y);
 			//Update content script
 			if _element.need_to_update_content {
 				_element.on_content_update();
@@ -708,6 +695,21 @@ function LuiBase() constructor {
 			var _cur_x = floor(_e_x);
 			var _cur_y = floor(_e_y);
 			if _element.previous_x != _cur_x || _element.previous_y != _cur_y {
+				//Get absolute parent position
+				var _p_x = base_x;
+				var _p_y = base_y;
+				//Check element is inside parent when position update
+				if is_undefined(self.parent_relative) {
+					_element.inside_parent = rectangle_in_rectangle(
+						_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+						_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
+				} else {
+					_p_x = _element.parent_relative.get_absolute_x();
+					_p_y = _element.parent_relative.get_absolute_y();
+					_element.inside_parent = rectangle_in_rectangle(
+						_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height);
+				}
 				_element.on_position_update();
 			}
 			_element.previous_x = _e_x;
@@ -725,14 +727,17 @@ function LuiBase() constructor {
 			var _mouse_x = device_mouse_x_to_gui(0);
 	        var _mouse_y = device_mouse_y_to_gui(0);
 			if _mouse_x < 0 || _mouse_x > self.width || _mouse_y < 0 || _mouse_y > self.height exit;
-	        var topmost_element = self.get_topmost_element(_mouse_x, _mouse_y);
-	        if (topmost_element != undefined && !topmost_element.deactivated) {
-				topmost_element.is_mouse_hovered = true;
+	        self.topmost_hovered_element = self.get_topmost_element(_mouse_x, _mouse_y);
+	        if !is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated {
+				self.topmost_hovered_element.is_mouse_hovered = true;
 				if mouse_check_button(mb_left) {
-					topmost_element.on_mouse_left();
+					self.topmost_hovered_element.on_mouse_left();
 				}
 				if mouse_check_button_pressed(mb_left) {
-					topmost_element.on_mouse_left_pressed();
+					self.topmost_hovered_element.on_mouse_left_pressed();
+				}
+				if mouse_check_button_released(mb_left) {
+					self.topmost_hovered_element.on_mouse_left_released();
 				}
 			}
 		}
@@ -741,69 +746,66 @@ function LuiBase() constructor {
 	//Render
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
-		if self.visible
+		if !self.visible return false;
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
 			if _element.visible == false continue;
+			//Check for allowing to draw
+			var _allow_to_draw = (_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && _element.inside_parent == 1 || _element.inside_parent == 2);
 			//Check if the element is in the area of its parent and draw
-			if _element.draw_relative == false {
-				if _element.inside_parent == 1 {
-					//Get absolute position
-					var _absloute_x = _element.get_absolute_x();
-					var _absloute_y = _element.get_absolute_y();
-					//Draw
-					_element.pre_draw();
-					_element.draw(_absloute_x, _absloute_y);
-					if _element.render_content_enabled _element.render(_absloute_x, _absloute_y);
-					if global.LUI_DEBUG_MODE == 1 _element.render_debug(_absloute_x, _absloute_y);
-				}
-			} else {
-				if _element.inside_parent == 1 || _element.inside_parent == 2 {
-					//Draw
-					_element.pre_draw();
-					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
-					if _element.render_content_enabled _element.render(base_x +_element.pos_x, base_y + _element.pos_y);
-					if global.LUI_DEBUG_MODE == 1 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
-				}
+			if _allow_to_draw {
+				//Draw
+				_element.pre_draw();
+				_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
+				if _element.render_content_enabled _element.render(base_x + _element.pos_x, base_y + _element.pos_y);
+				if global.LUI_DEBUG_MODE != 0 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
 			}
+		}
+		if global.LUI_DEBUG_MODE != 0 {
+			//Get element
+			var _element = self.topmost_hovered_element;
+			if is_undefined(_element) return false;
+			//Text on mouse
+			var _mouse_x = device_mouse_x_to_gui(0) + 16;
+			var _mouse_y = device_mouse_y_to_gui(0) + 0;
+			//Text
+			draw_set_alpha(1);
+			draw_set_color(c_white);
+			_lui_draw_text_debug(_mouse_x, _mouse_y, 
+			"name: " + string(_element.name) + "\n" +
+			"x: " + string(_element.pos_x) + " y: " + string(_element.pos_y) + "\n" +
+			"w: " + string(_element.width) + " h: " + string(_element.height) + "\n" +
+			"v: " + string(_element.value) + "\n" +
+			"hl: " + string(_element.halign) + " vl: " + string(_element.valign) + "\n" +
+			"z: " + string(_element.z));
 		}
 	}
 	
 	///@desc render_debug()
 	///@ignore
-	static render_debug = function(_x = self.get_absolute_x(), _y = self.get_absolute_y()) {
-		if !is_undefined(self.style.font_debug) draw_set_font(self.style.font_debug);
-		//Rectangles
+	static render_debug = function(_x = 0, _y = 0) {
+		if !is_undefined(self.style.font_debug) {
+			draw_set_font(self.style.font_debug);
+		}
 		draw_set_alpha(0.5);
 		draw_set_color(mouse_hover() ? c_red : make_color_hsv(self.z % 255 * 10, 255, 255));
+		//Rectangles
 		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
 		//draw_line(_x, _y, _x + self.width - 1, _y + self.height - 1);
 		//draw_line(_x, _y + self.height, _x + self.width - 1, _y - 1);
 		//Text
-		_lui_draw_text_debug(_x, _y, 
-		"name: " + string(self.name) + "\n" +
-		"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
-		"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
-		"v: " + string(self.value) + "\n" +
-		"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
-		"z: " + string(self.z));
-		//Text on mouse
-		if mouse_hover() {
-			//Get mouse coords
-			var _mx = device_mouse_x_to_gui(0) + 16;
-			var _my = device_mouse_y_to_gui(0);
-			//Text
-			_lui_draw_text_debug(_mx, _my, 
+		if global.LUI_DEBUG_MODE == 2 {
+			_lui_draw_text_debug(_x, _y, 
 			"name: " + string(self.name) + "\n" +
 			"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
 			"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
 			"v: " + string(self.value) + "\n" +
 			"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
 			"z: " + string(self.z));
+			draw_set_alpha(1);
+			draw_set_color(c_white);
 		}
-		draw_set_alpha(1);
-		draw_set_color(c_white);
 	}
 	
 	///@desc _lui_draw_text_debug(x, y, text)
@@ -811,10 +813,12 @@ function LuiBase() constructor {
 	static _lui_draw_text_debug = function(x, y, text) {
 		var _text_width = string_width(text);
 		var _text_height = string_height(text);
-		draw_set_halign(fa_left);
-		draw_set_valign(fa_top);
+		x = clamp(x, 0, display_get_gui_width() - _text_width);
+		y = clamp(y, 0, display_get_gui_height() - _text_height);
 		draw_set_color(c_black);
 		draw_rectangle(x, y, x + _text_width, y + _text_height, false);
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_top);
 		draw_set_color(c_white);
 		draw_text(x, y, text);
 	}

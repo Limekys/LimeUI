@@ -1,11 +1,9 @@
-///@desc render ui
+///@desc RENDER
 my_ui.render();
 
 if debug_grid {
 	my_ui._draw_screen_grid();
 }
-
-DrawSetText(c_red, fDebug, fa_left, fa_top, 1);
 
 DrawSetText(c_red, fDebug, fa_left, fa_bottom, 1);
 draw_text(4, room_height - 4, 

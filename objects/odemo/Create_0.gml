@@ -260,8 +260,8 @@ scroll_panel.add_content([
 	new LuiText( , , , , "Scroll panel")
 ]);
 
-//Add 3 new buttons to scroll panel
-for (var i = 0; i < 3; ++i) {
+//Add some new buttons to scroll panel
+for (var i = 0; i < 5; ++i) {
     var _btn = new LuiButton( , , , , "Button " + string(i+1), );
 	scroll_panel.add_content(_btn);
 }

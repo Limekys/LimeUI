@@ -29,29 +29,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		return self;
 	}
 	
-	self.step = function() {
-		var x1 = self.get_absolute_x();
-		var y1 = self.get_absolute_y();
-		var x2 = x1 + self.width;
-		var y2 = y1 + self.height;
-		
-		if mouse_check_button_pressed(mb_left) && mouse_hover() {
-			self.dragging = true;
-		}
-		
-		if (self.dragging) {
-			if mouse_check_button(mb_left) {
-				self.value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.value_max - self.value_min) + self.value_min, self.value_min, self.value_max);
-				if (self.integers_only) {
-				    self.value = round(self.value);
-				}
-				self.callback();
-			} else {
-				self.dragging = false;
-			}
-		}
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Bar
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
@@ -89,6 +66,29 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		//Knob border
 		if !is_undefined(self.style.sprite_slider_knob_border) {
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_progress_bar_border, 1);
+		}
+	}
+	
+	self.step = function() {
+		var x1 = self.get_absolute_x();
+		var y1 = self.get_absolute_y();
+		var x2 = x1 + self.width;
+		var y2 = y1 + self.height;
+		
+		if mouse_check_button_pressed(mb_left) && mouse_hover() {
+			self.dragging = true;
+		}
+		
+		if (self.dragging) {
+			if mouse_check_button(mb_left) {
+				self.value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.value_max - self.value_min) + self.value_min, self.value_min, self.value_max);
+				if (self.integers_only) {
+				    self.value = round(self.value);
+				}
+				self.callback();
+			} else {
+				self.dragging = false;
+			}
 		}
 	}
 	

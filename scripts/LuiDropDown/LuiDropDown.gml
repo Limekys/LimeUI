@@ -37,8 +37,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			    var _item = new LuiDropDownItem(, , , , items[i].text, items[i].callback);
 				_item.dropdown_parent = self;
 				self.dropdown_panel.add_content([_item]);
-				_item.set_depth(_item.z + array_last(self.parent.contents).z + i);// += array_last(self.parent.contents).z;
-				print(_item.dropdown_parent.contents)
+				_item.set_depth(_item.z + array_last(self.parent.contents).z + i);
 			}
 			self.dropdown_panel.style.padding = _prev_padding;
 		} else {
@@ -99,18 +98,21 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
+	self.on_mouse_left_pressed = function() {
+		self.is_pressed = true;
+	}
+	
+	self.on_mouse_left_released = function() {
+		if self.is_pressed {
+			self.is_pressed = false;
+			self.callback();
+			self.toggle_dropdown();
+			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+		}
+	}
+	
 	self.step = function() {
-		if mouse_hover() { 
-			if mouse_check_button_pressed(mb_left) {
-				self.is_pressed = true;
-			}
-			if mouse_check_button_released(mb_left) && self.is_pressed {
-				self.is_pressed = false;
-				self.callback();
-				self.toggle_dropdown();
-				if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-			}
-		} else {
+		if !mouse_hover() { 
 			self.is_pressed = false;
 		}
 	}
@@ -177,18 +179,21 @@ function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
+	self.on_mouse_left_pressed = function() {
+		self.is_pressed = true;
+	}
+	
+	self.on_mouse_left_released = function() {
+		if self.is_pressed {
+			self.is_pressed = false;
+			self.callback();
+			self.dropdown_callback();
+			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+		}
+	}
+	
 	self.step = function() {
-		if mouse_hover() { 
-			if mouse_check_button_pressed(mb_left) {
-				self.is_pressed = true;
-			}
-			if mouse_check_button_released(mb_left) && self.is_pressed {
-				self.is_pressed = false;
-				self.callback();
-				self.dropdown_callback();
-				if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-			}
-		} else {
+		if !mouse_hover() { 
 			self.is_pressed = false;
 		}
 	}

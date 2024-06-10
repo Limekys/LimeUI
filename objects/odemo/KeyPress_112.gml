@@ -1,2 +1,6 @@
 /// @desc Toggle debug mode
-global.LUI_DEBUG_MODE = global.LUI_DEBUG_MODE == 0 ? 1 : 0;
+if global.LUI_DEBUG_MODE < 2 {
+	global.LUI_DEBUG_MODE++;
+} else {
+	global.LUI_DEBUG_MODE = 0;
+}

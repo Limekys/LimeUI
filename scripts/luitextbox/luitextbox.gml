@@ -106,15 +106,18 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		self.cursor_pointer = "";
 	}
 	
+	self.on_mouse_left_pressed = function() {
+		self.is_pressed = true;
+	}
+	
+	self.on_mouse_left_released = function() {
+		if self.is_pressed {
+			set_focus();
+		}
+	}
+	
 	self.step = function() {
-		if mouse_hover() { 
-			if mouse_check_button_pressed(mb_left) {
-				self.is_pressed = true;
-			}
-			if mouse_check_button_released(mb_left) && self.is_pressed {
-				set_focus();
-			}
-		} else {
+		if !mouse_hover() {
 			if mouse_check_button_pressed(mb_left) {
 				remove_focus();
 			}

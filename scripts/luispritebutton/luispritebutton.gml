@@ -57,21 +57,25 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.step = function() {
 		if mouse_hover() { 
 			self.button_color = merge_colour(self.color_blend, self.style.color_hover, 0.5);
-			if mouse_check_button_pressed(mb_left) {
-				self.is_pressed = true;
-			}
-			if mouse_check_button(mb_left) {
-				self.button_color = merge_colour(self.color_blend, c_black, 0.5);
-			}
-			if mouse_check_button_released(mb_left) && self.is_pressed {
-				self.callback();
-				if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-			}
 		} else {
 			self.button_color = self.color_blend;
 			self.is_pressed = false;
 		}
-		
+	}
+	
+	self.on_mouse_left_pressed = function() {
+		self.is_pressed = true;
+	}
+	
+	self.on_mouse_left = function() {
+		self.button_color = merge_colour(self.color_blend, c_black, 0.5);
+	}
+	
+	self.on_mouse_left_released = function() {
+		if self.is_pressed {
+			self.callback();
+			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+		}
 	}
 	
 	return self;

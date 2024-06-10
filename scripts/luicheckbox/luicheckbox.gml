@@ -51,21 +51,23 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
+	self.on_mouse_left_pressed = function() {
+		self.is_pressed = true;
+	}
+	
+	self.on_mouse_left_released = function() {
+		if self.is_pressed {
+			self.is_pressed = false;
+			self.set(!self.get());
+			self.callback();
+			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+		}
+	}
+	
 	self.step = function() {
-		if mouse_hover() { 
-			if mouse_check_button_pressed(mb_left) {
-				self.is_pressed = true;
-			}
-			if mouse_check_button_released(mb_left) && self.is_pressed {
-				self.is_pressed = false;
-				self.set(!self.get());
-				self.callback();
-				if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-			}
-		} else {
+		if !mouse_hover() { 
 			self.is_pressed = false;
 		}
-		
 	}
 	
 	return self;
