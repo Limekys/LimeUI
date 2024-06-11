@@ -137,7 +137,7 @@ my_ui = new LuiBase().set_style(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 600, 332, 32, "LuiTabGroup");
+tab_group = new LuiTabGroup( , , 550, 332, 32, "LuiTabGroup");
 
 //Add main panels to main ui container
 my_ui.add_content([
@@ -260,15 +260,17 @@ scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel");
 
 //Add text to scroll panel
 scroll_panel.add_content([
-	new LuiText( , , , , "Scroll panel")
+	[new LuiText( , , , , "Scroll panel")]
 ]);
 
 //Add some new buttons to scroll panel
+var delete_self = function() {self.destroy();}
 for (var i = 0; i < 5; ++i) {
-    var _btn = new LuiButton( , , , , "Button " + string(i+1), function() {
-		self.destroy();
-	});
-	scroll_panel.add_content(_btn);
+    var _btn = new LuiButton( , , , , "Button " + string(i+1), delete_self);
+    var _btn2 = new LuiButton( , , , , "Button " + string(i+1) + "_2", delete_self);
+	scroll_panel.add_content([
+		[_btn, _btn2]
+	]);
 }
 
 //Create some panel that will be added to the scroll panel
@@ -332,12 +334,12 @@ tab_2.add_content([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
 //Add info about me in Tab 3
 sprite_limekys = new LuiSprite(, , 64, 64, sLimekysAvatar);
 text_about = new LuiText(, , , 64, "Hi, i am Limekys, and this is my UI system!");
-sprite_discord = new LuiSpriteButton(, , 64, 64, sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});
-sprite_telegram = new LuiSpriteButton(, , 64, 64, sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")});
-sprite_twitch = new LuiSpriteButton(, , 64, 64, sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")});
-sprite_twitter = new LuiSpriteButton(, , 64, 64, sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")});
-sprite_vk = new LuiSpriteButton(, , 64, 64, sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")});
-sprite_youtube = new LuiSpriteButton(, , 64, 64, sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")});
+sprite_discord = new LuiSpriteButton(, , , 64, sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});
+sprite_telegram = new LuiSpriteButton(, , , 64, sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")});
+sprite_twitch = new LuiSpriteButton(, , , 64, sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")});
+sprite_twitter = new LuiSpriteButton(, , , 64, sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")});
+sprite_vk = new LuiSpriteButton(, , , 64, sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")});
+sprite_youtube = new LuiSpriteButton(, , , 64, sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")});
 text_version = new LuiText(, , , , "LimeUI version: " + LIMEUI_VERSION).set_valign(fa_bottom);
 tab_3.add_content([
 	[sprite_limekys, text_about],

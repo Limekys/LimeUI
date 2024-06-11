@@ -691,14 +691,13 @@ function LuiBase() constructor {
 				var _p_x = base_x;
 				var _p_y = base_y;
 				//Check element is inside parent when position update
-				if is_undefined(self.parent_relative) {
-					_element.inside_parent = rectangle_in_rectangle(
-						_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
-						_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
-				} else {
+				_element.inside_parent = rectangle_in_rectangle(
+					_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+					_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
+				if !is_undefined(self.parent_relative) {
 					_p_x = _element.parent_relative.get_absolute_x();
 					_p_y = _element.parent_relative.get_absolute_y();
-					_element.inside_parent = rectangle_in_rectangle(
+					_element.inside_parent = _element.inside_parent && rectangle_in_rectangle(
 						_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
 						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height);
 				}
@@ -746,7 +745,6 @@ function LuiBase() constructor {
 	//Render
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
-		if !self.visible return false;
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
@@ -825,7 +823,7 @@ function LuiBase() constructor {
 	
 	///@desc draw text fit to width
 	///@ignore
-	static _lui_draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
+	static _lui_draw_text_cutoff_old = function(_x, _y, _string, _width = infinity) {
 		//Calculate text width to cut off
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
@@ -840,6 +838,47 @@ function LuiBase() constructor {
 		//Draw text
 		draw_text(_x, _y, _str_to_draw);
 	}
+	///@desc draw text fit to width with binary cut method
+	///@ignore
+	static _lui_draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
+	    // Calculate the width of "..." once, to use in our calculations
+	    var ellipsis = "...";
+	    var ellipsis_width = string_width(ellipsis);
+		
+	    // Calculate initial text width
+	    var _str_to_draw = _string;
+	    var _str_width = string_width(_str_to_draw);
+		
+	    // Check if the text needs to be truncated
+	    if (_str_width > _width) {
+	        // Calculate the width available for the main part of the string
+	        var available_width = _width - ellipsis_width;
+			
+	        // Initialize binary search bounds
+	        var low = 1;
+	        var high = string_length(_string);
+	        var mid;
+			
+	        // Perform binary search to find the cutoff point
+	        while (low < high) {
+	            mid = floor((low + high) / 2);
+	            _str_to_draw = string_copy(_string, 1, mid);
+	            _str_width = string_width(_str_to_draw);
+				
+	            if (_str_width < available_width) {
+	                low = mid + 1;
+	            } else {
+	                high = mid;
+	            }
+	        }
+			
+	        // The final string should be within the bounds
+	        _str_to_draw = string_copy(_string, 1, high - 1) + ellipsis;
+	    }
+		
+	    // Draw the final text
+	    draw_text(_x, _y, _str_to_draw);
+	};
 	
 	//Clean up
 	///@desc destroy()

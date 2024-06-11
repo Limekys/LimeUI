@@ -37,7 +37,11 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 				_element.pos_y = self.style.padding;
 			} else {
 				var _prev_element = self.contents[i-1];
-				_element.pos_y = _prev_element.pos_y + _prev_element.height + self.style.padding;
+				if _prev_element.start_y == _element.start_y {
+					_element.pos_y = _prev_element.start_y;
+				} else {
+					_element.pos_y = _prev_element.pos_y + _prev_element.height + self.style.padding;
+				}
 			}
 			_element.start_y = _element.pos_y;
 		}
