@@ -803,10 +803,11 @@ function LuiBase() constructor {
 	//Render
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
+		if !self.visible return false;
 		for (var i = 0, n = array_length(self.contents); i < n; i++) {
 			//Get element
 			var _element = self.contents[i];
-			if _element.visible == false continue;
+			if !_element.visible continue;
 			//Check for allowing to draw
 			var _allow_to_draw = (_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && _element.inside_parent == 1 || _element.inside_parent == 2);
 			//Check if the element is in the area of its parent and draw
