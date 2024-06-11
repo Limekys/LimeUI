@@ -128,51 +128,75 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _grid_add = function() {
-		if self.inside_parent == 0 || self.visible == false return false;
+		if (self.inside_parent == 0 || !self.visible) return false;
 		
-		var _elm_x = floor(self.get_absolute_x() / global.lui_screen_grid_size);
-		var _elm_y = floor(self.get_absolute_y() / global.lui_screen_grid_size);
-		var _width = ceil(self.width / global.lui_screen_grid_size);
-		var _height = ceil(self.height / global.lui_screen_grid_size);
+		var abs_x = self.get_absolute_x();
+		var abs_y = self.get_absolute_y();
+		var grid_size = global.lui_screen_grid_size;
+		
+		var _elm_x = floor(abs_x / grid_size);
+		var _elm_y = floor(abs_y / grid_size);
+		var _width = ceil(self.width / grid_size);
+		var _height = ceil(self.height / grid_size);
+		
+		var abs_x_end = abs_x + self.width;
+		var abs_y_end = abs_y + self.height;
 		
 		for (var _x = _elm_x; _x <= _elm_x + _width; ++_x) {
-		    for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
-			    var _inside = rectangle_in_rectangle(
-					self.get_absolute_x(), self.get_absolute_y(), self.get_absolute_x() + self.width, self.get_absolute_y() + self.height,
-					_x * global.lui_screen_grid_size, _y * global.lui_screen_grid_size, _x * global.lui_screen_grid_size + global.lui_screen_grid_size, _y * global.lui_screen_grid_size + global.lui_screen_grid_size);
-				if _inside == 0 continue;
+			for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
+				var grid_x_start = _x * grid_size;
+				var grid_y_start = _y * grid_size;
+				var grid_x_end = grid_x_start + grid_size;
+				var grid_y_end = grid_y_start + grid_size;
+				
+				var _inside = rectangle_in_rectangle(
+					abs_x, abs_y, abs_x_end, abs_y_end,
+					grid_x_start, grid_y_start, grid_x_end, grid_y_end
+				);
+				
+				if (_inside == 0) continue;
+				
 				var _key = string(_x) + "_" + string(_y);
-				if variable_struct_exists(global.lui_screen_grid, _key) {
+				
+				if (variable_struct_exists(global.lui_screen_grid, _key)) {
 					var _array = global.lui_screen_grid[$ _key];
 					array_push(_array, self);
 					array_push(self._grid_location, _key);
 				}
 			}
 		}
-	}
+	};
 	
 	///@ignore
 	static _grid_delete = function() {
-		var _elm_x = floor(self.get_absolute_x() / global.lui_screen_grid_size);
-		var _elm_y = floor(self.get_absolute_y() / global.lui_screen_grid_size);
-		var _width = ceil(self.width / global.lui_screen_grid_size);
-		var _height = ceil(self.height / global.lui_screen_grid_size);
 		
-		for (var i = array_length(self._grid_location) - 1; i >= 0; --i) {
-		    var _key = self._grid_location[i];
-			if variable_struct_exists(global.lui_screen_grid, _key) {
+		var abs_x = self.get_absolute_x();
+		var abs_y = self.get_absolute_y();
+		var grid_size = global.lui_screen_grid_size;
+		
+		var _elm_x = floor(abs_x / grid_size);
+		var _elm_y = floor(abs_y / grid_size);
+		var _width = ceil(self.width / grid_size);
+		var _height = ceil(self.height / grid_size);
+		
+		var _grid_location_length = array_length(self._grid_location);
+		for (var i = _grid_location_length - 1; i >= 0; --i) {
+			var _key = self._grid_location[i];
+			
+			if (variable_struct_exists(global.lui_screen_grid, _key)) {
 				var _array = global.lui_screen_grid[$ _key];
-				var _ind = array_find_index(_array, function(_elm) {
-					return _elm.element_id == self.element_id;
-				});
-				if _ind != -1 {
-					array_delete(_array, _ind, 1);
+				var _array_length = array_length(_array);
+				for (var j = 0; j < _array_length; ++j) {
+					if (_array[j].element_id == self.element_id) {
+						array_delete(_array, j, 1);
+						break;
+					}
 				}
 			}
 		}
 		
 		self._grid_location = [];
-	}
+	};
 	
 	///@ignore
 	static _grid_update = function() {
@@ -191,19 +215,33 @@ function LuiBase() constructor {
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);
 		draw_set_font(fDebug);
-		for (var _x = 0, _width = ceil(display_get_gui_width() / global.lui_screen_grid_size); _x <= _width; ++_x) {
-		    for (var _y = 0, _height = ceil(display_get_gui_height() / global.lui_screen_grid_size); _y <= _height; ++_y) {
-			    var _key = string(_x) + "_" + string(_y);
+		
+		var grid_size = global.lui_screen_grid_size;
+		var gui_width = display_get_gui_width();
+		var gui_height = display_get_gui_height();
+		
+		var _width = ceil(gui_width / grid_size);
+		var _height = ceil(gui_height / grid_size);
+		
+		for (var _x = 0; _x <= _width; ++_x) {
+			var x_pos = _x * grid_size;
+			draw_line(x_pos, 0, x_pos, gui_height);
+			
+			for (var _y = 0; _y <= _height; ++_y) {
+				var y_pos = _y * grid_size;
+				
+				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
+				
+				var _key = string(_x) + "_" + string(_y);
 				var _array = global.lui_screen_grid[$ _key];
-				draw_rectangle(_x * global.lui_screen_grid_size, _y * global.lui_screen_grid_size, 
-					_x * global.lui_screen_grid_size + global.lui_screen_grid_size - 1, _y * global.lui_screen_grid_size + global.lui_screen_grid_size - 1, true);
-				draw_text(_x * global.lui_screen_grid_size, _y * global.lui_screen_grid_size, string(_key));
+				draw_text(x_pos, y_pos, string(_key));
+				
 				for (var i = 0, n = array_length(_array); i < n; ++i) {
-				    draw_text(_x * global.lui_screen_grid_size, _y * global.lui_screen_grid_size + 6 + 6*i, _array[i].name);
+					draw_text(x_pos, y_pos + 6 + 6 * i, _array[i].name);
 				}
 			}
 		}
-	}
+	};
 	
 	//Init
 	static init_element = function() {
@@ -655,88 +693,106 @@ function LuiBase() constructor {
 	//Update
 	///@desc update()
 	static update = function(base_x = 0, base_y = 0) {
-		//Limit updates
-		if self.visible == false || self.deactivated || self.inside_parent == 0 {
+		// Limit updates
+		if (!self.visible || self.deactivated || self.inside_parent == 0) {
 			return false;
 		}
-		//Check if the element is in the area of its parent and call its step function
-		if self.draw_relative == false {
-			if self.inside_parent == 1 {
+		
+		// Check if the element is in the area of its parent and call its step function
+		if (!self.draw_relative) {
+			if (self.inside_parent == 1) {
 				self.step();
 			}
 		} else {
-			if self.inside_parent == 1 || self.inside_parent == 2 {
+			if (self.inside_parent == 1 || self.inside_parent == 2) {
 				self.step();
 			}
 		}
-		//Update all elements inside
-		for (var i = array_length(self.contents)-1; i >= 0; --i) {
-			//Get element
+		
+		// Update all elements inside
+		var content_length = array_length(self.contents);
+		for (var i = content_length - 1; i >= 0; --i) {
 			var _element = self.contents[i];
-			//Get absolute position
+			
+			// Get absolute position
 			var _e_x = base_x + _element.pos_x;
 			var _e_y = base_y + _element.pos_y;
-			//Update
+			
+			// Update element
 			_element.update(_e_x, _e_y);
-			//Update content script
-			if _element.need_to_update_content {
+			
+			// Update content script if needed
+			if (_element.need_to_update_content) {
 				_element.on_content_update();
 				_element.need_to_update_content = false;
 			}
-			//Update current position
+			
+			// Update current position
 			var _cur_x = floor(_e_x);
 			var _cur_y = floor(_e_y);
-			if _element.previous_x != _cur_x || _element.previous_y != _cur_y {
-				//Get absolute parent position
+			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
+				// Get absolute parent position
 				var _p_x = base_x;
 				var _p_y = base_y;
-				//Check element is inside parent when position update
+				
+				// Check if element is inside parent when position updates
 				_element.inside_parent = rectangle_in_rectangle(
 					_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
-					_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height);
-				if !is_undefined(self.parent_relative) {
+					_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
+				);
+				
+				if (!is_undefined(self.parent_relative)) {
 					_p_x = _element.parent_relative.get_absolute_x();
 					_p_y = _element.parent_relative.get_absolute_y();
 					_element.inside_parent = _element.inside_parent && rectangle_in_rectangle(
 						_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
-						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height);
+						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
+					);
 				}
 				_element.on_position_update();
 			}
-			_element.previous_x = _e_x;
-			_element.previous_y = _e_y;
-			//Update grid position
+			
+			_element.previous_x = _cur_x;
+			_element.previous_y = _cur_y;
+			
+			// Update grid position
 			var _grid_x = floor(_e_x / 32);
 			var _grid_y = floor(_e_y / 32);
-			if _element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y {
+			if (_element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y) {
 				_element._grid_update();
 			}
+			
 			_element.grid_previous_x = _grid_x;
 			_element.grid_previous_y = _grid_y;
-			//Delete marked to delete elements
-			if _element.marked_to_delete {
+			
+			// Delete marked to delete elements
+			if (_element.marked_to_delete) {
 				array_delete(self.contents, i, 1);
 				delete _element;
 			}
 		}
-		//Mouse hover (check topmost elements on mouse)
+		
+		// Mouse hover (check topmost elements on mouse)
 		is_mouse_hovered = false;
-		var _is_main_ui = (self.parent == undefined);
-		if _is_main_ui {
+		if (is_undefined(self.parent)) { // is_main_ui check
 			var _mouse_x = device_mouse_x_to_gui(0);
-	        var _mouse_y = device_mouse_y_to_gui(0);
-			if _mouse_x < 0 || _mouse_x > self.width || _mouse_y < 0 || _mouse_y > self.height exit;
-	        self.topmost_hovered_element = self.get_topmost_element(_mouse_x, _mouse_y);
-	        if !is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated {
-				self.topmost_hovered_element.is_mouse_hovered = true;
-				if mouse_check_button(mb_left) {
-					self.topmost_hovered_element.on_mouse_left();
-				}
-				if mouse_check_button_pressed(mb_left) {
-					self.topmost_hovered_element.on_mouse_left_pressed();
-				}
-				if mouse_check_button_released(mb_left) {
-					self.topmost_hovered_element.on_mouse_left_released();
+			var _mouse_y = device_mouse_y_to_gui(0);
+			
+			if (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
+				self.topmost_hovered_element = self.get_topmost_element(_mouse_x, _mouse_y);
+				
+				if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
+					self.topmost_hovered_element.is_mouse_hovered = true;
+					
+					if (mouse_check_button(mb_left)) {
+						self.topmost_hovered_element.on_mouse_left();
+					}
+					if (mouse_check_button_pressed(mb_left)) {
+						self.topmost_hovered_element.on_mouse_left_pressed();
+					}
+					if (mouse_check_button_released(mb_left)) {
+						self.topmost_hovered_element.on_mouse_left_released();
+					}
 				}
 			}
 		}
