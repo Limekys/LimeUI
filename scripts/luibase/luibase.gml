@@ -315,14 +315,12 @@ function LuiBase() constructor {
 	//Add content
 	///@desc get_first
 	static get_first = function() {
-		if (array_length(self.contents) == 0) return undefined;
-		return self.contents[0];
+		return array_first(self.contents);
 	};
 	
 	///@desc get_last
 	static get_last = function() {
-		if (array_length(self.contents) == 0) return undefined;
-		return self.contents[array_length(self.contents) - 1];
+		return array_last(self.contents);
 	};
 	
 	///@desc add_content(elements)
@@ -487,10 +485,12 @@ function LuiBase() constructor {
 	
 	static center_horizontally = function() {
 		self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
+		return self;
 	}
 	
 	static center_vertically = function() {
 		self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
+		return self;
 	}
 	
 	///@desc align_all_elements() //???//
@@ -535,10 +535,9 @@ function LuiBase() constructor {
 	static set_style = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.custom_style_is_setted = true;
-		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
-			var _element = self.contents[i];
-			_element.set_style_childs(self.style);
-		}
+		array_foreach(self.contents, function(_elm) {
+			_elm.set_style_childs(self.style);
+		});
 		return self;
 	}
 	///@desc set_style_childs(_style)
@@ -554,13 +553,16 @@ function LuiBase() constructor {
 	}
 	///@desc get style
 	static get_style = function() {
-		var _style = self.style;
-		if !is_undefined(_style) return _style;
-		if !is_undefined(self.parent) {
-			_style = self.parent.get_style();
-			if !is_undefined(_style) return _style;
+		if (!is_undefined(self.style)) {
+			return self.style;
 		}
-		return _style;
+		if (!is_undefined(self.parent)) {
+			var _style = self.parent.get_style();
+			if (!is_undefined(_style)) {
+				return _style;
+			}
+		}
+		return undefined;
 	}
 	///@desc Set draw_relative to all descendants
 	static set_draw_relative = function(_relative, _parent_relative = self) {
@@ -573,9 +575,9 @@ function LuiBase() constructor {
 	}
 	static set_depth = function(_depth) {
 		self.z = _depth;
-		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
-		    self.contents[i].set_depth(_depth + i + 1);
-		}
+		array_foreach(self.contents, function(_elm, _ind) {
+			_elm.set_depth(self.z + _ind + 1);
+		});
 	}
 	
 	//Interactivity
@@ -894,7 +896,7 @@ function LuiBase() constructor {
 		//Draw text
 		draw_text(_x, _y, _str_to_draw);
 	}
-	///@desc draw text fit to width with binary cut method
+	///@desc draw text fit to width
 	///@ignore
 	static _lui_draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
 	    // Calculate the width of "..." once, to use in our calculations
@@ -939,11 +941,9 @@ function LuiBase() constructor {
 	//Clean up
 	///@desc destroy()
 	static destroy = function() {
-		if array_length(self.contents) > 0 {
-			for (var i = array_length(self.contents) - 1;  i >= 0; --i) {
-			    var _element = self.contents[i];
-				_element.destroy();
-			}
+		for (var i = array_length(self.contents) - 1;  i >= 0; --i) {
+			var _element = self.contents[i];
+			_element.destroy();
 		}
 		self.marked_to_delete = true;
 		self.clean_up();
