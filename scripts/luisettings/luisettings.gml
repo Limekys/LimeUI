@@ -11,7 +11,8 @@
 //Globals
 global.LUI_DEBUG_MODE =	0;
 
-//Overlay
+//Overlay //???//
+///@ignore
 function _LuiGetOverlay() {
 	static LuiOverlay = function() : LuiBase() constructor {
 		global.lui_main_ui = undefined;

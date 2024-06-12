@@ -92,5 +92,16 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
+	self.on_mouse_wheel = function() {
+		var _wheel_up = mouse_wheel_up() ? 1 : 0;
+		var _wheel_down = mouse_wheel_down() ? 1 : 0;
+		var _wheel = _wheel_up - _wheel_down;
+		self.value = clamp(self.value + _wheel, self.value_min, self.value_max);
+		if (self.integers_only) {
+			self.value = round(self.value);
+		}
+		self.callback();
+	}
+	
 	return self;
 }

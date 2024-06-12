@@ -53,6 +53,7 @@ function LuiBase() constructor {
 	self.need_to_update_content = false;
 	self.topmost_hovered_element = undefined;
 	self.element_in_focus = undefined;
+	self.display_focused_element = false;
 	
 	//Custom functions for elements
 	
@@ -279,14 +280,12 @@ function LuiBase() constructor {
 	static set_focus = function() {
 		self.has_focus = true;
 		self.on_focus_set();
-		print(self.name," focus set");
 		return self;
 	}
 	///@desc remove_focus
 	static remove_focus = function() {
 		self.has_focus = false;
 		self.on_focus_remove();
-		print(self.name," focus remove");
 		return self;
 	}
 	
@@ -850,11 +849,13 @@ function LuiBase() constructor {
 			}
 		}
 		if (is_undefined(self.parent)) {
-			if !is_undefined(self.element_in_focus) {
-				draw_rectangle_color(
-					self.element_in_focus.x - 1, self.element_in_focus.y - 1, 
-					self.element_in_focus.x + self.element_in_focus.width, self.element_in_focus.y + self.element_in_focus.height, c_white, c_white, c_white, c_white, true
-				);
+			if self.display_focused_element {
+				if !is_undefined(self.element_in_focus) {
+					draw_rectangle_color(
+						self.element_in_focus.x - 1, self.element_in_focus.y - 1, 
+						self.element_in_focus.x + self.element_in_focus.width, self.element_in_focus.y + self.element_in_focus.height, c_white, c_white, c_white, c_white, true
+					);
+				}
 			}
 		}
 		if global.LUI_DEBUG_MODE != 0 {
