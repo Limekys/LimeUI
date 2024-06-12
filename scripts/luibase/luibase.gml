@@ -130,27 +130,25 @@ function LuiBase() constructor {
 	static _grid_add = function() {
 		if (self.inside_parent == 0 || !self.visible) return false;
 		
-		var abs_x = self.get_absolute_x();
-		var abs_y = self.get_absolute_y();
-		var grid_size = global.lui_screen_grid_size;
+		var _grid_size = global.lui_screen_grid_size;
 		
-		var _elm_x = floor(abs_x / grid_size);
-		var _elm_y = floor(abs_y / grid_size);
-		var _width = ceil(self.width / grid_size);
-		var _height = ceil(self.height / grid_size);
+		var _elm_x = floor(self.x / _grid_size);
+		var _elm_y = floor(self.y / _grid_size);
+		var _width = ceil(self.width / _grid_size);
+		var _height = ceil(self.height / _grid_size);
 		
-		var abs_x_end = abs_x + self.width;
-		var abs_y_end = abs_y + self.height;
+		var abs_x_end = self.x + self.width;
+		var abs_y_end = self.y + self.height;
 		
 		for (var _x = _elm_x; _x <= _elm_x + _width; ++_x) {
 			for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
-				var grid_x_start = _x * grid_size;
-				var grid_y_start = _y * grid_size;
-				var grid_x_end = grid_x_start + grid_size;
-				var grid_y_end = grid_y_start + grid_size;
+				var grid_x_start = _x * _grid_size;
+				var grid_y_start = _y * _grid_size;
+				var grid_x_end = grid_x_start + _grid_size;
+				var grid_y_end = grid_y_start + _grid_size;
 				
 				var _inside = rectangle_in_rectangle(
-					abs_x, abs_y, abs_x_end, abs_y_end,
+					self.x, self.y, abs_x_end, abs_y_end,
 					grid_x_start, grid_y_start, grid_x_end, grid_y_end
 				);
 				
@@ -170,14 +168,12 @@ function LuiBase() constructor {
 	///@ignore
 	static _grid_delete = function() {
 		
-		var abs_x = self.get_absolute_x();
-		var abs_y = self.get_absolute_y();
-		var grid_size = global.lui_screen_grid_size;
+		var _grid_size = global.lui_screen_grid_size;
 		
-		var _elm_x = floor(abs_x / grid_size);
-		var _elm_y = floor(abs_y / grid_size);
-		var _width = ceil(self.width / grid_size);
-		var _height = ceil(self.height / grid_size);
+		var _elm_x = floor(self.x / _grid_size);
+		var _elm_y = floor(self.y / _grid_size);
+		var _width = ceil(self.width / _grid_size);
+		var _height = ceil(self.height / _grid_size);
 		
 		var _grid_location_length = array_length(self._grid_location);
 		for (var i = _grid_location_length - 1; i >= 0; --i) {
@@ -200,17 +196,18 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _grid_update = function() {
-		self._grid_delete();
-		self._grid_add();
+		self._grid_delete(self.x, self.y);
+		self._grid_add(self.x, self.y);
 	}
 	
 	///@ignore
 	static _grid_clean_up = function() {
-		self._grid_delete();
+		self._grid_delete(self.x, self.y);
 	}
 	
 	///@ignore
 	static _draw_screen_grid = function() {
+		draw_set_alpha(1);
 		draw_set_color(c_red);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);
@@ -296,7 +293,7 @@ function LuiBase() constructor {
 		array_foreach(self.contents, function(_elm) {
 			_elm.set_visible(self.visible);
 		});
-		self._grid_update();
+		self._grid_update(self.x, self.y);
 		return self;
 	}
 	///@desc ignore_mouse_hover(true/false)
@@ -591,26 +588,6 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc get_absolute_x()
-	///@return {Real}
-	static get_absolute_x = function() {
-		if self.parent != undefined {
-			return self.pos_x + self.parent.get_absolute_x();
-		} else {
-			return self.pos_x;
-		}
-	}
-	
-	///@desc get_absolute_y()
-	///@return {Real}
-	static get_absolute_y = function() {
-		if self.parent != undefined {
-			return self.pos_y + self.parent.get_absolute_y();
-		} else {
-			return self.pos_y;
-		}
-	}
-	
 	///@desc mouse_hover()
 	static mouse_hover = function() {
 		return self.is_mouse_hovered;
@@ -620,8 +597,8 @@ function LuiBase() constructor {
 	static mouse_hover_any = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-		var _element_x = self.get_absolute_x();
-		var _element_y = self.get_absolute_y();
+		var _element_x = self.x;
+		var _element_y = self.y;
 		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
 		return _on_this;
 	}
@@ -654,9 +631,9 @@ function LuiBase() constructor {
 	
 	///@desc point_on_element
 	static point_on_element = function(point_x, point_y) {
-		var _element_x = self.get_absolute_x();
-		var _element_y = self.get_absolute_y();
-		return point_in_rectangle(point_x, point_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
+		var _abs_x = self.x;
+		var _abs_y = self.y;
+		return point_in_rectangle(point_x, point_y, _abs_x, _abs_y, _abs_x + self.width - 1, _abs_y + self.height - 1);
 	}
 	///@desc get_topmost_element
 	static get_topmost_element = function(_mouse_x, _mouse_y) {
@@ -717,11 +694,11 @@ function LuiBase() constructor {
 			var _element = self.contents[i];
 			
 			// Get absolute position
-			var _e_x = base_x + _element.pos_x;
-			var _e_y = base_y + _element.pos_y;
+			_element.x = base_x + _element.pos_x;
+			_element.y = base_y + _element.pos_y;
 			
 			// Update element
-			_element.update(_e_x, _e_y);
+			_element.update(_element.x, _element.y);
 			
 			// Update content script if needed
 			if (_element.need_to_update_content) {
@@ -730,8 +707,8 @@ function LuiBase() constructor {
 			}
 			
 			// Update current position
-			var _cur_x = floor(_e_x);
-			var _cur_y = floor(_e_y);
+			var _cur_x = floor(_element.x);
+			var _cur_y = floor(_element.y);
 			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
 				// Get absolute parent position
 				var _p_x = base_x;
@@ -739,15 +716,15 @@ function LuiBase() constructor {
 				
 				// Check if element is inside parent when position updates
 				_element.inside_parent = rectangle_in_rectangle(
-					_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+					_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
 					_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
 				);
 				
 				if (!is_undefined(self.parent_relative)) {
-					_p_x = _element.parent_relative.get_absolute_x();
-					_p_y = _element.parent_relative.get_absolute_y();
+					_p_x = _element.parent_relative.x;
+					_p_y = _element.parent_relative.y;
 					_element.inside_parent = _element.inside_parent && rectangle_in_rectangle(
-						_e_x, _e_y, _e_x + _element.width, _e_y + _element.height,
+						_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
 						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
 					);
 				}
@@ -758,10 +735,10 @@ function LuiBase() constructor {
 			_element.previous_y = _cur_y;
 			
 			// Update grid position
-			var _grid_x = floor(_e_x / 32);
-			var _grid_y = floor(_e_y / 32);
+			var _grid_x = floor(_element.x / 16);
+			var _grid_y = floor(_element.y / 16);
 			if (_element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y) {
-				_element._grid_update();
+				_element._grid_update(_element.x, _element.y);
 			}
 			
 			_element.grid_previous_x = _grid_x;
@@ -867,17 +844,17 @@ function LuiBase() constructor {
 	
 	///@desc _lui_draw_text_debug(x, y, text)
 	///@ignore
-	static _lui_draw_text_debug = function(x, y, text) {
+	static _lui_draw_text_debug = function(_text_x, _text_y, text) {
 		var _text_width = string_width(text);
 		var _text_height = string_height(text);
-		x = clamp(x, 0, display_get_gui_width() - _text_width);
-		y = clamp(y, 0, display_get_gui_height() - _text_height);
+		_text_x = clamp(_text_x, 0, display_get_gui_width() - _text_width);
+		_text_y = clamp(_text_y, 0, display_get_gui_height() - _text_height);
 		draw_set_color(c_black);
-		draw_rectangle(x, y, x + _text_width, y + _text_height, false);
+		draw_rectangle(_text_x, _text_y, _text_x + _text_width, _text_y + _text_height, false);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);
 		draw_set_color(c_white);
-		draw_text(x, y, text);
+		draw_text(_text_x, _text_y, text);
 	}
 	
 	///@desc draw text fit to width

@@ -70,8 +70,8 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	}
 	
 	self.step = function() {
-		var x1 = self.get_absolute_x();
-		var y1 = self.get_absolute_y();
+		var x1 = self.x;
+		var y1 = self.y;
 		var x2 = x1 + self.width;
 		var y2 = y1 + self.height;
 		
