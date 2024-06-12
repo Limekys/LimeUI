@@ -20,10 +20,10 @@ function LuiBase() constructor {
 	self.target_y = 0;							//Target y position this element for animation //???//
 	self.start_x = self.pos_x;					//First x position
 	self.start_y = self.pos_y;					//First y position
-	self.previous_x = -1000;
-	self.previous_y = -1000;
-	self.grid_previous_x = -1000;
-	self.grid_previous_y = -1000;
+	self.previous_x = -1;						//Previous floor(x) position on the screen
+	self.previous_y = -1;						//Previous floor(y) position on the screen
+	self.grid_previous_x = -1;					//Previous floor(x / 16) position on the grid
+	self.grid_previous_y = -1;					//Previous floor(y / 16) position on the grid
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.min_width = 32;
@@ -36,7 +36,7 @@ function LuiBase() constructor {
 	self.auto_height = false;
 	self.parent = undefined;
 	self.callback = undefined;
-	self.contents = [];
+	self.content = [];
 	self.marked_to_delete = false;
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
@@ -274,7 +274,7 @@ function LuiBase() constructor {
 	///@desc activate
 	static activate = function() {
 		self.deactivated = false;
-		array_foreach(self.contents, function(_elm) {
+		array_foreach(self.content, function(_elm) {
 			_elm.activate();
 		});
 		return self;
@@ -282,7 +282,7 @@ function LuiBase() constructor {
 	///@desc deactivate
 	static deactivate = function() {
 		self.deactivated = true;
-		array_foreach(self.contents, function(_elm) {
+		array_foreach(self.content, function(_elm) {
 			_elm.deactivate();
 		});
 		return self;
@@ -290,7 +290,7 @@ function LuiBase() constructor {
 	///@desc set_visible(true/false)
 	static set_visible = function(_visible) {
 		self.visible = _visible;
-		array_foreach(self.contents, function(_elm) {
+		array_foreach(self.content, function(_elm) {
 			_elm.set_visible(self.visible);
 		});
 		self._grid_update(self.x, self.y);
@@ -304,7 +304,7 @@ function LuiBase() constructor {
 	
 	static set_inside_parent = function(_inside) {
 		self.inside_parent = _inside;
-		array_foreach(self.contents, function(_elm) {
+		array_foreach(self.content, function(_elm) {
 			_elm.set_inside_parent(self.inside_parent);
 		});
 	}
@@ -312,12 +312,12 @@ function LuiBase() constructor {
 	//Add content
 	///@desc get_first
 	static get_first = function() {
-		return array_first(self.contents);
+		return array_first(self.content);
 	};
 	
 	///@desc get_last
 	static get_last = function() {
-		return array_last(self.contents);
+		return array_last(self.content);
 	};
 	
 	///@desc add_content(elements)
@@ -431,7 +431,7 @@ function LuiBase() constructor {
 				_element.create();
 				
 				//Add to content array
-				array_push(self.contents, _element);
+				array_push(self.content, _element);
 			}
 		}
 		self.align_all_elements();
@@ -492,8 +492,8 @@ function LuiBase() constructor {
 	
 	///@desc align_all_elements() //???//
 	static align_all_elements = function() {
-		for (var i = array_length(self.contents) - 1; i >= 0 ; --i) {
-			var _element = self.contents[i];
+		for (var i = array_length(self.content) - 1; i >= 0 ; --i) {
+			var _element = self.content[i];
 			switch(_element.halign) {
 				case fa_left:
 					//while(_element.pos_x > _element.parent.style.padding || !point_on_element(_element.parent.pos_x, _element.parent.pos_y)) {
@@ -532,7 +532,7 @@ function LuiBase() constructor {
 	static set_style = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.custom_style_is_setted = true;
-		array_foreach(self.contents, function(_elm) {
+		array_foreach(self.content, function(_elm) {
 			_elm.set_style_childs(self.style);
 		});
 		return self;
@@ -542,8 +542,8 @@ function LuiBase() constructor {
 		if self.custom_style_is_setted == false {
 			self.style = _style;
 		}
-		for (var i = array_length(self.contents)-1; i >= 0 ; --i) {
-			var _element = self.contents[i];
+		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
+			var _element = self.content[i];
 			_element.set_style_childs(_style);
 		}
 		return self;
@@ -563,16 +563,16 @@ function LuiBase() constructor {
 	}
 	///@desc Set draw_relative to all descendants
 	static set_draw_relative = function(_relative, _parent_relative = self) {
-		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
-		    self.contents[i].draw_relative = _relative;
-		    self.contents[i].parent_relative = _parent_relative;
-			self.contents[i].set_draw_relative(_relative, self.contents[i].parent_relative);
+		for (var i = 0, n = array_length(self.content); i < n; ++i) {
+		    self.content[i].draw_relative = _relative;
+		    self.content[i].parent_relative = _parent_relative;
+			self.content[i].set_draw_relative(_relative, self.content[i].parent_relative);
 		}
 		return self;
 	}
 	static set_depth = function(_depth) {
 		self.z = _depth;
-		array_foreach(self.contents, function(_elm, _ind) {
+		array_foreach(self.content, function(_elm, _ind) {
 			_elm.set_depth(self.z + _ind + 1);
 		});
 	}
@@ -621,8 +621,8 @@ function LuiBase() constructor {
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _on_element = false;
 		if self.visible
-		for (var i = 0, _n = array_length(self.contents); i < _n; ++i) {
-		    var _element = self.contents[i];
+		for (var i = 0, _n = array_length(self.content); i < _n; ++i) {
+		    var _element = self.content[i];
 			_on_element = _element.mouse_hover_any();
 			if _on_element break;
 		}
@@ -650,8 +650,8 @@ function LuiBase() constructor {
 	///@desc get_topmost_element_old
 	static get_topmost_element_old = function(_mouse_x, _mouse_y) {
 		var topmost_element = undefined;
-		for (var i = array_length(self.contents) - 1; i >= 0; --i) {
-			var _element = self.contents[i];
+		for (var i = array_length(self.content) - 1; i >= 0; --i) {
+			var _element = self.content[i];
 			if _element.visible && !_element.ignore_mouse && _element.point_on_element(_mouse_x, _mouse_y) {
 				topmost_element = _element.get_topmost_element_old(_mouse_x, _mouse_y);
 				if topmost_element == undefined {
@@ -689,9 +689,9 @@ function LuiBase() constructor {
 		}
 		
 		// Update all elements inside
-		var content_length = array_length(self.contents);
+		var content_length = array_length(self.content);
 		for (var i = content_length - 1; i >= 0; --i) {
-			var _element = self.contents[i];
+			var _element = self.content[i];
 			
 			// Get absolute position
 			_element.x = base_x + _element.pos_x;
@@ -746,7 +746,7 @@ function LuiBase() constructor {
 			
 			// Delete marked to delete elements
 			if (_element.marked_to_delete) {
-				array_delete(self.contents, i, 1);
+				array_delete(self.content, i, 1);
 				delete _element;
 			}
 		}
@@ -781,9 +781,9 @@ function LuiBase() constructor {
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
 		if !self.visible return false;
-		for (var i = 0, n = array_length(self.contents); i < n; i++) {
+		for (var i = 0, n = array_length(self.content); i < n; i++) {
 			//Get element
-			var _element = self.contents[i];
+			var _element = self.content[i];
 			if !_element.visible continue;
 			//Check for allowing to draw
 			var _allow_to_draw = (_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && _element.inside_parent == 1 || _element.inside_parent == 2);
@@ -919,8 +919,8 @@ function LuiBase() constructor {
 	//Clean up
 	///@desc destroy()
 	static destroy = function() {
-		for (var i = array_length(self.contents) - 1;  i >= 0; --i) {
-			var _element = self.contents[i];
+		for (var i = array_length(self.content) - 1;  i >= 0; --i) {
+			var _element = self.content[i];
 			_element.destroy();
 		}
 		self.marked_to_delete = true;
@@ -932,9 +932,9 @@ function LuiBase() constructor {
 	
 	///@desc destroy_content()
 	static destroy_content = function() {
-		if array_length(self.contents) > 0 {
-			for (var i = array_length(self.contents) - 1;  i >= 0; --i) {
-			    var _element = self.contents[i];
+		if array_length(self.content) > 0 {
+			for (var i = array_length(self.content) - 1;  i >= 0; --i) {
+			    var _element = self.content[i];
 				_element.destroy();
 			}
 		}

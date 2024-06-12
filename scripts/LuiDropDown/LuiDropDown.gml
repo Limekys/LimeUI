@@ -37,7 +37,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			    var _item = new LuiDropDownItem(, , , , items[i].text, items[i].callback);
 				_item.dropdown_parent = self;
 				self.dropdown_panel.add_content([_item]);
-				_item.set_depth(_item.z + array_last(self.parent.contents).z + i);
+				_item.set_depth(_item.z + array_last(self.parent.content).z + i);
 			}
 			self.dropdown_panel.style.padding = _prev_padding;
 		} else {

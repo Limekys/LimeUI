@@ -31,12 +31,12 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	///@ignore
 	static _rearrange_elements = function() {
-		for (var i = 0, n = array_length(self.contents); i < n; ++i) {
-		    var _element = self.contents[i];
+		for (var i = 0, n = array_length(self.content); i < n; ++i) {
+		    var _element = self.content[i];
 			if i == 0 {
 				_element.pos_y = self.style.padding;
 			} else {
-				var _prev_element = self.contents[i-1];
+				var _prev_element = self.content[i-1];
 				if _prev_element.start_y == _element.start_y {
 					_element.pos_y = _prev_element.start_y;
 				} else {
@@ -50,7 +50,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	///@ignore
 	static _apply_scroll = function() {
-		array_foreach(self.contents, function(_elm) {
+		array_foreach(self.content, function(_elm) {
 			_elm.pos_y = _elm.start_y + self.scroll_offset_y;
 		});
 	}
@@ -104,7 +104,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if !is_undefined(self.style.sprite_scroll_slider_back) {
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider_back, 0, _scroll_slider_x, draw_y + _scroll_slider_offset, _scroll_slider_offset, self.height - _scroll_slider_offset*2, self.style.color_scroll_slider_back, 1);
 		}
-		if !is_undefined(self.style.sprite_scroll_slider) && array_length(self.contents) > 0 {
+		if !is_undefined(self.style.sprite_scroll_slider) && array_length(self.content) > 0 {
 			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, draw_y + _scroll_slider_offset + _scroll_slider_y, _scroll_slider_offset, _scroll_slider_offset, self.style.color_scroll_slider, 1);
 		}
@@ -115,7 +115,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.step = function() {
-		if mouse_hover_any() && array_length(self.contents) > 0 {
+		if mouse_hover_any() && array_length(self.content) > 0 {
 			var _wheel_up = mouse_wheel_up() ? 1 : 0;
 			var _wheel_down = mouse_wheel_down() ? 1 : 0;
 			var _wheel = _wheel_up - _wheel_down;

@@ -1,5 +1,5 @@
 //Info
-#macro LIMEUI_VERSION "2024.06.11"
+#macro LIMEUI_VERSION "2024.06.12"
 
 //System (Dont touch)
 #macro LUI_AUTO							-1
@@ -18,7 +18,7 @@ function _LuiGetOverlay() {
 		self.name = "LUI_OVERLAY";
 		self.baseRender = self.render;
 		self.render = function() {
-			if array_length(self.contents) > 0 {
+			if array_length(self.content) > 0 {
 				self.width = window_get_width();
 	            self.height = window_get_height();
 				draw_set_alpha(0.5);
