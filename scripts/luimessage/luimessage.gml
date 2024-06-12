@@ -1,6 +1,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} text
+///@ignore
 function LuiMessage(width = 320, height = 160, text = "sample text") : LuiPanel(, , width, height) constructor {
 	
 	self.name = "LuiMessage";

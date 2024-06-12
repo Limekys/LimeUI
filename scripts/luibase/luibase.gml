@@ -52,6 +52,7 @@ function LuiBase() constructor {
 	self.delayed_content = undefined;
 	self.need_to_update_content = false;
 	self.topmost_hovered_element = undefined;
+	self.element_in_focus = undefined;
 	
 	//Custom functions for elements
 	
@@ -101,6 +102,11 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
+	///@desc Called when the mouse wheel moves up or down
+	self.on_mouse_wheel = function() {
+		//Custom for each element
+	}
+	
 	///@desc Called during keyboard input if the item is in focus
 	self.on_keyboard_input = function() {
 		//Custom for each element
@@ -109,6 +115,16 @@ function LuiBase() constructor {
 	///@desc Called when element change his position
 	self.on_position_update = function() {
 		//Custom for each element
+	}
+	
+	///@desc Called once when an element gets the focus
+	self.on_focus_set = function() {
+		
+	}
+	
+	///@desc Called once when an element has lost focus
+	self.on_focus_remove = function() {
+		
 	}
 	
 	//Screen grid for interactive iterations
@@ -262,11 +278,15 @@ function LuiBase() constructor {
 	///@desc set_focus
 	static set_focus = function() {
 		self.has_focus = true;
+		self.on_focus_set();
+		print(self.name," focus set");
 		return self;
 	}
 	///@desc remove_focus
 	static remove_focus = function() {
 		self.has_focus = false;
+		self.on_focus_remove();
+		print(self.name," focus remove");
 		return self;
 	}
 	
@@ -746,17 +766,24 @@ function LuiBase() constructor {
 			
 			// Delete marked to delete elements
 			if (_element.marked_to_delete) {
+				self.content[i] = undefined;
 				array_delete(self.content, i, 1);
-				delete _element;
+				if _element == global.lui_main_ui.element_in_focus {
+					global.lui_main_ui.element_in_focus.remove_focus();
+					global.lui_main_ui.element_in_focus = undefined;
+				}
 			}
 		}
 		
-		// Mouse hover (check topmost elements on mouse)
+		// Mouse hover and mouse events on topmost element
 		is_mouse_hovered = false;
 		if (is_undefined(self.parent)) { // is_main_ui check
+			
+			// Mouse position
 			var _mouse_x = device_mouse_x_to_gui(0);
 			var _mouse_y = device_mouse_y_to_gui(0);
 			
+			// Mouse events
 			if (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
 				self.topmost_hovered_element = self.get_topmost_element(_mouse_x, _mouse_y);
 				
@@ -768,9 +795,35 @@ function LuiBase() constructor {
 					}
 					if (mouse_check_button_pressed(mb_left)) {
 						self.topmost_hovered_element.on_mouse_left_pressed();
+						// Set focus on element
+						if self.element_in_focus != self.topmost_hovered_element {
+							// Remove focus from previous element
+							if !is_undefined(self.element_in_focus) {
+								self.element_in_focus.remove_focus();
+								self.element_in_focus = undefined;
+							}
+							self.topmost_hovered_element.set_focus();
+							self.element_in_focus = self.topmost_hovered_element;
+						}
 					}
 					if (mouse_check_button_released(mb_left)) {
 						self.topmost_hovered_element.on_mouse_left_released();
+						// Remove focus from element
+						if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
+							self.element_in_focus.remove_focus();
+							self.element_in_focus = undefined;
+						}
+					}
+					if (mouse_wheel_down() || mouse_wheel_up()) {
+						self.topmost_hovered_element.on_mouse_wheel();
+					}
+				} else {
+					// Remove focus from element
+					if !is_undefined(self.element_in_focus) {
+						if (mouse_check_button_pressed(mb_left)) {
+							self.element_in_focus.remove_focus();
+							self.element_in_focus = undefined;
+						}
 					}
 				}
 			}
@@ -794,6 +847,14 @@ function LuiBase() constructor {
 				_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
 				if _element.render_content_enabled _element.render(base_x + _element.pos_x, base_y + _element.pos_y);
 				if global.LUI_DEBUG_MODE != 0 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
+			}
+		}
+		if (is_undefined(self.parent)) {
+			if !is_undefined(self.element_in_focus) {
+				draw_rectangle_color(
+					self.element_in_focus.x - 1, self.element_in_focus.y - 1, 
+					self.element_in_focus.x + self.element_in_focus.width, self.element_in_focus.y + self.element_in_focus.height, c_white, c_white, c_white, c_white, true
+				);
 			}
 		}
 		if global.LUI_DEBUG_MODE != 0 {
@@ -877,43 +938,43 @@ function LuiBase() constructor {
 	///@desc draw text fit to width
 	///@ignore
 	static _lui_draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
-	    // Calculate the width of "..." once, to use in our calculations
-	    var ellipsis = "...";
-	    var ellipsis_width = string_width(ellipsis);
+		// Calculate initial text width
+		var _str_to_draw = _string;
+		var _str_width = string_width(_str_to_draw);
 		
-	    // Calculate initial text width
-	    var _str_to_draw = _string;
-	    var _str_width = string_width(_str_to_draw);
-		
-	    // Check if the text needs to be truncated
-	    if (_str_width > _width) {
-	        // Calculate the width available for the main part of the string
-	        var available_width = _width - ellipsis_width;
+		// Check if the text needs to be truncated
+		if (_str_width > _width) {
+			// Calculate the width of "..." once, to use in our calculations
+			var ellipsis = "...";
+			var ellipsis_width = string_width(ellipsis);
 			
-	        // Initialize binary search bounds
-	        var low = 1;
-	        var high = string_length(_string);
-	        var mid;
+			// Calculate the width available for the main part of the string
+			var available_width = _width - ellipsis_width;
 			
-	        // Perform binary search to find the cutoff point
-	        while (low < high) {
-	            mid = floor((low + high) / 2);
-	            _str_to_draw = string_copy(_string, 1, mid);
-	            _str_width = string_width(_str_to_draw);
+			// Initialize binary search bounds
+			var low = 1;
+			var high = string_length(_string);
+			var mid;
+			
+			// Perform binary search to find the cutoff point
+			while (low < high) {
+				mid = floor((low + high) / 2);
+				_str_to_draw = string_copy(_string, 1, mid);
+				_str_width = string_width(_str_to_draw);
 				
-	            if (_str_width < available_width) {
-	                low = mid + 1;
-	            } else {
-	                high = mid;
-	            }
-	        }
+				if (_str_width < available_width) {
+					low = mid + 1;
+				} else {
+					high = mid;
+				}
+			}
 			
-	        // The final string should be within the bounds
-	        _str_to_draw = string_copy(_string, 1, high - 1) + ellipsis;
-	    }
+			// The final string should be within the bounds
+			_str_to_draw = string_copy(_string, 1, high - 1) + ellipsis;
+		}
 		
-	    // Draw the final text
-	    draw_text(_x, _y, _str_to_draw);
+		// Draw the final text
+		draw_text(_x, _y, _str_to_draw);
 	};
 	
 	//Clean up
@@ -926,8 +987,9 @@ function LuiBase() constructor {
 		self.marked_to_delete = true;
 		self.clean_up();
 		self._grid_clean_up();
-		if !is_undefined(self.parent) self.set_need_to_update_content(true);
+		self.set_need_to_update_content(true);
 		global.lui_element_count--;
+		if self == global.lui_main_ui global.lui_main_ui = undefined;
 	}
 	
 	///@desc destroy_content()

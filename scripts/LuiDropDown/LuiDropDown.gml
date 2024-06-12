@@ -111,10 +111,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.step = function() {
-		if !mouse_hover() { 
-			self.is_pressed = false;
-		}
+	self.on_focus_remove = function() {
+		self.is_pressed = false;
 	}
 	
 	return self;

@@ -13,7 +13,6 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.value = string(start_text);
 	self.pos_x = x;
 	self.pos_y = y;
-	self.min_width = string_width(self.value);
 	self.width = width;
 	self.height = height;
 	init_element();
@@ -32,10 +31,18 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 	}, [], -1);
 	
+	///@ignore
+	static _limit_value = function() {
+		if string_length(self.value) > self.max_length {
+			self.value = string_copy(self.value, 1, self.max_length);
+		}
+	}
+	
 	self.create = function() {
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
 		}
+		self.min_width = string_width(self.value);
 		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
 	}
 	
@@ -93,54 +100,39 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 	}
 	
-	static set_focus = function() {
-		self.has_focus = true;
+	self.on_focus_set = function() {
 		time_source_start(self.cursor_timer);
 		self.cursor_pointer = self.style.textbox_cursor;
 		keyboard_string = get();
 	}
 	
-	static remove_focus = function() {
-		self.has_focus = false;
+	self.on_focus_remove = function() {
 		time_source_stop(self.cursor_timer);
 		self.cursor_pointer = "";
+		self.is_pressed = false;
 	}
 	
 	self.on_mouse_left_pressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left_released = function() {
-		if self.is_pressed {
-			set_focus();
-		}
-	}
-	
 	self.step = function() {
-		if !mouse_hover() {
-			if mouse_check_button_pressed(mb_left) {
-				remove_focus();
-			}
-			self.is_pressed = false;
-		}
-		
-		if has_focus {
+		if self.has_focus {
 			if keyboard_check(vk_anykey) {
-				if string_length(keyboard_string) > self.max_length {
-				    keyboard_string = string_copy(keyboard_string, 1, self.max_length);
+				self.value = keyboard_string;
+				self._limit_value();
+				if keyboard_check_released(vk_anykey) {
+					self.callback();
 				}
-				self.set(keyboard_string);
-			}
-			if keyboard_check_released(vk_anykey) {
-				self.callback();
-			}
-			if (keyboard_check_pressed(vk_enter)) {
-				self.callback();
-				remove_focus();
-			}
-			if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
-				set(get() + clipboard_get_text());
-				keyboard_string = get();
+				if (keyboard_check_pressed(vk_enter)) {
+					self.callback();
+					self.remove_focus();
+				}
+				if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
+					self.value = self.value + clipboard_get_text();
+					self._limit_value();
+					keyboard_string = self.value;
+				}
 			}
 		}
 	}

@@ -8,6 +8,7 @@
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, sprite, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+	
 	self.name = "LuiSprite";
 	self.pos_x = x;
 	self.pos_y = y;

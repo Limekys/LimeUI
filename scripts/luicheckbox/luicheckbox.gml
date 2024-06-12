@@ -16,6 +16,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	set_callback(callback);
 	
 	self.is_pressed = false;
+	self.pin_margin = 0;
 	
 	self.create = function() {
 		self.pin_margin = self.style.checkbox_pin_margin;
@@ -58,16 +59,14 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.on_mouse_left_released = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
-			self.set(!self.get());
+			self.value = !self.value;
 			self.callback();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
 	}
 	
-	self.step = function() {
-		if !mouse_hover() { 
-			self.is_pressed = false;
-		}
+	self.on_focus_remove = function() {
+		self.is_pressed = false;
 	}
 	
 	return self;

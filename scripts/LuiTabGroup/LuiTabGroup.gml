@@ -171,10 +171,8 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 		}
 	}
 	
-	self.step = function() {
-		if !mouse_hover() { 
-			self.is_pressed = false;
-		}
+	self.on_focus_remove = function() {
+		self.is_pressed = false;
 	}
 
     return self;
