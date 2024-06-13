@@ -27,10 +27,10 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Create dropdown panel
 		var _width = self.width;
 		var _height = self.height * _item_count;
-		var _x = self.pos_x;
-		var _y = self.pos_y + self.height;
+		var _x = self.x;
+		var _y = self.y + self.height;
 		self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel");
-		self.parent.addContent([self.dropdown_panel]);
+		self.main_ui.addContent([self.dropdown_panel]);
 		//Add items to this panel
 		var _prev_padding = self.dropdown_panel.style.padding;
 		self.dropdown_panel.style.padding = 0;
