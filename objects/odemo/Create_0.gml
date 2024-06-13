@@ -223,10 +223,11 @@ my_panel_2.addContent([
 ]);
 
 //Create drop down menu and some items in it
-var dropdown = new LuiDropDown(, , , , "Select item...");
-dropdown.addItem("Item 1", function() { show_debug_message("Item 1 selected"); });
-dropdown.addItem("Item 2", function() { show_debug_message("Item 2 selected"); });
-dropdown.addItem("Item 3", function() { show_debug_message("Item 3 selected"); });
+dropdown_menu = new LuiDropDown(, , , , "Select item...");
+drop_item1 = new LuiDropDownItem("Item 1", function() { show_debug_message("Item 1 selected"); });
+drop_item2 = new LuiDropDownItem("Item 2", function() { show_debug_message("Item 2 selected"); });
+drop_item3 = new LuiDropDownItem("Item 3", function() { show_debug_message("Item 3 selected"); });
+dropdown_menu.addItems([drop_item1, drop_item2, drop_item3]);
 
 //Create big empty buttons (see forward why)
 big_button = new LuiButton(, , , 64, "", function() {});
@@ -248,7 +249,7 @@ big_button_3.addContent([
 //Add elements to third main panel
 my_panel_3.addContent([
 	new LuiText( , , , , "Third panel").setTextHalign(fa_center),
-	dropdown,
+	dropdown_menu,
 	new LuiText(, , , , "This is a really long text that probably won't fit in this window!"),
 	big_button,
 	big_button_2,

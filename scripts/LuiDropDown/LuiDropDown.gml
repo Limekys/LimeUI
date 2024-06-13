@@ -17,50 +17,58 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.is_pressed = false;
 	self.hint = hint;
-	self.items = [];
+	self.items = undefined;
 	self.is_open = false;
 	self.dropdown_panel = undefined;
 	
-	self.toggleDropdown = function() {
-        self.is_open = !self.is_open;
-		if self.is_open {
-			var _items_length = array_length(items);
-			var _width = self.width;
-			var _height = self.height * _items_length;
-			var _x = self.pos_x;
-			var _y = self.pos_y + self.height;
-			self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel");
-			self.parent.addContent([self.dropdown_panel]);
-			var _prev_padding = self.dropdown_panel.style.padding;
-			self.dropdown_panel.style.padding = 0;
-			for (var i = 0; i < _items_length; ++i) {
-			    var _item = new LuiDropDownItem(, , , , items[i].text, items[i].callback);
-				_item.dropdown_parent = self;
-				self.dropdown_panel.addContent([_item]);
-				_item.setDepth(_item.z + array_last(self.parent.content).z + i);
-			}
-			self.dropdown_panel.style.padding = _prev_padding;
-		} else {
-			self.dropdown_panel.destroy();
+	///@ignore
+	static _initItems = function() {
+		var _item_count = array_length(self.items);
+		//Create dropdown panel
+		var _width = self.width;
+		var _height = self.height * _item_count;
+		var _x = self.pos_x;
+		var _y = self.pos_y + self.height;
+		self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel");
+		self.parent.addContent([self.dropdown_panel]);
+		//Add items to this panel
+		var _prev_padding = self.dropdown_panel.style.padding;
+		self.dropdown_panel.style.padding = 0;
+		if !is_array(self.items) self.items = [self.items];
+		for (var i = 0; i < _item_count; ++i) {
+			var _item = self.items[i];
+			_item.dropdown_parent = self;
+			self.dropdown_panel.addContent([_item]);
+			_item.setDepth(_item.z + array_last(self.parent.content).z + i);
 		}
+		self.dropdown_panel.style.padding = _prev_padding;
+	}
+	
+	static toggleDropdown = function() {
+        if is_undefined(self.dropdown_panel) {
+			self._initItems();
+		}
+		self.is_open = !self.is_open;
+		self.dropdown_panel.setVisible(self.is_open);
+		return self;
+    }
+	
+	static addItems = function(_items) {
+        self.items = _items;
         return self;
     }
 	
-	self.addItem = function(text, callback = undefined) {
-        var item = {
-			text : text,
-			callback : callback
-		}
-        array_push(self.items, item);
+	//???//
+    static removeItem = function(index) {
+        //if (index >= 0 && index < array_length(self.items)) {
+        //    array_delete(self.items, index, 1);
+        //}
         return self;
     }
 	
-    self.removeItem = function(index) {
-        if (index >= 0 && index < array_length(self.items)) {
-            array_delete(self.items, index, 1);
-        }
-        return self;
-    }
+	self.create = function() {
+		
+	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
@@ -118,21 +126,17 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	return self;
 }
 
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "dropdown_item", callback = undefined) : LuiBase() constructor {
+function LuiDropDownItem(text = "dropdown_item", callback = undefined) : LuiBase() constructor {
 	
 	self.name = "LuiDropDownItem";
 	self.text = text;
 	self.value = text;
-	self.pos_x = x;
-	self.pos_y = y;
-	self.width = width;
-	self.height = height;
+	self.pos_x = LUI_AUTO;
+	self.pos_y = LUI_AUTO;
+	self.width = LUI_AUTO;
+	self.height = LUI_AUTO;
 	initElement();
 	setCallback(callback);
 	
