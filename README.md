@@ -1,7 +1,9 @@
 # LimeUI
 Free simple UI system for Game Maker games
 
-Features:
+_*Right now the system is in a very early stage of development and with each update I may change things drastically_
+
+### Features:
 - Custom styles
 - Containers
 - Panels
@@ -17,7 +19,7 @@ Features:
 - Dropdown lists
 - Tabs panel
 
-In development now:
+### In development:
 - Draggable windows
 - Animations
 
