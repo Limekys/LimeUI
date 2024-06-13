@@ -14,7 +14,7 @@ _*Right now the system is in a very early stage of development and with each upd
 - Textboxes
 - Progress bars
 - Sliders
-- Spriteboxes
+- Sprites
 - Sprite buttons
 - Dropdown lists
 - Tabs panel
