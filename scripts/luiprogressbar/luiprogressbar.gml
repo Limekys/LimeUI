@@ -13,7 +13,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
+	initElement();
 	
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
@@ -22,8 +22,8 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.render_mode = 1;
 	///@desc 0 - raw value, 1 - integer only //???//
-	set_render_mode = function(mode) {
-		render_mode = mode;
+	static setRenderMode = function(mode) {
+		self.render_mode = mode;
 		return self;
 	}
 	

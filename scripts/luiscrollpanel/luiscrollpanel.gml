@@ -10,7 +10,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
+	initElement();
 	
 	self.render_content_enabled = false;
 	self.panel_surface = -1;
@@ -18,8 +18,8 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.scroll_target_offset_y = 0;
 	self.surface_offset = undefined;
 	
-	///@func set_surface_offset(array:[left,right,top,bottom])
-	static set_surface_offset = function(array) {
+	///@desc setSurfaceOffset(array:[left,right,top,bottom])
+	static setSurfaceOffset = function(array) {
 		self.surface_offset = {
 			left : array[0],
 			right : array[1],
@@ -29,8 +29,14 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		return self;
 	}
 	
+	static cleanScrollPanel = function() {
+		self.destroyContent();
+		self.scroll_offset_y = 0;
+		self.scroll_target_offset_y = 0;
+	}
+	
 	///@ignore
-	static _rearrange_elements = function() {
+	static _rearrangeElements = function() {
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
 		    var _element = self.content[i];
 			if i == 0 {
@@ -45,34 +51,28 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			}
 			_element.start_y = _element.pos_y;
 		}
-		self._apply_scroll();
+		self._applyScroll();
 	}
 	
 	///@ignore
-	static _apply_scroll = function() {
+	static _applyScroll = function() {
 		array_foreach(self.content, function(_elm) {
 			_elm.pos_y = _elm.start_y + self.scroll_offset_y;
 		});
 	}
 	
-	static clean_scroll_panel = function() {
-		self.destroy_content();
-		self.scroll_offset_y = 0;
-		self.scroll_target_offset_y = 0;
-	}
-	
 	self.create = function() {
 		if is_undefined(self.surface_offset) {
-			self.set_surface_offset(self.style.scroll_surface_offset);
+			self.setSurfaceOffset(self.style.scroll_surface_offset);
 		}
 	}
 	
-	self.on_content_update = function() {
-		self.set_draw_relative(true);
-		self._rearrange_elements();
+	self.onContentUpdate = function() {
+		self.setDrawRelative(true);
+		self._rearrangeElements();
 	}
 	
-	self.pre_draw = function() {
+	self.preDraw = function() {
 		//Create surface
 		if !surface_exists(self.panel_surface) {
 			self.panel_surface = surface_create(self.width, self.height - self.surface_offset.top - self.surface_offset.bottom);
@@ -105,7 +105,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider_back, 0, _scroll_slider_x, draw_y + _scroll_slider_offset, _scroll_slider_offset, self.height - _scroll_slider_offset*2, self.style.color_scroll_slider_back, 1);
 		}
 		if !is_undefined(self.style.sprite_scroll_slider) && array_length(self.content) > 0 {
-			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
+			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.getLast().start_y + self.getLast().height + self.style.padding - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, draw_y + _scroll_slider_offset + _scroll_slider_y, _scroll_slider_offset, _scroll_slider_offset, self.style.color_scroll_slider, 1);
 		}
 		//Panel border
@@ -115,22 +115,22 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.step = function() {
-		if mouse_hover_any() && array_length(self.content) > 0 {
+		if mouseHoverAny() && array_length(self.content) > 0 {
 			var _wheel_up = mouse_wheel_up() ? 1 : 0;
 			var _wheel_down = mouse_wheel_down() ? 1 : 0;
 			var _wheel = _wheel_up - _wheel_down;
 			if _wheel != 0 {
 				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
-				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.get_last().start_y + self.get_last().height + self.style.padding - self.height), 0);
+				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.getLast().start_y + self.getLast().height + self.style.padding - self.height), 0);
 			}
 		}
 		if self.scroll_offset_y != self.scroll_target_offset_y {
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
-			self._apply_scroll();
+			self._applyScroll();
 		}
 	}
 	
-	self.clean_up = function() {
+	self.cleanUp = function() {
 		if surface_exists(self.panel_surface) {
 			surface_free(self.panel_surface);
 		}

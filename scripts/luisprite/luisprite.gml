@@ -14,7 +14,7 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
+	initElement();
 	
 	self.value = sprite;
 	self.sprite = sprite;
@@ -27,7 +27,7 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.maintain_aspect = maintain_aspect;
 	self.aspect = self.sprite_real_width / self.sprite_real_height;
 	
-	static set_sprite = function(_sprite) {
+	static setSprite = function(_sprite) {
 		self.sprite = _sprite;
 		self.sprite_real_width = sprite_get_width(self.sprite);
 		self.sprite_real_height = sprite_get_height(self.sprite);

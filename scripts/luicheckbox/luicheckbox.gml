@@ -12,8 +12,8 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.is_pressed = false;
 	self.pin_margin = 0;
@@ -28,7 +28,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.max_height = self.min_height;
 	}
 	
-	static set_pin_margin = function(_value) {
+	static setPinMargin = function(_value) {
 		self.pin_margin = _value;
 		return self;
 	}
@@ -41,7 +41,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Pin
 		if !is_undefined(self.style.sprite_checkbox_pin) {
 			var _color = self.value ? self.style.color_checkbox_pin : self.style.color_checkbox;
-			if !self.deactivated && self.mouse_hover() {
+			if !self.deactivated && self.mouseHover() {
 				_color = merge_colour(_color, self.style.color_hover, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, draw_x + self.pin_margin, draw_y + self.pin_margin, self.width - self.pin_margin*2, self.height - self.pin_margin*2, _color, 1);
@@ -52,11 +52,11 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
 			self.value = !self.value;
@@ -65,7 +65,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.on_focus_remove = function() {
+	self.onFocusRemove = function() {
 		self.is_pressed = false;
 	}
 	

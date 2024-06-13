@@ -13,8 +13,8 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.is_pressed = false;
 	self.button_color = undefined;
@@ -24,7 +24,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !is_undefined(self.style.sprite_button) {
 			var _blend_color = self.style.color_button;
 			if !is_undefined(self.button_color) _blend_color = self.button_color;
-			if !self.deactivated && self.mouse_hover() {
+			if !self.deactivated && self.mouseHover() {
 				_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
 					_blend_color = merge_colour(_blend_color, c_black, 0.5);
@@ -44,7 +44,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_set_valign(fa_middle);
 			var _txt_x = draw_x + self.width / 2;
 			var _txt_y = draw_y + self.height / 2;
-			_lui_draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		//Border
@@ -53,11 +53,11 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
 			self.callback();
@@ -65,13 +65,13 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.on_focus_remove = function() {
+	self.onFocusRemove = function() {
 		self.is_pressed = false;
 	}
 	
-	///@func set_color(_button_color)
+	///@func setColor(_button_color)
 	///@arg _button_color
-	self.set_color = function(_button_color) {
+	self.setColor = function(_button_color) {
 		self.button_color = _button_color;
 		return self;
 	}

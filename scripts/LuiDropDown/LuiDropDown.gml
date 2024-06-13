@@ -12,8 +12,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.is_pressed = false;
 	self.hint = hint;
@@ -21,7 +21,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.is_open = false;
 	self.dropdown_panel = undefined;
 	
-	self.toggle_dropdown = function() {
+	self.toggleDropdown = function() {
         self.is_open = !self.is_open;
 		if self.is_open {
 			var _items_length = array_length(items);
@@ -30,14 +30,14 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _x = self.pos_x;
 			var _y = self.pos_y + self.height;
 			self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel");
-			self.parent.add_content([self.dropdown_panel]);
+			self.parent.addContent([self.dropdown_panel]);
 			var _prev_padding = self.dropdown_panel.style.padding;
 			self.dropdown_panel.style.padding = 0;
 			for (var i = 0; i < _items_length; ++i) {
 			    var _item = new LuiDropDownItem(, , , , items[i].text, items[i].callback);
 				_item.dropdown_parent = self;
-				self.dropdown_panel.add_content([_item]);
-				_item.set_depth(_item.z + array_last(self.parent.content).z + i);
+				self.dropdown_panel.addContent([_item]);
+				_item.setDepth(_item.z + array_last(self.parent.content).z + i);
 			}
 			self.dropdown_panel.style.padding = _prev_padding;
 		} else {
@@ -46,7 +46,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         return self;
     }
 	
-	self.add_item = function(text, callback = undefined) {
+	self.addItem = function(text, callback = undefined) {
         var item = {
 			text : text,
 			callback : callback
@@ -55,7 +55,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         return self;
     }
 	
-    self.remove_item = function(index) {
+    self.removeItem = function(index) {
         if (index >= 0 && index < array_length(self.items)) {
             array_delete(self.items, index, 1);
         }
@@ -66,7 +66,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Base
 		if !is_undefined(self.style.sprite_dropdown) {
 			var _blend_color = self.style.color_dropdown;
-			if !self.deactivated && self.mouse_hover() {
+			if !self.deactivated && self.mouseHover() {
 				_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
 					_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
@@ -87,9 +87,9 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _txt_y = draw_y + self.height / 2;
 		if self.value == "" {
 			draw_set_alpha(0.5);
-			_lui_draw_text_cutoff(_txt_x, _txt_y, self.hint, self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, self.hint, self.width);
 		} else {
-			_lui_draw_text_cutoff(_txt_x, _txt_y, string(self.value), self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, string(self.value), self.width);
 		}
 		
 		//Border
@@ -98,20 +98,20 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
 			self.callback();
-			self.toggle_dropdown();
+			self.toggleDropdown();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
 	}
 	
-	self.on_focus_remove = function() {
+	self.onFocusRemove = function() {
 		self.is_pressed = false;
 	}
 	
@@ -133,22 +133,22 @@ function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.is_pressed = false;
 	self.dropdown_parent = undefined;
 	
-	self.dropdown_callback = function() {
+	self.dropdownCallback = function() {
 		self.dropdown_parent.value = self.text;
-		self.dropdown_parent.toggle_dropdown();
+		self.dropdown_parent.toggleDropdown();
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_dropdown) {
 			var _blend_color = self.style.color_dropdown;
-			if !self.deactivated && self.mouse_hover() {
+			if !self.deactivated && self.mouseHover() {
 				_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
 					_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
@@ -168,7 +168,7 @@ function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			draw_set_valign(fa_middle);
 			var _txt_x = draw_x + self.width / 2;
 			var _txt_y = draw_y + self.height / 2;
-			_lui_draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		//Border
@@ -177,21 +177,21 @@ function LuiDropDownItem(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
 			self.callback();
-			self.dropdown_callback();
+			self.dropdownCallback();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
 	}
 	
 	self.step = function() {
-		if !mouse_hover() { 
+		if !mouseHover() { 
 			self.is_pressed = false;
 		}
 	}

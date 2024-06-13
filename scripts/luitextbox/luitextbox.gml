@@ -15,8 +15,8 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.hint = hint;
 	self.is_password = is_password;
@@ -50,7 +50,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		//Textbox field
 		if !is_undefined(self.style.sprite_textbox) {
 			var _blend_color = self.style.color_textbox;
-			if !self.deactivated && !self.has_focus && self.mouse_hover() {
+			if !self.deactivated && !self.has_focus && self.mouseHover() {
 				_blend_color = merge_colour(self.style.color_textbox, self.style.color_hover, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
@@ -100,19 +100,19 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 	}
 	
-	self.on_focus_set = function() {
+	self.onFocusSet = function() {
 		time_source_start(self.cursor_timer);
 		self.cursor_pointer = self.style.textbox_cursor;
 		keyboard_string = get();
 	}
 	
-	self.on_focus_remove = function() {
+	self.onFocusRemove = function() {
 		time_source_stop(self.cursor_timer);
 		self.cursor_pointer = "";
 		self.is_pressed = false;
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
@@ -126,7 +126,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 				}
 				if (keyboard_check_pressed(vk_enter)) {
 					self.callback();
-					self.remove_focus();
+					self.removeFocus();
 				}
 				if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
 					self.value = self.value + clipboard_get_text();
@@ -137,7 +137,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 	}
 	
-	self.clean_up = function() {
+	self.cleanUp = function() {
 		if time_source_exists(self.cursor_timer) {
 			time_source_destroy(self.cursor_timer);
 		}

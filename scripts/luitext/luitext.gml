@@ -11,10 +11,20 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
+	initElement();
 	
 	self.text_halign = fa_left;
 	self.text_valign = fa_middle;
+	
+	static setTextHalign = function(halign) {
+		self.text_halign = halign;
+		return self;
+	}
+	
+	static setTextValign = function(valign) {
+		self.text_valign = valign;
+		return self;
+	}
 	
 	self.create = function() {
 		if !is_undefined(self.style.font_default) {
@@ -60,18 +70,8 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 		//Draw text
 		if self.value != "" {
-			self._lui_draw_text_cutoff(_txt_x, _txt_y, self.value, self.width);
+			self._luiDrawTextCutoff(_txt_x, _txt_y, self.value, self.width);
 		}
-	}
-	
-	self.set_text_halign = function(halign) {
-		self.text_halign = halign;
-		return self;
-	}
-	
-	self.set_text_valign = function(valign) {
-		self.text_valign = valign;
-		return self;
 	}
 	
 	return self;

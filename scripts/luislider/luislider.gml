@@ -13,8 +13,8 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
@@ -24,7 +24,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.render_mode = 1;
 	///@desc 0 - raw value, 1 - integer only //???//
-	self.set_render_mode = function(mode) {
+	self.setRenderMode = function(mode) {
 		render_mode = mode;
 		return self;
 	}
@@ -60,7 +60,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _knob_extender = 1;
 		if !is_undefined(self.style.sprite_slider_knob) {
 			var _blend_color = self.style.color_progress_bar;
-			if !self.deactivated && self.mouse_hover() _blend_color = merge_colour(self.style.color_progress_bar, self.style.color_hover, 0.5);
+			if !self.deactivated && self.mouseHover() _blend_color = merge_colour(self.style.color_progress_bar, self.style.color_hover, 0.5);
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_color, 1);
 		}
 		//Knob border
@@ -75,7 +75,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var x2 = x1 + self.width;
 		var y2 = y1 + self.height;
 		
-		if mouse_check_button_pressed(mb_left) && mouse_hover() {
+		if mouse_check_button_pressed(mb_left) && mouseHover() {
 			self.dragging = true;
 		}
 		
@@ -92,7 +92,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.on_mouse_wheel = function() {
+	self.onMouseWheel = function() {
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;

@@ -15,8 +15,8 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
-	set_callback(callback);
+	initElement();
+	setCallback(callback);
 	
 	self.value = sprite;
 	self.sprite = sprite;
@@ -32,7 +32,7 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.button_color = self.color_blend;
 	self.is_pressed = false;
 	
-	self.set_color_blend = function(color_blend) {
+	self.setColorBlend = function(color_blend) {
 		self.color_blend = color_blend;
 	}
 	
@@ -55,7 +55,7 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.step = function() {
-		if mouse_hover() { 
+		if mouseHover() { 
 			self.button_color = merge_colour(self.color_blend, self.style.color_hover, 0.5);
 		} else {
 			self.button_color = self.color_blend;
@@ -63,15 +63,15 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left = function() {
+	self.onMouseLeft = function() {
 		self.button_color = merge_colour(self.color_blend, c_black, 0.5);
 	}
 	
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.callback();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);

@@ -10,7 +10,7 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
+	initElement();
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base

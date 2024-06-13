@@ -11,7 +11,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	init_element();
+	initElement();
 	
 	self.is_pressed = false;
 	self.tabs = undefined;
@@ -20,17 +20,17 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.tabgroup_header = undefined;
 	
 	self.create = function() {
-		if !is_undefined(self.style) && !is_undefined(self.tabs) self._init_tabs();
+		if !is_undefined(self.style) && !is_undefined(self.tabs) self._initTabs();
 	}
 	
 	///@ignore
-	static _init_tabs = function() {
+	static _initTabs = function() {
 		var _prev_padding = self.style.padding;
 		self.style.padding = 0;
 		//First creating header for tabs
 		if is_undefined(self.tabgroup_header) {
 			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "tabgroup_header");
-			self.add_content([self.tabgroup_header]);
+			self.addContent([self.tabgroup_header]);
 		}
 		//Add tabs
 		if !is_array(self.tabs) self.tabs = [self.tabs];
@@ -46,33 +46,33 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			//Set tabgroup parent to tab
 			_tab.tabgroup = self;
 			//Add tab container to tabgroup
-			self.add_content(_tab_container);
+			self.addContent(_tab_container);
 		}
 		//Add tab to header of tabgroup
-		self.tabgroup_header.add_content([self.tabs]);
+		self.tabgroup_header.addContent([self.tabs]);
 		self.style.padding = _prev_padding;
 		//Deactivate all and activate first
-		self.tab_deactivate_all();
-		self.tabs[0].tab_activate();
+		self.tabDeactivateAll();
+		self.tabs[0].tabActivate();
 	}
 	
-	self.add_tabs = function(_tabs) {
+	self.addTabs = function(_tabs) {
         self.tabs = _tabs;
-		if !is_undefined(self.style) self._init_tabs();
+		if !is_undefined(self.style) self._initTabs();
         return self;
     }
 	
-	self.tab_deactivate_all = function() {
+	self.tabDeactivateAll = function() {
 		var _tab_count = array_length(self.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
 		    //Get tab
 			var _tab = self.tabs[i];
 			//Deactivate it
-			_tab.tab_deactivate();
+			_tab.tabDeactivate();
 		}
 	}
 	
-    self.remove_tab = function(index) {
+    self.removeTab = function(index) {
         if (index >= 0 && index < array_length(self.tabs)) {
             array_delete(self.tabs, index, 1);
         }
@@ -101,25 +101,25 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 	self.width = LUI_AUTO;
 	self.pos_x = LUI_AUTO;
 	self.pos_y = LUI_AUTO;
-	init_element();
+	initElement();
 	
 	self.is_pressed = false;
 	self.is_active = false;
 	self.tabgroup = undefined;
 	self.tab_container = undefined;
 	
-	self.tab_activate = function() {
+	self.tabActivate = function() {
 		self.is_active = true;
-		self.tab_container.set_visible(true);
+		self.tab_container.setVisible(true);
 	}
 	
-	self.tab_deactivate = function() {
+	self.tabDeactivate = function() {
 		self.is_active = false;
-		self.tab_container.set_visible(false);
+		self.tab_container.setVisible(false);
 	}
 	
-	self.add_content = function(elements) {
-		self.tab_container.add_content(elements);
+	self.addContent = function(elements) {
+		self.tab_container.addContent(elements);
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
@@ -128,7 +128,7 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 			var _blend_color = self.style.color_main;
 			if !self.is_active {
 				_blend_color = merge_colour(self.style.color_main, c_black, 0.25);
-				if !self.deactivated && self.mouse_hover() {
+				if !self.deactivated && self.mouseHover() {
 					_blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
 						_blend_color = merge_colour(self.style.color_main, c_black, 0.5);
@@ -149,7 +149,7 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 			draw_set_valign(fa_middle);
 			var _txt_x = draw_x + self.width / 2;
 			var _txt_y = draw_y + self.height / 2;
-			_lui_draw_text_cutoff(_txt_x, _txt_y, self.text, self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		//Border
@@ -158,20 +158,20 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 		}
 	}
 	
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		self.is_pressed = true;
 	}
 	
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		if self.is_pressed && !self.is_active {
 			self.is_pressed = false;
-			self.tabgroup.tab_deactivate_all();
-			self.tab_activate();
+			self.tabgroup.tabDeactivateAll();
+			self.tabActivate();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
 	}
 	
-	self.on_focus_remove = function() {
+	self.onFocusRemove = function() {
 		self.is_pressed = false;
 	}
 

@@ -69,12 +69,12 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Called when adding or deleting elements inside
-	self.on_content_update = function() {
+	self.onContentUpdate = function() {
 		//Custom for each element
 	}
 	
 	///@desc Pre draw method call before draw method (for surfaces for example)
-	self.pre_draw = function() {
+	self.preDraw = function() {
 		//Custom for each element
 	}
 	
@@ -84,47 +84,47 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Called when this element is deleted (for example to clear surfaces)
-	self.clean_up = function() {
+	self.cleanUp = function() {
 		//Custom for each element
 	};
 	
 	///@desc Called when you click on an element with the left mouse button
-	self.on_mouse_left = function() {
+	self.onMouseLeft = function() {
 		//Custom for each element
 	}
 	
 	///@desc Called once when you click on an element with the left mouse button
-	self.on_mouse_left_pressed = function() {
+	self.onMouseLeftPressed = function() {
 		//Custom for each element
 	}
 	
 	///@desc Called once when the mouse left button is released
-	self.on_mouse_left_released = function() {
+	self.onMouseLeftReleased = function() {
 		//Custom for each element
 	}
 	
 	///@desc Called when the mouse wheel moves up or down
-	self.on_mouse_wheel = function() {
+	self.onMouseWheel = function() {
 		//Custom for each element
 	}
 	
 	///@desc Called during keyboard input if the item is in focus
-	self.on_keyboard_input = function() {
+	self.onKeyboardInput = function() {
 		//Custom for each element
 	}
 	
 	///@desc Called when element change his position
-	self.on_position_update = function() {
+	self.onPositionUpdate = function() {
 		//Custom for each element
 	}
 	
 	///@desc Called once when an element gets the focus
-	self.on_focus_set = function() {
+	self.onFocusSet = function() {
 		
 	}
 	
 	///@desc Called once when an element has lost focus
-	self.on_focus_remove = function() {
+	self.onFocusRemove = function() {
 		
 	}
 	
@@ -144,7 +144,7 @@ function LuiBase() constructor {
 	}
 	
 	///@ignore
-	static _grid_add = function() {
+	static _gridAdd = function() {
 		if (self.inside_parent == 0 || !self.visible) return false;
 		
 		var _grid_size = global.lui_screen_grid_size;
@@ -183,7 +183,7 @@ function LuiBase() constructor {
 	};
 	
 	///@ignore
-	static _grid_delete = function() {
+	static _gridDelete = function() {
 		
 		var _grid_size = global.lui_screen_grid_size;
 		
@@ -212,18 +212,18 @@ function LuiBase() constructor {
 	};
 	
 	///@ignore
-	static _grid_update = function() {
-		self._grid_delete(self.x, self.y);
-		self._grid_add(self.x, self.y);
+	static _gridUpdate = function() {
+		self._gridDelete();
+		self._gridAdd();
 	}
 	
 	///@ignore
-	static _grid_clean_up = function() {
-		self._grid_delete(self.x, self.y);
+	static _gridCleanUp = function() {
+		self._gridDelete();
 	}
 	
 	///@ignore
-	static _draw_screen_grid = function() {
+	static _drawScreenGrid = function() {
 		draw_set_alpha(1);
 		draw_set_color(c_red);
 		draw_set_halign(fa_left);
@@ -258,7 +258,7 @@ function LuiBase() constructor {
 	};
 	
 	//Init
-	static init_element = function() {
+	static initElement = function() {
 		if self.pos_x == LUI_AUTO || self.pos_y == LUI_AUTO {
 			self.auto_x = true;
 			self.auto_y = true;
@@ -276,16 +276,16 @@ function LuiBase() constructor {
 	}
 	
 	//Focusing
-	///@desc set_focus
-	static set_focus = function() {
+	///@desc setFocus
+	static setFocus = function() {
 		self.has_focus = true;
-		self.on_focus_set();
+		self.onFocusSet();
 		return self;
 	}
-	///@desc remove_focus
-	static remove_focus = function() {
+	///@desc removeFocus
+	static removeFocus = function() {
 		self.has_focus = false;
-		self.on_focus_remove();
+		self.onFocusRemove();
 		return self;
 	}
 	
@@ -306,42 +306,43 @@ function LuiBase() constructor {
 		});
 		return self;
 	}
-	///@desc set_visible(true/false)
-	static set_visible = function(_visible) {
+	///@desc setVisible(true/false)
+	static setVisible = function(_visible) {
 		self.visible = _visible;
 		array_foreach(self.content, function(_elm) {
-			_elm.set_visible(self.visible);
+			_elm.setVisible(self.visible);
 		});
-		self._grid_update(self.x, self.y);
+		self._gridUpdate();
 		return self;
 	}
-	///@desc ignore_mouse_hover(true/false)
-	static ignore_mouse_hover = function(_ignore = true) {
+	///@desc ignoreMouseHover(true/false)
+	static ignoreMouseHover = function(_ignore = true) {
 		self.ignore_mouse = _ignore;
 		return self;
 	}
 	
-	static set_inside_parent = function(_inside) {
+	//???//
+	static setInsideParent = function(_inside) {
 		self.inside_parent = _inside;
 		array_foreach(self.content, function(_elm) {
-			_elm.set_inside_parent(self.inside_parent);
+			_elm.setInsideParent(self.inside_parent);
 		});
 	}
 	
 	//Add content
-	///@desc get_first
-	static get_first = function() {
+	///@desc getFirst
+	static getFirst = function() {
 		return array_first(self.content);
 	};
 	
-	///@desc get_last
-	static get_last = function() {
+	///@desc getLast
+	static getLast = function() {
 		return array_last(self.content);
 	};
 	
-	///@desc add_content(elements)
+	///@desc addContent(elements)
 	///@arg {Any} elements
-	static add_content = function(elements) {
+	static addContent = function(elements) {
 		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
 		//Check for unordered adding
@@ -375,7 +376,7 @@ function LuiBase() constructor {
 			for (var j = 0; j < _row_element_count; j++) {
 				//Get
 				var _element = _row_elements[j];
-				var _last = get_last();
+				var _last = getLast();
 				
 				//Set parent and style
 				_element.parent = self;
@@ -443,7 +444,7 @@ function LuiBase() constructor {
 				
 				//Add delayed contents
 				if !is_undefined(_element.delayed_content) {
-					_element.add_content(_element.delayed_content);
+					_element.addContent(_element.delayed_content);
 				}
 				
 				//Call create function
@@ -453,8 +454,8 @@ function LuiBase() constructor {
 				array_push(self.content, _element);
 			}
 		}
-		self.align_all_elements();
-		self.set_need_to_update_content(true);
+		self.alignAllElements();
+		self.setNeedToUpdateContent(true);
 		return self;
 	}
 	
@@ -465,9 +466,9 @@ function LuiBase() constructor {
 	static set = function(value) { self.value = value; return self}
 	
 	//Alignment and sizes
-	///@desc stretch_horizontally(padding)
-	static stretch_horizontally = function(padding) {
-		var _last = parent.get_last();
+	///@desc stretchHorizontally(padding)
+	static stretchHorizontally = function(padding) {
+		var _last = parent.getLast();
 		if (_last) && (_last.pos_x + _last.width < parent.width - self.min_width - padding) {
 			self.width = parent.width - (_last.pos_x + _last.width) - padding*2;
 		} else {
@@ -476,9 +477,9 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc stretch_vertically(padding)
-	static stretch_vertically = function(padding) {
-		var _last = parent.get_last();
+	///@desc stretchVertically(padding)
+	static stretchVertically = function(padding) {
+		var _last = parent.getLast();
 		if (_last) && (_last.pos_y + _last.height < parent.height - self.min_height - padding) {
 			self.height = parent.height - (_last.pos_y + _last.height) - padding*2;
 		} else {
@@ -487,35 +488,35 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc set_halign(halign)
-	static set_halign = function(halign) {
+	///@desc setHalign(halign)
+	static setHalign = function(halign) {
 		self.halign = halign;
 		return self;
 	}
 	
-	///@desc set_valign(valign)
-	static set_valign = function(valign) {
+	///@desc setValign(valign)
+	static setValign = function(valign) {
 		self.valign = valign;
 		return self;
 	}
 	
-	static center_horizontally = function() {
+	static centerHorizontally = function() {
 		self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
 		return self;
 	}
 	
-	static center_vertically = function() {
+	static centerVertically = function() {
 		self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
 		return self;
 	}
 	
-	///@desc align_all_elements() //???//
-	static align_all_elements = function() {
+	///@desc alignAllElements() //???//
+	static alignAllElements = function() {
 		for (var i = array_length(self.content) - 1; i >= 0 ; --i) {
 			var _element = self.content[i];
 			switch(_element.halign) {
 				case fa_left:
-					//while(_element.pos_x > _element.parent.style.padding || !point_on_element(_element.parent.pos_x, _element.parent.pos_y)) {
+					//while(_element.pos_x > _element.parent.style.padding || !pointOnElement(_element.parent.pos_x, _element.parent.pos_y)) {
 					//	_element.pos_x--;
 					//}
 					_element.pos_x = _element.style.padding;
@@ -542,38 +543,38 @@ function LuiBase() constructor {
 				default:
 				break;
 			}
-			_element.align_all_elements();
+			_element.alignAllElements();
 		}
 	}
 	
 	//Design
-	///@desc set_style(_style)
-	static set_style = function(_style) {
+	///@desc setStyle(_style)
+	static setStyle = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.custom_style_is_setted = true;
 		array_foreach(self.content, function(_elm) {
-			_elm.set_style_childs(self.style);
+			_elm.setStyleChilds(self.style);
 		});
 		return self;
 	}
-	///@desc set_style_childs(_style)
-	static set_style_childs = function(_style) {
+	///@desc setStyleChilds(_style)
+	static setStyleChilds = function(_style) {
 		if self.custom_style_is_setted == false {
 			self.style = _style;
 		}
 		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
 			var _element = self.content[i];
-			_element.set_style_childs(_style);
+			_element.setStyleChilds(_style);
 		}
 		return self;
 	}
 	///@desc get style
-	static get_style = function() {
+	static getStyle = function() {
 		if (!is_undefined(self.style)) {
 			return self.style;
 		}
 		if (!is_undefined(self.parent)) {
-			var _style = self.parent.get_style();
+			var _style = self.parent.getStyle();
 			if (!is_undefined(_style)) {
 				return _style;
 			}
@@ -581,24 +582,24 @@ function LuiBase() constructor {
 		return undefined;
 	}
 	///@desc Set draw_relative to all descendants
-	static set_draw_relative = function(_relative, _parent_relative = self) {
+	static setDrawRelative = function(_relative, _parent_relative = self) {
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
 		    self.content[i].draw_relative = _relative;
 		    self.content[i].parent_relative = _parent_relative;
-			self.content[i].set_draw_relative(_relative, self.content[i].parent_relative);
+			self.content[i].setDrawRelative(_relative, self.content[i].parent_relative);
 		}
 		return self;
 	}
-	static set_depth = function(_depth) {
+	static setDepth = function(_depth) {
 		self.z = _depth;
 		array_foreach(self.content, function(_elm, _ind) {
-			_elm.set_depth(self.z + _ind + 1);
+			_elm.setDepth(self.z + _ind + 1);
 		});
 	}
 	
 	//Interactivity
-	///@desc set_callback(callback)
-	static set_callback = function(callback) {
+	///@desc setCallback(callback)
+	static setCallback = function(callback) {
 		if callback == undefined {
 			self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
 		} else {
@@ -607,13 +608,13 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc mouse_hover()
-	static mouse_hover = function() {
+	///@desc mouseHover()
+	static mouseHover = function() {
 		return self.is_mouse_hovered;
 	}
 	
-	///@desc mouse_hover_any()
-	static mouse_hover_any = function() {
+	///@desc mouseHoverAny()
+	static mouseHoverAny = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _element_x = self.x;
@@ -622,43 +623,43 @@ function LuiBase() constructor {
 		return _on_this;
 	}
 	
-	///@desc mouse_hover_parent()
-	static mouse_hover_parent = function() {
+	///@desc mouseHoverParent()
+	static mouseHoverParent = function() {
 		if is_undefined(self.parent) return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 		if is_undefined(self.parent_relative) {
-			return self.parent.mouse_hover_any(_mouse_x, _mouse_y);
+			return self.parent.mouseHoverAny(_mouse_x, _mouse_y);
 		} else {
-			return self.parent_relative.mouse_hover_any(_mouse_x, _mouse_y);
+			return self.parent_relative.mouseHoverAny(_mouse_x, _mouse_y);
 		}
 	}
 	
-	///@desc mouse_hover_childs()
-	static mouse_hover_childs = function() {
+	///@desc mouseHoverChilds()
+	static mouseHoverChilds = function() {
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _on_element = false;
 		if self.visible
 		for (var i = 0, _n = array_length(self.content); i < _n; ++i) {
 		    var _element = self.content[i];
-			_on_element = _element.mouse_hover_any();
+			_on_element = _element.mouseHoverAny();
 			if _on_element break;
 		}
 		return _on_element;
 	}
 	
-	///@desc point_on_element
-	static point_on_element = function(point_x, point_y) {
+	///@desc pointOnElement
+	static pointOnElement = function(point_x, point_y) {
 		var _abs_x = self.x;
 		var _abs_y = self.y;
 		return point_in_rectangle(point_x, point_y, _abs_x, _abs_y, _abs_x + self.width - 1, _abs_y + self.height - 1);
 	}
-	///@desc get_topmost_element
-	static get_topmost_element = function(_mouse_x, _mouse_y) {
+	///@desc getTopmostElement
+	static getTopmostElement = function(_mouse_x, _mouse_y) {
 		var _key = string(floor(_mouse_x / global.lui_screen_grid_size)) + "_" + string(floor(_mouse_y / global.lui_screen_grid_size));
 		var _array = array_filter(global.lui_screen_grid[$ _key], function(_elm) {
-			return _elm.mouse_hover_any() && _elm.mouse_hover_parent() && _elm.visible && !_elm.ignore_mouse;
+			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.visible && !_elm.ignore_mouse;
 		});
 		array_sort(_array, function(_elm1, _elm2) {
 			return _elm1.z - _elm2.z;
@@ -666,13 +667,13 @@ function LuiBase() constructor {
 		return array_last(_array);
 	}
 	
-	///@desc get_topmost_element_old
-	static get_topmost_element_old = function(_mouse_x, _mouse_y) {
+	///@desc getTopmostElementOld
+	static getTopmostElementOld = function(_mouse_x, _mouse_y) {
 		var topmost_element = undefined;
 		for (var i = array_length(self.content) - 1; i >= 0; --i) {
 			var _element = self.content[i];
-			if _element.visible && !_element.ignore_mouse && _element.point_on_element(_mouse_x, _mouse_y) {
-				topmost_element = _element.get_topmost_element_old(_mouse_x, _mouse_y);
+			if _element.visible && !_element.ignore_mouse && _element.pointOnElement(_mouse_x, _mouse_y) {
+				topmost_element = _element.getTopmostElementOld(_mouse_x, _mouse_y);
 				if topmost_element == undefined {
 					return _element;
 				}
@@ -682,10 +683,10 @@ function LuiBase() constructor {
 		return topmost_element;
 	}
 	
-	static set_need_to_update_content = function(_update) {
+	static setNeedToUpdateContent = function(_update) {
 		if is_undefined(self.parent) return true;
 		self.need_to_update_content = true;
-		self.parent.set_need_to_update_content(_update);
+		self.parent.setNeedToUpdateContent(_update);
 	}
 	
 	//Update
@@ -721,7 +722,7 @@ function LuiBase() constructor {
 			
 			// Update content script if needed
 			if (_element.need_to_update_content) {
-				_element.on_content_update();
+				_element.onContentUpdate();
 				_element.need_to_update_content = false;
 			}
 			
@@ -747,7 +748,7 @@ function LuiBase() constructor {
 						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
 					);
 				}
-				_element.on_position_update();
+				_element.onPositionUpdate();
 			}
 			
 			_element.previous_x = _cur_x;
@@ -757,7 +758,7 @@ function LuiBase() constructor {
 			var _grid_x = floor(_element.x / 16);
 			var _grid_y = floor(_element.y / 16);
 			if (_element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y) {
-				_element._grid_update(_element.x, _element.y);
+				_element._gridUpdate();
 			}
 			
 			_element.grid_previous_x = _grid_x;
@@ -768,7 +769,7 @@ function LuiBase() constructor {
 				self.content[i] = undefined;
 				array_delete(self.content, i, 1);
 				if _element == global.lui_main_ui.element_in_focus {
-					global.lui_main_ui.element_in_focus.remove_focus();
+					global.lui_main_ui.element_in_focus.removeFocus();
 					global.lui_main_ui.element_in_focus = undefined;
 				}
 			}
@@ -784,43 +785,43 @@ function LuiBase() constructor {
 			
 			// Mouse events
 			if (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
-				self.topmost_hovered_element = self.get_topmost_element(_mouse_x, _mouse_y);
+				self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
 				
 				if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					
 					if (mouse_check_button(mb_left)) {
-						self.topmost_hovered_element.on_mouse_left();
+						self.topmost_hovered_element.onMouseLeft();
 					}
 					if (mouse_check_button_pressed(mb_left)) {
-						self.topmost_hovered_element.on_mouse_left_pressed();
+						self.topmost_hovered_element.onMouseLeftPressed();
 						// Set focus on element
 						if self.element_in_focus != self.topmost_hovered_element {
 							// Remove focus from previous element
 							if !is_undefined(self.element_in_focus) {
-								self.element_in_focus.remove_focus();
+								self.element_in_focus.removeFocus();
 								self.element_in_focus = undefined;
 							}
-							self.topmost_hovered_element.set_focus();
+							self.topmost_hovered_element.setFocus();
 							self.element_in_focus = self.topmost_hovered_element;
 						}
 					}
 					if (mouse_check_button_released(mb_left)) {
-						self.topmost_hovered_element.on_mouse_left_released();
+						self.topmost_hovered_element.onMouseLeftReleased();
 						// Remove focus from element
 						if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
-							self.element_in_focus.remove_focus();
+							self.element_in_focus.removeFocus();
 							self.element_in_focus = undefined;
 						}
 					}
 					if (mouse_wheel_down() || mouse_wheel_up()) {
-						self.topmost_hovered_element.on_mouse_wheel();
+						self.topmost_hovered_element.onMouseWheel();
 					}
 				} else {
 					// Remove focus from element
 					if !is_undefined(self.element_in_focus) {
 						if (mouse_check_button_pressed(mb_left)) {
-							self.element_in_focus.remove_focus();
+							self.element_in_focus.removeFocus();
 							self.element_in_focus = undefined;
 						}
 					}
@@ -842,10 +843,10 @@ function LuiBase() constructor {
 			//Check if the element is in the area of its parent and draw
 			if _allow_to_draw {
 				//Draw
-				_element.pre_draw();
+				_element.preDraw();
 				_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
 				if _element.render_content_enabled _element.render(base_x + _element.pos_x, base_y + _element.pos_y);
-				if global.LUI_DEBUG_MODE != 0 _element.render_debug(base_x + _element.pos_x, base_y + _element.pos_y);
+				if global.LUI_DEBUG_MODE != 0 _element.renderDebug(base_x + _element.pos_x, base_y + _element.pos_y);
 			}
 		}
 		if (is_undefined(self.parent)) {
@@ -868,7 +869,7 @@ function LuiBase() constructor {
 			//Text
 			draw_set_alpha(1);
 			draw_set_color(c_white);
-			_lui_draw_text_debug(_mouse_x, _mouse_y, 
+			_luiDrawTextDebug(_mouse_x, _mouse_y, 
 			"name: " + string(_element.name) + "\n" +
 			"x: " + string(_element.pos_x) + " y: " + string(_element.pos_y) + "\n" +
 			"w: " + string(_element.width) + " h: " + string(_element.height) + "\n" +
@@ -878,21 +879,21 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc render_debug()
+	///@desc renderDebug()
 	///@ignore
-	static render_debug = function(_x = 0, _y = 0) {
+	static renderDebug = function(_x = 0, _y = 0) {
 		if !is_undefined(self.style.font_debug) {
 			draw_set_font(self.style.font_debug);
 		}
 		draw_set_alpha(0.5);
-		draw_set_color(mouse_hover() ? c_red : make_color_hsv(self.z % 255 * 10, 255, 255));
+		draw_set_color(mouseHover() ? c_red : make_color_hsv(self.z % 255 * 10, 255, 255));
 		//Rectangles
 		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
 		//draw_line(_x, _y, _x + self.width - 1, _y + self.height - 1);
 		//draw_line(_x, _y + self.height, _x + self.width - 1, _y - 1);
 		//Text
 		if global.LUI_DEBUG_MODE == 2 {
-			_lui_draw_text_debug(_x, _y, 
+			_luiDrawTextDebug(_x, _y, 
 			"name: " + string(self.name) + "\n" +
 			"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
 			"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
@@ -904,9 +905,9 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc _lui_draw_text_debug(x, y, text)
+	///@desc _luiDrawTextDebug(x, y, text)
 	///@ignore
-	static _lui_draw_text_debug = function(_text_x, _text_y, text) {
+	static _luiDrawTextDebug = function(_text_x, _text_y, text) {
 		var _text_width = string_width(text);
 		var _text_height = string_height(text);
 		_text_x = clamp(_text_x, 0, display_get_gui_width() - _text_width);
@@ -921,7 +922,7 @@ function LuiBase() constructor {
 	
 	///@desc draw text fit to width
 	///@ignore
-	static _lui_draw_text_cutoff_old = function(_x, _y, _string, _width = infinity) {
+	static _luiDrawTextCutoffOld = function(_x, _y, _string, _width = infinity) {
 		//Calculate text width to cut off
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
@@ -938,7 +939,7 @@ function LuiBase() constructor {
 	}
 	///@desc draw text fit to width
 	///@ignore
-	static _lui_draw_text_cutoff = function(_x, _y, _string, _width = infinity) {
+	static _luiDrawTextCutoff = function(_x, _y, _string, _width = infinity) {
 		// Calculate initial text width
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
@@ -986,15 +987,15 @@ function LuiBase() constructor {
 			_element.destroy();
 		}
 		self.marked_to_delete = true;
-		self.clean_up();
-		self._grid_clean_up();
-		self.set_need_to_update_content(true);
+		self.cleanUp();
+		self._gridCleanUp();
+		self.setNeedToUpdateContent(true);
 		global.lui_element_count--;
 		if self == global.lui_main_ui global.lui_main_ui = undefined;
 	}
 	
-	///@desc destroy_content()
-	static destroy_content = function() {
+	///@desc destroyContent()
+	static destroyContent = function() {
 		if array_length(self.content) > 0 {
 			for (var i = array_length(self.content) - 1;  i >= 0; --i) {
 			    var _element = self.content[i];

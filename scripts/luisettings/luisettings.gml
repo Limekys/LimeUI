@@ -1,5 +1,5 @@
 //Info
-#macro LIMEUI_VERSION "2024.06.12"
+#macro LIMEUI_VERSION "2024.06.13"
 
 //System (Dont touch)
 #macro LUI_AUTO							-1
