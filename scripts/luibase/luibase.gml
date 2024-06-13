@@ -55,6 +55,7 @@ function LuiBase() constructor {
 	self.element_in_focus = undefined;
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
+	self.main_ui = self;
 	
 	//Custom functions for elements
 	
@@ -379,8 +380,9 @@ function LuiBase() constructor {
 				var _element = _row_elements[j];
 				var _last = getLast();
 				
-				//Set parent and style
+				//Set parent, main ui and style
 				_element.parent = self;
+				_element.main_ui = _element.parent.main_ui;
 				_element.style = self.style;
 				_element.z = _element.parent.z + ++_local_z;
 				
@@ -610,7 +612,15 @@ function LuiBase() constructor {
 	}
 	
 	static isInteracting = function() {
-		return self.mouseHoverChilds() || self.waiting_for_keyboard_input;
+		return self.isInteractingMouse() || self.isInteractingKeyboard();
+	}
+	
+	static isInteractingMouse = function() {
+		return self.mouseHoverChilds();
+	}
+	
+	static isInteractingKeyboard = function() {
+		return self.waiting_for_keyboard_input;
 	}
 	
 	///@desc mouseHover()
@@ -625,7 +635,7 @@ function LuiBase() constructor {
 		var _element_x = self.x;
 		var _element_y = self.y;
 		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
-		return _on_this;
+		return _on_this && self.visible;
 	}
 	
 	///@desc mouseHoverParent()
@@ -773,9 +783,9 @@ function LuiBase() constructor {
 			if (_element.marked_to_delete) {
 				self.content[i] = undefined;
 				array_delete(self.content, i, 1);
-				if _element == global.lui_main_ui.element_in_focus {
-					global.lui_main_ui.element_in_focus.removeFocus();
-					global.lui_main_ui.element_in_focus = undefined;
+				if _element == _element.main_ui.element_in_focus {
+					_element.main_ui.element_in_focus.removeFocus();
+					_element.main_ui.element_in_focus = undefined;
 				}
 			}
 		}
@@ -996,7 +1006,6 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		global.lui_element_count--;
-		if self == global.lui_main_ui global.lui_main_ui = undefined;
 	}
 	
 	///@desc destroyContent()
