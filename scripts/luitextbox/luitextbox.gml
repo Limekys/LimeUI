@@ -104,12 +104,14 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		time_source_start(self.cursor_timer);
 		self.cursor_pointer = self.style.textbox_cursor;
 		keyboard_string = get();
+		global.lui_main_ui.waiting_for_keyboard_input = true;
 	}
 	
 	self.onFocusRemove = function() {
 		time_source_stop(self.cursor_timer);
 		self.cursor_pointer = "";
 		self.is_pressed = false;
+		global.lui_main_ui.waiting_for_keyboard_input = false;
 	}
 	
 	self.onMouseLeftPressed = function() {

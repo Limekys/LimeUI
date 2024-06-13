@@ -54,6 +54,7 @@ function LuiBase() constructor {
 	self.topmost_hovered_element = undefined;
 	self.element_in_focus = undefined;
 	self.display_focused_element = false;
+	self.waiting_for_keyboard_input = false;
 	
 	//Custom functions for elements
 	
@@ -606,6 +607,10 @@ function LuiBase() constructor {
 			self.callback = method(self, callback);
 		}
 		return self;
+	}
+	
+	static isInteracting = function() {
+		return self.mouseHoverChilds() || self.waiting_for_keyboard_input;
 	}
 	
 	///@desc mouseHover()
