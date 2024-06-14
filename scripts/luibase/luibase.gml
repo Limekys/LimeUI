@@ -132,16 +132,12 @@ function LuiBase() constructor {
 	
 	//Screen grid for interactive iterations
 	self._grid_location = [];
-	
+	self._screen_grid = {};
 	global.lui_screen_grid_size = 96;
-	
-	if !variable_global_exists("lui_screen_grid") {
-		variable_global_set("lui_screen_grid", {});
-		for (var _x = 0, _width = ceil(display_get_gui_width() / global.lui_screen_grid_size); _x <= _width; ++_x) {
-		    for (var _y = 0, _height = ceil(display_get_gui_height() / global.lui_screen_grid_size); _y <= _height; ++_y) {
-			    var _key = string(_x) + "_" + string(_y);
-				global.lui_screen_grid[$ _key] = array_create(0);
-			}
+	for (var _x = 0, _width = ceil(display_get_gui_width() / global.lui_screen_grid_size); _x <= _width; ++_x) {
+		for (var _y = 0, _height = ceil(display_get_gui_height() / global.lui_screen_grid_size); _y <= _height; ++_y) {
+			var _key = string(_x) + "_" + string(_y);
+			self.main_ui._screen_grid[$ _key] = array_create(0);
 		}
 	}
 	
@@ -175,8 +171,8 @@ function LuiBase() constructor {
 				
 				var _key = string(_x) + "_" + string(_y);
 				
-				if (variable_struct_exists(global.lui_screen_grid, _key)) {
-					var _array = global.lui_screen_grid[$ _key];
+				if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
+					var _array = self.main_ui._screen_grid[$ _key];
 					array_push(_array, self);
 					array_push(self._grid_location, _key);
 				}
@@ -198,8 +194,8 @@ function LuiBase() constructor {
 		for (var i = _grid_location_length - 1; i >= 0; --i) {
 			var _key = self._grid_location[i];
 			
-			if (variable_struct_exists(global.lui_screen_grid, _key)) {
-				var _array = global.lui_screen_grid[$ _key];
+			if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
+				var _array = self.main_ui._screen_grid[$ _key];
 				var _array_length = array_length(_array);
 				for (var j = 0; j < _array_length; ++j) {
 					if (_array[j].element_id == self.element_id) {
@@ -249,7 +245,7 @@ function LuiBase() constructor {
 				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
 				
 				var _key = string(_x) + "_" + string(_y);
-				var _array = global.lui_screen_grid[$ _key];
+				var _array = self.main_ui._screen_grid[$ _key];
 				draw_text(x_pos, y_pos, string(_key));
 				
 				for (var i = 0, n = array_length(_array); i < n; ++i) {
@@ -673,7 +669,7 @@ function LuiBase() constructor {
 	///@desc getTopmostElement
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
 		var _key = string(floor(_mouse_x / global.lui_screen_grid_size)) + "_" + string(floor(_mouse_y / global.lui_screen_grid_size));
-		var _array = array_filter(global.lui_screen_grid[$ _key], function(_elm) {
+		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
 			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.visible && !_elm.ignore_mouse;
 		});
 		array_sort(_array, function(_elm1, _elm2) {
