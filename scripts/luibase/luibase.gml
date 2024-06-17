@@ -59,6 +59,7 @@ function LuiBase() constructor {
 	self.ui_screen_surface = -1;
 	self.update_ui_screen_surface = true;
 	self.main_ui_pre_draw_list = [];
+	self.visibility_switching = true;
 	
 	//Custom functions for elements
 	
@@ -322,7 +323,7 @@ function LuiBase() constructor {
 	}
 	///@desc setVisible(true/false)
 	static setVisible = function(_visible) {
-		self.visible = _visible;
+		if self._visibility_switching self.visible = _visible;
 		array_foreach(self.content, function(_elm) {
 			_elm.setVisible(self.visible);
 		});
@@ -341,6 +342,13 @@ function LuiBase() constructor {
 		array_foreach(self.content, function(_elm) {
 			_elm.setInsideParent(self.inside_parent);
 		});
+		return self;
+	}
+	
+	///@desc Enable or disable visibility switching by function setVisible()
+	static setVisibilitySwitching = function(_bool) {
+		self.visibility_switching = _bool;
+		return self;
 	}
 	
 	//Add content
@@ -815,9 +823,9 @@ function LuiBase() constructor {
 			}
 		}
 		
-		// Mouse hover and mouse events on topmost element
-		
-		if (is_undefined(self.parent)) { // is_main_ui check
+		//Main ui system
+		if self == self.main_ui {
+			// Mouse hover and mouse events on topmost element
 			
 			// Mouse position
 			var _mouse_x = device_mouse_x_to_gui(0);
@@ -887,6 +895,14 @@ function LuiBase() constructor {
 					}
 				}
 			}
+			
+			// Keyboard events
+			if !is_undefined(self.element_in_focus) {
+				if keyboard_check(vk_anykey) {
+					self.element_in_focus.onKeyboardInput();
+					self.updateMainUiSurface();
+				}
+			}
 		}
 	}
 	
@@ -894,7 +910,7 @@ function LuiBase() constructor {
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
 		//Prepare main ui surface and other surfaces
-		if self = self.main_ui {
+		if self == self.main_ui {
 			//Pre draw events
 			for (var i = 0, n = array_length(self.main_ui_pre_draw_list); i < n; ++i) {
 			    var _element = self.main_ui_pre_draw_list[i];
@@ -923,9 +939,11 @@ function LuiBase() constructor {
 				//Check if the element is in the area of its parent and draw
 				if _allow_to_draw {
 					//Draw
-					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
-					if _element.render_content_enabled _element.render(base_x + _element.pos_x, base_y + _element.pos_y);
-					if global.LUI_DEBUG_MODE != 0 _element.renderDebug(base_x + _element.pos_x, base_y + _element.pos_y);
+					var _x = base_x + _element.pos_x;
+					var _y = base_y + _element.pos_y;
+					_element.draw(_x, _y);
+					if _element.render_content_enabled _element.render(_x, _y);
+					if global.LUI_DEBUG_MODE != 0 _element.renderDebug(_x, _y);
 				}
 			}
 			if self == self.main_ui {
@@ -935,7 +953,7 @@ function LuiBase() constructor {
 			}
 		}
 		//Draw all to screen
-		if self = self.main_ui {
+		if self == self.main_ui {
 			//Draw main ui surface
 			draw_surface(self.ui_screen_surface, self.x, self.y);
 			//Draw other stuff

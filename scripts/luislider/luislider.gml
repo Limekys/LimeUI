@@ -70,17 +70,12 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	}
 	
 	self.step = function() {
-		var x1 = self.x;
-		var y1 = self.y;
-		var x2 = x1 + self.width;
-		var y2 = y1 + self.height;
-		
-		if mouse_check_button_pressed(mb_left) && mouseHover() {
-			self.dragging = true;
-		}
-		
 		if (self.dragging) {
 			if mouse_check_button(mb_left) {
+				var x1 = self.x;
+				var y1 = self.y;
+				var x2 = x1 + self.width;
+				//var y2 = y1 + self.height;
 				self.value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.value_max - self.value_min) + self.value_min, self.value_min, self.value_max);
 				if (self.integers_only) {
 				    self.value = round(self.value);
@@ -90,6 +85,10 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				self.dragging = false;
 			}
 		}
+	}
+	
+	self.onMouseLeftPressed = function() {
+		self.dragging = true;
 	}
 	
 	self.onMouseWheel = function() {

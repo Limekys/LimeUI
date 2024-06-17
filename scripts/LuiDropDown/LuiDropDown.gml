@@ -29,7 +29,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _height = self.height * _item_count;
 		var _x = self.x;
 		var _y = self.y + self.height;
-		self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel");
+		self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
 		//Add items to this panel
 		var _prev_padding = self.dropdown_panel.style.padding;
@@ -49,7 +49,9 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			self._initItems();
 		}
 		self.is_open = !self.is_open;
+		self.dropdown_panel.setVisibilitySwitching(true);
 		self.dropdown_panel.setVisible(self.is_open);
+		self.dropdown_panel.setVisibilitySwitching(false);
 		return self;
     }
 	
@@ -119,7 +121,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.onFocusRemove = function() {
+	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
 	
@@ -194,10 +196,8 @@ function LuiDropDownItem(text = "dropdown_item", callback = undefined) : LuiBase
 		}
 	}
 	
-	self.step = function() {
-		if !mouseHover() { 
-			self.is_pressed = false;
-		}
+	self.onMouseLeave = function() {
+		self.is_pressed = false;
 	}
 
     return self;
