@@ -257,11 +257,11 @@ my_panel_3.addContent([
 ]);
 
 //Create scroll panel and some sprites
-scroll_panel = new LuiScrollPanel( , , 300, 256, "Scroll panel");
+scroll_panel = new LuiScrollPanel(, , 300, 256, "Scroll panel");
 
 //Add text to scroll panel
 scroll_panel.addContent([
-	[new LuiText( , , , , "Scroll panel")]
+	new LuiText( , , , , "Scroll panel")
 ]);
 
 //Add some new buttons to scroll panel

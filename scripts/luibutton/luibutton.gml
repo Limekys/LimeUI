@@ -65,7 +65,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.onFocusRemove = function() {
+	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
 	
