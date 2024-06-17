@@ -86,16 +86,16 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			self.panel_surface = surface_create(self.width, self.height - self.surface_offset.top - self.surface_offset.bottom);
 			_updateScrollSurface();
 		}
-		if self.update_scroll_surface {
+		//if self.update_scroll_surface {
 			//Draw on surface
 			surface_set_target(self.panel_surface);
 			gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
-			draw_clear_alpha(self.style.color_main, 1); //???// A temporary solution to display the text correctly, the surface will actually be drawn with sharp corners under the frame
+			draw_clear_alpha(self.style.color_main, 0); //???//
 			self.render();
 			gpu_set_blendequation(bm_eq_add);
 			surface_reset_target();
-			self.update_scroll_surface = false;
-		}
+			//self.update_scroll_surface = false;
+		//}
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {

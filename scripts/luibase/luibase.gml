@@ -149,6 +149,16 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
+	///@desc Called when an element has change visible to true
+	self.onShow = function() {
+		//Custom for each element
+	}
+	
+	///@desc Called when an element has change visible to false
+	self.onHide = function() {
+		//Custom for each element
+	}
+	
 	//Screen grid for interactive iterations
 	self._grid_location = [];
 	self._screen_grid = {};
@@ -325,7 +335,16 @@ function LuiBase() constructor {
 	}
 	///@desc setVisible(true/false)
 	static setVisible = function(_visible) {
-		if self.visibility_switching self.visible = _visible;
+		if self.visibility_switching {
+			if self.visible == false &&_visible == true {
+				self.onShow();
+				self.updateMainUiSurface();
+			} else if self.visible == true && _visible == false {
+				self.onHide();
+				self.updateMainUiSurface();
+			}
+			self.visible = _visible;
+		}
 		array_foreach(self.content, function(_elm) {
 			_elm.setVisible(self.visible);
 		});
@@ -632,6 +651,13 @@ function LuiBase() constructor {
 	///@desc Update main ui surface
 	static updateMainUiSurface = function() {
 		self.main_ui.update_ui_screen_surface = true;
+		self.updateParentRelativeSurface();
+	}
+	///@desc Update parent relative surface
+	static updateParentRelativeSurface = function() {
+		if !is_undefined(self.parent_relative) {
+			self.parent_relative._updateScrollSurface();
+		}
 	}
 	
 	//Interactivity
@@ -839,21 +865,17 @@ function LuiBase() constructor {
 				self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
 				if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 					_previous_hovered_element.is_mouse_hovered = false;
-					self.updateMainUiSurface();
 					_previous_hovered_element.onMouseLeave();
-					if !is_undefined(_previous_hovered_element.parent_relative) {
-						_previous_hovered_element.parent_relative._updateScrollSurface();
-					}
+					_previous_hovered_element.updateMainUiSurface();
+					//_previous_hovered_element.updateParentRelativeSurface();
 				}
 				
 				if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
 					if self.topmost_hovered_element.is_mouse_hovered == false {
 						self.topmost_hovered_element.is_mouse_hovered = true;
-						self.updateMainUiSurface();
 						self.topmost_hovered_element.onMouseEnter();
-						if !is_undefined(self.topmost_hovered_element.parent_relative) {
-							self.topmost_hovered_element.parent_relative._updateScrollSurface();
-						}
+						self.topmost_hovered_element.updateMainUiSurface();
+						//self.topmost_hovered_element.updateParentRelativeSurface();
 					}
 					
 					if (mouse_check_button(mb_left)) {
@@ -926,7 +948,6 @@ function LuiBase() constructor {
 		}
 		//Update main ui surface
 		if self.main_ui.update_ui_screen_surface {
-			if !self.visible return false;
 			if self == self.main_ui {
 				surface_set_target(self.ui_screen_surface);
 				draw_clear_alpha(c_black, 0);
@@ -955,7 +976,7 @@ function LuiBase() constructor {
 			}
 		}
 		//Draw all to screen
-		if self == self.main_ui {
+		if self == self.main_ui && self.visible {
 			//Draw main ui surface
 			draw_surface(self.ui_screen_surface, self.x, self.y);
 			//Draw other stuff
