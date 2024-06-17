@@ -127,11 +127,11 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 		if !is_undefined(self.style.sprite_tab) {
 			var _blend_color = self.style.color_main;
 			if !self.is_active {
-				_blend_color = merge_colour(self.style.color_main, c_black, 0.25);
+				_blend_color = merge_colour(_blend_color, c_black, 0.25);
 				if !self.deactivated && self.mouseHover() {
-					_blend_color = merge_colour(self.style.color_main, self.style.color_hover, 0.5);
+					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
-						_blend_color = merge_colour(self.style.color_main, c_black, 0.5);
+						_blend_color = merge_colour(_blend_color, c_black, 0.5);
 					}
 				}
 			}
@@ -171,7 +171,7 @@ function LuiTab(text = "Tab") : LuiBase() constructor {
 		}
 	}
 	
-	self.onFocusRemove = function() {
+	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
 
