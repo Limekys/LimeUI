@@ -325,7 +325,7 @@ function LuiBase() constructor {
 	}
 	///@desc setVisible(true/false)
 	static setVisible = function(_visible) {
-		if self._visibility_switching self.visible = _visible;
+		if self.visibility_switching self.visible = _visible;
 		array_foreach(self.content, function(_elm) {
 			_elm.setVisible(self.visible);
 		});
