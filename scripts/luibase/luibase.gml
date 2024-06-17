@@ -114,12 +114,14 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
-	self.onMouseHover = function() {
-		
+	///@desc Called once when mouse enter on an element
+	self.onMouseEnter = function() {
+		//Custom for each element
 	}
 	
+	///@desc Called once when mouse leave from an element
 	self.onMouseLeave = function() {
-		
+		//Custom for each element
 	}
 	
 	///@desc Called during keyboard input if the item is in focus
@@ -134,17 +136,17 @@ function LuiBase() constructor {
 	
 	///@desc Called once when an element gets the focus
 	self.onFocusSet = function() {
-		
+		//Custom for each element
 	}
 	
 	///@desc Called once when an element has lost focus
 	self.onFocusRemove = function() {
-		
+		//Custom for each element
 	}
 	
 	///@desc Called when an element has change value
 	self.onValueUpdate = function() {
-		
+		//Custom for each element
 	}
 	
 	//Screen grid for interactive iterations
@@ -848,7 +850,7 @@ function LuiBase() constructor {
 					if self.topmost_hovered_element.is_mouse_hovered == false {
 						self.topmost_hovered_element.is_mouse_hovered = true;
 						self.updateMainUiSurface();
-						self.topmost_hovered_element.onMouseHover();
+						self.topmost_hovered_element.onMouseEnter();
 						if !is_undefined(self.topmost_hovered_element.parent_relative) {
 							self.topmost_hovered_element.parent_relative._updateScrollSurface();
 						}
