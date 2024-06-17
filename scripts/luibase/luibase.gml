@@ -56,6 +56,9 @@ function LuiBase() constructor {
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.main_ui = self;
+	self.ui_screen_surface = -1;
+	self.update_ui_screen_surface = true;
+	self.main_ui_pre_draw_list = [];
 	
 	//Custom functions for elements
 	
@@ -110,6 +113,14 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
+	self.onMouseHover = function() {
+		
+	}
+	
+	self.onMouseLeave = function() {
+		
+	}
+	
 	///@desc Called during keyboard input if the item is in focus
 	self.onKeyboardInput = function() {
 		//Custom for each element
@@ -127,6 +138,11 @@ function LuiBase() constructor {
 	
 	///@desc Called once when an element has lost focus
 	self.onFocusRemove = function() {
+		
+	}
+	
+	///@desc Called when an element has change value
+	self.onValueUpdate = function() {
 		
 	}
 	
@@ -460,9 +476,16 @@ function LuiBase() constructor {
 	
 	//Setter and getter
 	///@desc get()
-	static get = function() { return self.value; }
+	static get = function() {
+		return self.value;
+	}
 	///@desc set()
-	static set = function(value) { self.value = value; return self}
+	static set = function(value) {
+		self.value = value;
+		self.onValueUpdate();
+		self.updateMainUiSurface();
+		return self;
+	}
 	
 	//Alignment and sizes
 	///@desc stretchHorizontally(padding)
@@ -589,11 +612,16 @@ function LuiBase() constructor {
 		}
 		return self;
 	}
+	///@desc Set depth to the element
 	static setDepth = function(_depth) {
 		self.z = _depth;
 		array_foreach(self.content, function(_elm, _ind) {
 			_elm.setDepth(self.z + _ind + 1);
 		});
+	}
+	///@desc Update main ui surface
+	static updateMainUiSurface = function() {
+		self.main_ui.update_ui_screen_surface = true;
 	}
 	
 	//Interactivity
@@ -760,6 +788,7 @@ function LuiBase() constructor {
 					);
 				}
 				_element.onPositionUpdate();
+				self.updateMainUiSurface();
 			}
 			
 			_element.previous_x = _cur_x;
@@ -787,7 +816,7 @@ function LuiBase() constructor {
 		}
 		
 		// Mouse hover and mouse events on topmost element
-		is_mouse_hovered = false;
+		
 		if (is_undefined(self.parent)) { // is_main_ui check
 			
 			// Mouse position
@@ -796,13 +825,30 @@ function LuiBase() constructor {
 			
 			// Mouse events
 			if (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
+				var _previous_hovered_element = self.topmost_hovered_element;
 				self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
+				if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
+					_previous_hovered_element.is_mouse_hovered = false;
+					self.updateMainUiSurface();
+					_previous_hovered_element.onMouseLeave();
+					if !is_undefined(_previous_hovered_element.parent_relative) {
+						_previous_hovered_element.parent_relative._updateScrollSurface();
+					}
+				}
 				
 				if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
-					self.topmost_hovered_element.is_mouse_hovered = true;
+					if self.topmost_hovered_element.is_mouse_hovered == false {
+						self.topmost_hovered_element.is_mouse_hovered = true;
+						self.updateMainUiSurface();
+						self.topmost_hovered_element.onMouseHover();
+						if !is_undefined(self.topmost_hovered_element.parent_relative) {
+							self.topmost_hovered_element.parent_relative._updateScrollSurface();
+						}
+					}
 					
 					if (mouse_check_button(mb_left)) {
 						self.topmost_hovered_element.onMouseLeft();
+						self.updateMainUiSurface();
 					}
 					if (mouse_check_button_pressed(mb_left)) {
 						self.topmost_hovered_element.onMouseLeftPressed();
@@ -816,6 +862,7 @@ function LuiBase() constructor {
 							self.topmost_hovered_element.setFocus();
 							self.element_in_focus = self.topmost_hovered_element;
 						}
+						self.updateMainUiSurface();
 					}
 					if (mouse_check_button_released(mb_left)) {
 						self.topmost_hovered_element.onMouseLeftReleased();
@@ -824,9 +871,11 @@ function LuiBase() constructor {
 							self.element_in_focus.removeFocus();
 							self.element_in_focus = undefined;
 						}
+						self.updateMainUiSurface();
 					}
 					if (mouse_wheel_down() || mouse_wheel_up()) {
 						self.topmost_hovered_element.onMouseWheel();
+						self.updateMainUiSurface();
 					}
 				} else {
 					// Remove focus from element
@@ -844,23 +893,52 @@ function LuiBase() constructor {
 	//Render
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
-		if !self.visible return false;
-		for (var i = 0, n = array_length(self.content); i < n; i++) {
-			//Get element
-			var _element = self.content[i];
-			if !_element.visible continue;
-			//Check for allowing to draw
-			var _allow_to_draw = (_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && _element.inside_parent == 1 || _element.inside_parent == 2);
-			//Check if the element is in the area of its parent and draw
-			if _allow_to_draw {
-				//Draw
+		//Prepare main ui surface and other surfaces
+		if self = self.main_ui {
+			//Pre draw events
+			for (var i = 0, n = array_length(self.main_ui_pre_draw_list); i < n; ++i) {
+			    var _element = self.main_ui_pre_draw_list[i];
 				_element.preDraw();
-				_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
-				if _element.render_content_enabled _element.render(base_x + _element.pos_x, base_y + _element.pos_y);
-				if global.LUI_DEBUG_MODE != 0 _element.renderDebug(base_x + _element.pos_x, base_y + _element.pos_y);
+			}
+			//Create main ui surface
+			if !surface_exists(self.ui_screen_surface) {
+				self.ui_screen_surface = surface_create(self.width, self.height);
+				self.update_ui_screen_surface = true;
 			}
 		}
-		if (is_undefined(self.parent)) {
+		//Update main ui surface
+		if self.main_ui.update_ui_screen_surface {
+			if !self.visible return false;
+			if self == self.main_ui {
+				surface_set_target(self.ui_screen_surface);
+				draw_clear_alpha(c_black, 0);
+				gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
+			}
+			for (var i = 0, n = array_length(self.content); i < n; i++) {
+				//Get element
+				var _element = self.content[i];
+				if !_element.visible continue;
+				//Check for allowing to draw
+				var _allow_to_draw = (_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && _element.inside_parent == 1 || _element.inside_parent == 2);
+				//Check if the element is in the area of its parent and draw
+				if _allow_to_draw {
+					//Draw
+					_element.draw(base_x + _element.pos_x, base_y + _element.pos_y);
+					if _element.render_content_enabled _element.render(base_x + _element.pos_x, base_y + _element.pos_y);
+					if global.LUI_DEBUG_MODE != 0 _element.renderDebug(base_x + _element.pos_x, base_y + _element.pos_y);
+				}
+			}
+			if self == self.main_ui {
+				gpu_set_blendequation(bm_eq_add);
+				surface_reset_target();
+				self.main_ui.update_ui_screen_surface = false;
+			}
+		}
+		//Draw all to screen
+		if self = self.main_ui {
+			//Draw main ui surface
+			draw_surface(self.ui_screen_surface, self.x, self.y);
+			//Draw other stuff
 			if self.display_focused_element {
 				if !is_undefined(self.element_in_focus) {
 					draw_rectangle_color(
@@ -1002,6 +1080,7 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		global.lui_element_count--;
+		if surface_exists(self.ui_screen_surface) surface_free(self.ui_screen_surface);
 	}
 	
 	///@desc destroyContent()

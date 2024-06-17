@@ -1,4 +1,8 @@
 /// @desc UPDATE
 my_ui.update();
 
-if demo_loading_state demo_loading.value += demo_loading.value < 100 ? 0.1 : 0;
+if demo_loading_state {
+	if demo_loading.get() < 100 {
+		demo_loading.set(demo_loading.get() + 0.1);
+	}
+}

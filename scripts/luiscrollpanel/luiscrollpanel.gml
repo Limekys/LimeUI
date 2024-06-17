@@ -17,6 +17,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
 	self.surface_offset = undefined;
+	self.update_scroll_surface = true;
 	
 	///@desc setSurfaceOffset(array:[left,right,top,bottom])
 	static setSurfaceOffset = function(array) {
@@ -59,12 +60,19 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		array_foreach(self.content, function(_elm) {
 			_elm.pos_y = _elm.start_y + self.scroll_offset_y;
 		});
+		_updateScrollSurface();
+	}
+	
+	static _updateScrollSurface = function() {
+		self.update_scroll_surface = true;
+		self.updateMainUiSurface();
 	}
 	
 	self.create = function() {
 		if is_undefined(self.surface_offset) {
 			self.setSurfaceOffset(self.style.scroll_surface_offset);
 		}
+		array_push(self.main_ui.main_ui_pre_draw_list, self);
 	}
 	
 	self.onContentUpdate = function() {
@@ -76,16 +84,18 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		//Create surface
 		if !surface_exists(self.panel_surface) {
 			self.panel_surface = surface_create(self.width, self.height - self.surface_offset.top - self.surface_offset.bottom);
+			_updateScrollSurface();
 		}
-		//Draw on surface
-		surface_set_target(self.panel_surface);
-		draw_clear_alpha(c_white, 0);
-		//shader_set(shPremultiplyAlpha);
-		//gpu_set_blendmode_ext(bm_one, bm_inv_src_alpha);
-		self.render();
-		//gpu_set_blendmode(bm_normal);
-		//shader_reset();
-		surface_reset_target();
+		if self.update_scroll_surface {
+			//Draw on surface
+			surface_set_target(self.panel_surface);
+			gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
+			draw_clear_alpha(self.style.color_main, 1); //???// A temporary solution to display the text correctly, the surface will actually be drawn with sharp corners under the frame
+			self.render();
+			gpu_set_blendequation(bm_eq_add);
+			surface_reset_target();
+			self.update_scroll_surface = false;
+		}
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
