@@ -438,6 +438,7 @@ function LuiBase() constructor {
 				}
 				
 				//Set width
+				_element.min_width = _element.style.default_min_width;
 				if _element.auto_width {
 					//Calculate width by ranges (ranges have high priority)
 					if array_length(_ranges) > 0 {
@@ -452,6 +453,7 @@ function LuiBase() constructor {
 				}
 				
 				//Set height
+				_element.min_height = _element.style.default_min_height;
 				if _element.auto_height {
 					_element.height = _element.min_height;
 				}

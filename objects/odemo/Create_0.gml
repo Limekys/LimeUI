@@ -55,9 +55,11 @@ global.demo_style_light = {
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
+	default_min_width : 32,
+	default_min_height : 32,
 	padding : 16,
-	scroll_step : 32,
 	checkbox_pin_margin : 6,
+	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•"
@@ -116,9 +118,11 @@ global.demo_style_dark = {
 	//Sounds
 	sound_click : sndBasicClick,
 	//Settings
+	default_min_width : 32,
+	default_min_height : 32,
 	padding : 16,
-	scroll_step : 32,
 	checkbox_pin_margin : 6,
+	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•",

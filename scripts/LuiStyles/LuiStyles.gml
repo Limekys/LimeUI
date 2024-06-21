@@ -53,9 +53,11 @@ function LuiStyle(_style) constructor {
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
+	default_min_width = _style[$ "default_min_width"] ?? 32;
+	default_min_height = _style[$ "default_min_height"] ?? 32;
 	padding = _style[$ "padding"] ?? 16;
-	scroll_step = _style[$ "scroll_step"] ?? 32;
 	checkbox_pin_margin = _style[$ "checkbox_pin_margin"] ?? 6;
+	scroll_step = _style[$ "scroll_step"] ?? 32;
 	scroll_surface_offset = _style[$ "scroll_surface_offset"] ?? [0,0,0,0];
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
