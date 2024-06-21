@@ -122,18 +122,15 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		self.value = keyboard_string;
 		self._limit_value();
 		keyboard_string = self.value;
-		if keyboard_check_released(vk_anykey) {
-			self.callback();
-		}
-		if (keyboard_check_pressed(vk_enter)) {
-			self.callback();
-			self.removeFocus();
-		}
 		if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
 			self.value = self.value + clipboard_get_text();
 			self._limit_value();
 			keyboard_string = self.value;
 		}
+	}
+	
+	self.onKeyboardRelease = function() {
+		self.callback();
 	}
 	
 	self.cleanUp = function() {

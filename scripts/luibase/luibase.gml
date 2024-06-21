@@ -129,6 +129,11 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
+	///@desc Called during keyboard release if the item is in focus
+	self.onKeyboardRelease = function() {
+		//Custom for each element
+	}
+	
 	///@desc Called when element change his position
 	self.onPositionUpdate = function() {
 		//Custom for each element
@@ -924,6 +929,10 @@ function LuiBase() constructor {
 			if !is_undefined(self.element_in_focus) {
 				if keyboard_check(vk_anykey) {
 					self.element_in_focus.onKeyboardInput();
+					self.updateMainUiSurface();
+				}
+				if keyboard_check_released(vk_anykey) {
+					self.element_in_focus.onKeyboardRelease();
 					self.updateMainUiSurface();
 				}
 			}
