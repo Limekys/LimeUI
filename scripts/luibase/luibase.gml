@@ -1001,6 +1001,9 @@ function LuiBase() constructor {
 			}
 		}
 		if global.LUI_DEBUG_MODE != 0 {
+			if !is_undefined(self.style.font_debug) {
+				draw_set_font(self.style.font_debug);
+			}
 			//Get element
 			var _element = self.topmost_hovered_element;
 			if is_undefined(_element) return false;
@@ -1044,6 +1047,8 @@ function LuiBase() constructor {
 			draw_set_alpha(1);
 			draw_set_color(c_white);
 		}
+		draw_set_alpha(1);
+		draw_set_color(c_white);
 	}
 	
 	///@desc _luiDrawTextDebug(x, y, text)
