@@ -936,6 +936,10 @@ function LuiBase() constructor {
 				}
 				if keyboard_check_released(vk_anykey) {
 					self.element_in_focus.onKeyboardRelease();
+				}
+				if keyboard_check_pressed(vk_escape) {
+					self.element_in_focus.removeFocus();
+					self.element_in_focus = undefined;
 					self.updateMainUiSurface();
 				}
 			}
