@@ -922,6 +922,7 @@ function LuiBase() constructor {
 						if (mouse_check_button_pressed(mb_left)) {
 							self.element_in_focus.removeFocus();
 							self.element_in_focus = undefined;
+							self.updateMainUiSurface();
 						}
 					}
 				}

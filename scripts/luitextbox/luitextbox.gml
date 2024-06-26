@@ -29,6 +29,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		} else {
 			self.cursor_pointer = "";
 		}
+		self.updateMainUiSurface();
 	}, [], -1);
 	
 	///@ignore
