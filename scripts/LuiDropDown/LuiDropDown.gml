@@ -27,9 +27,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Create dropdown panel
 		var _width = self.width;
 		var _height = self.height * _item_count;
-		var _x = self.x;
-		var _y = self.y + self.height;
-		self.dropdown_panel = new LuiPanel(_x, _y, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
+		self.dropdown_panel = new LuiPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
 		//Add items to this panel
 		var _prev_padding = self.dropdown_panel.style.padding;
@@ -48,6 +46,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         if is_undefined(self.dropdown_panel) {
 			self._initItems();
 		}
+		//Set position of dropdown panel
+		var _x = self.x;
+		var _y = self.y + self.height;
+		self.dropdown_panel.pos_x = _x;
+		self.dropdown_panel.pos_y = _y;
+		//Open and change visibility
 		self.is_open = !self.is_open;
 		self.dropdown_panel.setVisibilitySwitching(true);
 		self.dropdown_panel.setVisible(self.is_open);
