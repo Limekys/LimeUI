@@ -3,7 +3,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} text
-function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "sample text") : LuiBase() constructor {
+function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "sample text", scale_to_fit = false) : LuiBase() constructor {
 	
 	self.name = "LuiText";
 	self.value = text;
@@ -15,6 +15,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	
 	self.text_halign = fa_left;
 	self.text_valign = fa_middle;
+	self.scale_to_fit = scale_to_fit;
 	
 	static setTextHalign = function(halign) {
 		self.text_halign = halign;
@@ -70,7 +71,15 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 		//Draw text
 		if self.value != "" {
-			self._luiDrawTextCutoff(_txt_x, _txt_y, self.value, self.width);
+			if !self.scale_to_fit {
+				self._luiDrawTextCutoff(_txt_x, _txt_y, self.value, self.width);
+			} else {
+				var _text = _luiGetTextCutoff(self.value, self.width);
+				var _xscale = self.width / string_width(_text);
+				var _yscale = self.height / string_height(_text);
+				var _scale = min(_xscale, _yscale);
+				draw_text_transformed(_txt_x, _txt_y, _text, _scale, _scale, 0);
+			}
 		}
 	}
 	

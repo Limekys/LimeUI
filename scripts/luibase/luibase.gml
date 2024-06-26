@@ -1066,23 +1066,48 @@ function LuiBase() constructor {
 		draw_text(_text_x, _text_y, text);
 	}
 	
-	///@desc draw text fit to width
+	///@desc returns text fit to width
 	///@ignore
-	static _luiDrawTextCutoffOld = function(_x, _y, _string, _width = infinity) {
-		//Calculate text width to cut off
+	static _luiGetTextCutoff = function(_string, _width = infinity) {
+		// Calculate initial text width
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
-		if _str_width >= _width {
-			_str_to_draw += "...";
-			do {
-				_str_to_draw = string_delete(_str_to_draw, string_length(_str_to_draw)-3, 1);
+		
+		// Check if the text needs to be truncated
+		if (_str_width > _width) {
+			// Calculate the width of "..." once, to use in our calculations
+			var _ellipsis = "...";
+			var _ellipsis_width = string_width(_ellipsis);
+			
+			// Calculate the width available for the main part of the string
+			var _available_width = _width - _ellipsis_width;
+			
+			// Initialize binary search bounds
+			var _low = 1;
+			var _high = string_length(_string);
+			var _mid;
+			
+			// Perform binary search to find the cutoff point
+			while (_low < _high) {
+				_mid = floor((_low + _high) / 2);
+				_str_to_draw = string_copy(_string, 1, _mid);
 				_str_width = string_width(_str_to_draw);
+				
+				if (_str_width < _available_width) {
+					_low = _mid + 1;
+				} else {
+					_high = _mid;
+				}
 			}
-			until (_str_width < _width);
+			
+			// The final string should be within the bounds
+			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
 		}
-		//Draw text
-		draw_text(_x, _y, _str_to_draw);
-	}
+		
+		// Draw the final text
+		return _str_to_draw;
+	};
+	
 	///@desc draw text fit to width
 	///@ignore
 	static _luiDrawTextCutoff = function(_x, _y, _string, _width = infinity) {
@@ -1093,32 +1118,32 @@ function LuiBase() constructor {
 		// Check if the text needs to be truncated
 		if (_str_width > _width) {
 			// Calculate the width of "..." once, to use in our calculations
-			var ellipsis = "...";
-			var ellipsis_width = string_width(ellipsis);
+			var _ellipsis = "...";
+			var _ellipsis_width = string_width(_ellipsis);
 			
 			// Calculate the width available for the main part of the string
-			var available_width = _width - ellipsis_width;
+			var _available_width = _width - _ellipsis_width;
 			
 			// Initialize binary search bounds
-			var low = 1;
-			var high = string_length(_string);
-			var mid;
+			var _low = 1;
+			var _high = string_length(_string);
+			var _mid;
 			
 			// Perform binary search to find the cutoff point
-			while (low < high) {
-				mid = floor((low + high) / 2);
-				_str_to_draw = string_copy(_string, 1, mid);
+			while (_low < _high) {
+				_mid = floor((_low + _high) / 2);
+				_str_to_draw = string_copy(_string, 1, _mid);
 				_str_width = string_width(_str_to_draw);
 				
-				if (_str_width < available_width) {
-					low = mid + 1;
+				if (_str_width < _available_width) {
+					_low = _mid + 1;
 				} else {
-					high = mid;
+					_high = _mid;
 				}
 			}
 			
 			// The final string should be within the bounds
-			_str_to_draw = string_copy(_string, 1, high - 1) + ellipsis;
+			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
 		}
 		
 		// Draw the final text

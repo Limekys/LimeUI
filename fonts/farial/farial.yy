@@ -323,7 +323,7 @@
     {"amount":-1,"first":1100,"second":1095,},
   ],
   "last":0,
-  "lineHeight":0,
+  "lineHeight":18,
   "maintainGms1Font":false,
   "name":"fArial",
   "parent":{
