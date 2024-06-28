@@ -77,7 +77,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.onContentUpdate = function() {
 		self.setDrawRelative(true);
-		self._rearrangeElements();
+		//self._rearrangeElements();
 	}
 	
 	self.preDraw = function() {
