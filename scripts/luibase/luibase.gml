@@ -994,7 +994,7 @@ function LuiBase() constructor {
 		//Draw all to screen
 		if self == self.main_ui && self.visible {
 			//Draw main ui surface
-			draw_surface(self.ui_screen_surface, self.x, self.y);
+			draw_surface_ext(self.ui_screen_surface, self.x, self.y, 1, 1, 0, c_white, 1);
 			//Draw other stuff
 			if self.display_focused_element {
 				if !is_undefined(self.element_in_focus) {
