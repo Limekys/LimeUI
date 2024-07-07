@@ -2,9 +2,9 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {Real} tab_height
 ///@arg {String} name
-function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, tab_height = 32, name = "LuiTabGroup") : LuiBase() constructor {
+///@arg {Real} tab_height
+function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiTabGroup", tab_height = 32) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -29,7 +29,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.style.padding = 0;
 		//First creating header for tabs
 		if is_undefined(self.tabgroup_header) {
-			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "tabgroup_header");
+			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "_tabgroup_header_" + string(self.element_id));
 			self.addContent([self.tabgroup_header]);
 		}
 		//Add tabs
@@ -41,7 +41,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			//Set tab sizes
 			_tab.height = self.tab_height;
 			//Create tab container
-			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, "tab_container");
+			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, $"_tab_container_{self.element_id}_{i}");
 			_tab.tab_container = _tab_container;
 			//Set tabgroup parent to tab
 			_tab.tabgroup = self;
@@ -93,10 +93,11 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	return self;
 }
 
+///@arg {String} name
 ///@arg {String} text
-function LuiTab(text = "Tab") : LuiBase() constructor {
+function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 	
-	self.name = "LuiTab";
+	self.name = name;
 	self.text = text;
 	self.width = LUI_AUTO;
 	self.pos_x = LUI_AUTO;

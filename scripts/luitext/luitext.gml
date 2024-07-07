@@ -2,10 +2,11 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
+///@arg {String} name
 ///@arg {String} text
-function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "sample text", scale_to_fit = false) : LuiBase() constructor {
+function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiText", text = "sample text", scale_to_fit = false) : LuiBase() constructor {
 	
-	self.name = "LuiText";
+	self.name = name;
 	self.value = text;
 	self.pos_x = x;
 	self.pos_y = y;

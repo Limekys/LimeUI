@@ -2,13 +2,14 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
+///@arg {String} name
 ///@arg {Real} value_min
 ///@arg {Real} value_max
 ///@arg {Real} value
 ///@arg {Function} callback
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiSlider", value_min = 0, value_max = 100, value = 0, callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiSlider";
+	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;

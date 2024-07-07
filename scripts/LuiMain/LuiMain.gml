@@ -6,6 +6,7 @@ function LuiMain() : LuiBase() constructor {
 	self.ui_screen_surface = -1;
 	self.update_ui_screen_surface = true;
 	self.main_ui_pre_draw_list = [];
+	self.element_names = {};
 	
 	//Init screen grid
 	self._screen_grid = {};
@@ -23,6 +24,18 @@ function LuiMain() : LuiBase() constructor {
 			surface_free(self.ui_screen_surface);
 		}
 		delete self._screen_grid;
+		delete self.element_names;
+	}
+	
+	///@desc Get element by name
+	///@return {Struct}
+	static getElement = function(_name) {
+		if variable_struct_exists(self.element_names, _name) {
+			return variable_struct_get(self.element_names, _name);
+		} else {
+			print($"ERROR: Can't find element {_name}!");
+			return self;
+		}
 	}
 	
 	//Return self

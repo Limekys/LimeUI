@@ -2,14 +2,15 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
+///@arg {String} name
 ///@arg {String} start_text
 ///@arg {String} hint
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiTextbox", start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiTextbox";
+	self.name = name;
 	self.value = string(start_text);
 	self.pos_x = x;
 	self.pos_y = y;

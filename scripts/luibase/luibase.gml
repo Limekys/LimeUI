@@ -293,6 +293,36 @@ function LuiBase() constructor {
 		}
 	}
 	
+	//Element names
+	static registerElementName = function() {
+		if !variable_struct_exists(self.main_ui.element_names, self.name) {
+			variable_struct_set(self.main_ui.element_names, self.name, self);
+		} else {
+			print($"ATTENTION: This element name {self.name} already exists! Please give another name!");
+			var _new_name = "_" + md5_string_utf8(self.name + string(self.element_id));
+			variable_struct_set(self.main_ui.element_names, _new_name, self);
+			self.name = _new_name;
+		}
+	}
+	
+	static deleteElementName = function() {
+		if variable_struct_exists(self.main_ui.element_names, self.name) {
+			variable_struct_remove(self.main_ui.element_names, self.name);
+		} else {
+			print($"ERROR: Can't find name {self.name}!");
+		}
+	}
+	
+	static setName = function(_name) {
+		if !variable_struct_exists(self.main_ui.element_names, _name) {
+			self.deleteElementName();
+			self.name = _name;
+			self.registerElementName();
+		} else {
+			print($"ATTENTION: This element name {_name} already exists! Please give another name!");
+		}
+	}
+	
 	//Focusing
 	///@desc setFocus
 	static setFocus = function() {
@@ -478,6 +508,9 @@ function LuiBase() constructor {
 				
 				//Save last in row
 				_last_in_row = _element;
+				
+				//Register element name
+				_element.registerElementName();
 				
 				//Add delayed contents
 				if !is_undefined(_element.delayed_content) {

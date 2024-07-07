@@ -2,11 +2,12 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
+///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, text = "button", callback = undefined) : LuiBase() constructor {
+function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiButton", text = "button", callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiButton";
+	self.name = name;
 	self.text = text;
 	self.value = text;
 	self.pos_x = x;

@@ -2,15 +2,16 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
+///@arg {String} name
 ///@arg {Asset.GMSprite} sprite
 ///@arg {Real} subimg
 ///@arg {Real} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 ///@arg {Function} callback
-function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, sprite, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
+function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiSpriteButton", sprite, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiSpriteButton";
+	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;

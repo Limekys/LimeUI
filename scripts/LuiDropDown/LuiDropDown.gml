@@ -2,11 +2,12 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
+///@arg {String} name
 ///@arg {String} hint
 ///@arg {Function} callback
-function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, hint = "drop list", callback = undefined) : LuiBase() constructor {
+function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiDropDown", hint = "drop list", callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiDropDown";
+	self.name = name;
 	self.value = "";
 	self.pos_x = x;
 	self.pos_y = y;
@@ -132,11 +133,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	return self;
 }
 
+///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiDropDownItem(text = "dropdown_item", callback = undefined) : LuiBase() constructor {
+function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callback = undefined) : LuiBase() constructor {
 	
-	self.name = "LuiDropDownItem";
+	self.name = name;
 	self.text = text;
 	self.value = text;
 	self.pos_x = LUI_AUTO;
