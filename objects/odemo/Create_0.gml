@@ -172,7 +172,7 @@ btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).se
 
 //Add elements to first panel and init some here
 my_panel.addContent([
-	new LuiText( , , , , , "First panel").setTextHalign(fa_center),
+	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group.pos_x = self.value}), [0.2, 0.8]],
 	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group.pos_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
@@ -227,16 +227,16 @@ my_panel_in_second_2.addContent(
 
 //Then add its to second panel
 my_panel_2.addContent([
-	new LuiText( , , , , , "Second panel").setTextHalign(fa_center),
+	new LuiText( , , , , , "Second panel", true).setTextHalign(fa_center),
 	my_panel_in_second_1,
 	my_panel_in_second_2
 ]);
 
 //Create drop down menu and some items in it
 dropdown_menu = new LuiDropDown(, , , , , "Select item...");
-drop_item1 = new LuiDropDownItem( , "Item 1", function() { show_debug_message("Item 1 selected"); });
-drop_item2 = new LuiDropDownItem( , "Item 2", function() { show_debug_message("Item 2 selected"); });
-drop_item3 = new LuiDropDownItem( , "Item 3 with super cool description", function() { show_debug_message("Item 3 selected"); });
+drop_item1 = new LuiDropDownItem( , "Short item", function() { show_debug_message("Item 1 selected"); });
+drop_item2 = new LuiDropDownItem( , "Very long item", function() { show_debug_message("Item 2 selected"); });
+drop_item3 = new LuiDropDownItem( , "Super duper very long item", function() { show_debug_message("Item 3 selected"); });
 dropdown_menu.addItems([drop_item1, drop_item2, drop_item3]);
 
 //Create big empty buttons (see forward why)
@@ -258,7 +258,7 @@ big_button_3.addContent([
 
 //Add elements to third main panel
 my_panel_3.addContent([
-	new LuiText( , , , , , "Third panel").setTextHalign(fa_center),
+	new LuiText( , , , , , "Third panel", true).setTextHalign(fa_center),
 	dropdown_menu,
 	new LuiText(, , , , , "This is a really long text that probably won't fit in this window!"),
 	big_button,
