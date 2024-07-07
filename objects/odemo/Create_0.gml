@@ -5,9 +5,9 @@ debug_grid = false;
 //Light theme
 global.demo_style_light = {
 	//Fonts
-	font_default : fArial,
-	font_buttons : fArial,
-	font_sliders : fArial,
+	font_default : fDemo,
+	font_buttons : fDemo,
+	font_sliders : fDemo,
 	font_debug : fDebug,
 	//Colors
 	color_font : c_black,
@@ -72,9 +72,9 @@ global.demo_style_light = {
 //Dark theme
 global.demo_style_dark = {
 	//Fonts
-	font_default : fArial,
-	font_buttons : fArial,
-	font_sliders : fArial,
+	font_default : fDemo,
+	font_buttons : fDemo,
+	font_sliders : fDemo,
 	font_debug : fDebug,
 	//Colors
 	color_font : merge_color(c_white, #393c4f, 0.1),

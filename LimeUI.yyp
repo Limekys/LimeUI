@@ -26,8 +26,8 @@
   },
   "name":"LimeUI",
   "resources":[
-    {"id":{"name":"fArial","path":"fonts/fArial/fArial.yy",},},
     {"id":{"name":"fDebug","path":"fonts/fDebug/fDebug.yy",},},
+    {"id":{"name":"fDemo","path":"fonts/fDemo/fDemo.yy",},},
     {"id":{"name":"oDemo","path":"objects/oDemo/oDemo.yy",},},
     {"id":{"name":"oSteadyDeltaTime","path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},},
     {"id":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},},
