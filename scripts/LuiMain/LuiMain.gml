@@ -23,7 +23,7 @@ function LuiMain() : LuiBase() constructor {
 		if surface_exists(self.ui_screen_surface) {
 			surface_free(self.ui_screen_surface);
 		}
-		delete self._screen_grid;
+		//delete self._screen_grid;
 		delete self.element_names;
 	}
 	

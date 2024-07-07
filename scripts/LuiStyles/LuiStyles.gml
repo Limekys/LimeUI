@@ -26,6 +26,7 @@ function LuiStyle(_style) constructor {
 	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
 	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
 	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
+	color_dropdown_arrow = _style[$ "color_dropdown_arrow"] ?? c_gray;
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
 	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
@@ -45,6 +46,9 @@ function LuiStyle(_style) constructor {
 	sprite_scroll_slider_back = _style[$ "sprite_scroll_slider_back"] ?? undefined;
 	sprite_dropdown = _style[$ "sprite_dropdown"] ?? undefined;
 	sprite_dropdown_border = _style[$ "sprite_dropdown_border"] ?? undefined;
+	sprite_dropdown_item = _style[$ "sprite_dropdown_item"] ?? undefined;
+	sprite_dropdown_item_border = _style[$ "sprite_dropdown_item_border"] ?? undefined;
+	sprite_dropdown_arrow = _style[$ "sprite_dropdown_arrow"] ?? undefined;
 	sprite_tab = _style[$ "sprite_tab"] ?? undefined;
 	sprite_tab_border = _style[$ "sprite_tab_border"] ?? undefined;
 	sprite_tabgroup = _style[$ "sprite_tabgroup"] ?? undefined;

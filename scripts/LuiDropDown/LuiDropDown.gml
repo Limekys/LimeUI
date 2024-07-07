@@ -21,18 +21,25 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.items = undefined;
 	self.is_open = false;
 	self.dropdown_panel = undefined;
+	self.text_width = self.width;
 	
 	///@ignore
 	static _initItems = function() {
 		var _item_count = array_length(self.items);
-		//Create dropdown panel
+		//Calculate dropdown panel sizes
 		var _width = self.width;
-		var _height = self.height * _item_count;
-		self.dropdown_panel = new LuiPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
+		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
+		//if !is_undefined(self.style.sprite_dropdown) {
+		//	var _nineslice = sprite_get_nineslice(self.style.sprite_dropdown);
+		//	_height += _nineslice.top + _nineslice.bottom;
+		//}
+		//Create dropdown panel
+		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
+		self.dropdown_panel.setDepth(array_last(self.parent.content).z + 1);
 		//Add items to this panel
-		var _prev_padding = self.dropdown_panel.style.padding;
-		self.dropdown_panel.style.padding = 0;
+		//var _prev_padding = self.dropdown_panel.style.padding;
+		//self.dropdown_panel.style.padding = 0;
 		if !is_array(self.items) self.items = [self.items];
 		for (var i = 0; i < _item_count; ++i) {
 			var _item = self.items[i];
@@ -40,7 +47,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			self.dropdown_panel.addContent([_item]);
 			_item.setDepth(_item.z + array_last(self.parent.content).z + i);
 		}
-		self.dropdown_panel.style.padding = _prev_padding;
+		//if !is_undefined(self.style.sprite_dropdown)
+		//array_foreach(self.items, function(_elm) {
+		//	var _nineslice = sprite_get_nineslice(self.style.sprite_dropdown);
+		//	_elm.pos_y += _nineslice.top
+		//});
+		//self.dropdown_panel.style.padding = _prev_padding;
 	}
 	
 	static toggleDropdown = function() {
@@ -73,10 +85,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         return self;
     }
 	
-	self.create = function() {
-		
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_dropdown) {
@@ -90,6 +98,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			draw_sprite_stretched_ext(self.style.sprite_dropdown, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
+		//Arrow
+		if !is_undefined(self.style.sprite_dropdown_arrow) {
+			var _x_offset = sprite_get_width(self.style.sprite_dropdown_arrow);
+			draw_sprite_ext(self.style.sprite_dropdown_arrow, 0, draw_x + _x_offset, draw_y + self.height div 2, 1, is_open ? -1 : 1, 0, self.style.color_dropdown_arrow, 1);
+		}
+		
 		//Text
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
@@ -98,18 +112,26 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		draw_set_color(self.style.color_font);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		var _txt_x = draw_x + self.width / 2;
+		var _txt_x = draw_x + self.width / 2;// + sprite_get_width(self.style.sprite_dropdown_arrow);
 		var _txt_y = draw_y + self.height / 2;
 		if self.value == "" {
 			draw_set_alpha(0.5);
-			_luiDrawTextCutoff(_txt_x, _txt_y, self.hint, self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, self.hint, self.text_width);
 		} else {
-			_luiDrawTextCutoff(_txt_x, _txt_y, string(self.value), self.width);
+			_luiDrawTextCutoff(_txt_x, _txt_y, string(self.value), self.text_width);
 		}
 		
 		//Border
 		if !is_undefined(self.style.sprite_dropdown_border) {
 			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
+		}
+	}
+	
+	self.create = function() {
+		if !is_undefined(self.style.sprite_dropdown_arrow) {
+			self.text_width = self.width - sprite_get_width(self.style.sprite_dropdown_arrow)*4;
+		} else {
+			self.text_width = self.width;
 		}
 	}
 	
@@ -158,7 +180,7 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
-		if !is_undefined(self.style.sprite_dropdown) {
+		if !is_undefined(self.style.sprite_dropdown_item) {
 			var _blend_color = self.style.color_dropdown;
 			if !self.deactivated && self.mouseHover() {
 				_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
@@ -166,7 +188,7 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 					_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
 				}
 			}
-			draw_sprite_stretched_ext(self.style.sprite_dropdown, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_item, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Text
@@ -184,8 +206,8 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_dropdown_border) {
-			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
+		if !is_undefined(self.style.sprite_dropdown_item_border) {
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_item_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
 		}
 	}
 	
@@ -207,4 +229,32 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 	}
 
     return self;
+}
+
+///@arg {Real} x
+///@arg {Real} y
+///@arg {Real} width
+///@arg {Real} height
+///@arg {String} name
+function LuiDropdownPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiDropdownPanel") : LuiBase() constructor {
+	
+	self.name = name;
+	self.pos_x = x;
+	self.pos_y = y;
+	self.width = width;
+	self.height = height;
+	initElement();
+	
+	self.draw = function(draw_x = 0, draw_y = 0) {
+		//Base
+		if !is_undefined(self.style.sprite_dropdown) {
+			draw_sprite_stretched_ext(self.style.sprite_dropdown, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown, 1);
+		}
+		//Border
+		if !is_undefined(self.style.sprite_dropdown_border) {
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
+		}
+	}
+	
+	return self;
 }

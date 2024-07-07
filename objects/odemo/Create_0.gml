@@ -29,6 +29,7 @@ global.demo_style_light = {
 	color_scroll_slider_back : c_gray,
 	color_dropdown : c_white,
 	color_dropdown_border : merge_colour(c_white, c_black, 0.5),
+	color_dropdown_arrow : merge_colour(c_white, c_black, 0.5),
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
@@ -46,8 +47,11 @@ global.demo_style_light = {
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
 	sprite_scroll_slider_back : sUI_scroll_slider,
-	sprite_dropdown : sUI_dropdown,
-	sprite_dropdown_border : sUI_dropdown_border,
+	sprite_dropdown : sUI_button,
+	sprite_dropdown_border : sUI_button_border,
+	sprite_dropdown_item : sUI_button,
+	//sprite_dropdown_item_border : sUI_button_border,
+	sprite_dropdown_arrow : sUI_dropdown_arrow,
 	sprite_tab : sUI_tab,
 	sprite_tab_border : sUI_tab_border,
 	sprite_tabgroup : sUI_tabgroup,
@@ -92,6 +96,7 @@ global.demo_style_dark = {
 	color_scroll_slider_back : merge_color(#393c4f, c_black, 0.5),
 	color_dropdown : #393c4f,
 	color_dropdown_border : merge_color(#393c4f, c_black, 0.5),
+	color_dropdown_arrow : merge_color(#393c4f, c_black, 0.5),
 	//Sprites
 	sprite_panel : sUI_panel,
 	sprite_panel_border : sUI_panel_border,
@@ -109,8 +114,11 @@ global.demo_style_dark = {
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
 	sprite_scroll_slider_back : sUI_scroll_slider,
-	sprite_dropdown : sUI_dropdown,
-	sprite_dropdown_border : sUI_dropdown_border,
+	sprite_dropdown : sUI_button,
+	sprite_dropdown_border : sUI_button_border,
+	sprite_dropdown_item : sUI_button,
+	//sprite_dropdown_item_border : sUI_button_border,
+	sprite_dropdown_arrow : sUI_dropdown_arrow,
 	sprite_tab : sUI_tab,
 	sprite_tab_border : sUI_tab_border,
 	sprite_tabgroup : sUI_tabgroup,
@@ -228,7 +236,7 @@ my_panel_2.addContent([
 dropdown_menu = new LuiDropDown(, , , , , "Select item...");
 drop_item1 = new LuiDropDownItem( , "Item 1", function() { show_debug_message("Item 1 selected"); });
 drop_item2 = new LuiDropDownItem( , "Item 2", function() { show_debug_message("Item 2 selected"); });
-drop_item3 = new LuiDropDownItem( , "Item 3", function() { show_debug_message("Item 3 selected"); });
+drop_item3 = new LuiDropDownItem( , "Item 3 with super cool description", function() { show_debug_message("Item 3 selected"); });
 dropdown_menu.addItems([drop_item1, drop_item2, drop_item3]);
 
 //Create big empty buttons (see forward why)
