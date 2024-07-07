@@ -33,4 +33,4 @@ _*Right now the system is in a very early stage of development and with each upd
 
 # Example of practical use:
 ![2024_06_05_18_46_Runner_CMb21IN1Zc](https://github.com/Limekys/LimeUI/assets/58959645/819f2999-4040-41a5-aa86-d43d8c5a2f58)
-![2024_06_13_11_29_Runner_m1tTCeO9q9](https://github.com/Limekys/LimeUI/assets/58959645/24d1dbd9-3dae-4180-9495-2d86c39f9836)
+![2024_07_06_23_53_Runner_9kB1prHBDR](https://github.com/Limekys/LimeUI/assets/58959645/d160a519-a463-4198-8404-fe037fd558dc)
