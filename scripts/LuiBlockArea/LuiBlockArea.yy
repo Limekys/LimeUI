@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"LuiBlockArea",
   "isCompatibility":false,
   "isDnD":false,

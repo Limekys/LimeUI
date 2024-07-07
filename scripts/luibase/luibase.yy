@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"LuiBase",
   "isCompatibility":false,
   "isDnD":false,

@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"LuiText",
   "isCompatibility":false,
   "isDnD":false,

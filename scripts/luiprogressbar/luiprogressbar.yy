@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"LuiProgressBar",
   "isCompatibility":false,
   "isDnD":false,

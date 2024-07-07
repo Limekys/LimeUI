@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"LuiPanel",
   "isCompatibility":false,
   "isDnD":false,

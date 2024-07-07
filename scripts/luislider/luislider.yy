@@ -1,5 +1,5 @@
 {
-  "$GMScript":"",
+  "$GMScript":"v1",
   "%Name":"LuiSlider",
   "isCompatibility":false,
   "isDnD":false,
