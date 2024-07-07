@@ -77,11 +77,11 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				var y1 = self.y;
 				var x2 = x1 + self.width;
 				//var y2 = y1 + self.height;
-				self.value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.value_max - self.value_min) + self.value_min, self.value_min, self.value_max);
+				var _new_value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.value_max - self.value_min) + self.value_min, self.value_min, self.value_max);
 				if (self.integers_only) {
-				    self.value = round(self.value);
+				    _new_value = round(_new_value);
 				}
-				self.callback();
+				self.set(_new_value);
 			} else {
 				self.dragging = false;
 			}
@@ -96,10 +96,14 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;
-		self.value = clamp(self.value + _wheel, self.value_min, self.value_max);
+		var _new_value = clamp(self.value + _wheel, self.value_min, self.value_max);
 		if (self.integers_only) {
-			self.value = round(self.value);
+			_new_value = round(_new_value);
 		}
+		self.set(_new_value);
+	}
+	
+	self.onValueUpdate = function() {
 		self.callback();
 	}
 	

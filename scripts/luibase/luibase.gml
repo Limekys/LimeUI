@@ -536,9 +536,11 @@ function LuiBase() constructor {
 	}
 	///@desc set()
 	static set = function(value) {
-		self.value = value;
-		self.onValueUpdate();
-		self.updateMainUiSurface();
+		if self.value != value {
+			self.value = value;
+			self.onValueUpdate();
+			self.updateMainUiSurface();
+		}
 		return self;
 	}
 	
@@ -874,6 +876,7 @@ function LuiBase() constructor {
 					_element.main_ui.element_in_focus.removeFocus();
 					_element.main_ui.element_in_focus = undefined;
 				}
+				self.updateMainUiSurface();
 			}
 		}
 		
@@ -906,7 +909,7 @@ function LuiBase() constructor {
 					
 					if (mouse_check_button(mb_left)) {
 						self.topmost_hovered_element.onMouseLeft();
-						self.updateMainUiSurface();
+						//self.updateMainUiSurface();
 					}
 					if (mouse_check_button_pressed(mb_left)) {
 						self.topmost_hovered_element.onMouseLeftPressed();
