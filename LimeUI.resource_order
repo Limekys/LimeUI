@@ -16,6 +16,7 @@
     {"name":"LuiCheckbox","order":10,"path":"scripts/LuiCheckbox/LuiCheckbox.yy",},
     {"name":"LuiContainer","order":3,"path":"scripts/LuiContainer/LuiContainer.yy",},
     {"name":"LuiDropDown","order":15,"path":"scripts/LuiDropDown/LuiDropDown.yy",},
+    {"name":"LuiMain","order":19,"path":"scripts/LuiMain/LuiMain.yy",},
     {"name":"LuiMessage","order":9,"path":"scripts/LuiMessage/LuiMessage.yy",},
     {"name":"LuiPanel","order":4,"path":"scripts/LuiPanel/LuiPanel.yy",},
     {"name":"LuiProgressBar","order":7,"path":"scripts/LuiProgressBar/LuiProgressBar.yy",},

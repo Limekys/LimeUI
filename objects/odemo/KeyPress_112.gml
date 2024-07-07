@@ -1,6 +1,6 @@
 /// @desc Toggle debug mode
-if global.LUI_DEBUG_MODE < 2 {
-	global.LUI_DEBUG_MODE++;
+if global.lui_debug_mode < 2 {
+	global.lui_debug_mode++;
 } else {
-	global.LUI_DEBUG_MODE = 0;
+	global.lui_debug_mode = 0;
 }

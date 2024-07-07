@@ -132,12 +132,10 @@ global.demo_style_dark = {
 	//}
 }
 
-//LUI_OVERLAY.style = new LuiStyle(global.demo_style_dark);
-
 //Create the main ui container
-my_ui = new LuiBase().setStyle(global.demo_style_dark);
+my_ui = new LuiMain().setStyle(global.demo_style_dark);
 
-//Create main panels
+//Create some panels
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
@@ -145,8 +143,8 @@ tab_group = new LuiTabGroup( , , 550, 332, 32, "LuiTabGroup");
 
 //Add main panels to main ui container
 my_ui.addContent([
-	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],
-	tab_group
+	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],	//Adding panels in one row with automatic width with proportions 40% 40% 20%
+	tab_group												//Adding tab group below these panels
 ]);
 
 //Add content to tabgroup

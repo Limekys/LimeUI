@@ -1,36 +1,3 @@
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} text
-///@ignore
-function LuiMessage(width = 320, height = 160, text = "sample text") : LuiPanel(, , width, height) constructor {
-	
-	self.name = "LuiMessage";
-	self.text = text;
-	self.width = width;
-	self.height = height;
-	initElement();
-	
-	self.setHalign(fa_center);
-	self.setValign(fa_middle);
-	
-	//???//Temporary saving of the main ui to the LUI_OVERLAY variable
-	LUI_OVERLAY.main_ui = global.lui_main_ui;
-	global.lui_main_ui = LUI_OVERLAY;
-	
-	LUI_OVERLAY.addContent(self);
-	
-	self.addContent([
-		new LuiText(, , , , self.text).setTextHalign(fa_center),
-		new LuiButton(, , , , "Close", function() {
-			//???//Back main ui from LUI_OVERLAY variable
-			global.lui_main_ui = LUI_OVERLAY.main_ui;
-			LUI_OVERLAY.close();
-		}).setValign(fa_bottom).setHalign(fa_center)
-	]);
-	
-	return self;
-}
-
 ///@arg {Struct} ui
 ///@arg {Real} width
 ///@arg {Real} height

@@ -37,6 +37,7 @@
     {"id":{"name":"LuiCheckbox","path":"scripts/LuiCheckbox/LuiCheckbox.yy",},},
     {"id":{"name":"LuiContainer","path":"scripts/LuiContainer/LuiContainer.yy",},},
     {"id":{"name":"LuiDropDown","path":"scripts/LuiDropDown/LuiDropDown.yy",},},
+    {"id":{"name":"LuiMain","path":"scripts/LuiMain/LuiMain.yy",},},
     {"id":{"name":"LuiMessage","path":"scripts/LuiMessage/LuiMessage.yy",},},
     {"id":{"name":"LuiPanel","path":"scripts/LuiPanel/LuiPanel.yy",},},
     {"id":{"name":"LuiProgressBar","path":"scripts/LuiProgressBar/LuiProgressBar.yy",},},
