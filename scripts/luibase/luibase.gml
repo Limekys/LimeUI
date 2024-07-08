@@ -34,7 +34,7 @@ function LuiBase() constructor {
 	self.parent = undefined;
 	self.callback = undefined;
 	self.content = [];
-	self.marked_to_delete = false;
+	self.marked_to_delete = false;				//Deprecated variable
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
 	self.visible = true;
@@ -867,21 +867,11 @@ function LuiBase() constructor {
 			
 			_element.grid_previous_x = _grid_x;
 			_element.grid_previous_y = _grid_y;
-			
-			// Delete marked to delete elements
-			if (_element.marked_to_delete) {
-				self.content[i] = undefined;
-				array_delete(self.content, i, 1);
-				if _element == _element.main_ui.element_in_focus {
-					_element.main_ui.element_in_focus.removeFocus();
-					_element.main_ui.element_in_focus = undefined;
-				}
-				self.updateMainUiSurface();
-			}
 		}
 		
 		//Main ui system
 		if self == self.main_ui {
+			
 			// Mouse hover and mouse events on topmost element
 			
 			// Mouse position
@@ -1182,12 +1172,22 @@ function LuiBase() constructor {
 			var _element = self.content[i];
 			_element.destroy();
 		}
-		self.marked_to_delete = true;
+		if self == main_ui.element_in_focus {
+			main_ui.element_in_focus.removeFocus();
+			main_ui.element_in_focus = undefined;
+		}
 		self.cleanUp();
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
 		global.lui_element_count--;
+		self.updateMainUiSurface();
+		//Delete self from parent content
+		if !is_undefined(parent) {
+			array_delete(parent.content, array_find_index(parent.content, function(_elm) {
+				return _elm == self;
+			}), 1);
+		}
 	}
 	
 	///@desc destroyContent()
