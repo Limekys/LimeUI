@@ -17,6 +17,4 @@ function LuiBlockArea(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 		draw_set_color(c_black);
 		draw_rectangle(0, 0, self.width, self.height, false);
 	}
-	
-	return self;
 }

@@ -89,11 +89,15 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Base
 		if !is_undefined(self.style.sprite_dropdown) {
 			var _blend_color = self.style.color_dropdown;
-			if !self.deactivated && self.mouseHover() {
-				_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
-				if self.is_pressed == true {
-					_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
+			if !self.deactivated {
+				if self.mouseHover() {
+					_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
+					if self.is_pressed == true {
+						_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
+					}
 				}
+			} else {
+				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_dropdown, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
@@ -101,15 +105,23 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Arrow
 		if !is_undefined(self.style.sprite_dropdown_arrow) {
 			var _x_offset = sprite_get_width(self.style.sprite_dropdown_arrow);
-			draw_sprite_ext(self.style.sprite_dropdown_arrow, 0, draw_x + _x_offset, draw_y + self.height div 2, 1, is_open ? -1 : 1, 0, self.style.color_dropdown_arrow, 1);
+			var _blend_color = self.style.color_dropdown_arrow;
+			if self.deactivated {
+				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+			}
+			draw_sprite_ext(self.style.sprite_dropdown_arrow, 0, draw_x + _x_offset, draw_y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
 		}
 		
 		//Text
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
 		}
+		if !self.deactivated {
+			draw_set_color(self.style.color_font);
+		} else {
+			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+		}
 		draw_set_alpha(1);
-		draw_set_color(self.style.color_font);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		var _txt_x = draw_x + self.width / 2;// + sprite_get_width(self.style.sprite_dropdown_arrow);
@@ -151,8 +163,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
-	
-	return self;
 }
 
 ///@arg {String} name
@@ -227,8 +237,6 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
-
-    return self;
 }
 
 ///@arg {Real} x
@@ -255,6 +263,4 @@ function LuiDropdownPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height =
 			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
 		}
 	}
-	
-	return self;
 }

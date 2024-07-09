@@ -11,6 +11,4 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 	self.width = width;
 	self.height = height;
 	initElement();
-	
-	return self;
 }

@@ -37,7 +37,4 @@ function LuiMain() : LuiBase() constructor {
 			return self;
 		}
 	}
-	
-	//Return self
-	return self;
 }

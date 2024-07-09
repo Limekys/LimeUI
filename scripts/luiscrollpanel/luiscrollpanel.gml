@@ -36,8 +36,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		self.scroll_target_offset_y = 0;
 	}
 	
-	///@ignore
-	static _rearrangeElements = function() {
+	static rearrangeElements = function() {
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
 		    var _element = self.content[i];
 			if i == 0 {
@@ -77,7 +76,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.onContentUpdate = function() {
 		self.setDrawRelative(true);
-		//self._rearrangeElements();
+		//self.rearrangeElements();
 	}
 	
 	self.preDraw = function() {
@@ -101,7 +100,11 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Panel
 		if !is_undefined(self.style.sprite_panel) {
-			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, self.style.color_main, 1);
+			var _blend_color = self.style.color_main;
+			if self.deactivated {
+				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+			}
+			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		//Surface
 		if surface_exists(self.panel_surface) {
@@ -145,6 +148,4 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			surface_free(self.panel_surface);
 		}
 	}
-	
-	return self;
 }

@@ -41,7 +41,11 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
 		}
-		draw_set_color(self.style.color_font);
+		if !self.deactivated {
+			draw_set_color(self.style.color_font);
+		} else {
+			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+		}
 		draw_set_alpha(1);
 		draw_set_halign(self.text_halign);
 		draw_set_valign(self.text_valign);
@@ -83,6 +87,4 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 			}
 		}
 	}
-	
-	return self;
 }

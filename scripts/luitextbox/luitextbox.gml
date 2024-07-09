@@ -49,23 +49,33 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		//Textbox field
+		//Base
 		if !is_undefined(self.style.sprite_textbox) {
 			var _blend_color = self.style.color_textbox;
-			if !self.deactivated && !self.has_focus && self.mouseHover() {
-				_blend_color = merge_colour(self.style.color_textbox, self.style.color_hover, 0.5);
+			if !self.deactivated {
+				if !self.has_focus && self.mouseHover() {
+					_blend_color = merge_colour(self.style.color_textbox, self.style.color_hover, 0.5);
+				}
+			} else {
+				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
-		//Text
+		//Set text properties
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
 		}
+		if !self.deactivated {
+			draw_set_color(self.style.color_font);
+		} else {
+			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+		}
 		draw_set_alpha(1);
-		draw_set_color(self.style.color_font);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_middle);
+		
+		//Get text
 		var _margin = 6;
 		var _txt_x = draw_x + _margin;
 		var _txt_y = draw_y + self.height / 2;
@@ -84,10 +94,12 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		}
 		
 		//Cut
-		while(string_width(_display_text) > (self.width - (2 * _margin)))
-		_display_text = string_delete(_display_text, 1, 1);
+		if _display_text != "" {
+			while(string_width(_display_text) > (self.width - (2 * _margin)))
+			_display_text = string_delete(_display_text, 1, 1);
+		}
 		
-		//Final text
+		//Draw final text
 		if _display_text != "" || self.has_focus {
 			draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
 		}
@@ -140,6 +152,4 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			time_source_destroy(self.cursor_timer);
 		}
 	}
-	
-	return self;
 }

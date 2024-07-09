@@ -10,13 +10,13 @@ global.demo_style_light = {
 	font_sliders : fDemo,
 	font_debug : fDebug,
 	//Colors
-	color_font : c_black,
+	color_font : merge_colour(c_black, c_white, 0.2),
 	color_font_hint : c_gray,
 	color_main : c_white,
 	color_border : merge_colour(c_white, c_black, 0.5),
 	color_button : c_white,
 	color_button_border : merge_colour(c_white, c_black, 0.5),
-	color_hover : c_ltgray,
+	color_hover : c_gray,
 	color_checkbox : c_white,
 	color_checkbox_pin : #45C952,
 	color_checkbox_border : merge_colour(c_white, c_black, 0.5),
@@ -38,7 +38,7 @@ global.demo_style_light = {
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
 	sprite_checkbox : sUI_button,
-	sprite_checkbox_pin : sUI_button,
+	sprite_checkbox_pin : sUI_checkbox_pin,
 	sprite_checkbox_border : sUI_button_border,
 	sprite_progress_bar : sUI_panel,
 	sprite_progress_bar_value : sUI_panel,
@@ -62,7 +62,7 @@ global.demo_style_light = {
 	default_min_width : 32,
 	default_min_height : 32,
 	padding : 16,
-	checkbox_pin_margin : 6,
+	checkbox_pin_margin : 4,
 	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
@@ -77,7 +77,7 @@ global.demo_style_dark = {
 	font_sliders : fDemo,
 	font_debug : fDebug,
 	//Colors
-	color_font : merge_color(c_white, #393c4f, 0.1),
+	color_font : merge_color(c_white, #393c4f, 0.2),
 	color_font_hint : #77726e,
 	color_main : #393c4f,
 	color_border : merge_color(#393c4f, c_black, 0.5),
@@ -105,7 +105,7 @@ global.demo_style_dark = {
 	sprite_button : sUI_button,
 	sprite_button_border : sUI_button_border,
 	sprite_checkbox : sUI_button,
-	sprite_checkbox_pin : sUI_button,
+	sprite_checkbox_pin : sUI_checkbox_pin,
 	sprite_checkbox_border : sUI_button_border,
 	sprite_progress_bar : sUI_panel,
 	sprite_progress_bar_value : sUI_panel,
@@ -129,7 +129,7 @@ global.demo_style_dark = {
 	default_min_width : 32,
 	default_min_height : 32,
 	padding : 16,
-	checkbox_pin_margin : 6,
+	checkbox_pin_margin : 4,
 	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
@@ -155,18 +155,20 @@ my_ui.addContent([
 	tab_group												//Adding tab group below these panels
 ]);
 
-//Add content to tabgroup
-tab_1 = new LuiTab("tabPanels", "Panels");
-tab_2 = new LuiTab("tabSprites", "Sprites");
-tab_3 = new LuiTab("tabAbout", "About");
-tab_group.addTabs([tab_1, tab_2, tab_3]).centerHorizontally();
+//Create tabs for tabGroup
+tab_panels = new LuiTab("tabPanels", "Panels");
+tab_search = new LuiTab("tabSearch", "Search");
+tab_sprites = new LuiTab("tabSprites", "Sprites");
+tab_about = new LuiTab("tabAbout", "About");
+//Add tabs to tabgroup
+tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
 
 //Create some elements
 //setHalign and setValign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , , "Show message", function() {
-	LuiShowMessage(oDemo.my_ui, 360, 140, "This is just a simple message!");
+	showLuiMessage(oDemo.my_ui, 360, 140, "This is just a simple message!");
 }).setValign(fa_bottom).setHalign(fa_left);
 btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).setValign(fa_bottom).setHalign(fa_right);
 
@@ -191,11 +193,12 @@ btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
 my_panel_in_second_1 = new LuiPanel( , , , );
 //Create deactivated button
 deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
-	destroy();
+	self.destroy();
+	oDemo.deactivated_button = -1;
 }).deactivate();
 my_panel_in_second_1.addContent([
 	new LuiText( , , , , , "Panel in panel").setTextHalign(fa_center),
-	[new LuiButton( , , , , , "ACTIVATE", function() {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}),
+	[new LuiButton( , , , , , "ACTIVATE", function() {if is_struct(oDemo.deactivated_button) {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}}),
 	new LuiButton( , , , , , "Visible", function() {
 		oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
 	})],
@@ -206,8 +209,9 @@ my_panel_in_second_2 = new LuiPanel( , , , );
 //Create to arrays with sprite buttons
 var _buttons1 = []
 var _buttons2 = []
+changeButtonColor = function() {self.setColorBlend(merge_color(choose(c_red, c_orange, c_yellow, c_lime, c_blue, c_purple), c_white, 0.5))}
 for (var i = 0; i < 10; ++i) {
-    var _button = new LuiSpriteButton( , , , 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i < 5 ? true : false, function() {self.setColorBlend(choose(#231b2a, #4e2640, #52466c))});
+    var _button = new LuiSpriteButton( , , , 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i < 5 ? true : false, changeButtonColor);
 	if i < 5 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);
@@ -266,98 +270,144 @@ my_panel_3.addContent([
 	big_button_3
 ]);
 
-//Create scroll panel and some sprites
-scroll_panel = new LuiScrollPanel(, , 300, 256, "Scroll panel");
-
-//Add text to scroll panel
-scroll_panel.addContent([
-	new LuiText( , , , , , "Scroll panel")
-]);
-
-//Add some new buttons to scroll panel
-var delete_self = function() {self.destroy();}
-for (var i = 0; i < 5; ++i) {
-    var _btn = new LuiButton( , , , , , "Button " + string(i+1), delete_self);
-    var _btn2 = new LuiButton( , , , , , "Button " + string(i+1) + "_2", delete_self);
-	scroll_panel.addContent([
-		[_btn, _btn2]
-	]);
-}
-
-//Create some panel that will be added to the scroll panel
-nested_panel = new LuiPanel( , , , 330, "Panel in scroll panel");
-
-//And add some elements to panel that is inside of scroll panel
-nested_panel.addContent([
-	new LuiText(, , , , , "Nested panel x1"),
-	new LuiButton( , , , , , "Nested button"),
-	[new LuiCheckbox( , , , , , false, function() {
-		if get() == true {
-			LuiShowMessage(oDemo.my_ui, 360, 140, "Checkbox in nested panel of scroll panel!");
-		} else {
-			LuiShowMessage(oDemo.my_ui, 360, 140, ":(");
-		}
-	}),
-	new LuiText(, , , , , "Check me!")],
-	new LuiPanel(, , , 150, "Nested panel x2").addContent([
-		new LuiText(, , , , , "Nested panel x2"),
-		new LuiPanel(, , , 75, "Nested panel x3").addContent([
-			new LuiText(, , , , , "Nested panel x3")
-		])
-	])
-]);
-
-//Add moew elements to scroll panel
-scroll_panel.addContent([
-	new LuiTextbox(, , , , , , "textbox in scroll panel"),
-	nested_panel,
-	new LuiSprite( , , , 100, , sCarFlip),
-	new LuiSprite( , , , 256, , sHamburger),
-	new LuiSprite( , , , 200, , sCar),
-	new LuiSprite( , , , 128, , sHamburger),
-]);
-
 #region Fill all tabs in tabGroup
 
-//Add scroll panel in Tab1
-control_panel = new LuiPanel(, , , 256, "ControlPanel");
-control_textbox = new LuiTextbox(, , , , , , "new element name", false, 32);
-control_btn_add = new LuiButton(, , , , , "Add element", function() {
-	var _button_name = oDemo.control_textbox.get();
-	oDemo.control_textbox.set("");
-	oDemo.scroll_panel.addContent(new LuiButton(, , , , , _button_name, function(){self.destroy();}))
-});
-control_btn_clear = new LuiButton(, , , , , "Clear list", function() {oDemo.scroll_panel.cleanScrollPanel()});
-control_panel.addContent([
-	control_textbox,
-	control_btn_add,
-	control_btn_clear
-]);
-tab_1.addContent([
-	[scroll_panel, control_panel]
-]);
+	#region Add scroll panel in tab_panels
+	
+		//Create scroll panel
+		scroll_panel = new LuiScrollPanel(, , , 268, "Scroll panel");
+		//Create some panel that will be added to the scroll panel
+		nested_panel = new LuiPanel( , , , 330, "Panel in scroll panel");
+		//And add some elements to panel that is inside of scroll panel
+		nested_panel.addContent([
+			new LuiText(, , , , , "Nested panel x1"),
+			new LuiButton( , , , , , "Nested button"),
+			[new LuiCheckbox( , , , , , false, function() {
+				if get() == true {
+					showLuiMessage(oDemo.my_ui, 360, 140, "Checkbox in nested panel of scroll panel!");
+				} else {
+					showLuiMessage(oDemo.my_ui, 360, 140, ":(");
+				}
+			}),
+			new LuiText(, , , , , "Check me!")],
+			new LuiPanel(, , , 150, "Nested panel x2").addContent([
+				new LuiText(, , , , , "Nested panel x2"),
+				new LuiPanel(, , , 75, "Nested panel x3").addContent([
+					new LuiText(, , , , , "Nested panel x3")
+				])
+			])
+		]);
+		//Add some elements to scroll panel
+		scroll_panel.addContent([
+			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
+			new LuiTextbox(, , , , , , "textbox in scroll panel"),
+			nested_panel,
+			new LuiSprite( , , , 100, , sCarFlip),
+			new LuiSprite( , , , 256, , sHamburger),
+			new LuiSprite( , , , 200, , sCar),
+			new LuiSprite( , , , 128, , sHamburger),
+		]);
+		tab_panels.addContent([
+			scroll_panel
+		]);
+	
+	#endregion
 
-//Add some sprites in Tab 2
-sprite_car_1 = new LuiSprite( , , , 256, , sCar);
-sprite_car_2 = new LuiSprite( , , , 256, , sCar, , , , false);
-sprite_car_3 = new LuiSprite( , , , 256, , sCarFlip);
-sprite_car_4 = new LuiSprite( , , , 256, , sCarFlip, , , , false);
-tab_2.addContent([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
+	#region Add elements in tab_search
+		
+		//Function for buttons
+		deleteSelf = function() {
+			self.destroy(); oDemo.filterElements()
+		};
+		//Function for search system
+		filterElements = function() {
+			with(oDemo) {
+				//Hide all
+				array_foreach(search_panel.content, function(_elm) {
+					_elm.setVisible(false);
+					_elm.setVisibilitySwitching(false);
+				});
+				//Filter
+				var _filtered_elements = array_filter(search_panel.content, function(_elm) {
+					var _elm_name = _elm.get();
+					var _search_string = textbox_search.get();
+					var _founded = string_pos(string_lower(_search_string), string_lower(_elm_name));
+					if _founded != 0 return true;
+					return false;
+				});
+				//Rearrange filtered positions and made it visible
+				for (var i = 0, n = array_length(_filtered_elements); i < n; ++i) {
+				    var _element = _filtered_elements[i];
+					_element.setVisibilitySwitching(true);
+					_element.setVisible(true);
+					_element.pos_y = _element.style.padding + i * (_element.height + _element.style.padding);
+					_element.start_y = _element.pos_y;
+				}
+			}
+		}
+		//Other elements
+		search_panel = new LuiScrollPanel(, , , 268 - 48, "SearchPanel").addContent([
+			new LuiButton(, , , , , "Aboba", oDemo.deleteSelf),
+			new LuiButton(, , , , , "Microba", oDemo.deleteSelf),
+			new LuiButton(, , , , , "Foo", oDemo.deleteSelf),
+			new LuiButton(, , , , , "Bar", oDemo.deleteSelf),
+			new LuiButton(, , , , , "Game maker!", oDemo.deleteSelf),
+			new LuiButton(, , , , , "777", oDemo.deleteSelf),
+		]);
+		textbox_search = new LuiTextbox(, , , , "textboxSearch", , "Search...", , 256, filterElements);
+		control_panel = new LuiPanel(, , , 268, "ControlPanel");
+		control_textbox = new LuiTextbox(, , , , , , "new element name", false, 32);
+		control_btn_add = new LuiButton(, , , , , "Add element", function() {
+			var _button_name = oDemo.control_textbox.get();
+			oDemo.control_textbox.set("");
+			oDemo.search_panel.addContent(new LuiButton(, , , , , _button_name, oDemo.deleteSelf));
+		});
+		control_btn_clear = new LuiButton(, , , , , "Clear list", function() {oDemo.search_panel.cleanScrollPanel()});
+		control_panel.addContent([
+			control_textbox,
+			control_btn_add,
+			control_btn_clear
+		]);
+		tab_search.addContent([
+			textbox_search,
+			[search_panel, control_panel]
+		]);
+		textbox_search.width = search_panel.width;
+		control_panel.pos_y = textbox_search.pos_y;
+	
+	#endregion
 
-//Add info about me in Tab 3
-sprite_limekys = new LuiSprite(, , 64, 64, "sprLimekys", sLimekysAvatar);
-text_about = new LuiText(, , , 64, "textAbout", "Hi, i am Limekys, and this is my UI system!");
-sprite_discord = new LuiSpriteButton(, , , 64, "sprDiscord", sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});
-sprite_telegram = new LuiSpriteButton(, , , 64, "sprTelegram", sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")});
-sprite_twitch = new LuiSpriteButton(, , , 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")});
-sprite_twitter = new LuiSpriteButton(, , , 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")});
-sprite_vk = new LuiSpriteButton(, , , 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")});
-sprite_youtube = new LuiSpriteButton(, , , 64, , sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")});
-text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setValign(fa_bottom);
-tab_3.addContent([
-	[sprite_limekys, text_about],
-	[sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube],
-	text_version
-]);
+	#region Add some sprites in tab_sprites
+	
+		sprite_car_1 = new LuiSprite( , , , 256, , sCar);
+		sprite_car_2 = new LuiSprite( , , , 256, , sCar, , , , false);
+		sprite_car_3 = new LuiSprite( , , , 256, , sCarFlip);
+		sprite_car_4 = new LuiSprite( , , , 256, , sCarFlip, , , , false);
+		tab_sprites.addContent([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
+	
+	#endregion
+
+	#region Add info about me in tab_about
+	
+		sprite_limekys = new LuiSprite(, , 64, 64, "sprLimekys", sLimekysAvatar);
+		text_about = new LuiText(, , , 64, "textAbout", "Hi, i am Limekys, and this is my UI system!");
+		sprite_discord = new LuiSpriteButton(, , , 64, "sprDiscord", sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")});
+		sprite_telegram = new LuiSpriteButton(, , , 64, "sprTelegram", sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")});
+		sprite_twitch = new LuiSpriteButton(, , , 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")});
+		sprite_twitter = new LuiSpriteButton(, , , 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")});
+		sprite_vk = new LuiSpriteButton(, , , 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")});
+		sprite_youtube = new LuiSpriteButton(, , , 64, , sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")});
+		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setValign(fa_bottom);
+		tab_about.addContent([
+			[sprite_limekys, text_about],
+			[sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube],
+			text_version
+		]);
+	
+	#endregion
 
 #endregion
+
+var a = {
+	"a b" : 0
+}

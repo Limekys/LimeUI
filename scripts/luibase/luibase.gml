@@ -294,7 +294,8 @@ function LuiBase() constructor {
 	}
 	
 	//Element names
-	static registerElementName = function() {
+	///@ignore
+	static _registerElementName = function() {
 		if !variable_struct_exists(self.main_ui.element_names, self.name) {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
@@ -304,8 +305,8 @@ function LuiBase() constructor {
 			self.name = _new_name;
 		}
 	}
-	
-	static deleteElementName = function() {
+	///@ignore
+	static _deleteElementName = function() {
 		if variable_struct_exists(self.main_ui.element_names, self.name) {
 			variable_struct_remove(self.main_ui.element_names, self.name);
 		} else {
@@ -313,24 +314,29 @@ function LuiBase() constructor {
 		}
 	}
 	
+	///@desc Set name of this element (by which the data of this element can be retrieved in the future)
+	///@return {Struct}
 	static setName = function(_name) {
 		if !variable_struct_exists(self.main_ui.element_names, _name) {
-			self.deleteElementName();
+			self._deleteElementName();
 			self.name = _name;
-			self.registerElementName();
+			self._registerElementName();
 		} else {
 			print($"ATTENTION: This element name {_name} already exists! Please give another name!");
 		}
+		return self;
 	}
 	
 	//Focusing
 	///@desc setFocus
+	///@return {Struct}
 	static setFocus = function() {
 		self.has_focus = true;
 		self.onFocusSet();
 		return self;
 	}
 	///@desc removeFocus
+	///@return {Struct}
 	static removeFocus = function() {
 		self.has_focus = false;
 		self.onFocusRemove();
@@ -339,6 +345,7 @@ function LuiBase() constructor {
 	
 	//Functions
 	///@desc activate
+	///@return {Struct}
 	static activate = function() {
 		self.deactivated = false;
 		array_foreach(self.content, function(_elm) {
@@ -347,6 +354,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc deactivate
+	///@return {Struct}
 	static deactivate = function() {
 		self.deactivated = true;
 		array_foreach(self.content, function(_elm) {
@@ -355,6 +363,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc setVisible(true/false)
+	///@return {Struct}
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
 			if self.visible == false &&_visible == true {
@@ -373,12 +382,14 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc ignoreMouseHover(true/false)
+	///@return {Struct}
 	static ignoreMouseHover = function(_ignore = true) {
 		self.ignore_mouse = _ignore;
 		return self;
 	}
 	
 	//???//
+	///@return {Struct}
 	static setInsideParent = function(_inside) {
 		self.inside_parent = _inside;
 		array_foreach(self.content, function(_elm) {
@@ -388,6 +399,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Enable or disable visibility switching by function setVisible()
+	///@return {Struct}
 	static setVisibilitySwitching = function(_bool) {
 		self.visibility_switching = _bool;
 		return self;
@@ -510,7 +522,7 @@ function LuiBase() constructor {
 				_last_in_row = _element;
 				
 				//Register element name
-				_element.registerElementName();
+				_element._registerElementName();
 				
 				//Add delayed contents
 				if !is_undefined(_element.delayed_content) {
@@ -530,11 +542,11 @@ function LuiBase() constructor {
 	}
 	
 	//Setter and getter
-	///@desc get()
+	///@desc Get value of this element
 	static get = function() {
 		return self.value;
 	}
-	///@desc set()
+	///@desc Set value of this element
 	static set = function(value) {
 		if self.value != value {
 			self.value = value;
@@ -545,7 +557,7 @@ function LuiBase() constructor {
 	}
 	
 	//Alignment and sizes
-	///@desc stretchHorizontally(padding)
+	///@desc stretchHorizontally(padding) //???//
 	static stretchHorizontally = function(padding) {
 		var _last = parent.getLast();
 		if (_last) && (_last.pos_x + _last.width < parent.width - self.min_width - padding) {
@@ -556,7 +568,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc stretchVertically(padding)
+	///@desc stretchVertically(padding) //???//
 	static stretchVertically = function(padding) {
 		var _last = parent.getLast();
 		if (_last) && (_last.pos_y + _last.height < parent.height - self.min_height - padding) {
@@ -567,29 +579,36 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc setHalign(halign)
+	///@desc Set horizontal element aligment (fa_left, fa_center, fa_right)
+	///@return {Struct}
 	static setHalign = function(halign) {
 		self.halign = halign;
 		return self;
 	}
 	
-	///@desc setValign(valign)
+	///@desc Set vertical element aligment (fa_top, fa_middle, fa_bottom)
+	///@return {Struct}
 	static setValign = function(valign) {
 		self.valign = valign;
 		return self;
 	}
 	
+	///@desc Center element horizontally on the parent element
+	///@return {Struct}
 	static centerHorizontally = function() {
 		self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
 		return self;
 	}
 	
+	///@desc Center element vertically on the parent element
+	///@return {Struct}
 	static centerVertically = function() {
 		self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
 		return self;
 	}
 	
 	///@desc alignAllElements() //???//
+	///@return {Struct}
 	static alignAllElements = function() {
 		for (var i = array_length(self.content) - 1; i >= 0 ; --i) {
 			var _element = self.content[i];
@@ -624,10 +643,12 @@ function LuiBase() constructor {
 			}
 			_element.alignAllElements();
 		}
+		return self;
 	}
 	
 	//Design
 	///@desc setStyle(_style)
+	///@return {Struct}
 	static setStyle = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.custom_style_is_setted = true;
@@ -637,6 +658,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc setStyleChilds(_style)
+	///@return {Struct}
 	static setStyleChilds = function(_style) {
 		if self.custom_style_is_setted == false {
 			self.style = _style;
@@ -661,6 +683,7 @@ function LuiBase() constructor {
 		return undefined;
 	}
 	///@desc Set draw_relative to all descendants
+	///@return {Struct}
 	static setDrawRelative = function(_relative, _parent_relative = self) {
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
 		    self.content[i].draw_relative = _relative;
@@ -670,26 +693,33 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc Set depth to the element
+	///@return {Struct}
 	static setDepth = function(_depth) {
 		self.z = _depth;
 		array_foreach(self.content, function(_elm, _ind) {
 			_elm.setDepth(self.z + _ind + 1);
 		});
+		return self;
 	}
 	///@desc Update main ui surface
+	///@return {Struct}
 	static updateMainUiSurface = function() {
 		self.main_ui.update_ui_screen_surface = true;
 		self.updateParentRelativeSurface();
+		return self;
 	}
 	///@desc Update parent relative surface
+	///@return {Struct}
 	static updateParentRelativeSurface = function() {
 		if !is_undefined(self.parent_relative) {
 			self.parent_relative._updateScrollSurface();
 		}
+		return self;
 	}
 	
 	//Interactivity
 	///@desc setCallback(callback)
+	///@return {Struct}
 	static setCallback = function(callback) {
 		if callback == undefined {
 			self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};

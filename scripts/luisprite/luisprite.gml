@@ -38,6 +38,7 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
+		//Calculate fit size
 		var _width = self.width;
 		var _height = self.height;
 		if self.maintain_aspect {
@@ -47,13 +48,17 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				_width = _height * self.aspect;
 			}
 		}
+		//Get blend color
+		var _blend_color = self.color_blend;
+		if self.deactivated {
+			_blend_color = merge_colour(_blend_color, c_black, 0.5);
+		}
+		//Draw sprite
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
 		_sprite_render_function(self.sprite, self.subimg, 
 									floor(draw_x + self.width/2 - _width/2), 
 									floor(draw_y + self.height/2 - _height/2), 
 									_width, _height, 
-									self.color_blend, self.alpha);
+									_blend_color, self.alpha);
 	}
-	
-	return self;
 }

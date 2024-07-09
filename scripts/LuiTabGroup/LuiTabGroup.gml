@@ -82,15 +82,17 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_tabgroup) {
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_main, 1);
+			var _blend_color = self.style.color_main;
+			if self.deactivated {
+				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+			}
+			draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
 		}
 		//Border
 		if !is_undefined(self.style.sprite_tabgroup_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
 		}
 	}
-	
-	return self;
 }
 
 ///@arg {String} name
@@ -129,12 +131,15 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 			var _blend_color = self.style.color_main;
 			if !self.is_active {
 				_blend_color = merge_colour(_blend_color, c_black, 0.25);
-				if !self.deactivated && self.mouseHover() {
+				if self.mouseHover() {
 					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
 						_blend_color = merge_colour(_blend_color, c_black, 0.5);
 					}
 				}
+			}
+			if self.deactivated {
+				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_tab, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
@@ -144,8 +149,12 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 			if !is_undefined(self.style.font_buttons) {
 				draw_set_font(self.style.font_buttons);
 			}
+			if !self.deactivated {
+				draw_set_color(self.style.color_font);
+			} else {
+				draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+			}
 			draw_set_alpha(1);
-			draw_set_color(self.style.color_font);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
 			var _txt_x = draw_x + self.width / 2;
@@ -175,6 +184,4 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
-
-    return self;
 }

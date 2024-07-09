@@ -2,9 +2,9 @@
   "$GMSprite":"",
   "%Name":"sLimekysAvatar",
   "bboxMode":0,
-  "bbox_bottom":255,
+  "bbox_bottom":63,
   "bbox_left":0,
-  "bbox_right":255,
+  "bbox_right":63,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -16,7 +16,7 @@
   ],
   "gridX":0,
   "gridY":0,
-  "height":256,
+  "height":64,
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"8cad306c-a01d-4910-8928-3a07f843770e","blendMode":0,"displayName":"default","isLocked":false,"name":"8cad306c-a01d-4910-8928-3a07f843770e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":256,
+  "width":64,
 }

@@ -37,7 +37,7 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		//Get sizes
+		//Calculate fit size
 		var _width = self.width;
 		var _height = self.height;
 		if self.maintain_aspect {
@@ -47,13 +47,17 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 				_width = _height * self.aspect;
 			}
 		}
-		//Get color
+		//Get blend color
 		var _blend_color = self.color_blend;
-		if !self.deactivated && self.mouseHover() {
-			_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
-			if self.is_pressed {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+		if !self.deactivated {
+			if self.mouseHover() {
+				_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
+				if self.is_pressed {
+					_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				}
 			}
+		} else {
+			_blend_color = merge_colour(_blend_color, c_black, 0.5);
 		}
 		//Draw sprite button
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
@@ -79,6 +83,4 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
-	
-	return self;
 }
