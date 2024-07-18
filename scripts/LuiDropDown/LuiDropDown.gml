@@ -163,6 +163,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.onMouseLeave = function() {
 		self.is_pressed = false;
 	}
+	
+	self.onHide = function() {
+		if self.is_open {
+			self.toggleDropdown();
+		}
+	}
 }
 
 ///@arg {String} name
