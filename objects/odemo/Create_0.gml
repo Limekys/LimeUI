@@ -140,6 +140,57 @@ global.demo_style_dark = {
 	//}
 }
 
+//Modern theme
+global.demo_style_modern = {
+	//Fonts
+	font_default : fModern,
+	font_buttons : fModern,
+	font_sliders : fModern,
+	font_debug : fDebug,
+	//Colors
+	color_font : #ffffff,
+	color_font_hint : #9a9daf,
+	color_main : #393a44,
+	color_button : #4d515e,
+	color_hover : c_gray,
+	color_checkbox : #4d515e,
+	color_checkbox_pin : #64d0b9,
+	color_progress_bar : #4d515e,
+	color_progress_bar_value : #64d0b9,
+	color_textbox : #4d515e,
+	color_scroll_slider : #4d515e,
+	color_scroll_slider_back : merge_color(#4d515e, c_black, 0.5),
+	color_dropdown : #4d515e,
+	color_dropdown_arrow : merge_color(#4d515e, c_black, 0.5),
+	//Sprites
+	sprite_panel : sUI_Square_21r,
+	sprite_textbox : sUI_Square_6r,
+	sprite_button : sUI_Square_6r,
+	sprite_checkbox : sUI_Square_6r,
+	sprite_checkbox_pin : sUI_checkbox_pin,
+	sprite_progress_bar : sUI_Square_6r,
+	sprite_progress_bar_value : sUI_Square_6r,
+	sprite_slider_knob : sUI_Square_6r,
+	sprite_scroll_slider : sUI_scroll_slider,
+	sprite_scroll_slider_back : sUI_scroll_slider,
+	sprite_dropdown : sUI_Square_6r,
+	sprite_dropdown_item : sUI_Square_6r,
+	sprite_dropdown_arrow : sUI_dropdown_arrow,
+	sprite_tab : sUI_Square_21r,
+	sprite_tabgroup : sUI_Square_21r,
+	//Sounds
+	sound_click : sndBasicClick,
+	//Settings
+	default_min_width : 32,
+	default_min_height : 32,
+	padding : 16,
+	checkbox_pin_margin : 4,
+	scroll_step : 32,
+	scroll_surface_offset : [0,0,0,0],
+	textbox_cursor : "|",
+	textbox_password : "•"
+}
+
 //Create the main ui container
 my_ui = new LuiMain().setStyle(global.demo_style_dark);
 
@@ -147,7 +198,7 @@ my_ui = new LuiMain().setStyle(global.demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 32);
+tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);
 
 //Add main panels to main ui container
 my_ui.addContent([
@@ -202,7 +253,7 @@ my_panel_in_second_1.addContent([
 	new LuiButton( , , , , , "Visible", function() {
 		oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
 	})],
-	new LuiButton( , , , , , "This button with really long text that probably won't fit in this button!", ),
+	new LuiButton( , , , , , "This button with a really long text that probably won't fit in this button!", ),
 	deactivated_button,
 ]);
 my_panel_in_second_2 = new LuiPanel( , , , );
@@ -237,10 +288,45 @@ my_panel_2.addContent([
 ]);
 
 //Create drop down menu and some items in it
-dropdown_menu = new LuiDropDown(, , , , , "Select item...");
-drop_item1 = new LuiDropDownItem( , "Short item", function() { show_debug_message("Item 1 selected"); });
-drop_item2 = new LuiDropDownItem( , "Very long item", function() { show_debug_message("Item 2 selected"); });
-drop_item3 = new LuiDropDownItem( , "Super duper very long item", function() { show_debug_message("Item 3 selected"); });
+dropdown_menu = new LuiDropDown(, , , , , "Select theme...").set("Dark");
+drop_item1 = new LuiDropDownItem( , "Dark", function() {
+	with(oDemo) {
+		my_ui.setStyle(global.demo_style_dark);
+		var _b = layer_background_get_id("bgColor");
+		layer_background_blend(_b, #191919);
+		var _b = layer_background_get_id("bgSprites");
+		layer_background_blend(_b, #333333);
+		layer_background_visible(_b, true);
+		//Set colors to buttons 
+		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
+		btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
+	}
+});
+drop_item2 = new LuiDropDownItem( , "Light", function() {
+	with(oDemo) {
+		my_ui.setStyle(global.demo_style_light);
+		var _b = layer_background_get_id("bgColor");
+		layer_background_blend(_b, c_ltgray);
+		var _b = layer_background_get_id("bgSprites");
+		layer_background_blend(_b, c_white);
+		layer_background_visible(_b, true);
+		//Set colors to buttons
+		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.1));
+		btn_restart.setColor(merge_color(#ff7777, c_black, 0.1));
+	}
+});
+drop_item3 = new LuiDropDownItem( , "Modern", function() { 
+	with(oDemo) {
+		my_ui.setStyle(global.demo_style_modern);
+		var _b = layer_background_get_id("bgColor");
+		layer_background_blend(_b, #32333d);
+		var _b = layer_background_get_id("bgSprites");
+		layer_background_visible(_b, false);
+		//Set colors to buttons 
+		btn_show_msg.setColor(merge_color(#fa9a31, c_white, 0.25));
+		btn_restart.setColor(merge_color(#e5538d, c_white, 0.25));
+	}
+});
 dropdown_menu.addItems([drop_item1, drop_item2, drop_item3]);
 
 //Create big empty buttons (see forward why)
@@ -275,7 +361,7 @@ my_panel_3.addContent([
 	#region Add scroll panel in tab_panels
 	
 		//Create scroll panel
-		scroll_panel = new LuiScrollPanel(, , , 268, "Scroll panel");
+		scroll_panel = new LuiScrollPanel(, , , 252, "Scroll panel");
 		//Create some panel that will be added to the scroll panel
 		nested_panel = new LuiPanel( , , , 330, "Panel in scroll panel");
 		//And add some elements to panel that is inside of scroll panel
@@ -346,7 +432,7 @@ my_panel_3.addContent([
 			}
 		}
 		//Other elements
-		search_panel = new LuiScrollPanel(, , , 268 - 48, "SearchPanel").addContent([
+		search_panel = new LuiScrollPanel(, , , 268 - 48 - 16, "SearchPanel").addContent([
 			new LuiButton(, , , , , "Aboba", oDemo.deleteSelf),
 			new LuiButton(, , , , , "Microba", oDemo.deleteSelf),
 			new LuiButton(, , , , , "Foo", oDemo.deleteSelf),
@@ -355,7 +441,7 @@ my_panel_3.addContent([
 			new LuiButton(, , , , , "777", oDemo.deleteSelf),
 		]);
 		textbox_search = new LuiTextbox(, , , , "textboxSearch", , "Search...", , 256, filterElements);
-		control_panel = new LuiPanel(, , , 268, "ControlPanel");
+		control_panel = new LuiPanel(, , , 268 - 16, "ControlPanel");
 		control_textbox = new LuiTextbox(, , , , , , "new element name", false, 32);
 		control_btn_add = new LuiButton(, , , , , "Add element", function() {
 			var _button_name = oDemo.control_textbox.get();
@@ -407,7 +493,3 @@ my_panel_3.addContent([
 	#endregion
 
 #endregion
-
-var a = {
-	"a b" : 0
-}

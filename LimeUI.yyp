@@ -12,6 +12,7 @@
   "Folders":[
     {"$GMFolder":"","%Name":"DEMO","folderPath":"folders/DEMO.yy","name":"DEMO","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Fonts","folderPath":"folders/DEMO/Fonts.yy","name":"Fonts","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Modern theme","folderPath":"folders/DEMO/Modern theme.yy","name":"Modern theme","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sounds","folderPath":"folders/DEMO/Sounds.yy","name":"Sounds","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Sprites","folderPath":"folders/DEMO/Sprites.yy","name":"Sprites","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Socials","folderPath":"folders/DEMO/Sprites/Socials.yy","name":"Socials","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -22,12 +23,13 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.6.0.157",
+    "IDEVersion":"2024.6.2.162",
   },
   "name":"LimeUI",
   "resources":[
     {"id":{"name":"fDebug","path":"fonts/fDebug/fDebug.yy",},},
     {"id":{"name":"fDemo","path":"fonts/fDemo/fDemo.yy",},},
+    {"id":{"name":"fModern","path":"fonts/fModern/fModern.yy",},},
     {"id":{"name":"oDemo","path":"objects/oDemo/oDemo.yy",},},
     {"id":{"name":"oSteadyDeltaTime","path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},},
     {"id":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},},
@@ -75,6 +77,8 @@
     {"id":{"name":"sUI_scroll_slider","path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},},
     {"id":{"name":"sUI_slider_knob_border","path":"sprites/sUI_slider_knob_border/sUI_slider_knob_border.yy",},},
     {"id":{"name":"sUI_slider_knob","path":"sprites/sUI_slider_knob/sUI_slider_knob.yy",},},
+    {"id":{"name":"sUI_Square_21r","path":"sprites/sUI_Square_21r/sUI_Square_21r.yy",},},
+    {"id":{"name":"sUI_Square_6r","path":"sprites/sUI_Square_6r/sUI_Square_6r.yy",},},
     {"id":{"name":"sUI_tab_border","path":"sprites/sUI_tab_border/sUI_tab_border.yy",},},
     {"id":{"name":"sUI_tab","path":"sprites/sUI_tab/sUI_tab.yy",},},
     {"id":{"name":"sUI_tabgroup_border","path":"sprites/sUI_tabgroup_border/sUI_tabgroup_border.yy",},},
