@@ -366,19 +366,26 @@ function LuiBase() constructor {
 	///@return {Struct}
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
-			if self.visible == false &&_visible == true {
-				self.onShow();
-				self.updateMainUiSurface();
-			} else if self.visible == true && _visible == false {
-				self.onHide();
-				self.updateMainUiSurface();
+			if self.visible != _visible {
+				//Change visible
+				self.visible = _visible;
+				if !is_undefined(self.main_ui) {
+					self._gridUpdate();
+				}
+				//Set visible to all childs
+				array_foreach(self.content, function(_elm) {
+					_elm.setVisible(self.visible);
+				});
+				//Call event onShow / onHide
+				if _visible {
+					self.onShow();
+					self.updateMainUiSurface();
+				} else {
+					self.onHide();
+					self.updateMainUiSurface();
+				}
 			}
-			self.visible = _visible;
 		}
-		array_foreach(self.content, function(_elm) {
-			_elm.setVisible(self.visible);
-		});
-		self._gridUpdate();
 		return self;
 	}
 	///@desc ignoreMouseHover(true/false)
@@ -459,6 +466,7 @@ function LuiBase() constructor {
 				_element.main_ui = _element.parent.main_ui;
 				_element.style = self.style;
 				_element.z = _element.parent.z + ++_local_z;
+				if !_element.parent.visible _element.visible = false;
 				
 				//Calculate width for right auto width calculations for next element
 				if !is_undefined(_last_in_row) {
@@ -1058,6 +1066,8 @@ function LuiBase() constructor {
 			var _mouse_x = device_mouse_x_to_gui(0) + 16;
 			var _mouse_y = device_mouse_y_to_gui(0) + 0;
 			//Text
+			var _prev_color = draw_get_color();
+			var _prev_alpha = draw_get_alpha();
 			draw_set_alpha(1);
 			draw_set_color(c_white);
 			_luiDrawTextDebug(_mouse_x, _mouse_y, 
@@ -1067,6 +1077,8 @@ function LuiBase() constructor {
 			"v: " + string(_element.value) + "\n" +
 			"hl: " + string(_element.halign) + " vl: " + string(_element.valign) + "\n" +
 			"z: " + string(_element.z));
+			draw_set_color(_prev_color);
+			draw_set_alpha(_prev_alpha);
 		}
 	}
 	
@@ -1076,6 +1088,8 @@ function LuiBase() constructor {
 		if !is_undefined(self.style.font_debug) {
 			draw_set_font(self.style.font_debug);
 		}
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
 		draw_set_alpha(0.5);
 		draw_set_color(mouseHover() ? c_red : make_color_hsv(self.z % 255 * 10, 255, 255));
 		//Rectangles
@@ -1089,11 +1103,9 @@ function LuiBase() constructor {
 			"v: " + string(self.value) + "\n" +
 			"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
 			"z: " + string(self.z));
-			draw_set_alpha(1);
-			draw_set_color(c_white);
 		}
-		draw_set_alpha(1);
-		draw_set_color(c_white);
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc _luiDrawTextDebug(x, y, text)

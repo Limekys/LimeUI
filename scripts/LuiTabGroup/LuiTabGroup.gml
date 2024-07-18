@@ -41,7 +41,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			//Set tab sizes
 			_tab.height = self.tab_height;
 			//Create tab container
-			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, $"_tab_container_{self.element_id}_{i}");
+			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, $"_tab_container_{self.element_id}_{i}").setVisible(false);
 			_tab.tab_container = _tab_container;
 			//Set tabgroup parent to tab
 			_tab.tabgroup = self;
@@ -91,6 +91,17 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Border
 		if !is_undefined(self.style.sprite_tabgroup_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
+		}
+	}
+	
+	self.onShow = function() {
+		//Turn of visible of deactivated tab_container's
+		var _tab_count = array_length(self.tabs);
+		for (var i = 0; i < _tab_count; ++i) {
+			var _tab = self.tabs[i];
+			if !_tab.is_active {
+				_tab.tab_container.setVisible(false);
+			}
 		}
 	}
 }
