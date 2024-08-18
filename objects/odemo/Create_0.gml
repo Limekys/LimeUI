@@ -1,6 +1,14 @@
+///@desc CREATE STYLES AND UI
+
+#region Init debug variables
+
 randomize();
 debug_overlay = false;
 debug_grid = false;
+
+#endregion
+
+#region Create styles
 
 //Light theme
 global.demo_style_light = {
@@ -190,6 +198,8 @@ global.demo_style_modern = {
 	textbox_cursor : "|",
 	textbox_password : "•"
 }
+
+#endregion
 
 //Create the main ui container
 my_ui = new LuiMain().setStyle(global.demo_style_dark);

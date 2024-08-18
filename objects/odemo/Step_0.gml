@@ -1,4 +1,4 @@
-/// @desc UPDATE
+/// @desc UPDATE UI
 my_ui.update();
 
 if demo_loading_state {

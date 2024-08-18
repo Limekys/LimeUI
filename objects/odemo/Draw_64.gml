@@ -1,4 +1,4 @@
-///@desc RENDER
+///@desc RENDER UI
 my_ui.render();
 
 if debug_grid {
