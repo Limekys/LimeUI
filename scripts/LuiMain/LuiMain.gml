@@ -24,7 +24,7 @@ function LuiMain() : LuiBase() constructor {
 			surface_free(self.ui_screen_surface);
 		}
 		//delete self._screen_grid;
-		delete self.element_names;
+		//delete self.element_names;
 	}
 	
 	///@desc Get element by name
@@ -34,7 +34,7 @@ function LuiMain() : LuiBase() constructor {
 			return variable_struct_get(self.element_names, _name);
 		} else {
 			print($"ERROR: Can't find element {_name}!");
-			return self;
+			return -1;
 		}
 	}
 }

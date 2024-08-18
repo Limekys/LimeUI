@@ -1226,9 +1226,11 @@ function LuiBase() constructor {
 		self.updateMainUiSurface();
 		//Delete self from parent content
 		if !is_undefined(parent) {
-			array_delete(parent.content, array_find_index(parent.content, function(_elm) {
-				return _elm == self;
-			}), 1);
+			if parent.content != -1 {
+				array_delete(parent.content, array_find_index(parent.content, function(_elm) {
+					return _elm == self;
+				}), 1);
+			}
 		}
 	}
 	
