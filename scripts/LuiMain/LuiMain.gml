@@ -5,7 +5,7 @@ function LuiMain() : LuiBase() constructor {
 	self.height = display_get_gui_height();
 	self.ui_screen_surface = -1;
 	self.update_ui_screen_surface = true;
-	self.main_ui_pre_draw_list = [];
+	self.pre_draw_list = [];
 	self.element_names = {};
 	
 	//Init screen grid
@@ -19,7 +19,7 @@ function LuiMain() : LuiBase() constructor {
 	
 	//Cleanup
 	self.cleanUp = function() {
-		self.main_ui_pre_draw_list = -1;
+		self.pre_draw_list = -1;
 		if surface_exists(self.ui_screen_surface) {
 			surface_free(self.ui_screen_surface);
 		}

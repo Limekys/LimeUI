@@ -465,7 +465,7 @@ function LuiBase() constructor {
 				_element.parent = self;
 				_element.main_ui = _element.parent.main_ui;
 				_element.style = self.style;
-				_element.z = _element.parent.z + ++_local_z;
+				_element.z = _element.parent.z + 1//++_local_z;
 				if !_element.parent.visible _element.visible = false;
 				
 				//Calculate width for right auto width calculations for next element
@@ -1002,8 +1002,8 @@ function LuiBase() constructor {
 		//Prepare main ui surface and other surfaces
 		if self == self.main_ui {
 			//Pre draw events
-			for (var i = 0, n = array_length(self.main_ui_pre_draw_list); i < n; ++i) {
-			    var _element = self.main_ui_pre_draw_list[i];
+			for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
+			    var _element = self.pre_draw_list[i];
 				_element.preDraw();
 			}
 			//Create main ui surface
@@ -1024,7 +1024,7 @@ function LuiBase() constructor {
 				var _element = self.content[i];
 				if !_element.visible continue;
 				//Check for allowing to draw
-				var _allow_to_draw = (_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && (_element.inside_parent == 1 || _element.inside_parent == 2));
+				var _allow_to_draw = _element.inside_parent != 0; //(_element.draw_relative == false && _element.inside_parent == 1) || (_element.draw_relative == true && (_element.inside_parent == 1 || _element.inside_parent == 2));
 				//Check if the element is in the area of its parent and draw
 				if _allow_to_draw {
 					//Draw

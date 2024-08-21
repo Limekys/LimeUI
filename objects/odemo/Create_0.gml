@@ -210,7 +210,7 @@ my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
 tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);
 
-//Add main panels to main ui container
+//Add panels to main ui container
 my_ui.addContent([
 	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],	//Adding panels in one row with automatic width with proportions 40% 40% 20%
 	tab_group												//Adding tab group below these panels
