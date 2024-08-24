@@ -44,6 +44,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		for (var i = 0; i < _item_count; ++i) {
 			var _item = self.items[i];
 			_item.dropdown_parent = self;
+			_item.height = self.height;
+			_item.auto_height = false;
 			self.dropdown_panel.addContent([_item]);
 			_item.setDepth(_item.z + array_last(self.parent.content).z + i);
 		}
