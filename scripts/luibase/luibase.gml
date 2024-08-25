@@ -54,6 +54,7 @@ function LuiBase() constructor {
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.main_ui = self;
+	self.allow_height_extend = true;
 	
 	//Custom functions for elements
 	
@@ -517,11 +518,6 @@ function LuiBase() constructor {
 					}
 				}
 				
-				//Extend the height of the parent element if the added element does not fit (Except for scrollbars, as they work on a different principle)
-				if !is_instanceof(self, LuiScrollPanel) && self.auto_height && _element.pos_y + _element.height > self.height - self.style.padding {
-					self.height = _element.pos_y + _element.height + self.style.padding;
-				}
-				
 				//Save new start x y position
 				_element.start_x = _element.pos_x;
 				_element.start_y = _element.pos_y;
@@ -542,6 +538,9 @@ function LuiBase() constructor {
 				
 				//Add to content array
 				array_push(self.content, _element);
+				
+				//Extend the height of the parent element if the added element does not fit
+				self.extendHeight();
 			}
 		}
 		self.alignAllElements();
@@ -549,11 +548,23 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	//Setter and getter
+	// Getters
 	///@desc Get value of this element
 	static get = function() {
 		return self.value;
 	}
+	
+	///@desc Returns the lowest point of the elements by height
+	static getLowerPoint = function() {
+		var _lower_point = 0;
+		for (var i = 0, n = array_length(content); i < n; ++i) {
+		    var _elm = content[i];
+			_lower_point = max(_lower_point, _elm.pos_y + _elm.height);
+		}
+		return _lower_point;
+	}
+	
+	// Setters
 	///@desc Set value of this element
 	static set = function(value) {
 		if self.value != value {
@@ -613,6 +624,22 @@ function LuiBase() constructor {
 	static centerVertically = function() {
 		self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
 		return self;
+	}
+	
+	///@desc Recursive function to extend an element by height
+	static extendHeight = function() {
+		if self.allow_height_extend && self.auto_height {
+			var _lower_point = self.getLowerPoint();
+			if _lower_point > self.height - self.style.padding {
+				// Extend self
+				self.height = _lower_point + self.style.padding;
+				// Move next in parent down //???//
+				if !is_undefined(self.parent) {
+					
+				}
+			}
+			self.parent.extendHeight();
+		}
 	}
 	
 	///@desc alignAllElements() //???//

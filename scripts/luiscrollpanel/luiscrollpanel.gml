@@ -18,6 +18,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.scroll_target_offset_y = 0;
 	self.surface_offset = undefined;
 	self.update_scroll_surface = true;
+	self.allow_height_extend = false;
 	
 	///@desc setSurfaceOffset(array:[left,right,top,bottom])
 	static setSurfaceOffset = function(array) {

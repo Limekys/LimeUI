@@ -251,7 +251,7 @@ btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
 btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
 
 //Create some panels
-my_panel_in_second_1 = new LuiPanel( , , , );
+my_panel_in_second_1 = new LuiPanel();
 //Create deactivated button
 deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
 	self.destroy();
@@ -266,7 +266,7 @@ my_panel_in_second_1.addContent([
 	new LuiButton( , , , , , "This button with a really long text that probably won't fit in this button!", ),
 	deactivated_button,
 ]);
-my_panel_in_second_2 = new LuiPanel( , , , );
+my_panel_in_second_2 = new LuiPanel();
 //Create to arrays with sprite buttons
 var _buttons1 = []
 var _buttons2 = []
@@ -373,7 +373,7 @@ my_panel_3.addContent([
 		//Create scroll panel
 		scroll_panel = new LuiScrollPanel(, , , 252, "Scroll panel");
 		//Create some panel that will be added to the scroll panel
-		nested_panel = new LuiPanel( , , , 330, "Panel in scroll panel");
+		nested_panel = new LuiPanel( , , , , "Panel in scroll panel");
 		//And add some elements to panel that is inside of scroll panel
 		nested_panel.addContent([
 			new LuiText(, , , , , "Nested panel x1"),
@@ -386,9 +386,9 @@ my_panel_3.addContent([
 				}
 			}),
 			new LuiText(, , , , , "Check me!")],
-			new LuiPanel(, , , 150, "Nested panel x2").addContent([
+			new LuiPanel(, , , , "Nested panel x2").addContent([
 				new LuiText(, , , , , "Nested panel x2"),
-				new LuiPanel(, , , 75, "Nested panel x3").addContent([
+				new LuiPanel(, , , , "Nested panel x3").addContent([
 					new LuiText(, , , , , "Nested panel x3")
 				])
 			])

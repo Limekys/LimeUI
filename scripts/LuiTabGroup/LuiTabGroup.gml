@@ -42,6 +42,8 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			_tab.height = self.tab_height;
 			//Create tab container
 			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, $"_tab_container_{self.element_id}_{i}").setVisible(false);
+			//_tab_container.auto_x = true;
+			//_tab_container.auto_y = true;
 			_tab.tab_container = _tab_container;
 			//Set tabgroup parent to tab
 			_tab.tabgroup = self;
