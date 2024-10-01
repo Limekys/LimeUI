@@ -119,6 +119,10 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		self.cursor_pointer = self.style.textbox_cursor;
 		keyboard_string = get();
 		self.main_ui.waiting_for_keyboard_input = true;
+		//Touch compatibility
+		if os_type == os_android || os_type == os_ios {
+			keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, false);
+		}
 	}
 	
 	self.onFocusRemove = function() {
@@ -126,6 +130,10 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		self.cursor_pointer = "";
 		self.is_pressed = false;
 		self.main_ui.waiting_for_keyboard_input = false;
+		//Touch compatibility
+		if os_type == os_android || os_type == os_ios {
+			keyboard_virtual_hide();
+		}
 	}
 	
 	self.onMouseLeftPressed = function() {
