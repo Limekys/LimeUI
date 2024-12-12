@@ -33,7 +33,7 @@ function LuiMain() : LuiBase() constructor {
 		if variable_struct_exists(self.element_names, _name) {
 			return variable_struct_get(self.element_names, _name);
 		} else {
-			print($"ERROR: Can't find element {_name}!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR: Can't find element {_name}!");
 			return -1;
 		}
 	}

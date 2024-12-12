@@ -300,7 +300,7 @@ function LuiBase() constructor {
 		if !variable_struct_exists(self.main_ui.element_names, self.name) {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
-			print($"ATTENTION: This element name {self.name} already exists! Please give another name!");
+			if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {self.name} already exists! Please give another name!");
 			var _new_name = "_" + md5_string_utf8(self.name + string(self.element_id));
 			variable_struct_set(self.main_ui.element_names, _new_name, self);
 			self.name = _new_name;
@@ -311,7 +311,7 @@ function LuiBase() constructor {
 		if variable_struct_exists(self.main_ui.element_names, self.name) {
 			variable_struct_remove(self.main_ui.element_names, self.name);
 		} else {
-			print($"ERROR: Can't find name {self.name}!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR: Can't find name {self.name}!");
 		}
 	}
 	
@@ -323,7 +323,7 @@ function LuiBase() constructor {
 			self.name = _name;
 			self._registerElementName();
 		} else {
-			print($"ATTENTION: This element name {_name} already exists! Please give another name!");
+			if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {_name} already exists! Please give another name!");
 		}
 		return self;
 	}

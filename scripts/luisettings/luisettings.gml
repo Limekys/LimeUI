@@ -10,3 +10,4 @@ global.lui_screen_grid_size = 96;
 #macro LUI_AUTO_NO_PADDING				-2
 #macro LUI_STRETCH						-3
 #macro LUI_GRID_SIZE					global.lui_screen_grid_size
+#macro LUI_LOG_ERROR_MODE				1	// 0 - do not log, 1 - errors only, 2 - errors and warnings
