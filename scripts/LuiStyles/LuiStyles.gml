@@ -1,3 +1,7 @@
+enum LUI_ANIM {
+	none,
+}
+
 ///@desc Style for UI
 ///@arg {Struct} _style
 function LuiStyle(_style) constructor {
@@ -67,5 +71,8 @@ function LuiStyle(_style) constructor {
 	//Render functions
 	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined;
 	//Animations
-	
+	anim_on_create = _style[$ "anim_on_create"] ?? LUI_ANIM.none;
+	anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
+	anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;
+	anim_on_mouse_leave = _style[$ "anim_on_mouse_leave"] ?? LUI_ANIM.none;
 }
