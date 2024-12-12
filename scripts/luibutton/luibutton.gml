@@ -19,9 +19,12 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.is_pressed = false;
 	self.button_color = undefined;
+	self.sprite_icon = -1;
+	self.sprite_icon_width = -1;
+	self.sprite_icon_height = -1;
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		//Base
+		// Base
 		if !is_undefined(self.style.sprite_button) {
 			var _blend_color = self.style.color_button;
 			if !is_undefined(self.button_color) _blend_color = self.button_color;
@@ -38,7 +41,10 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_sprite_stretched_ext(self.style.sprite_button, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
-		//Text
+		// Icon
+		self.drawIcon();
+		
+		// Text
 		if self.text != "" {
 			if !is_undefined(self.style.font_buttons) {
 				draw_set_font(self.style.font_buttons);
@@ -56,7 +62,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
-		//Border
+		// Border
 		if !is_undefined(self.style.sprite_button_border) {
 			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 		}
@@ -83,5 +89,22 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.setColor = function(_button_color) {
 		self.button_color = _button_color;
 		return self;
+	}
+	
+	///@arg {Asset.GMSprite} _sprite
+	self.setIcon = function(_sprite) {
+		self.sprite_icon = _sprite;
+		var _size = min(self.width, self.height, sprite_get_width(_sprite), sprite_get_height(_sprite)) * 0.6;
+		self.sprite_icon_width = _size;
+		self.sprite_icon_height = _size;
+	}
+	
+	self.drawIcon = function() {
+		if sprite_exists(self.sprite_icon) {
+			var _offset = 4;
+			var _x = self.x + _offset;
+			var _y = self.y + self.height / 2 - self.sprite_icon_height / 2;
+			draw_sprite_stretched(self.sprite_icon, 0, _x, _y, self.sprite_icon_width, self.sprite_icon_height);
+		}
 	}
 }

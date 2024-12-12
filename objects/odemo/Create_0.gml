@@ -223,7 +223,11 @@ tab_sprites = new LuiTab("tabSprites", "Sprites");
 tab_about = new LuiTab("tabAbout", "About");
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
-
+// Set icons for tabs
+tab_panels.setIcon(sIconHome);
+tab_search.setIcon(sIconLookingGlass);
+tab_sprites.setIcon(sIconCamera);
+tab_about.setIcon(sIconQuestion);
 //Create some elements
 //setHalign and setValign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0);
@@ -260,7 +264,7 @@ deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
 my_panel_in_second_1.addContent([
 	new LuiText( , , , , , "Panel in panel").setTextHalign(fa_center),
 	[new LuiButton( , , , , , "ACTIVATE", function() {if is_struct(oDemo.deactivated_button) {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}}),
-	new LuiButton( , , , , , "Visible", function() {
+	new LuiButton( , , , , "btnVisibility", "Visible", function() {
 		oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
 	})],
 	new LuiButton( , , , , , "This button with a really long text that probably won't fit in this button!", ),

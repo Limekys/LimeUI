@@ -2,6 +2,7 @@
   "FolderOrderSettings":[
     {"name":"DEMO","order":2,"path":"folders/DEMO.yy",},
     {"name":"Fonts","order":1,"path":"folders/DEMO/Fonts.yy",},
+    {"name":"Icons","order":6,"path":"folders/DEMO/Icons.yy",},
     {"name":"Modern theme","order":5,"path":"folders/DEMO/Modern theme.yy",},
     {"name":"Sprites","order":2,"path":"folders/DEMO/Sprites.yy",},
     {"name":"Socials","order":21,"path":"folders/DEMO/Sprites/Socials.yy",},
@@ -37,6 +38,10 @@
     {"name":"sCar","order":9,"path":"sprites/sCar/sCar.yy",},
     {"name":"sCarFlip","order":10,"path":"sprites/sCarFlip/sCarFlip.yy",},
     {"name":"sHamburger","order":11,"path":"sprites/sHamburger/sHamburger.yy",},
+    {"name":"sIconCamera","order":3,"path":"sprites/sIconCamera/sIconCamera.yy",},
+    {"name":"sIconGhost","order":4,"path":"sprites/sIconGhost/sIconGhost.yy",},
+    {"name":"sIconLookingGlass","order":1,"path":"sprites/sIconLookingGlass/sIconLookingGlass.yy",},
+    {"name":"sIconQuestion","order":2,"path":"sprites/sIconQuestion/sIconQuestion.yy",},
     {"name":"sLimekysAvatar","order":20,"path":"sprites/sLimekysAvatar/sLimekysAvatar.yy",},
     {"name":"sLogoDemo","order":7,"path":"sprites/sLogoDemo/sLogoDemo.yy",},
     {"name":"sTelegram_64px","order":1,"path":"sprites/sTelegram_64px/sTelegram_64px.yy",},

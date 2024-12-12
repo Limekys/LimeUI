@@ -110,16 +110,8 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 
 ///@arg {String} name
 ///@arg {String} text
-function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
+function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, 0, name, text) constructor {
 	
-	self.name = name;
-	self.text = text;
-	self.width = LUI_AUTO;
-	self.pos_x = LUI_AUTO;
-	self.pos_y = LUI_AUTO;
-	initElement();
-	
-	self.is_pressed = false;
 	self.is_active = false;
 	self.tabgroup = undefined;
 	self.tab_container = undefined;
@@ -139,7 +131,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		//Base
+		// Base
 		if !is_undefined(self.style.sprite_tab) {
 			var _blend_color = self.style.color_main;
 			if !self.is_active {
@@ -157,7 +149,10 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 			draw_sprite_stretched_ext(self.style.sprite_tab, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		
-		//Text
+		// Icon
+		self.drawIcon();
+		
+		// Text
 		if self.text != "" {
 			if !is_undefined(self.style.font_buttons) {
 				draw_set_font(self.style.font_buttons);
@@ -175,14 +170,10 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
-		//Border
+		// Border
 		if !is_undefined(self.style.sprite_tab_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 		}
-	}
-	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
 	}
 	
 	self.onMouseLeftReleased = function() {
@@ -192,9 +183,5 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiBase() constructor {
 			self.tabActivate();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
-	}
-	
-	self.onMouseLeave = function() {
-		self.is_pressed = false;
 	}
 }
