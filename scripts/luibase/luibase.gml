@@ -924,8 +924,8 @@ function LuiBase() constructor {
 			_element.previous_y = _cur_y;
 			
 			// Update grid position
-			var _grid_x = floor(_element.x / 16);
-			var _grid_y = floor(_element.y / 16);
+			var _grid_x = floor(_element.x / global.lui_screen_grid_accuracy);
+			var _grid_y = floor(_element.y / global.lui_screen_grid_accuracy);
 			if (_element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y) {
 				_element._gridUpdate();
 			}

@@ -224,10 +224,10 @@ tab_about = new LuiTab("tabAbout", "About");
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
 // Set icons for tabs
-tab_panels.setIcon(sIconHome);
-tab_search.setIcon(sIconLookingGlass);
-tab_sprites.setIcon(sIconCamera);
-tab_about.setIcon(sIconQuestion);
+tab_panels.setIcon(sIconMenu);
+tab_search.setIcon(sIconSearch);
+tab_sprites.setIcon(sIconPalette);
+tab_about.setIcon(sIconInfo);
 //Create some elements
 //setHalign and setValign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0);

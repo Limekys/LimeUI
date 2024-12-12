@@ -92,16 +92,16 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	}
 	
 	///@arg {Asset.GMSprite} _sprite
-	self.setIcon = function(_sprite) {
+	self.setIcon = function(_sprite, _scale = 0.5) {
 		self.sprite_icon = _sprite;
-		var _size = min(self.width, self.height, sprite_get_width(_sprite), sprite_get_height(_sprite)) * 0.6;
+		var _size = floor(min(self.width, self.height, sprite_get_width(_sprite), sprite_get_height(_sprite)) * _scale);
 		self.sprite_icon_width = _size;
 		self.sprite_icon_height = _size;
 	}
 	
 	self.drawIcon = function() {
 		if sprite_exists(self.sprite_icon) {
-			var _offset = 4;
+			var _offset = 8;
 			var _x = self.x + _offset;
 			var _y = self.y + self.height / 2 - self.sprite_icon_height / 2;
 			draw_sprite_stretched(self.sprite_icon, 0, _x, _y, self.sprite_icon_width, self.sprite_icon_height);

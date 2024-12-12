@@ -4,6 +4,7 @@
 //Globals
 global.lui_debug_mode =	0;
 global.lui_screen_grid_size = 96;
+global.lui_screen_grid_accuracy = 8; // 8 - good but for low size pixel styles ui would be good 1
 
 //System
 #macro LUI_AUTO							-1
