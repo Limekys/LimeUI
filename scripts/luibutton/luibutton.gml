@@ -20,6 +20,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.is_pressed = false;
 	self.button_color = undefined;
 	self.sprite_icon = -1;
+	self.sprite_icon_scale = 0.5;
 	self.sprite_icon_width = -1;
 	self.sprite_icon_height = -1;
 	
@@ -84,6 +85,10 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		self.is_pressed = false;
 	}
 	
+	self.create = function() {
+		if sprite_exists(self.sprite_icon) self.calcIconSize();
+	}
+	
 	///@func setColor(_button_color)
 	///@arg _button_color
 	self.setColor = function(_button_color) {
@@ -94,13 +99,20 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	///@arg {Asset.GMSprite} _sprite
 	self.setIcon = function(_sprite, _scale = 0.5) {
 		self.sprite_icon = _sprite;
-		var _size = floor(min(self.width, self.height, sprite_get_width(_sprite), sprite_get_height(_sprite)) * _scale);
+		self.sprite_icon_scale = _scale;
+		self.calcIconSize();
+		return self;
+	}
+	
+	self.calcIconSize = function() {
+		var _size = floor(min(self.width, self.height, sprite_get_width(self.sprite_icon), sprite_get_height(self.sprite_icon)) * self.sprite_icon_scale);
 		self.sprite_icon_width = _size;
 		self.sprite_icon_height = _size;
 	}
 	
 	self.drawIcon = function() {
 		if sprite_exists(self.sprite_icon) {
+			// Draw icon
 			var _offset = 8;
 			var _x = self.x + _offset;
 			var _y = self.y + self.height / 2 - self.sprite_icon_height / 2;

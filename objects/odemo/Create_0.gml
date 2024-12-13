@@ -217,17 +217,12 @@ my_ui.addContent([
 ]);
 
 //Create tabs for tabGroup
-tab_panels = new LuiTab("tabPanels", "Panels");
-tab_search = new LuiTab("tabSearch", "Search");
-tab_sprites = new LuiTab("tabSprites", "Sprites");
-tab_about = new LuiTab("tabAbout", "About");
+tab_panels = new LuiTab("tabPanels", "Panels").setIcon(sIconMenu);
+tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch);
+tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette);
+tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo);
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
-// Set icons for tabs
-tab_panels.setIcon(sIconMenu);
-tab_search.setIcon(sIconSearch);
-tab_sprites.setIcon(sIconPalette);
-tab_about.setIcon(sIconInfo);
 //Create some elements
 //setHalign and setValign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0);
