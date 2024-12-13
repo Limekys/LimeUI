@@ -240,7 +240,7 @@ my_panel.addContent([
 	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group_target_x = self.value}), [0.2, 0.8]],
 	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group_target_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
-	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = self.value}), new LuiText( , , , , , "Progress loading")],
+	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = self.value}).setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
 	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],
 	new LuiTextbox( , , , , , , "login"),
 	new LuiTextbox( , , , , , , "password", true),
@@ -264,7 +264,7 @@ my_panel_in_second_1.addContent([
 	new LuiButton( , , , , "btnVisibility", "Visible", function() {
 		oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
 	})],
-	new LuiButton( , , , , , "This button with a really long text that probably won't fit in this button!", ),
+	new LuiButton( , , , , , "This button with a really long text that probably won't fit in this button!", ).setTooltip("This button with a really long text that probably won't fit in this button!"),
 	deactivated_button,
 ]);
 my_panel_in_second_2 = new LuiPanel();
@@ -299,7 +299,7 @@ my_panel_2.addContent([
 ]);
 
 //Create drop down menu and some items in it
-dropdown_menu = new LuiDropDown(, , , , , "Select theme...").set("Dark");
+dropdown_menu = new LuiDropDown(, , , , , "Select theme...").set("Dark").setTooltip("Change UI theme");
 drop_item1 = new LuiDropDownItem( , "Dark", function() {
 	with(oDemo) {
 		my_ui.setStyle(global.demo_style_dark);
@@ -361,7 +361,7 @@ big_button_3.addContent([
 my_panel_3.addContent([
 	new LuiText( , , , , , "Third panel", true).setTextHalign(fa_center),
 	dropdown_menu,
-	new LuiText(, , , , , "This is a really long text that probably won't fit in this window!"),
+	new LuiText(, , , , , "This is a really long text that probably won't fit in this panel!").setTooltip("This is a really long text that probably won't fit in this panel!"),
 	big_button,
 	big_button_2,
 	big_button_3

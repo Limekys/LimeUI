@@ -57,6 +57,7 @@ function LuiBase() constructor {
 	self.waiting_for_keyboard_input = false;
 	self.main_ui = self;
 	self.allow_height_extend = true;
+	self.tooltip = "";
 	
 	//Custom functions for elements
 	
@@ -574,6 +575,11 @@ function LuiBase() constructor {
 			self.onValueUpdate();
 			self.updateMainUiSurface();
 		}
+		return self;
+	}
+	
+	static setTooltip = function(_tooltip) {
+		self.tooltip = _tooltip;
 		return self;
 	}
 	

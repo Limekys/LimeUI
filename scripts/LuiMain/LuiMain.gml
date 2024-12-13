@@ -155,14 +155,33 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
+		// Get topmost element
+		var _element = self.topmost_hovered_element;
+		
+		// Draw tooltip text
+		if !is_undefined(_element) {
+			if _element.tooltip != "" {
+				draw_set_font(_element.style.font_default);
+				var _width = string_width(_element.tooltip);
+				var _height = string_height(_element.tooltip);
+				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, 0, self.width - _width);
+				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, 0, self.height - _height);
+				draw_set_color(c_black);
+				draw_set_alpha(0.5);
+				draw_rectangle(_mouse_x, _mouse_y, _mouse_x + _width, _mouse_y + _height, false);
+				draw_rectangle(_mouse_x, _mouse_y, _mouse_x + _width, _mouse_y + _height, true);
+				draw_set_color(c_white);
+				draw_set_halign(fa_left);
+				draw_set_valign(fa_top);
+				draw_text(_mouse_x, _mouse_y, _element.tooltip);
+			}
+		}
+		
 		// Draw debug info under mouse
-		if global.lui_debug_mode != 0 {
+		if global.lui_debug_mode != 0 && !is_undefined(_element) {
 			if !is_undefined(self.style.font_debug) {
 				draw_set_font(self.style.font_debug);
 			}
-			//Get element
-			var _element = self.topmost_hovered_element;
-			if is_undefined(_element) return false;
 			//Text on mouse
 			var _mouse_x = device_mouse_x_to_gui(0) + 16;
 			var _mouse_y = device_mouse_y_to_gui(0) + 0;
