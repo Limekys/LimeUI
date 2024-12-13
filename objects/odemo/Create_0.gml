@@ -223,6 +223,8 @@ tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette);
 tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo);
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
+tab_group_target_x = tab_group.pos_x;
+tab_group_target_y = tab_group.pos_y;
 //Create some elements
 //setHalign and setValign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0);
@@ -235,8 +237,8 @@ btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).se
 //Add elements to first panel and init some here
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
-	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group.pos_x = self.value}), [0.2, 0.8]],
-	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group.pos_y = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group_target_x = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group_target_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
 	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = self.value}), new LuiText( , , , , , "Progress loading")],
 	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],

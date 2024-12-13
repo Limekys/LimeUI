@@ -1,6 +1,7 @@
 function LuiMain() : LuiBase() constructor {
 	
-	//Init main variables
+	// Main variables
+	self.name = "lui_main_ui";
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.ui_screen_surface = -1;
@@ -8,7 +9,7 @@ function LuiMain() : LuiBase() constructor {
 	self.pre_draw_list = [];
 	self.element_names = {};
 	
-	//Init screen grid
+	// Screen grid
 	self._screen_grid = {};
 	for (var _x = 0, _width = ceil(display_get_gui_width() / LUI_GRID_SIZE); _x <= _width; ++_x) {
 		for (var _y = 0, _height = ceil(display_get_gui_height() / LUI_GRID_SIZE); _y <= _height; ++_y) {
@@ -17,7 +18,172 @@ function LuiMain() : LuiBase() constructor {
 		}
 	}
 	
-	//Cleanup
+	// Update
+	self.base_update = method(self, update);
+	self.update = function() {
+		
+		// Update all elements
+		self.base_update();
+			
+		// Mouse position
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+			
+		// Mouse events
+		if (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
+			var _previous_hovered_element = self.topmost_hovered_element;
+			self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
+			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
+				_previous_hovered_element.is_mouse_hovered = false;
+				_previous_hovered_element.onMouseLeave();
+				_previous_hovered_element.updateMainUiSurface();
+				//_previous_hovered_element.updateParentRelativeSurface(); //???//
+			}
+			
+			if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
+				if self.topmost_hovered_element.is_mouse_hovered == false {
+					self.topmost_hovered_element.is_mouse_hovered = true;
+					self.topmost_hovered_element.onMouseEnter();
+					self.topmost_hovered_element.updateMainUiSurface();
+					//self.topmost_hovered_element.updateParentRelativeSurface(); //???//
+				}
+				
+				if (mouse_check_button(mb_left)) {
+					self.topmost_hovered_element.onMouseLeft();
+					//self.updateMainUiSurface();
+				}
+				if (mouse_check_button_pressed(mb_left)) {
+					self.topmost_hovered_element.onMouseLeftPressed();
+					// Set focus on element
+					if self.element_in_focus != self.topmost_hovered_element {
+						// Remove focus from previous element
+						if !is_undefined(self.element_in_focus) {
+							self.element_in_focus.removeFocus();
+							self.element_in_focus = undefined;
+						}
+						self.topmost_hovered_element.setFocus();
+						self.element_in_focus = self.topmost_hovered_element;
+					}
+					self.updateMainUiSurface();
+				}
+				if (mouse_check_button_released(mb_left)) {
+					self.topmost_hovered_element.onMouseLeftReleased();
+					// Remove focus from element
+					if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
+						self.element_in_focus.removeFocus();
+						self.element_in_focus = undefined;
+					}
+					self.updateMainUiSurface();
+				}
+				if (mouse_wheel_down() || mouse_wheel_up()) {
+					self.topmost_hovered_element.onMouseWheel();
+					self.updateMainUiSurface();
+				}
+			} else {
+				// Remove focus from element
+				if !is_undefined(self.element_in_focus) {
+					if (mouse_check_button_pressed(mb_left)) {
+						self.element_in_focus.removeFocus();
+						self.element_in_focus = undefined;
+						self.updateMainUiSurface();
+					}
+				}
+			}
+		}
+		
+		// Keyboard events
+		if !is_undefined(self.element_in_focus) {
+			if keyboard_check(vk_anykey) {
+				self.element_in_focus.onKeyboardInput();
+				self.updateMainUiSurface();
+			}
+			if keyboard_check_released(vk_anykey) {
+				self.element_in_focus.onKeyboardRelease();
+			}
+			if keyboard_check_pressed(vk_escape) {
+				self.element_in_focus.removeFocus();
+				self.element_in_focus = undefined;
+				self.updateMainUiSurface();
+			}
+		}
+	}
+	
+	// Render
+	self.base_render = method(self, render);
+	self.render = function() {
+		
+		// Pre draw events
+		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
+			var _element = self.pre_draw_list[i];
+			_element.preDraw();
+		}
+		
+		// Create main ui surface
+		if !surface_exists(self.ui_screen_surface) {
+			self.ui_screen_surface = surface_create(self.width, self.height);
+			self.update_ui_screen_surface = true;
+		}
+		
+		// Update main ui surface
+		if self.update_ui_screen_surface {
+			// Set ui surface
+			surface_set_target(self.ui_screen_surface);
+			draw_clear_alpha(c_black, 0);
+			gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
+			
+			// Draw all elements
+			self.base_render();
+			
+			// Reset ui surface
+			gpu_set_blendequation(bm_eq_add);
+			surface_reset_target();
+			self.update_ui_screen_surface = false;
+		}
+		
+		// Draw all to screen
+		if self.visible {
+			//Draw main ui surface
+			draw_surface_ext(self.ui_screen_surface, self.x, self.y, 1, 1, 0, c_white, 1);
+			//Draw other stuff
+			if self.display_focused_element {
+				if !is_undefined(self.element_in_focus) {
+					draw_rectangle_color(
+						self.element_in_focus.x - 1, self.element_in_focus.y - 1, 
+						self.element_in_focus.x + self.element_in_focus.width, self.element_in_focus.y + self.element_in_focus.height, c_white, c_white, c_white, c_white, true
+					);
+				}
+			}
+		}
+		
+		// Draw debug info under mouse
+		if global.lui_debug_mode != 0 {
+			if !is_undefined(self.style.font_debug) {
+				draw_set_font(self.style.font_debug);
+			}
+			//Get element
+			var _element = self.topmost_hovered_element;
+			if is_undefined(_element) return false;
+			//Text on mouse
+			var _mouse_x = device_mouse_x_to_gui(0) + 16;
+			var _mouse_y = device_mouse_y_to_gui(0) + 0;
+			//Text
+			var _prev_color = draw_get_color();
+			var _prev_alpha = draw_get_alpha();
+			draw_set_alpha(1);
+			draw_set_color(c_white);
+			_luiDrawTextDebug(_mouse_x, _mouse_y, 
+			"name: " + string(_element.name) + "\n" +
+			"x: " + string(_element.pos_x) + " y: " + string(_element.pos_y) + "\n" +
+			"w: " + string(_element.width) + " h: " + string(_element.height) + "\n" +
+			"v: " + string(_element.value) + "\n" +
+			"hl: " + string(_element.halign) + " vl: " + string(_element.valign) + "\n" +
+			"z: " + string(_element.z));
+			draw_set_color(_prev_color);
+			draw_set_alpha(_prev_alpha);
+		}
+	}
+	
+	// Cleanup
 	self.cleanUp = function() {
 		self.pre_draw_list = -1;
 		if surface_exists(self.ui_screen_surface) {

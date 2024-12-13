@@ -17,11 +17,12 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	initElement();
 	setCallback(callback);
 	
+	self.value = value;
+	self.target_value = value;
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
 	self.integers_only = false;
 	self.dragging = false;
-	self.value = value;
 	
 	self.render_mode = 1;
 	///@desc 0 - raw value, 1 - integer only //???//
