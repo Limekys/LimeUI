@@ -32,9 +32,9 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		//Value
+		// Value
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
-		//Base
+		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
 			var _blend_color = self.style.color_progress_bar;
 			if self.deactivated {
@@ -42,7 +42,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			}
 			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, draw_x, draw_y, width, height, _blend_color, 1);
 		}
-		//Bar value
+		// Bar value
 		if !is_undefined(self.style.sprite_progress_bar_value) {
 			var _blend_color = self.style.color_progress_bar_value;
 			if self.deactivated {
@@ -50,22 +50,26 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			}
 			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, draw_x, draw_y, width * _bar_value, height, _blend_color, 1);
 		}
-		//Border
+		// Border
 		if !is_undefined(self.style.sprite_progress_bar_border) {
 			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, draw_x, draw_y, width, height, self.style.color_progress_bar_border, 1);
 		}
-		//Text value
+		// Text value
 		var _value = render_mode == 0 ? string(self.value) : string(round(self.value));
-		if !is_undefined(self.style.font_sliders) draw_set_font(self.style.font_sliders);
+		if !is_undefined(self.style.font_sliders) {
+			draw_set_font(self.style.font_sliders);
+		}
 		if !self.deactivated {
 			draw_set_color(self.style.color_font);
 		} else {
 			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
 		}
-		draw_set_halign(fa_center);
-		draw_set_valign(fa_middle);
-		draw_text(draw_x + self.width div 2, draw_y + self.height div 2, _value);
-		//Slider knob
+		if !self.dragging {
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_middle);
+			draw_text(draw_x + self.width div 2, draw_y + self.height div 2, _value);
+		}
+		// Slider knob
 		var _knob_width = self.height;
 		if !is_undefined(self.style.sprite_slider_knob) {
 			var _slider_knob_nineslice = sprite_get_nineslice(self.style.sprite_slider_knob);
@@ -85,9 +89,15 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			}
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_color, 1);
 		}
-		//Knob border
+		// Knob border
 		if !is_undefined(self.style.sprite_slider_knob_border) {
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _knob_x - _knob_extender, draw_y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_progress_bar_border, 1);
+		}
+		// Popup text value when dragging
+		if self.dragging {
+			draw_set_halign(fa_center);
+			draw_set_valign(fa_bottom);
+			draw_text(_knob_x + _knob_width div 2, draw_y - 4, _value);
 		}
 	}
 	
