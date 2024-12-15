@@ -19,11 +19,23 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	setCallback(callback);
 	
 	self.value = value;
-	self.target_value = value;
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
-	self.dragging = false;
 	self.rounding = rounding;
+	self.dragging = false;
+	
+	static _calcValue = function(value) {
+		if self.rounding > 0 {
+			return floor(value div (self.rounding) * (self.rounding));
+		} else {
+			return value;
+		}
+	}
+	
+	static setRounding = function(rounding) {
+		self.rounding = rounding;
+		return self;
+	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		// Value
@@ -127,18 +139,5 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.onValueUpdate = function() {
 		self.callback();
-	}
-	
-	static _calcValue = function(value) {
-		if self.rounding > 0 {
-			return floor(value div (self.rounding) * (self.rounding));
-		} else {
-			return value;
-		}
-	}
-	
-	static setRounding = function(rounding) {
-		self.rounding = rounding;
-		return self;
 	}
 }
