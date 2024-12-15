@@ -237,13 +237,14 @@ btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).se
 //Add elements to first panel and init some here
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
-	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, function(){oDemo.tab_group_target_x = self.value}), [0.2, 0.8]],
-	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, function(){oDemo.tab_group_target_y = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, 0, function(){oDemo.tab_group_target_x = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, 1, function(){oDemo.tab_group_target_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
 	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = self.value}).setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
 	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],
 	new LuiTextbox( , , , , , , "login"),
 	new LuiTextbox( , , , , , , "password", true),
+	[new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , , 0, 100, 50, 10)],
 	[btn_show_msg, btn_restart]
 ]);
 
