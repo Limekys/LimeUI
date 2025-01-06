@@ -8,6 +8,13 @@ debug_grid = false;
 
 #endregion
 
+#region Init demo variables
+
+demo_login = "";
+demo_password = "";
+
+#endregion
+
 #region Create styles
 
 //Light theme
@@ -226,11 +233,10 @@ tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizo
 tab_group_target_x = tab_group.pos_x;
 tab_group_target_y = tab_group.pos_y;
 //Create some elements
-//setHalign and setValign allow you to set the alignment of elements in the panel
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , , "Show message", function() {
-	showLuiMessage(oDemo.my_ui, 360, 140, "This is just a simple message!");
+	showLuiMessage(oDemo.my_ui, 360, 140, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password);
 }).setValign(fa_bottom).setHalign(fa_left);
 btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).setValign(fa_bottom).setHalign(fa_right);
 
@@ -240,11 +246,15 @@ my_panel.addContent([
 	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, 0, function(){oDemo.tab_group_target_x = self.value}), [0.2, 0.8]],
 	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, 1, function(){oDemo.tab_group_target_y = self.value}), [0.2, 0.8]],
 	[demo_loading],
-	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = self.value}).setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
+	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = get()}).setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
 	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],
-	new LuiTextbox( , , , , , , "login"),
-	new LuiTextbox( , , , , , , "password", true),
-	[new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , , 0, 100, 20, 10)],
+	new LuiTextbox( , , , , , , "login", false, , function () {
+		oDemo.demo_login = get();
+	}),
+	new LuiTextbox( , , , , , , "password", true, , function () {
+		oDemo.demo_password = get();
+	}),
+	[new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)],
 	[btn_show_msg, btn_restart]
 ]);
 
@@ -391,7 +401,8 @@ my_panel_3.addContent([
 			new LuiPanel(, , , , "Nested panel x2").addContent([
 				new LuiText(, , , , , "Nested panel x2"),
 				new LuiPanel(, , , , "Nested panel x3").addContent([
-					new LuiText(, , , , , "Nested panel x3")
+					new LuiText(, , , , , "Updateble text with binding variable:"),
+					new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
 				])
 			])
 		]);

@@ -58,6 +58,7 @@ function LuiBase() constructor {
 	self.main_ui = self;
 	self.allow_height_extend = true;
 	self.tooltip = "";
+	self.binding_variable = -1;
 	
 	//Custom functions for elements
 	
@@ -578,9 +579,37 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set popup text to element when mouse on it
 	static setTooltip = function(_tooltip) {
 		self.tooltip = _tooltip;
 		return self;
+	}
+	
+	static setBinding = function(_source, _variable) {
+		if (_source != noone && _variable != "") {
+			if (variable_instance_exists(_source, _variable)) {
+				self.binding_variable = {
+					source : _source,
+					variable : _variable
+				}
+			} else {
+				if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): Can't find variable '{_variable}'!");
+			}
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): Wrong variable name or instance!");
+		}
+		return self;
+	}
+	
+	static updateBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _source_value = variable_instance_get(_source, _variable);
+			set(_source_value);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): The specified variable is no longer available!");
+		}
 	}
 	
 	//Alignment and sizes
@@ -895,6 +924,11 @@ function LuiBase() constructor {
 			
 			// Update element
 			_element.update(_element.x, _element.y);
+			
+			// Update binding variable
+			if _element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable) {
+				_element.updateBinding();
+			}
 			
 			// Update content script if needed
 			if (_element.need_to_update_content) {

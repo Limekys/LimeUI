@@ -34,10 +34,8 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	}, [], -1);
 	
 	///@ignore
-	static _limit_value = function() {
-		if string_length(self.value) > self.max_length {
-			self.value = string_copy(self.value, 1, self.max_length);
-		}
+	static _limit_value = function(_string) {
+		return string_copy(_string, 1, self.max_length);
 	}
 	
 	self.create = function() {
@@ -141,17 +139,15 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	}
 	
 	self.onKeyboardInput = function() {
-		self.value = keyboard_string;
-		self._limit_value();
-		keyboard_string = self.value;
+		self.set(self._limit_value(keyboard_string));
+		keyboard_string = self.get();
 		if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
-			self.value = self.value + clipboard_get_text();
-			self._limit_value();
-			keyboard_string = self.value;
+			self.set(self._limit_value(self.get() + clipboard_get_text()));
+			keyboard_string = self.get();
 		}
 	}
 	
-	self.onKeyboardRelease = function() {
+	self.onValueUpdate = function() {
 		self.callback();
 	}
 	
