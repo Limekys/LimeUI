@@ -161,19 +161,26 @@ function LuiMain() : LuiBase() constructor {
 		// Draw tooltip text
 		if !is_undefined(_element) {
 			if _element.tooltip != "" {
+				var _padding = 16; //Screen border indentation
+				var _padding_text = 8; //Text border indentation inside tooltip box
 				draw_set_font(_element.style.font_default);
-				var _width = string_width(_element.tooltip);
-				var _height = string_height(_element.tooltip);
-				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, 0, self.width - _width);
-				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, 0, self.height - _height);
-				draw_set_color(c_black);
-				draw_set_alpha(0.5);
-				draw_rectangle(_mouse_x, _mouse_y, _mouse_x + _width, _mouse_y + _height, false);
-				draw_rectangle(_mouse_x, _mouse_y, _mouse_x + _width, _mouse_y + _height, true);
-				draw_set_color(c_white);
+				var _width = string_width(_element.tooltip) + _padding_text*2;
+				var _height = string_height(_element.tooltip) + _padding_text*2;
+				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
+				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
+				// Draw sprite/rectangle
+				if !is_undefined(self.style.sprite_tooltip) {
+					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip, 1);
+				}
+				// Draw border sprite/rectangle
+				if !is_undefined(self.style.sprite_tooltip_border) {
+					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip_border, 1);
+				}
+				// Draw text
+				draw_set_color(self.style.color_font);
 				draw_set_halign(fa_left);
 				draw_set_valign(fa_top);
-				draw_text(_mouse_x, _mouse_y, _element.tooltip);
+				draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);
 			}
 		}
 		

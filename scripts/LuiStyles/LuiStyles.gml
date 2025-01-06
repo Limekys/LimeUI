@@ -10,27 +10,6 @@ function LuiStyle(_style) constructor {
 	font_buttons = _style[$ "font_buttons"] ?? undefined;
 	font_sliders = _style[$ "font_sliders"] ?? undefined;
 	font_debug = _style[$ "font_debug"] ?? undefined;
-	//Colors
-	color_font = _style[$ "color_font"] ?? c_black;
-	color_font_hint = _style[$ "color_font_hint"] ?? c_gray;
-	color_main = _style[$ "color_main"] ?? c_white;
-	color_border = _style[$ "color_border"] ?? c_gray;
-	color_button = _style[$ "color_button"] ?? c_white;
-	color_button_border = _style[$ "color_button_border"] ?? c_gray;
-	color_hover = _style[$ "color_hover"] ?? c_gray;	//mixes the color of the main color of this element by 50%
-	color_checkbox = _style[$ "color_checkbox"] ?? c_white;
-	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
-	color_checkbox_border = _style[$ "color_checkbox_border"] ?? c_gray;
-	color_progress_bar = _style[$ "color_progress_bar"] ?? c_white;
-	color_progress_bar_value = _style[$ "color_progress_bar_value"] ?? #45C952;
-	color_progress_bar_border = _style[$ "color_progress_bar_border"] ?? c_gray;
-	color_textbox = _style[$ "color_textbox"] ?? c_white;
-	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
-	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_white;
-	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
-	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
-	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
-	color_dropdown_arrow = _style[$ "color_dropdown_arrow"] ?? c_gray;
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
 	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
@@ -57,6 +36,31 @@ function LuiStyle(_style) constructor {
 	sprite_tab_border = _style[$ "sprite_tab_border"] ?? undefined;
 	sprite_tabgroup = _style[$ "sprite_tabgroup"] ?? undefined;
 	sprite_tabgroup_border = _style[$ "sprite_tabgroup_border"] ?? undefined;
+	sprite_tooltip = _style[$ "sprite_tooltip"] ?? undefined;
+	sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
+	//Colors
+	color_font = _style[$ "color_font"] ?? c_black;
+	color_font_hint = _style[$ "color_font_hint"] ?? c_gray;
+	color_main = _style[$ "color_main"] ?? c_white;
+	color_border = _style[$ "color_border"] ?? c_gray;
+	color_button = _style[$ "color_button"] ?? c_white;
+	color_button_border = _style[$ "color_button_border"] ?? c_gray;
+	color_hover = _style[$ "color_hover"] ?? c_gray; //mixes the color of the main color of this element by 50%
+	color_checkbox = _style[$ "color_checkbox"] ?? c_white;
+	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
+	color_checkbox_border = _style[$ "color_checkbox_border"] ?? c_gray;
+	color_progress_bar = _style[$ "color_progress_bar"] ?? c_white;
+	color_progress_bar_value = _style[$ "color_progress_bar_value"] ?? #45C952;
+	color_progress_bar_border = _style[$ "color_progress_bar_border"] ?? c_gray;
+	color_textbox = _style[$ "color_textbox"] ?? c_white;
+	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
+	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_white;
+	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
+	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
+	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
+	color_dropdown_arrow = _style[$ "color_dropdown_arrow"] ?? c_gray;
+	color_tooltip = _style[$ "color_tooltip"] ?? c_black;
+	color_tooltip_border = _style[$ "color_tooltip_border"] ?? c_black;
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
@@ -69,7 +73,7 @@ function LuiStyle(_style) constructor {
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
 	//Render functions
-	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined;
+	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined; //function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha)
 	//Animations
 	anim_on_create = _style[$ "anim_on_create"] ?? LUI_ANIM.none;
 	anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
