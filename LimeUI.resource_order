@@ -6,12 +6,12 @@
     {"name":"Modern theme","order":5,"path":"folders/DEMO/Modern theme.yy",},
     {"name":"Sprites","order":2,"path":"folders/DEMO/Sprites.yy",},
     {"name":"Socials","order":21,"path":"folders/DEMO/Sprites/Socials.yy",},
+    {"name":"UsefulTools","order":3,"path":"folders/Limekys/UsefulTools.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"fDebug","order":1,"path":"fonts/fDebug/fDebug.yy",},
     {"name":"fModern","order":2,"path":"fonts/fModern/fModern.yy",},
     {"name":"oDemo","order":3,"path":"objects/oDemo/oDemo.yy",},
-    {"name":"oSteadyDeltaTime","order":2,"path":"objects/oSteadyDeltaTime/oSteadyDeltaTime.yy",},
     {"name":"rDemo","order":4,"path":"rooms/rDemo/rDemo.yy",},
     {"name":"LuiBase","order":2,"path":"scripts/LuiBase/LuiBase.yy",},
     {"name":"LuiBlockArea","order":17,"path":"scripts/LuiBlockArea/LuiBlockArea.yy",},

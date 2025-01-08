@@ -19,6 +19,7 @@
     {"$GMFolder":"","%Name":"Socials","folderPath":"folders/DEMO/Sprites/Socials.yy","name":"Socials","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Limekys","folderPath":"folders/Limekys.yy","name":"Limekys","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"LimeUI","folderPath":"folders/Limekys/LimeUI.yy","name":"LimeUI","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"UsefulTools","folderPath":"folders/Limekys/UsefulTools.yy","name":"UsefulTools","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "IncludedFiles":[],
   "isEcma":false,

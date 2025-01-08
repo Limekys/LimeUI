@@ -26,7 +26,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	static _calcValue = function(value) {
 		if self.rounding > 0 {
-			return floor(value div (self.rounding) * (self.rounding));
+			return round(value / (self.rounding)) * (self.rounding);
 		} else {
 			return value;
 		}

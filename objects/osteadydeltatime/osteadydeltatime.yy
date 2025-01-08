@@ -10,8 +10,8 @@
   "name":"oSteadyDeltaTime",
   "overriddenProperties":[],
   "parent":{
-    "name":"Limekys",
-    "path":"folders/Limekys.yy",
+    "name":"UsefulTools",
+    "path":"folders/Limekys/UsefulTools.yy",
   },
   "parentObjectId":null,
   "persistent":true,

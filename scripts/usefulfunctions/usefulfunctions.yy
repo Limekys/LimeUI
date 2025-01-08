@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"UsefulFunctions",
   "parent":{
-    "name":"Limekys",
-    "path":"folders/Limekys.yy",
+    "name":"UsefulTools",
+    "path":"folders/Limekys/UsefulTools.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
