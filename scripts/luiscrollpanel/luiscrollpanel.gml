@@ -164,7 +164,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.cleanUp = function() {
+	self.onDestroy = function() {
 		if surface_exists(self.panel_surface) {
 			surface_free(self.panel_surface);
 		}

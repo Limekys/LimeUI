@@ -210,7 +210,7 @@ function LuiMain() : LuiBase() constructor {
 	}
 	
 	// Cleanup
-	self.cleanUp = function() {
+	self.onDestroy = function() {
 		self.pre_draw_list = -1;
 		if surface_exists(self.ui_screen_surface) {
 			surface_free(self.ui_screen_surface);

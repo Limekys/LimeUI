@@ -88,7 +88,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Called when this element is deleted (for example to clear surfaces)
-	self.cleanUp = function() {
+	self.onDestroy = function() {
 		//Custom for each element
 	};
 	
@@ -1134,7 +1134,7 @@ function LuiBase() constructor {
 			main_ui.element_in_focus.removeFocus();
 			main_ui.element_in_focus = undefined;
 		}
-		self.cleanUp();
+		self.onDestroy();
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;

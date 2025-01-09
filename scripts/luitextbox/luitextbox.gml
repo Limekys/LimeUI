@@ -151,7 +151,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		self.callback();
 	}
 	
-	self.cleanUp = function() {
+	self.onDestroy = function() {
 		if time_source_exists(self.cursor_timer) {
 			time_source_destroy(self.cursor_timer);
 		}
