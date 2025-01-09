@@ -525,3 +525,10 @@ my_panel_3.addContent([
 	#endregion
 
 #endregion
+
+// Create buttons to go another demo room
+button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
+	room_goto(rDemo2);
+}).setHalign(fa_right).setValign(fa_bottom);
+
+my_ui.addContent(button_next_demo);
