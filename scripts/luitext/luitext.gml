@@ -79,7 +79,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 			if !self.scale_to_fit {
 				self._luiDrawTextCutoff(_txt_x, _txt_y, self.value, self.width);
 			} else {
-				var _text = _luiGetTextCutoff(self.value, self.width);
+				var _text = self.value;
 				var _xscale = self.width / string_width(_text);
 				var _yscale = self.height / string_height(_text);
 				var _scale = min(_xscale, _yscale);
