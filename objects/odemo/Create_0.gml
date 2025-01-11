@@ -18,7 +18,7 @@ demo_password = "";
 #region Create styles
 
 //Light theme
-global.demo_style_light = {
+demo_style_light = {
 	//Fonts
 	font_default : fDemo,
 	font_buttons : fDemo,
@@ -86,10 +86,10 @@ global.demo_style_light = {
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•"
-}
+                                                                    }; // TEMP: Just for fix stupid feather >_<
 
 //Dark theme
-global.demo_style_dark = {
+demo_style_dark = {
 	//Fonts
 	font_default : fDemo,
 	font_buttons : fDemo,
@@ -161,10 +161,10 @@ global.demo_style_dark = {
 	//sprite_render_function : function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha) {
 	//	draw_sprite_stretched_ext(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha);
 	//}
-}
+                                                                    }; // TEMP: Just for fix stupid feather >_<
 
 //Modern theme
-global.demo_style_modern = {
+demo_style_modern = {
 	//Fonts
 	font_default : fModern,
 	font_buttons : fModern,
@@ -213,12 +213,12 @@ global.demo_style_modern = {
 	scroll_surface_offset : [0,0,0,0],
 	textbox_cursor : "|",
 	textbox_password : "•"
-}
+                                                                    }; // TEMP: Just for fix stupid feather >_<
 
 #endregion
 
 //Create the main ui container
-my_ui = new LuiMain().setStyle(global.demo_style_dark);
+my_ui = new LuiMain().setStyle(demo_style_dark);
 
 //Create some panels
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
@@ -322,7 +322,7 @@ my_panel_2.addContent([
 dropdown_menu = new LuiDropDown(, , , , , "Select theme...").set("Dark").setTooltip("Change UI theme\nWIP");
 drop_item1 = new LuiDropDownItem( , "Dark", function() {
 	with(oDemo) {
-		my_ui.setStyle(global.demo_style_dark);
+		my_ui.setStyle(demo_style_dark);
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #191919);
 		var _b = layer_background_get_id("bgSprites");
@@ -335,7 +335,7 @@ drop_item1 = new LuiDropDownItem( , "Dark", function() {
 });
 drop_item2 = new LuiDropDownItem( , "Light", function() {
 	with(oDemo) {
-		my_ui.setStyle(global.demo_style_light);
+		my_ui.setStyle(demo_style_light);
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, c_ltgray);
 		var _b = layer_background_get_id("bgSprites");
@@ -348,7 +348,7 @@ drop_item2 = new LuiDropDownItem( , "Light", function() {
 });
 drop_item3 = new LuiDropDownItem( , "Modern", function() { 
 	with(oDemo) {
-		my_ui.setStyle(global.demo_style_modern);
+		my_ui.setStyle(demo_style_modern);
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #32333d);
 		var _b = layer_background_get_id("bgSprites");

@@ -1,4 +1,4 @@
-///@arg {Struct} ui
+///@arg {Struct.LuiMain} ui
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} text

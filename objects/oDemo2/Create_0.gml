@@ -1,7 +1,7 @@
 // Sprites https://wenrexa.itch.io/uilight
 
 //Light theme
-global.demo2_style = {
+demo2_style = {
 	//Fonts
 	font_default : fntDemo2,
 	font_buttons : fntDemo2,
@@ -51,10 +51,11 @@ global.demo2_style = {
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•"
-}
+                                                                    }; // TEMP: Just for fix stupid feather >_<
+
 
 // Create the main ui container
-game_ui = new LuiMain().setStyle(global.demo2_style);
+game_ui = new LuiMain().setStyle(demo2_style);
 
 // Create panels
 panel_menu = new LuiPanel( , , 300, , "panelMainMenu").setHalign(fa_center).setValign(fa_middle);

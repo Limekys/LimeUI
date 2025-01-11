@@ -74,7 +74,7 @@ function LuiStyle(_style) constructor {
 	textbox_password = _style[$ "textbox_password"] ?? "•";
 	//Render functions
 	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined; //function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha)
-	//Animations
+	//Animations (WIP)
 	anim_on_create = _style[$ "anim_on_create"] ?? LUI_ANIM.none;
 	anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
 	anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;

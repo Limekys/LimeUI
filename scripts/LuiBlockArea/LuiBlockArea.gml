@@ -1,3 +1,4 @@
+///@desc Black transparent area
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

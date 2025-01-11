@@ -320,7 +320,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set name of this element (by which the data of this element can be retrieved in the future)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setName = function(_name) {
 		if !variable_struct_exists(self.main_ui.element_names, _name) {
 			self._deleteElementName();
@@ -334,14 +334,14 @@ function LuiBase() constructor {
 	
 	//Focusing
 	///@desc setFocus
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setFocus = function() {
 		self.has_focus = true;
 		self.onFocusSet();
 		return self;
 	}
 	///@desc removeFocus
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static removeFocus = function() {
 		self.has_focus = false;
 		self.onFocusRemove();
@@ -350,7 +350,7 @@ function LuiBase() constructor {
 	
 	//Functions
 	///@desc activate
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static activate = function() {
 		self.deactivated = false;
 		array_foreach(self.content, function(_elm) {
@@ -359,7 +359,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc deactivate
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static deactivate = function() {
 		self.deactivated = true;
 		array_foreach(self.content, function(_elm) {
@@ -368,7 +368,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc setVisible(true/false)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
 			if self.visible != _visible {
@@ -394,14 +394,14 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc ignoreMouseHover(true/false)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static ignoreMouseHover = function(_ignore = true) {
 		self.ignore_mouse = _ignore;
 		return self;
 	}
 	
 	//???//
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setInsideParent = function(_inside) {
 		self.inside_parent = _inside;
 		array_foreach(self.content, function(_elm) {
@@ -411,7 +411,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Enable or disable visibility switching by function setVisible()
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setVisibilitySwitching = function(_bool) {
 		self.visibility_switching = _bool;
 		return self;
@@ -636,28 +636,28 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set horizontal element aligment (fa_left, fa_center, fa_right)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setHalign = function(halign) {
 		self.halign = halign;
 		return self;
 	}
 	
 	///@desc Set vertical element aligment (fa_top, fa_middle, fa_bottom)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setValign = function(valign) {
 		self.valign = valign;
 		return self;
 	}
 	
 	///@desc Center element horizontally on the parent element
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static centerHorizontally = function() {
 		self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
 		return self;
 	}
 	
 	///@desc Center element vertically on the parent element
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static centerVertically = function() {
 		self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
 		return self;
@@ -680,7 +680,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc alignAllElements() //???//
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static alignAllElements = function() {
 		for (var i = array_length(self.content) - 1; i >= 0 ; --i) {
 			var _element = self.content[i];
@@ -720,7 +720,7 @@ function LuiBase() constructor {
 	
 	//Design
 	///@desc setStyle(_style)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setStyle = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.custom_style_is_setted = true;
@@ -730,7 +730,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc setStyleChilds(_style)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setStyleChilds = function(_style) {
 		if self.custom_style_is_setted == false {
 			self.style = _style;
@@ -755,7 +755,7 @@ function LuiBase() constructor {
 		return undefined;
 	}
 	///@desc Set draw_relative to all descendants
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setDrawRelative = function(_relative, _parent_relative = self) {
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
 		    self.content[i].draw_relative = _relative;
@@ -765,7 +765,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc Set depth to the element
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setDepth = function(_depth) {
 		self.z = _depth;
 		array_foreach(self.content, function(_elm, _ind) {
@@ -774,14 +774,14 @@ function LuiBase() constructor {
 		return self;
 	}
 	///@desc Update main ui surface
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static updateMainUiSurface = function() {
 		self.main_ui.update_ui_screen_surface = true;
 		self.updateParentRelativeSurface();
 		return self;
 	}
 	///@desc Update parent relative surface
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static updateParentRelativeSurface = function() {
 		if !is_undefined(self.parent_relative) {
 			self.parent_relative._updateScrollSurface();
@@ -791,7 +791,7 @@ function LuiBase() constructor {
 	
 	//Interactivity
 	///@desc setCallback(callback)
-	///@return {Struct}
+	///@return {Struct.LuiBase}
 	static setCallback = function(callback) {
 		if callback == undefined {
 			self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
@@ -1126,7 +1126,7 @@ function LuiBase() constructor {
 	//Clean up
 	///@desc destroy()
 	static destroy = function() {
-		for (var i = array_length(self.content) - 1;  i >= 0; --i) {
+		for (var i = array_length(self.content) - 1; i >= 0; --i) {
 			var _element = self.content[i];
 			_element.destroy();
 		}

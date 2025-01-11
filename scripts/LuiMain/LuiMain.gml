@@ -1,3 +1,4 @@
+/// @desc Main container for UI
 function LuiMain() : LuiBase() constructor {
 	
 	// Main variables
