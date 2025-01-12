@@ -1,4 +1,4 @@
-///@desc Black transparent area
+///@desc Black transparent area. Use to darken an area or the whole screen, e.g. for a pop-up message.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -13,9 +13,22 @@ function LuiBlockArea(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 	self.height = height;
 	initElement();
 	
+	self.color = c_black;
+	self.alpha = 0.5;
+	
 	self.draw = function(draw_x = 0, draw_y = 0) {
-		draw_set_alpha(0.5);
-		draw_set_color(c_black);
+		draw_set_alpha(self.alpha);
+		draw_set_color(self.color);
 		draw_rectangle(0, 0, self.width, self.height, false);
+	}
+	
+	self.setColor = function(_color) {
+		self.color = _color;
+		return self;
+	}
+	
+	self.setAlpha = function(_alpha) {
+		self.alpha = _alpha;
+		return self;
 	}
 }
