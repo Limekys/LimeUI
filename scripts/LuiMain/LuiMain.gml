@@ -2,7 +2,7 @@
 function LuiMain() : LuiBase() constructor {
 	
 	// Main variables
-	self.name = "lui_main_ui";
+	self.name = "__lui_main_ui";
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.ui_screen_surface = -1;
@@ -218,6 +218,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		//delete self._screen_grid;
 		//delete self.element_names;
+		global.lui_element_count = 0;
 	}
 	
 	///@desc Get element by name

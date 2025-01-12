@@ -313,10 +313,12 @@ function LuiBase() constructor {
 	}
 	///@ignore
 	static _deleteElementName = function() {
-		if variable_struct_exists(self.main_ui.element_names, self.name) {
-			variable_struct_remove(self.main_ui.element_names, self.name);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR: Can't find name {self.name}!");
+		if self != self.main_ui {
+			if variable_struct_exists(self.main_ui.element_names, self.name) {
+				variable_struct_remove(self.main_ui.element_names, self.name);
+			} else {
+				if LUI_LOG_ERROR_MODE >= 1 print($"ERROR: Can't find name {self.name}!");
+			}
 		}
 	}
 	
@@ -1136,14 +1138,27 @@ function LuiBase() constructor {
 	///@desc destroy()
 	static destroy = function() {
 		for (var i = array_length(self.content) - 1; i >= 0; --i) {
-			var _element = self.content[i];
-			_element.destroy();
+			
+			//var _element = self.content[i];
+			//_element.destroy();
+			
+			var _error = false;
+			try {
+				var _element = self.content[i];
+				_element.destroy();
+			} catch(_e) {
+				_error = true;
+			} finally {
+				if _error {} //???//
+				//print("============ERROR===========");
+			}
 		}
 		if self == main_ui.element_in_focus {
 			main_ui.element_in_focus.removeFocus();
 			main_ui.element_in_focus = undefined;
 		}
 		self.onDestroy();
+		self._deleteElementName();
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
@@ -1152,9 +1167,10 @@ function LuiBase() constructor {
 		//Delete self from parent content
 		if !is_undefined(parent) {
 			if parent.content != -1 {
-				array_delete(parent.content, array_find_index(parent.content, function(_elm) {
+				var _ind = array_find_index(parent.content, function(_elm) {
 					return _elm == self;
-				}), 1);
+				});
+				array_delete(parent.content, _ind, 1);
 			}
 		}
 	}
