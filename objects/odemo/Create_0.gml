@@ -245,7 +245,7 @@ tab_group_target_y = tab_group.pos_y;
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , , "Show message", function() {
-	showLuiMessage(oDemo.my_ui, 360, 140, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password);
+	showLuiMessage(oDemo.my_ui, 360, 140, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 }).setValign(fa_bottom).setHalign(fa_left);
 btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).setValign(fa_bottom).setHalign(fa_right);
 
@@ -392,7 +392,7 @@ my_panel_3.addContent([
 	#region Add scroll panel in tab_panels
 	
 		//Create scroll panel
-		scroll_panel = new LuiScrollPanel(, , , 252, "Scroll panel");
+		scroll_panel = new LuiScrollPanel(, , , 252, "firstScrollPanel");
 		//Create some panel that will be added to the scroll panel
 		nested_panel = new LuiPanel( , , , , "Panel in scroll panel");
 		//And add some elements to panel that is inside of scroll panel

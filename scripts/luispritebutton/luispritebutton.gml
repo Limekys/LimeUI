@@ -1,4 +1,4 @@
-///@desc A sprite that is a button.
+///@desc This item displays the specified sprite with certain settings but works like a button.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -33,6 +33,7 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	
 	self.is_pressed = false;
 	
+	///@desc Set blend color for sprite
 	self.setColorBlend = function(color_blend) {
 		self.color_blend = color_blend;
 	}

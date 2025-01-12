@@ -1,4 +1,4 @@
-///@desc Just a sprite.
+///@desc This item displays the specified sprite with certain settings.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -23,19 +23,26 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.subimg = subimg;
 	self.color_blend = color;
 	self.alpha = alpha;
-	
+	self.maintain_aspect = maintain_aspect;
 	self.sprite_real_width = sprite_get_width(self.sprite);
 	self.sprite_real_height = sprite_get_height(self.sprite);
-	self.maintain_aspect = maintain_aspect;
 	self.aspect = self.sprite_real_width / self.sprite_real_height;
 	
+	///@desc Set sprite
 	static setSprite = function(_sprite) {
 		self.sprite = _sprite;
+		self._calcSpriteSize();
+		return self
+	}
+	
+	static _calcSpriteSize = function() {
 		self.sprite_real_width = sprite_get_width(self.sprite);
 		self.sprite_real_height = sprite_get_height(self.sprite);
 		self.aspect = self.sprite_real_width / self.sprite_real_height;
-		
-		return self
+	}
+	
+	self.create = function() {
+		self._calcSpriteSize();
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {

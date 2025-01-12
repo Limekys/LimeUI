@@ -32,6 +32,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
+	///@desc Sets the rounding rule for the value (0 - no rounding, 0.1 - round to tenths...).
 	static setRounding = function(rounding) {
 		self.rounding = rounding;
 		return self;

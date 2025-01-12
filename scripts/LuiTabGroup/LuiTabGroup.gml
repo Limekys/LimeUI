@@ -1,4 +1,4 @@
-///@desc Tabbed panel.
+///@desc Panel with tabs
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -59,12 +59,14 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.tabs[0].tabActivate();
 	}
 	
+	///@desc Add LuiTab's
 	self.addTabs = function(_tabs) {
         self.tabs = _tabs;
 		if !is_undefined(self.style) self._initTabs();
         return self;
     }
 	
+	///@desc Deactivate all tabs
 	self.tabDeactivateAll = function() {
 		var _tab_count = array_length(self.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
@@ -75,6 +77,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
+	///@desc Removes tab (WIP)
     self.removeTab = function(index) {
         if (index >= 0 && index < array_length(self.tabs)) {
             array_delete(self.tabs, index, 1);
@@ -118,16 +121,19 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.tabgroup = undefined;
 	self.tab_container = undefined;
 	
+	///@desc Activate current tab
 	self.tabActivate = function() {
 		self.is_active = true;
 		self.tab_container.setVisible(true);
 	}
 	
+	///@desc Deactivate current tab
 	self.tabDeactivate = function() {
 		self.is_active = false;
 		self.tab_container.setVisible(false);
 	}
 	
+	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
 	self.addContent = function(elements) {
 		self.tab_container.addContent(elements);
 	}
@@ -152,7 +158,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		}
 		
 		// Icon
-		self.drawIcon();
+		self._drawIcon();
 		
 		// Text
 		if self.text != "" {
