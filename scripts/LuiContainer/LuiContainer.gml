@@ -1,3 +1,4 @@
+///@desc An empty, invisible container for elements.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

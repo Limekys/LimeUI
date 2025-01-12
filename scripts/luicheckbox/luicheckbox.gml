@@ -1,3 +1,4 @@
+///@desc A button with a boolean value, either marked or unmarked.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

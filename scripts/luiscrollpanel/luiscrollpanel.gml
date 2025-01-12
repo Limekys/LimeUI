@@ -1,3 +1,4 @@
+///@desc Visually visible panel, but with the ability to scroll down/up.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

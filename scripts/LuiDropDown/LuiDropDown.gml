@@ -1,3 +1,4 @@
+///@desc Drop-down list.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -179,6 +180,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 }
 
+///@desc An element for a drop-down list.
 ///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback

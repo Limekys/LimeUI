@@ -1,3 +1,4 @@
+///@desc A visually visible container for placing elements in it.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

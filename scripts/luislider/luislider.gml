@@ -1,3 +1,4 @@
+///@desc Slider with a limited value from and to, e.g. to change the volume.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

@@ -1,3 +1,4 @@
+///@desc A field for entering text.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

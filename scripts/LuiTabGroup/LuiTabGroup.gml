@@ -1,3 +1,4 @@
+///@desc Tabbed panel.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -108,6 +109,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 }
 
+///@desc Tab, used for LuiTabGroup.
 ///@arg {String} name
 ///@arg {String} text
 function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, 0, name, text) constructor {

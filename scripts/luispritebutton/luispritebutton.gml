@@ -1,3 +1,4 @@
+///@desc A sprite that is a button.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

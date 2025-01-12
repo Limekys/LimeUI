@@ -1,3 +1,4 @@
+///@desc A progress bar/loading/filling anything.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

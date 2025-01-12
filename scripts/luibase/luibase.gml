@@ -1,3 +1,4 @@
+///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
 function LuiBase() constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	
@@ -321,13 +322,13 @@ function LuiBase() constructor {
 	
 	///@desc Set name of this element (by which the data of this element can be retrieved in the future)
 	///@return {Struct.LuiBase}
-	static setName = function(_name) {
-		if !variable_struct_exists(self.main_ui.element_names, _name) {
+	static setName = function(_string) {
+		if !variable_struct_exists(self.main_ui.element_names, _string) {
 			self._deleteElementName();
-			self.name = _name;
+			self.name = _string;
 			self._registerElementName();
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {_name} already exists! Please give another name!");
+			if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {_string} already exists! Please give another name!");
 		}
 		return self;
 	}
@@ -393,6 +394,14 @@ function LuiBase() constructor {
 		}
 		return self;
 	}
+	
+	///@desc Enable or disable visibility switching by function setVisible()
+	///@return {Struct.LuiBase}
+	static setVisibilitySwitching = function(_bool) {
+		self.visibility_switching = _bool;
+		return self;
+	}
+	
 	///@desc ignoreMouseHover(true/false)
 	///@return {Struct.LuiBase}
 	static ignoreMouseHover = function(_ignore = true) {
@@ -407,13 +416,6 @@ function LuiBase() constructor {
 		array_foreach(self.content, function(_elm) {
 			_elm.setInsideParent(self.inside_parent);
 		});
-		return self;
-	}
-	
-	///@desc Enable or disable visibility switching by function setVisible()
-	///@return {Struct.LuiBase}
-	static setVisibilitySwitching = function(_bool) {
-		self.visibility_switching = _bool;
 		return self;
 	}
 	
@@ -570,9 +572,9 @@ function LuiBase() constructor {
 	
 	// Setters
 	///@desc Set value of this element
-	static set = function(value) {
-		if self.value != value {
-			self.value = value;
+	static set = function(_value) {
+		if self.value != _value {
+			self.value = _value;
 			self.onValueUpdate();
 			self.updateMainUiSurface();
 		}
@@ -580,11 +582,12 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set popup text to element when mouse on it
-	static setTooltip = function(_tooltip) {
-		self.tooltip = _tooltip;
+	static setTooltip = function(_string) {
+		self.tooltip = _string;
 		return self;
 	}
 	
+	///@desc Binds the object/struct variable to the element value
 	static setBinding = function(_source, _variable) {
 		if (_source != noone && _variable != "") {
 			if (variable_instance_exists(_source, _variable)) {
@@ -649,6 +652,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	//???//
 	///@desc Center element horizontally on the parent element
 	///@return {Struct.LuiBase}
 	static centerHorizontally = function() {
@@ -656,6 +660,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	//???//
 	///@desc Center element vertically on the parent element
 	///@return {Struct.LuiBase}
 	static centerVertically = function() {
@@ -729,6 +734,7 @@ function LuiBase() constructor {
 		});
 		return self;
 	}
+	
 	///@desc setStyleChilds(_style)
 	///@return {Struct.LuiBase}
 	static setStyleChilds = function(_style) {
@@ -741,6 +747,7 @@ function LuiBase() constructor {
 		}
 		return self;
 	}
+	
 	///@desc get style
 	static getStyle = function() {
 		if (!is_undefined(self.style)) {
@@ -754,6 +761,7 @@ function LuiBase() constructor {
 		}
 		return undefined;
 	}
+	
 	///@desc Set draw_relative to all descendants
 	///@return {Struct.LuiBase}
 	static setDrawRelative = function(_relative, _parent_relative = self) {
@@ -764,6 +772,7 @@ function LuiBase() constructor {
 		}
 		return self;
 	}
+	
 	///@desc Set depth to the element
 	///@return {Struct.LuiBase}
 	static setDepth = function(_depth) {

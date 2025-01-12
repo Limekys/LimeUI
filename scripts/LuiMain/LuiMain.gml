@@ -1,4 +1,4 @@
-/// @desc Main container for UI
+/// @desc Main UI container wich would be controll and render your UI.
 function LuiMain() : LuiBase() constructor {
 	
 	// Main variables

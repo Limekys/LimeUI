@@ -1,3 +1,4 @@
+///@desc It's just a button.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

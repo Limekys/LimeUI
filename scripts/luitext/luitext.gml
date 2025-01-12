@@ -1,3 +1,4 @@
+///@desc Just a text.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -18,11 +19,13 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.text_valign = fa_middle;
 	self.scale_to_fit = scale_to_fit;
 	
+	///@desc Set horizontal aligment of text.
 	static setTextHalign = function(halign) {
 		self.text_halign = halign;
 		return self;
 	}
 	
+	///@desc Set vertical aligment of text.
 	static setTextValign = function(valign) {
 		self.text_valign = valign;
 		return self;

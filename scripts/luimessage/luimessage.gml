@@ -1,3 +1,4 @@
+///@desc Show message with custom message text and button text
 ///@arg {Struct.LuiMain} ui
 ///@arg {Real} width
 ///@arg {Real} height

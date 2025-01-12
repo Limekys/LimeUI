@@ -1,3 +1,4 @@
+///@desc Just a sprite.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
