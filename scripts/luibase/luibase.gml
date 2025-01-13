@@ -577,6 +577,7 @@ function LuiBase() constructor {
 	static set = function(_value) {
 		if self.value != _value {
 			self.value = _value;
+			if self.binding_variable != -1 self.updateToBinding();
 			self.onValueUpdate();
 			self.updateMainUiSurface();
 		}
@@ -606,14 +607,27 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	static updateBinding = function() {
+	///@desc Update element value from binding variable
+	static updateFromBinding = function() {
 		var _source = binding_variable.source;
 		var _variable = binding_variable.variable;
 		if (_source != noone && variable_instance_exists(_source, _variable)) {
 			var _source_value = variable_instance_get(_source, _variable);
 			set(_source_value);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): The specified variable is no longer available!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): The binding variable is no longer available!");
+		}
+	}
+	
+	///@desc Update binding variable from element value
+	static updateToBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _element_value = get();
+			variable_instance_set(_source, _variable, _element_value);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): The binding variable is no longer available!");
 		}
 	}
 	
@@ -805,7 +819,11 @@ function LuiBase() constructor {
 	///@return {Struct.LuiBase}
 	static setCallback = function(callback) {
 		if callback == undefined {
-			self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
+			if LUI_DEBUG_CALLBACK {
+				self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
+			} else {
+				self.callback = function() { };
+			}
 		} else {
 			self.callback = method(self, callback);
 		}
@@ -938,7 +956,7 @@ function LuiBase() constructor {
 			
 			// Update binding variable
 			if _element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable) {
-				_element.updateBinding();
+				_element.updateFromBinding();
 			}
 			
 			// Update content script if needed

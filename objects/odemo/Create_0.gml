@@ -241,6 +241,10 @@ tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo);
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
 tab_group_target_x = tab_group.pos_x;
 tab_group_target_y = tab_group.pos_y;
+tab_group_min_x = tab_group.start_x;
+tab_group_max_x = room_width - tab_group.width - tab_group.style.padding;
+tab_group_min_y = tab_group.start_y;
+tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
 //Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
@@ -252,17 +256,13 @@ btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).se
 //Add elements to first panel and init some here
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
-	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , , tab_group.start_x, room_width - tab_group.width - tab_group.style.padding, tab_group.pos_x, 0, function(){oDemo.tab_group_target_x = self.value}), [0.2, 0.8]],
-	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , , tab_group.start_y, room_height - tab_group.height - tab_group.style.padding, tab_group.pos_y, 1, function(){oDemo.tab_group_target_y = self.value}), [0.2, 0.8]],
+	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, tab_group.pos_x, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]],
+	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, tab_group.pos_y, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]],
 	[demo_loading],
 	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = get()}).setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
 	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],
-	new LuiTextbox( , , , , , , "login", false, , function () {
-		oDemo.demo_login = get();
-	}),
-	new LuiTextbox( , , , , , , "password", true, , function () {
-		oDemo.demo_password = get();
-	}),
+	new LuiTextbox( , , , , , , "login", false).setBinding(oDemo, "demo_login"),
+	new LuiTextbox( , , , , , , "password", true).setBinding(oDemo, "demo_password"),
 	[new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)],
 	[btn_show_msg, btn_restart]
 ]);
