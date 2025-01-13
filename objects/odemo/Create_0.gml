@@ -259,7 +259,7 @@ my_panel.addContent([
 	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, tab_group.pos_x, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]],
 	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, tab_group.pos_y, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]],
 	[demo_loading],
-	[new LuiCheckbox( , , 32, 32, , false, function() {oDemo.demo_loading_state = get()}).setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
+	[new LuiCheckbox( , , 32, 32, , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
 	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],
 	new LuiTextbox( , , , , , , "login", false).setBinding(oDemo, "demo_login"),
 	new LuiTextbox( , , , , , , "password", true).setBinding(oDemo, "demo_password"),

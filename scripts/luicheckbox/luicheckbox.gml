@@ -69,7 +69,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
-			self.value = !self.value;
+			self.set(!self.value);
 			self.callback();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}

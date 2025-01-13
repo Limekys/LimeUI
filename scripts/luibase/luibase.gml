@@ -272,10 +272,12 @@ function LuiBase() constructor {
 				
 				var _key = string(_x) + "_" + string(_y);
 				var _array = self.main_ui._screen_grid[$ _key];
-				draw_text(x_pos, y_pos, string(_key));
+				draw_text(x_pos + 2, y_pos + 1, string(_key));
 				
 				for (var i = 0, n = array_length(_array); i < n; ++i) {
-					draw_text(x_pos, y_pos + 6 + 6 * i, _array[i].name);
+					//draw_text_ext(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, -1, LUI_GRID_SIZE);
+					//_luiDrawTextCutoff(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, LUI_GRID_SIZE);
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
 				}
 			}
 		}
@@ -577,7 +579,9 @@ function LuiBase() constructor {
 	static set = function(_value) {
 		if self.value != _value {
 			self.value = _value;
-			if self.binding_variable != -1 self.updateToBinding();
+			if self.binding_variable != -1 {
+				self.updateToBinding();
+			}
 			self.onValueUpdate();
 			self.updateMainUiSurface();
 		}
@@ -593,13 +597,12 @@ function LuiBase() constructor {
 	///@desc Binds the object/struct variable to the element value
 	static setBinding = function(_source, _variable) {
 		if (_source != noone && _variable != "") {
-			if (variable_instance_exists(_source, _variable)) {
-				self.binding_variable = {
-					source : _source,
-					variable : _variable
-				}
-			} else {
-				if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): Can't find variable '{_variable}'!");
+			self.binding_variable = {
+				source : _source,
+				variable : _variable
+			}
+			if LUI_LOG_ERROR_MODE == 2 && !variable_instance_exists(_source, _variable) {
+				print($"WARNING({self.name}): Can't find variable '{_variable}'!");
 			}
 		} else {
 			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): Wrong variable name or instance!");
@@ -891,7 +894,7 @@ function LuiBase() constructor {
 	}
 	///@desc getTopmostElement
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
-		var _key = string(floor(_mouse_x / global.lui_screen_grid_size)) + "_" + string(floor(_mouse_y / global.lui_screen_grid_size));
+		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
 		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
 			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.visible && !_elm.ignore_mouse;
 		});

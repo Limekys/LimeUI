@@ -200,7 +200,7 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 	self.dropdown_parent = undefined;
 	
 	self.dropdownCallback = function() {
-		self.dropdown_parent.value = self.text;
+		self.dropdown_parent.set(self.text);
 		self.dropdown_parent.toggleDropdown();
 	}
 	
