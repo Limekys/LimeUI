@@ -249,7 +249,7 @@ tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , , "Show message", function() {
-	showLuiMessage(oDemo.my_ui, 360, 140, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
+	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 }).setValign(fa_bottom).setHalign(fa_left);
 btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).setValign(fa_bottom).setHalign(fa_right);
 
@@ -268,8 +268,8 @@ my_panel.addContent([
 ]);
 
 //Set colors to buttons 
-btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
-btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
+btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5));
+btn_restart.setColor(merge_color(#FF7777, c_black, 0.5));
 
 //Create some panels
 my_panel_in_second_1 = new LuiPanel();
@@ -292,9 +292,9 @@ my_panel_in_second_2 = new LuiPanel();
 var _buttons1 = []
 var _buttons2 = []
 changeButtonColor = function() {self.setColorBlend(merge_color(choose(c_red, c_orange, c_yellow, c_lime, c_blue, c_purple), c_white, 0.5))}
-for (var i = 0; i < 10; ++i) {
-    var _button = new LuiSpriteButton( , , , 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i < 5 ? true : false, changeButtonColor);
-	if i < 5 array_push(_buttons1, _button);
+for (var i = 0; i < 8; ++i) {
+    var _button = new LuiSpriteButton( , , , 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i < 4 ? true : false, changeButtonColor);
+	if i < 4 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);
 }
