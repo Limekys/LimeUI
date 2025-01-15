@@ -20,40 +20,37 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.tabgroup_header = undefined;
 	
-	self.create = function() {
-		if !is_undefined(self.style) && !is_undefined(self.tabs) self._initTabs();
-	}
-	
-	///@ignore
-	static _initTabs = function() {
-		var _prev_padding = self.style.padding;
-		self.style.padding = 0;
-		//First creating header for tabs
+	static _initHeader = function() {
 		if is_undefined(self.tabgroup_header) {
 			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "_tabgroup_header_" + string(self.element_id));
 			self.addContent([self.tabgroup_header]);
 		}
+	}
+	
+	///@ignore
+	static _initTabs = function() {
 		//Add tabs
 		if !is_array(self.tabs) self.tabs = [self.tabs];
 		var _tab_count = array_length(self.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
-		    //Get tab
+		    // Get tab
 			var _tab = self.tabs[i];
-			//Set tab sizes
+			// Set tab sizes
 			_tab.height = self.tab_height;
-			//Create tab container
-			var _tab_container = new LuiContainer(0, self.tab_height + 1, self.width, self.height - self.tab_height - 1, $"_tab_container_{self.element_id}_{i}").setVisible(false);
-			//_tab_container.auto_x = true;
-			//_tab_container.auto_y = true;
-			_tab.tab_container = _tab_container;
-			//Set tabgroup parent to tab
+			// Init tab container
+			_tab._initContainer();
+			// Set tabgroup parent for tab
 			_tab.tabgroup = self;
-			//Add tab container to tabgroup
-			self.addContent(_tab_container);
+			// Add tab container to tabgroup
+			self.addContent(_tab.tab_container);
+			// Adjust position and size of container
+			_tab.tab_container.pos_x = 0;
+			_tab.tab_container.pos_y = self.tab_height;
+			_tab.tab_container.width = self.width;
+			_tab.tab_container.height = self.height - self.tab_height;
 		}
 		//Add tab to header of tabgroup
-		self.tabgroup_header.addContent([self.tabs]);
-		self.style.padding = _prev_padding;
+		self.tabgroup_header.addContent([self.tabs], 0);
 		//Deactivate all and activate first
 		self.tabDeactivateAll();
 		self.tabs[0].tabActivate();
@@ -84,6 +81,15 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         }
         return self;
     }
+	
+	self.create = function() {
+		if !is_undefined(self.style) {
+			self._initHeader();
+			if !is_undefined(self.tabs) {
+				self._initTabs();
+			}
+		}
+	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
@@ -121,6 +127,12 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.tabgroup = undefined;
 	self.tab_container = undefined;
 	
+	static _initContainer = function() {
+		if is_undefined(self.tab_container) {
+			self.tab_container = new LuiContainer(0, 0, 0, 0, $"_tab_container_{self.element_id}").setVisible(false);
+		}
+	}
+	
 	///@desc Activate current tab
 	self.tabActivate = function() {
 		self.is_active = true;
@@ -135,7 +147,16 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	
 	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
 	self.addContent = function(elements) {
+		if is_undefined(self.tabgroup) {
+			throw ("Order has been broken! First add tabs to TabGroup, then add content to tabs!");
+		}
+		self._initContainer();
 		self.tab_container.addContent(elements);
+	}
+	
+	self.create = function() {
+		self._initContainer();
+		if sprite_exists(self.sprite_icon) self._calcIconSize();
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
