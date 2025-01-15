@@ -20,10 +20,6 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.is_pressed = false;
 	self.pin_margin = 0;
 	
-	self.create = function() {
-		self.pin_margin = self.style.checkbox_pin_margin;
-	}
-	
 	//Make the maximum size of the checkbox minimal so that it does not stretch at auto size
 	if self.auto_width == true || self.auto_height == true {
 		self.max_width = self.min_width;
@@ -60,6 +56,10 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.style.sprite_checkbox_border) {
 			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_checkbox_border, 1);
 		}
+	}
+	
+	self.create = function() {
+		self.pin_margin = self.style.checkbox_pin_margin;
 	}
 	
 	self.onMouseLeftPressed = function() {

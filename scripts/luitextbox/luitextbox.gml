@@ -39,14 +39,6 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		return string_copy(_string, 1, self.max_length);
 	}
 	
-	self.create = function() {
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
-		}
-		self.min_width = string_width(self.value);
-		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_textbox) {
@@ -111,6 +103,14 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			}
 			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
 		}
+	}
+	
+	self.create = function() {
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
+		self.min_width = string_width(self.value);
+		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
 	}
 	
 	self.onFocusSet = function() {

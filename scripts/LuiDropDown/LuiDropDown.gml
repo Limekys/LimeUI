@@ -30,17 +30,11 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Calculate dropdown panel sizes
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
-		//if !is_undefined(self.style.sprite_dropdown) {
-		//	var _nineslice = sprite_get_nineslice(self.style.sprite_dropdown);
-		//	_height += _nineslice.top + _nineslice.bottom;
-		//}
 		//Create dropdown panel
 		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
 		self.dropdown_panel.setDepth(array_last(self.parent.content).z + 1);
 		//Add items to this panel
-		//var _prev_padding = self.dropdown_panel.style.padding;
-		//self.dropdown_panel.style.padding = 0;
 		if !is_array(self.items) self.items = [self.items];
 		for (var i = 0; i < _item_count; ++i) {
 			var _item = self.items[i];
@@ -50,12 +44,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			self.dropdown_panel.addContent([_item]);
 			_item.setDepth(_item.z + array_last(self.parent.content).z + i);
 		}
-		//if !is_undefined(self.style.sprite_dropdown)
-		//array_foreach(self.items, function(_elm) {
-		//	var _nineslice = sprite_get_nineslice(self.style.sprite_dropdown);
-		//	_elm.pos_y += _nineslice.top
-		//});
-		//self.dropdown_panel.style.padding = _prev_padding;
 	}
 	
 	static toggleDropdown = function() {

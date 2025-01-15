@@ -31,14 +31,6 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		return self;
 	}
 	
-	self.create = function() {
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
-		}
-		self.min_width = self.auto_width == true ? string_width(self.value) : self.width;
-		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Set font properties
 		if !is_undefined(self.style.font_default) {
@@ -89,5 +81,13 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 				draw_text_transformed(_txt_x, _txt_y, _text, _scale, _scale, 0);
 			}
 		}
+	}
+	
+	self.create = function() {
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
+		self.min_width = self.auto_width == true ? string_width(self.value) : self.width;
+		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
 	}
 }

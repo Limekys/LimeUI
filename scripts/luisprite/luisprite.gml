@@ -41,10 +41,6 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		self.aspect = self.sprite_real_width / self.sprite_real_height;
 	}
 	
-	self.create = function() {
-		self._calcSpriteSize();
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Calculate fit size
 		var _width = self.width;
@@ -68,5 +64,9 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 									floor(draw_y + self.height/2 - _height/2), 
 									_width, _height, 
 									_blend_color, self.alpha);
+	}
+	
+	self.create = function() {
+		self._calcSpriteSize();
 	}
 }

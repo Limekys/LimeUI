@@ -82,15 +82,6 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         return self;
     }
 	
-	self.create = function() {
-		if !is_undefined(self.style) {
-			self._initHeader();
-			if !is_undefined(self.tabs) {
-				self._initTabs();
-			}
-		}
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_tabgroup) {
@@ -103,6 +94,15 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Border
 		if !is_undefined(self.style.sprite_tabgroup_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
+		}
+	}
+	
+	self.create = function() {
+		if !is_undefined(self.style) {
+			self._initHeader();
+			if !is_undefined(self.tabs) {
+				self._initTabs();
+			}
 		}
 	}
 	
@@ -154,11 +154,6 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		self.tab_container.addContent(elements);
 	}
 	
-	self.create = function() {
-		self._initContainer();
-		if sprite_exists(self.sprite_icon) self._calcIconSize();
-	}
-	
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		// Base
 		if !is_undefined(self.style.sprite_tab) {
@@ -203,6 +198,11 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		if !is_undefined(self.style.sprite_tab_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 		}
+	}
+	
+	self.create = function() {
+		self._initContainer();
+		if sprite_exists(self.sprite_icon) self._calcIconSize();
 	}
 	
 	self.onMouseLeftReleased = function() {

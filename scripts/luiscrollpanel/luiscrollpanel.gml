@@ -71,18 +71,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		self.updateMainUiSurface();
 	}
 	
-	self.create = function() {
-		if is_undefined(self.surface_offset) {
-			self.setSurfaceOffset(self.style.scroll_surface_offset);
-		}
-		array_push(self.main_ui.pre_draw_list, self);
-	}
-	
-	self.onContentUpdate = function() {
-		self.setDrawRelative(true);
-		//self.rearrangeElements();
-	}
-	
 	self.preDraw = function() {
 		//Create surface
 		if !surface_exists(self.panel_surface) {
@@ -163,6 +151,18 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
 			self._applyScroll();
 		}
+	}
+	
+	self.create = function() {
+		if is_undefined(self.surface_offset) {
+			self.setSurfaceOffset(self.style.scroll_surface_offset);
+		}
+		array_push(self.main_ui.pre_draw_list, self);
+	}
+	
+	self.onContentUpdate = function() {
+		self.setDrawRelative(true);
+		//self.rearrangeElements();
 	}
 	
 	self.onDestroy = function() {
