@@ -81,7 +81,7 @@ demo_style_light = {
 	default_min_width : 32,
 	default_min_height : 32,
 	padding : 16,
-	checkbox_pin_margin : 4,
+	checkbox_pin_margin : 0,
 	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
@@ -152,7 +152,7 @@ demo_style_dark = {
 	default_min_width : 32,
 	default_min_height : 32,
 	padding : 16,
-	checkbox_pin_margin : 4,
+	checkbox_pin_margin : 0,
 	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
 	textbox_cursor : "|",
@@ -208,11 +208,11 @@ demo_style_modern = {
 	default_min_width : 32,
 	default_min_height : 32,
 	padding : 16,
-	checkbox_pin_margin : 4,
+	checkbox_pin_margin : 0,
 	scroll_step : 32,
 	scroll_surface_offset : [0,0,0,0],
 	textbox_cursor : "|",
-	textbox_password : "•"
+	textbox_password : "*"
                                                                     }; // TEMP: Just for fix stupid feather >_<
 
 #endregion
@@ -401,9 +401,9 @@ my_panel_3.addContent([
 			new LuiButton( , , , , , "Nested button"),
 			[new LuiCheckbox( , , , , , false, function() {
 				if get() == true {
-					showLuiMessage(oDemo.my_ui, 360, 140, "Checkbox in nested panel of scroll panel!");
+					showLuiMessage(oDemo.my_ui, , , "Checkbox in nested panel of scroll panel!");
 				} else {
-					showLuiMessage(oDemo.my_ui, 360, 140, ":(");
+					showLuiMessage(oDemo.my_ui, , , ":(");
 				}
 			}),
 			new LuiText(, , , , , "Check me!")],
