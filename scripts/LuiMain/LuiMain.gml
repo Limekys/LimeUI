@@ -199,6 +199,7 @@ function LuiMain() : LuiBase() constructor {
 			draw_set_alpha(1);
 			draw_set_color(c_white);
 			_luiDrawTextDebug(_mouse_x, _mouse_y, 
+			"id: " + string(_element.element_id) + "\n" +
 			"name: " + string(_element.name) + "\n" +
 			"x: " + string(_element.pos_x) + " y: " + string(_element.pos_y) + "\n" +
 			"w: " + string(_element.width) + " h: " + string(_element.height) + "\n" +

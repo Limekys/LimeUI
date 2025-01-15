@@ -434,9 +434,10 @@ function LuiBase() constructor {
 		return array_last(self.content);
 	};
 	
-	///@desc addContent(elements)
+	///@desc addContent(elements, _custom_padding)
 	///@arg {Any} elements
-	static addContent = function(elements) {
+	///@arg {Real} _custom_padding
+	static addContent = function(elements, _custom_padding = LUI_AUTO) {
 		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
 		//Check for unordered adding
@@ -479,9 +480,17 @@ function LuiBase() constructor {
 				_element.z = _element.parent.z + 1//++_local_z;
 				if !_element.parent.visible _element.visible = false;
 				
+				//Calculate padding
+				var _padding = self.style.padding;
+				if _custom_padding == LUI_AUTO {
+					_padding = self.style.padding;
+				} else {
+					_padding = 0;
+				}
+				
 				//Calculate width for right auto width calculations for next element
 				if !is_undefined(_last_in_row) {
-					_width -= _last_in_row.width + self.style.padding;
+					_width -= _last_in_row.width + _padding;
 				}
 				
 				//Set width
@@ -489,11 +498,11 @@ function LuiBase() constructor {
 				if _element.auto_width {
 					//Calculate width by ranges (ranges have high priority)
 					if array_length(_ranges) > 0 {
-						_element.width = floor(_ranges[j] * (self.width - (_row_element_count + 1)*self.style.padding));
+						_element.width = floor(_ranges[j] * (self.width - (_row_element_count + 1)*_padding));
 					} else {
 						//Calculate auto width for each element in row
 						var _remaining_element_count = _row_element_count - j;
-						var _auto_width = floor((_width - (_remaining_element_count + 1)*self.style.padding) / _remaining_element_count);
+						var _auto_width = floor((_width - (_remaining_element_count + 1)*_padding) / _remaining_element_count);
 						//Set width
 						_element.width = min(_auto_width, _element.max_width);
 					}
@@ -510,19 +519,19 @@ function LuiBase() constructor {
 					
 					//Add padding for first in row
 					if j == 0 {
-						_element.pos_x = self.style.padding;
-						_element.pos_y = self.style.padding;
+						_element.pos_x = _padding;
+						_element.pos_y = _padding;
 					}
 					
 					//If have last element
 					if !is_undefined(_last) {
 						//For first element in row
 						if j == 0 {
-							_element.pos_y = _last.pos_y + _last.height + self.style.padding;
+							_element.pos_y = _last.pos_y + _last.height + _padding;
 						}
 						//For next elements
 						if j != 0 {
-							_element.pos_x = _last.pos_x + _last.width + self.style.padding;
+							_element.pos_x = _last.pos_x + _last.width + _padding;
 							_element.pos_y = _last_in_row.pos_y;
 						}
 					}
@@ -1039,12 +1048,13 @@ function LuiBase() constructor {
 		var _prev_color = draw_get_color();
 		var _prev_alpha = draw_get_alpha();
 		draw_set_alpha(0.5);
-		draw_set_color(mouseHover() ? c_red : make_color_hsv(self.z % 255 * 10, 255, 255));
+		draw_set_color(mouseHover() ? c_red : make_color_hsv(self.element_id * 20 % 255, 255, 255));
 		//Rectangles
 		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
 		//Text
 		if global.lui_debug_mode == 2 {
 			_luiDrawTextDebug(_x, _y, 
+			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
 			"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
 			"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
