@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"UsefulFunctions",
+  "%Name":"LimekysUsefulFunctions",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"UsefulFunctions",
+  "name":"LimekysUsefulFunctions",
   "parent":{
     "name":"UsefulTools",
     "path":"folders/Limekys/UsefulTools.yy",
