@@ -136,8 +136,9 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 		// Touch compatibility
 		if self.drag_start_y != -1 {
-			if mouse_check_button(mb_left) {
-				self.drag_y =  device_mouse_y_to_gui(0);
+			if mouse_check_button(mb_left) 
+				&& (is_undefined(self.main_ui.element_in_focus) || (!is_undefined(self.main_ui.element_in_focus) && is_undefined(self.main_ui.element_in_focus.callback))) {
+				self.drag_y = device_mouse_y_to_gui(0);
 				self.scroll_target_offset_y = self.scroll_target_offset_y - self.drag_start_y + self.drag_y;
 				self.drag_start_y = SmoothApproachDelta(self.drag_start_y, self.drag_y, 1.1);
 				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.getLast().start_y + self.getLast().height + self.style.padding - self.height), 0);
