@@ -25,7 +25,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.text_width = self.width;
 	
 	///@ignore
-	static _initItems = function() {
+	static _initDropdownPanel = function() {
 		var _item_count = array_length(self.items);
 		//Calculate dropdown panel sizes
 		var _width = self.width;
@@ -34,6 +34,11 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
 		self.dropdown_panel.setDepth(array_last(self.parent.content).z + 1);
+	}
+	
+	///@ignore
+	static _initItems = function() {
+		var _item_count = array_length(self.items);
 		//Add items to this panel
 		if !is_array(self.items) self.items = [self.items];
 		for (var i = 0; i < _item_count; ++i) {
@@ -46,8 +51,10 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
+	///@desc Toggle dropdown menu open/close
 	static toggleDropdown = function() {
-        if is_undefined(self.dropdown_panel) {
+		if is_undefined(self.dropdown_panel) {
+			self._initDropdownPanel();
 			self._initItems();
 		}
 		//Set position of dropdown panel
@@ -63,12 +70,13 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		return self;
     }
 	
+	///@desc Add items to dropwdown menu
 	static addItems = function(_items) {
         self.items = _items;
         return self;
     }
 	
-	//???//
+	///@desc Remove items from dropdown menu //???//
     static removeItem = function(index) {
         //if (index >= 0 && index < array_length(self.items)) {
         //    array_delete(self.items, index, 1);
