@@ -202,7 +202,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	
 	self.create = function() {
 		self._initContainer();
-		if sprite_exists(self.sprite_icon) self._calcIconSize();
+		if sprite_exists(self.icon.sprite) self._calcIconSize();
 	}
 	
 	self.onMouseLeftReleased = function() {

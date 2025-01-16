@@ -6,18 +6,10 @@
 ///@arg {String} name
 ///@arg {String} hint
 ///@arg {Function} callback
-function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiDropDown", hint = "drop list", callback = undefined) : LuiBase() constructor {
+function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiDropDown", hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
 	
-	self.name = name;
 	self.value = "";
-	self.pos_x = x;
-	self.pos_y = y;
-	self.width = width;
-	self.height = height;
-	initElement();
-	setCallback(callback);
 	
-	self.is_pressed = false;
 	self.hint = hint;
 	self.items = undefined;
 	self.is_open = false;
@@ -108,7 +100,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_ext(self.style.sprite_dropdown_arrow, 0, draw_x + _x_offset, draw_y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
+			draw_sprite_ext(self.style.sprite_dropdown_arrow, 0, draw_x + self.width - _x_offset, draw_y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
 		}
 		
 		//Text
@@ -146,10 +138,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
-	}
-	
 	self.onMouseLeftReleased = function() {
 		if self.is_pressed {
 			self.is_pressed = false;
@@ -157,10 +145,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			self.toggleDropdown();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
-	}
-	
-	self.onMouseLeave = function() {
-		self.is_pressed = false;
 	}
 	
 	self.onHide = function() {
@@ -182,10 +166,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@arg {Function} callback
 function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
 	
-	initElement();
-	setCallback(callback);
-	
-	self.is_pressed = false;
 	self.dropdown_parent = undefined;
 	
 	self.dropdownCallback = function() {
@@ -205,6 +185,9 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 			}
 			draw_sprite_stretched_ext(self.style.sprite_dropdown_item, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
+		
+		// Icon
+		self._drawIcon();
 		
 		//Text
 		if self.text != "" {

@@ -43,11 +43,9 @@ demo_style_light = {
 	sprite_scroll_slider_back : sUI_scroll_slider,
 	sprite_dropdown : sUI_button,
 	sprite_dropdown_border : sUI_button_border,
-	sprite_dropdown_item : sUI_dropdown_item,
-	sprite_dropdown_item_border : sUI_dropdown_item_border,
+	sprite_dropdown_item : sUI_button,
 	sprite_tooltip : sUI_panel,
 	sprite_tooltip_border : sUI_panel_border,
-	//sprite_dropdown_item_border : sUI_button_border,
 	sprite_dropdown_arrow : sUI_dropdown_arrow,
 	sprite_tab : sUI_tab,
 	sprite_tab_border : sUI_tab_border,
@@ -74,7 +72,6 @@ demo_style_light = {
 	color_dropdown : c_white,
 	color_dropdown_border : merge_colour(c_white, c_black, 0.5),
 	color_dropdown_item : c_white,
-	color_dropdown_item_border : merge_colour(c_white, c_black, 0.5),
 	color_dropdown_arrow : merge_colour(c_white, c_black, 0.5),
 	color_tooltip : c_white,
 	color_tooltip_border : merge_colour(c_white, c_black, 0.5),
@@ -117,11 +114,9 @@ demo_style_dark = {
 	sprite_scroll_slider_back : sUI_scroll_slider,
 	sprite_dropdown : sUI_button,
 	sprite_dropdown_border : sUI_button_border,
-	sprite_dropdown_item : sUI_dropdown_item,
-	sprite_dropdown_item_border : sUI_dropdown_item_border,
+	sprite_dropdown_item : sUI_button,
 	sprite_tooltip : sUI_panel,
 	sprite_tooltip_border : sUI_panel_border,
-	//sprite_dropdown_item_border : sUI_button_border,
 	sprite_dropdown_arrow : sUI_dropdown_arrow,
 	sprite_tab : sUI_tab,
 	sprite_tab_border : sUI_tab_border,
@@ -148,7 +143,6 @@ demo_style_dark = {
 	color_dropdown : #393c4f,
 	color_dropdown_border : merge_color(#393c4f, c_black, 0.5),
 	color_dropdown_item : #393c4f,
-	color_dropdown_item_border : merge_color(#393c4f, c_black, 0.5),
 	color_dropdown_arrow : merge_color(#393c4f, c_black, 0.5),
 	color_tooltip : c_black,
 	color_tooltip_border : c_black,
@@ -242,10 +236,10 @@ my_ui.addContent([
 ]);
 
 //Create tabs for tabGroup
-tab_panels = new LuiTab("tabPanels", "Panels").setIcon(sIconMenu);
-tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch);
-tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette);
-tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo);
+tab_panels = new LuiTab("tabPanels", "Panels").setIcon(sIconMenu, 0.5);
+tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 0.5);
+tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
+tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
 tab_group_target_x = tab_group.pos_x;
