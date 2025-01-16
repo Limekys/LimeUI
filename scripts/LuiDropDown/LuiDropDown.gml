@@ -180,15 +180,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callback = undefined) : LuiBase() constructor {
+function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
 	
-	self.name = name;
-	self.text = text;
-	self.value = text;
-	self.pos_x = LUI_AUTO;
-	self.pos_y = LUI_AUTO;
-	self.width = LUI_AUTO;
-	self.height = LUI_AUTO;
 	initElement();
 	setCallback(callback);
 	
@@ -203,11 +196,11 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_dropdown_item) {
-			var _blend_color = self.style.color_dropdown;
+			var _blend_color = self.style.color_dropdown_item;
 			if !self.deactivated && self.mouseHover() {
-				_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
+				_blend_color = merge_colour(self.style.color_dropdown_item, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
-					_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
+					_blend_color = merge_colour(self.style.color_dropdown_item, c_black, 0.5);
 				}
 			}
 			draw_sprite_stretched_ext(self.style.sprite_dropdown_item, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
@@ -229,12 +222,8 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 		
 		//Border
 		if !is_undefined(self.style.sprite_dropdown_item_border) {
-			draw_sprite_stretched_ext(self.style.sprite_dropdown_item_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_item_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_item_border, 1);
 		}
-	}
-	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
 	}
 	
 	self.onMouseLeftReleased = function() {
@@ -244,10 +233,6 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 			self.dropdownCallback();
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
-	}
-	
-	self.onMouseLeave = function() {
-		self.is_pressed = false;
 	}
 }
 

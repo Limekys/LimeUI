@@ -58,6 +58,8 @@ function LuiStyle(_style) constructor {
 	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
 	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
 	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
+	color_dropdown_item = _style[$ "color_dropdown_item"] ?? c_gray;
+	color_dropdown_item_border = _style[$ "color_dropdown_item_border"] ?? c_gray;
 	color_dropdown_arrow = _style[$ "color_dropdown_arrow"] ?? c_gray;
 	color_tooltip = _style[$ "color_tooltip"] ?? c_black;
 	color_tooltip_border = _style[$ "color_tooltip_border"] ?? c_black;
