@@ -34,7 +34,7 @@ _*Right now the system is in a very early stage of development and with each upd
 - Animations
 
 # Screenshots
-![2024_06_10_18_18_Runner_SHjiTVp0uv](https://github.com/Limekys/LimeUI/assets/58959645/4eaed6b4-a178-429b-8b7b-7ef6a9a8e135)
+![2025_01_17_18_15_Runner_6MyWilpRGK](https://github.com/user-attachments/assets/71de4a67-57e9-4891-b797-b9a0914cd027)
 ![2024_06_10_18_13_Runner_4aDms0PEf1](https://github.com/Limekys/LimeUI/assets/58959645/4dd2b6d6-d591-47cf-a0ab-a030b5569e92)
 ![2024_06_10_18_15_Runner_tMxiRNI0m1](https://github.com/Limekys/LimeUI/assets/58959645/6e65210c-549b-4e5e-b1e4-2d7276fa8982)
 ![2024_06_10_18_15_Runner_LLVwkZXFzE](https://github.com/Limekys/LimeUI/assets/58959645/a25923cb-c01d-4fb0-9f57-b0d27881d1e3)
