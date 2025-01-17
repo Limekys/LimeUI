@@ -96,5 +96,8 @@ game_ui.addContent([
 button_prev_demo = new LuiButton(, , 256, , "buttonPrevDemo", "<-- Previous demo", function() {
 	room_goto(rDemo);
 }).setHalign(fa_left).setValign(fa_bottom);
+button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
+	room_goto(rDemo3);
+}).setHalign(fa_right).setValign(fa_bottom);
 
-game_ui.addContent(button_prev_demo);
+game_ui.addContent([button_prev_demo, button_next_demo]);

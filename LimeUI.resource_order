@@ -1,14 +1,15 @@
 {
   "FolderOrderSettings":[
-    {"name":"DEMO_2","order":3,"path":"folders/DEMO_2.yy",},
-    {"name":"Fonts","order":3,"path":"folders/DEMO_2/Fonts.yy",},
-    {"name":"Sprites","order":2,"path":"folders/DEMO_2/Sprites.yy",},
+    {"name":"DEMO 2","order":3,"path":"folders/DEMO 2.yy",},
+    {"name":"Fonts","order":3,"path":"folders/DEMO 2/Fonts.yy",},
+    {"name":"Sprites","order":2,"path":"folders/DEMO 2/Sprites.yy",},
     {"name":"DEMO","order":2,"path":"folders/DEMO.yy",},
     {"name":"Fonts","order":1,"path":"folders/DEMO/Fonts.yy",},
     {"name":"Icons","order":6,"path":"folders/DEMO/Icons.yy",},
     {"name":"Modern theme","order":5,"path":"folders/DEMO/Modern theme.yy",},
     {"name":"Sprites","order":2,"path":"folders/DEMO/Sprites.yy",},
     {"name":"Socials","order":21,"path":"folders/DEMO/Sprites/Socials.yy",},
+    {"name":"DEMO 3","order":6,"path":"folders/DEMO 3.yy",},
     {"name":"UsefulTools","order":3,"path":"folders/Limekys/UsefulTools.yy",},
   ],
   "ResourceOrderSettings":[
@@ -17,6 +18,7 @@
     {"name":"oDemo","order":3,"path":"objects/oDemo/oDemo.yy",},
     {"name":"oDemo2","order":1,"path":"objects/oDemo2/oDemo2.yy",},
     {"name":"rDemo","order":4,"path":"rooms/rDemo/rDemo.yy",},
+    {"name":"rDemo3","order":1,"path":"rooms/rDemo3/rDemo3.yy",},
     {"name":"LimekysUsefulFunctions","order":1,"path":"scripts/LimekysUsefulFunctions/LimekysUsefulFunctions.yy",},
     {"name":"LuiBase","order":2,"path":"scripts/LuiBase/LuiBase.yy",},
     {"name":"LuiBlockArea","order":17,"path":"scripts/LuiBlockArea/LuiBlockArea.yy",},

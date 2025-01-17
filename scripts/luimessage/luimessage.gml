@@ -27,5 +27,5 @@ function showLuiMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "", butt
 			])
 		])
 	]);
-	_block_area.setDepth(1000);
+	//_block_area.setDepth(1000);
 }

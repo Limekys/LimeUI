@@ -120,7 +120,7 @@
   "name":"fntDemo2",
   "parent":{
     "name":"Fonts",
-    "path":"folders/DEMO_2/Fonts.yy",
+    "path":"folders/DEMO 2/Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

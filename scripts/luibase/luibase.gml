@@ -477,7 +477,7 @@ function LuiBase() constructor {
 				_element.parent = self;
 				_element.main_ui = _element.parent.main_ui;
 				_element.style = self.style;
-				_element.z = _element.parent.z + 1//++_local_z;
+				_element.z = _element.element_id; //_element.parent.z + 1//++_local_z;
 				if !_element.parent.visible _element.visible = false;
 				
 				//Calculate padding
@@ -908,6 +908,9 @@ function LuiBase() constructor {
 			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.visible && !_elm.ignore_mouse;
 		});
 		array_sort(_array, function(_elm1, _elm2) {
+			//var _z1 = !is_undefined(_elm1.parent) ? _elm1.parent.z + _elm1.z : _elm1.z;
+			//var _z2 = !is_undefined(_elm2.parent) ? _elm2.parent.z + _elm2.z : _elm2.z;
+			//return _z1 - _z2;
 			return _elm1.z - _elm2.z;
 		});
 		return array_last(_array);

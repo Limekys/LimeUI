@@ -1,6 +1,6 @@
 {
   "$GMObject":"",
-  "%Name":"oDemo2",
+  "%Name":"oDemo3",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
@@ -8,11 +8,11 @@
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":12,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"oDemo2",
+  "name":"oDemo3",
   "overriddenProperties":[],
   "parent":{
-    "name":"DEMO 2",
-    "path":"folders/DEMO 2.yy",
+    "name":"DEMO 3",
+    "path":"folders/DEMO 3.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -45,7 +45,7 @@
   "origin":0,
   "parent":{
     "name":"Sprites",
-    "path":"folders/DEMO_2/Sprites.yy",
+    "path":"folders/DEMO 2/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
