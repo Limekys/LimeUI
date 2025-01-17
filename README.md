@@ -1,26 +1,36 @@
 # LimeUI
-Free simple UI system for Game Maker games
+Free UI system for Game Maker games
 
 _*Right now the system is in a very early stage of development and with each update I may change things drastically_
 
+### Elements:
+- Container
+- Panel
+- ScrollPanel
+- Button
+- Checkbox
+- Text
+- Textbox
+- ProgressBar
+- Slider
+- Sprite
+- SpriteButton
+- DropdownList
+- TabGroup
+
 ### Features:
-- Custom styles
-- Containers
-- Panels
-- Scroll panels
-- Buttons
-- Checkboxes
-- Texts
-- Textboxes
-- Progress bars
-- Sliders
-- Sprites
-- Sprite buttons
-- Dropdown lists
-- Tabs panel
+- Styles
+- Touch support
+- Tooltips
+- Separated logic and render
 
 ### In development:
+- RadioButton
+- TreeView
+- ColorPicker
+- ProgressRing
 - Draggable windows
+- Keyboard controls binding
 - Animations
 
 # Screenshots
