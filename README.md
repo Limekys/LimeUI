@@ -1,6 +1,8 @@
 # LimeUI
 Free UI system for Game Maker games
 
+For documentaion check [wiki page](https://github.com/Limekys/LimeUI/wiki)
+
 _*Right now the system is in a very early stage of development and with each update I may change things drastically_
 
 ### Elements:
