@@ -20,8 +20,8 @@ function LuiBase() constructor {
 	self.start_y = 0;							//First y position
 	self.previous_x = -1;						//Previous floor(x) position on the screen
 	self.previous_y = -1;						//Previous floor(y) position on the screen
-	self.grid_previous_x = -1;					//Previous floor(x / global.lui_screen_grid_accuracy) position on the grid
-	self.grid_previous_y = -1;					//Previous floor(y / global.lui_screen_grid_accuracy) position on the grid
+	self.grid_previous_x = -1;					//Previous floor(x / LUI_GRID_ACCURACY) position on the grid
+	self.grid_previous_y = -1;					//Previous floor(y / LUI_GRID_ACCURACY) position on the grid
 	self.width = 32;							//Actual width
 	self.height = 32;							//Actual height
 	self.target_width = 32;						//Target width (for animation) //???//
@@ -1010,8 +1010,8 @@ function LuiBase() constructor {
 			_element.previous_y = _cur_y;
 			
 			// Update grid position
-			var _grid_x = floor(_element.x / global.lui_screen_grid_accuracy);
-			var _grid_y = floor(_element.y / global.lui_screen_grid_accuracy);
+			var _grid_x = floor(_element.x / LUI_GRID_ACCURACY);
+			var _grid_y = floor(_element.y / LUI_GRID_ACCURACY);
 			if (_element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y) {
 				_element._gridUpdate();
 			}
