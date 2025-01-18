@@ -22,8 +22,8 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	static _initHeader = function() {
 		if is_undefined(self.tabgroup_header) {
-			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "_tabgroup_header_" + string(self.element_id));
-			self.addContent([self.tabgroup_header]);
+			self.tabgroup_header = new LuiContainer(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id));
+			self.addContent([self.tabgroup_header], 0);
 		}
 	}
 	

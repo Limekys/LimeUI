@@ -1,5 +1,5 @@
 //Info
-#macro LIMEUI_VERSION "2025.01.17"
+#macro LIMEUI_VERSION "2025.01.18"
 
 //Globals
 global.lui_debug_mode =	0;						// Enable/Disable debug mode

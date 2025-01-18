@@ -16,6 +16,11 @@ my_style = {
 
 game_ui = new LuiMain().setStyle(my_style);
 
-hello_button = new LuiButton( , , 128, 32, "btnHelloWorld", "Hello world!").setHalign(fa_center).setValign(fa_middle);
+hello_button = new LuiButton( , , , , "btnHelloWorld", "Hello world!")//.setHalign(fa_center).setValign(fa_middle);
+second_button = new LuiButton( , , , , "btn2", "Demo 1", function() { room_goto(rDemo) })//.setHalign(fa_center).setValign(fa_middle);
+third_button = new LuiButton( , , , , "btn3", "Demo 2", function() { room_goto(rDemo2) })//.setHalign(fa_center).setValign(fa_middle);
 
-game_ui.addContent(hello_button);
+game_ui.addContent([
+	hello_button, 
+	[second_button, third_button]
+]);

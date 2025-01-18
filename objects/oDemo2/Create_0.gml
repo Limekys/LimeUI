@@ -45,7 +45,7 @@ demo2_style = {
 	//Settings
 	default_min_width : 48,
 	default_min_height : 48,
-	padding : 16,
+	padding : 32,
 	checkbox_pin_margin : 0,
 	scroll_step : 32,
 	scroll_surface_offset : [0,0,1,3],
@@ -58,8 +58,8 @@ demo2_style = {
 game_ui = new LuiMain().setStyle(demo2_style);
 
 // Create panels
-panel_menu = new LuiPanel( , , 300, , "panelMainMenu").setHalign(fa_center).setValign(fa_middle);
-panel_options = new LuiPanel( , , 300, , "panelOptions").setHalign(fa_right).setValign(fa_middle);
+panel_menu = new LuiPanel( , , 300, , "panelMainMenu")//.setHalign(fa_center).setValign(fa_middle);
+panel_options = new LuiPanel( , , 300, , "panelOptions")//.setHalign(fa_right).setValign(fa_middle);
 
 // Create elements
 text_main_menu = new LuiText(, , , 64, "textMainMenu", "Main menu", true).setTextHalign(fa_center);
@@ -77,7 +77,7 @@ text_sounds = new LuiText(, , , , "textSounds", "Sounds: ");
 
 // Add all content to main ui
 game_ui.addContent([
-	panel_menu.addContent([
+	[panel_menu.addContent([
 		text_main_menu,
 		btn_play,
 		btn_achievements,
@@ -86,18 +86,18 @@ game_ui.addContent([
 	]),
 	panel_options.addContent([
 		text_options,
-		[text_fullscreen, checkbox_fullscreen],
-		[text_music, slider_music],
-		[text_sounds, slider_sounds]
-	])
+		[checkbox_fullscreen, text_fullscreen],
+		[text_music, slider_music, [0.3, 0.7]],
+		[text_sounds, slider_sounds, [0.3, 0.7]]
+	])]
 ])
 
 // Create buttons to go another demo room
 button_prev_demo = new LuiButton(, , 256, , "buttonPrevDemo", "<-- Previous demo", function() {
 	room_goto(rDemo);
-}).setHalign(fa_left).setValign(fa_bottom);
+})//.setHalign(fa_left).setValign(fa_bottom);
 button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
 	room_goto(rDemo3);
-}).setHalign(fa_right).setValign(fa_bottom);
+})//.setHalign(fa_right).setValign(fa_bottom);
 
 game_ui.addContent([button_prev_demo, button_next_demo]);

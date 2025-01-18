@@ -283,6 +283,45 @@ function LuiBase() constructor {
 		}
 	};
 	
+	// Flex init
+	self._init_flex = function() {
+		// Flex node
+		self.flex_node = flexpanel_create_node({name: self.name, data: {}});
+		
+		// Position X
+		if self.auto_x {
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.pos_x, flexpanel_unit.point);
+		}
+		
+		// Position Y
+		if self.auto_y {
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.pos_y, flexpanel_unit.point);
+		}
+		
+		// Width
+		if self.auto_width {
+			flexpanel_node_style_set_flex_grow(self.flex_node, 1);
+		} else {
+			flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
+		}
+		
+		// Height
+		if self.auto_height {
+			//flexpanel_node_style_set_height(self.flex_node, self.min_height, flexpanel_unit.point);
+		} else {
+			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
+		}
+		
+		//flexpanel_node_style_set_justify_content(self.flex_node, flexpanel_justify.start);
+		//flexpanel_node_style_set_align_items(self.flex_node, flexpanel_align.flex_start);
+		
+		flexpanel_node_style_set_min_width(self.flex_node, self.min_width, flexpanel_unit.point);
+		flexpanel_node_style_set_min_height(self.flex_node, self.min_height, flexpanel_unit.point);
+		
+		var _data = flexpanel_node_get_data(self.flex_node);
+		_data.element = self;
+	}
+	
 	//Init
 	static initElement = function() {
 		if self.pos_x == LUI_AUTO || self.pos_y == LUI_AUTO {
@@ -299,6 +338,7 @@ function LuiBase() constructor {
 			self.auto_height = true;
 			self.height = self.min_height;
 		}
+		self._init_flex();
 	}
 	
 	//Element names
@@ -449,11 +489,14 @@ function LuiBase() constructor {
 		//Adding
 		var _local_z = 0;
 		for (var i = 0; i < array_length(elements); i++) {
-		    //Get
+		    
+			//Get
 			var _row_elements = elements[i];
 			
 			//Convert to array if one element
-			if !is_array(_row_elements) _row_elements = [_row_elements];
+			if !is_array(_row_elements) {
+				_row_elements = [_row_elements];
+			}
 			var _row_element_count = array_length(_row_elements);
 			
 			//Take ranges from array
@@ -463,9 +506,17 @@ function LuiBase() constructor {
 				_row_element_count--;
 			}
 			
-			//Init variable for auto width calculations
-			var _last_in_row = undefined;
-			var _width = self.width;
+			// Padding
+			var _padding = _custom_padding;
+			if _padding == LUI_AUTO {
+				_padding = self.style.padding;
+			}
+			
+			// Flex node row
+			var _flex_node_row = flexpanel_create_node();
+			flexpanel_node_style_set_flex_direction(_flex_node_row, flexpanel_flex_direction.row);
+			flexpanel_node_style_set_gap(_flex_node_row, flexpanel_gutter.all_gutters, _padding);
+			flexpanel_node_insert_child(self.flex_node, _flex_node_row, flexpanel_node_get_num_children(self.flex_node));
 			
 			//Adding elements in row
 			for (var j = 0; j < _row_element_count; j++) {
@@ -480,69 +531,9 @@ function LuiBase() constructor {
 				_element.z = _element.element_id; //_element.parent.z + 1//++_local_z;
 				if !_element.parent.visible _element.visible = false;
 				
-				//Calculate padding
-				var _padding = self.style.padding;
-				if _custom_padding == LUI_AUTO {
-					_padding = self.style.padding;
-				} else {
-					_padding = 0;
-				}
-				
-				//Calculate width for right auto width calculations for next element
-				if !is_undefined(_last_in_row) {
-					_width -= _last_in_row.width + _padding;
-				}
-				
-				//Set width
-				_element.min_width = _element.style.default_min_width;
-				if _element.auto_width {
-					//Calculate width by ranges (ranges have high priority)
-					if array_length(_ranges) > 0 {
-						_element.width = floor(_ranges[j] * (self.width - (_row_element_count + 1)*_padding));
-					} else {
-						//Calculate auto width for each element in row
-						var _remaining_element_count = _row_element_count - j;
-						var _auto_width = floor((_width - (_remaining_element_count + 1)*_padding) / _remaining_element_count);
-						//Set width
-						_element.width = min(_auto_width, _element.max_width);
-					}
-				}
-				
-				//Set height
-				_element.min_height = _element.style.default_min_height;
-				if _element.auto_height {
-					_element.height = _element.min_height;
-				}
-				
-				//Set position
-				if _element.auto_x || _element.auto_y {
-					
-					//Add padding for first in row
-					if j == 0 {
-						_element.pos_x = _padding;
-						_element.pos_y = _padding;
-					}
-					
-					//If have last element
-					if !is_undefined(_last) {
-						//For first element in row
-						if j == 0 {
-							_element.pos_y = _last.pos_y + _last.height + _padding;
-						}
-						//For next elements
-						if j != 0 {
-							_element.pos_x = _last.pos_x + _last.width + _padding;
-							_element.pos_y = _last_in_row.pos_y;
-						}
-					}
-				}
-				
 				//Save new start x y position
 				_element.start_x = _element.pos_x;
 				_element.start_y = _element.pos_y;
-				
-				//Save last in row
-				_last_in_row = _element;
 				
 				//Register element name
 				_element._registerElementName();
@@ -552,17 +543,21 @@ function LuiBase() constructor {
 					_element.addContent(_element.delayed_content);
 				}
 				
+				// Flex
+				flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding);
+				flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding);
+				if array_length(_ranges) > 0 flexpanel_node_style_set_width(_element.flex_node, _ranges[j]*90, flexpanel_unit.percent);
+				flexpanel_node_insert_child(_flex_node_row, _element.flex_node, flexpanel_node_get_num_children(_flex_node_row));
+				
 				//Call create function
 				_element.create();
 				
 				//Add to content array
 				array_push(self.content, _element);
-				
-				//Extend the height of the parent element if the added element does not fit
-				self.extendHeight();
 			}
 		}
 		self.alignAllElements();
+		self.flexUpdateAll(self.flex_node);
 		self.setNeedToUpdateContent(true);
 		return self;
 	}
@@ -684,7 +679,7 @@ function LuiBase() constructor {
 	///@desc Center element horizontally on the parent element
 	///@return {Struct.LuiBase}
 	static centerHorizontally = function() {
-		self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
+		//self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
 		return self;
 	}
 	
@@ -692,24 +687,8 @@ function LuiBase() constructor {
 	///@desc Center element vertically on the parent element
 	///@return {Struct.LuiBase}
 	static centerVertically = function() {
-		self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
+		//self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
 		return self;
-	}
-	
-	///@desc Recursive function to extend an element by height
-	static extendHeight = function() {
-		if self.allow_height_extend && self.auto_height {
-			var _lower_point = self.getLowerPoint();
-			if _lower_point > self.height - self.style.padding {
-				// Extend self
-				self.height = _lower_point + self.style.padding;
-				// Move next in parent down //???//
-				if !is_undefined(self.parent) {
-					
-				}
-			}
-			self.parent.extendHeight();
-		}
 	}
 	
 	///@desc alignAllElements() //???//
@@ -719,29 +698,26 @@ function LuiBase() constructor {
 			var _element = self.content[i];
 			switch(_element.halign) {
 				case fa_left:
-					//while(_element.pos_x > _element.parent.style.padding || !pointOnElement(_element.parent.pos_x, _element.parent.pos_y)) {
-					//	_element.pos_x--;
-					//}
-					_element.pos_x = _element.style.padding;
+					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_start);
 				break;
 				case fa_center:
-					_element.pos_x = floor(_element.parent.width / 2 - _element.width / 2);
+					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.center);
 				break;
 				case fa_right:
-					_element.pos_x = _element.parent.width - _element.width - _element.style.padding;
+					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_end);
 				break;
 				default:
 				break;
 			}
 			switch(_element.valign) {
 				case fa_top:
-					_element.pos_y = _element.style.padding;
+					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_start);
 				break;
 				case fa_middle:
-					_element.pos_y = floor(_element.parent.height / 2 - _element.height / 2);
+					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.center);
 				break;
 				case fa_bottom:
-					_element.pos_y = _element.parent.height - _element.height - _element.style.padding;
+					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_end);
 				break;
 				default:
 				break;
@@ -749,6 +725,31 @@ function LuiBase() constructor {
 			_element.alignAllElements();
 		}
 		return self;
+	}
+	
+	static flexUpdateAll = function(_node) {
+		// Calculate all sizes and positions of elements
+		flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+		
+		// Get layout data
+		var _pos = flexpanel_node_layout_get_position(_node, false);
+		
+		// Update element
+		var _data = flexpanel_node_get_data(_node);
+		if struct_exists(_data, "element") {
+			var _element = _data.element;
+			_element.pos_x = _pos.left;
+			_element.pos_y = _pos.top;
+			_element.width = _pos.width;
+			_element.height = _pos.height;
+		}
+		
+		// Call for children (recursive)
+		var _children_count = flexpanel_node_get_num_children(_node);
+		for (var i = 0; i < _children_count; i++) {
+			var _child = flexpanel_node_get_child(_node, i);
+			flexUpdateAll(_child);
+		}
 	}
 	
 	//Design
@@ -760,6 +761,11 @@ function LuiBase() constructor {
 		array_foreach(self.content, function(_elm) {
 			_elm.setStyleChilds(self.style);
 		});
+		
+		// Flex
+		flexpanel_node_style_set_padding(self.flex_node, flexpanel_edge.all_edges, self.style.padding);
+		flexpanel_node_style_set_gap(self.flex_node, flexpanel_gutter.all_gutters, self.style.padding);
+		
 		return self;
 	}
 	
@@ -963,8 +969,8 @@ function LuiBase() constructor {
 			var _element = self.content[i];
 			
 			// Get absolute position
-			_element.x = base_x + _element.pos_x;
-			_element.y = base_y + _element.pos_y;
+			_element.x = _element.pos_x;
+			_element.y = _element.pos_y;
 			
 			// Update element
 			_element.update(_element.x, _element.y);
@@ -1033,8 +1039,8 @@ function LuiBase() constructor {
 			//Check if the element is in the area of its parent and draw
 			if _allow_to_draw {
 				//Draw
-				var _x = base_x + _element.pos_x;
-				var _y = base_y + _element.pos_y;
+				var _x = _element.x;
+				var _y = _element.y;
 				_element.draw(_x, _y);
 				if _element.render_content_enabled _element.render(_x, _y);
 				if global.lui_debug_mode != 0 _element.renderDebug(_x, _y);
