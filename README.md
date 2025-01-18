@@ -27,6 +27,7 @@ _*Right now the system is in a very early stage of development and with each upd
 - Separated logic and render
 
 ### In development:
+- Flexpanels implementation
 - RadioButton
 - TreeView
 - ColorPicker
