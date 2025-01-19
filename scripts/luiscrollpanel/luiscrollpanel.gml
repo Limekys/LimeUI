@@ -61,11 +61,13 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@ignore
 	static _applyScroll = function() {
 		array_foreach(self.content, function(_elm) {
-			_elm.pos_y = _elm.start_y + self.scroll_offset_y;
+			//_elm.pos_y = _elm.start_y + self.scroll_offset_y;
+			flexpanel_node_style_set_position(_elm.flex_node, flexpanel_edge.top, _elm.start_y + self.scroll_offset_y, flexpanel_unit.point);
 		});
 		_updateScrollSurface();
 	}
 	
+	///@ignore
 	static _updateScrollSurface = function() {
 		self.update_scroll_surface = true;
 		self.updateMainUiSurface();
@@ -78,14 +80,16 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			_updateScrollSurface();
 		}
 		//if self.update_scroll_surface {
-			//Draw on surface
-			if surface_exists(self.panel_surface) surface_set_target(self.panel_surface);
+		//Draw on surface
+		if surface_exists(self.panel_surface) {
+			surface_set_target(self.panel_surface);
 			gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
 			draw_clear_alpha(self.style.color_main, 0); //???//
 			self.render();
 			gpu_set_blendequation(bm_eq_add);
-			if surface_exists(self.panel_surface) surface_reset_target();
-			//self.update_scroll_surface = false;
+			surface_reset_target();
+		}
+		//self.update_scroll_surface = false;
 		//}
 	}
 	
@@ -101,7 +105,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		//Surface
 		if surface_exists(self.panel_surface) {
 			draw_set_alpha(1);
-			draw_surface(self.panel_surface, draw_x, draw_y + self.surface_offset.top);
+			draw_surface(self.panel_surface, self.x, self.y + self.surface_offset.top);
 		}
 		//Scroll slider
 		var _scroll_slider_offset = 8;

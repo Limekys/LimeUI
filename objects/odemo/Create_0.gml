@@ -247,10 +247,10 @@ tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]); //And center tab_group horizontally
 tab_group_target_x = 0;
 tab_group_target_y = 0;
-tab_group_min_x = tab_group.start_x;
-tab_group_max_x = room_width - tab_group.width - tab_group.style.padding;
-tab_group_min_y = tab_group.start_y;
-tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
+tab_group_min_x = 0;
+tab_group_max_x = room_width/2;
+tab_group_min_y = 0;
+tab_group_max_y = 100;
 //Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
@@ -263,10 +263,10 @@ btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {game_r
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiFlexRow().addContent([
-		new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, tab_group.pos_x, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]
+		new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, 0, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]
 	]),
 	new LuiFlexRow().addContent([
-		new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, tab_group.pos_y, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]
+		new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, 0, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]
 	]),
 	new LuiFlexRow().addContent([
 		new LuiCheckbox( , , 32, 32, , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), demo_loading
@@ -291,6 +291,7 @@ btn_restart.setColor(merge_color(#FF7777, c_black, 0.5));
 
 //Create some panels
 my_panel_in_second_1 = new LuiPanel();
+my_panel_in_second_2 = new LuiPanel();
 //Create deactivated button
 deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
 	self.destroy();
@@ -301,40 +302,37 @@ activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
 		oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE";
 	} 
 });
-my_panel_in_second_1.addContent([
-	new LuiText( , , , , , "Panel in panel").setTextHalign(fa_center),
-	new LuiFlexRow().addContent([
-		activate_button, deactivated_button
-	]),	
-	new LuiButton( , , , , "btnVisibility", "Visible", function() {
-		oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
-	}),
-	new LuiButton( , , , , , long_text, ).setTooltip(long_text),
-]);
-my_panel_in_second_2 = new LuiPanel();
-//Create to arrays with sprite buttons
-var _buttons1 = []
-var _buttons2 = []
-changeButtonColor = function() {self.setColorBlend(merge_color(choose(c_red, c_orange, c_yellow, c_lime, c_blue, c_purple), c_white, 0.5))}
+//Create two arrays with sprite buttons and function to change its color
+changeButtonColor = function() {
+	self.setColorBlend(merge_color(choose(c_red, c_orange, c_yellow, c_lime, c_blue, c_purple), c_white, 0.5));
+}
+var _buttons1 = [], _buttons2 = [];
 for (var i = 0; i < 8; ++i) {
     var _button = new LuiSpriteButton( , , , 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i < 4 ? true : false, changeButtonColor);
 	if i < 4 array_push(_buttons1, _button);
 	else
 	array_push(_buttons2, _button);
 }
-//Add these to arrays to second panel of second main panel
+//Add these two arrays to second panel of second main panel
 //Since these are arrays with buttons, they will be added each in a row
-my_panel_in_second_2.addContent([
-	new LuiText( , , , , , "Panel with sprites buttons"),
-	new LuiFlexRow().addContent(_buttons1),
-	new LuiFlexRow().addContent(_buttons2),
-]);
-
-//Then add its to second panel
+//Then add all together to second panel
 my_panel_2.addContent([
 	new LuiText( , , , , , "Second panel", true).setTextHalign(fa_center),
-	my_panel_in_second_1,
-	my_panel_in_second_2
+	my_panel_in_second_1.addContent([
+		new LuiText( , , , , , "Panel in panel").setTextHalign(fa_center),
+		new LuiFlexRow().addContent([
+			activate_button, deactivated_button
+		]),	
+		new LuiButton( , , , , "btnVisibility", "Visible", function() {
+			oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
+		}),
+		new LuiButton( , , , , , long_text, ).setTooltip(long_text),
+	]),
+	my_panel_in_second_2.addContent([
+		new LuiText( , , , , , "Panel with sprites buttons"),
+		new LuiFlexRow().addContent(_buttons1),
+		new LuiFlexRow().addContent(_buttons2),
+	])
 ]);
 
 //Create drop down menu and some items in it
@@ -417,42 +415,31 @@ my_panel_3.addContent([
 
 	#region Add scroll panel in tab_panels
 	
-		//Create scroll panel
-		scroll_panel = new LuiScrollPanel(, , , 252, "firstScrollPanel");
-		//Create some panel that will be added to the scroll panel
-		nested_panel = new LuiPanel( , , , , "Panel in scroll panel");
-		//And add some elements to panel that is inside of scroll panel
-		nested_panel.addContent([
-			new LuiText(, , , , , "Nested panel x1"),
-			new LuiButton( , , , , , "Nested button"),
-			new LuiCheckbox( , , , , , false, function() {
-				if get() == true {
-					showLuiMessage(oDemo.my_ui, , , "Checkbox in nested panel of scroll panel!");
-				} else {
-					showLuiMessage(oDemo.my_ui, , , ":(");
-				}
-			}),
-			new LuiText(, , , , , "Check me!"),
-			new LuiPanel(, , , , "Nested panel x2").addContent([
-				new LuiText(, , , , , "Nested panel x2"),
-				new LuiPanel(, , , , "Nested panel x3").addContent([
-					new LuiText(, , , , , "Updateble text with binding variable:"),
-					new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
-				])
-			])
-		]);
-		//Add some elements to scroll panel
-		scroll_panel.addContent([
-			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
-			new LuiTextbox(, , , , , , "textbox in scroll panel"),
-			nested_panel,
-			new LuiSprite( , , , 100, , sCarFlip),
-			new LuiSprite( , , , 256, , sHamburger),
-			new LuiSprite( , , , 200, , sCar),
-			new LuiSprite( , , , 128, , sHamburger),
-		]);
+		//Create scroll panel with different elements
 		tab_panels.addContent([
-			scroll_panel
+			new LuiScrollPanel(, , , 252, "firstScrollPanel").addContent([
+				new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
+				new LuiTextbox(, , , , , , "textbox in scroll panel"),
+				new LuiPanel( , , , , "Panel in scroll panel").addContent([
+					new LuiText(, , , , , "Nested panel x1"),
+					new LuiButton( , , , , , "Nested button"),
+					new LuiCheckbox( , , , , , false, function() {
+						showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
+					}),
+					new LuiText(, , , , , "Check me!"),
+					new LuiPanel(, , , , "Nested panel x2").addContent([
+						new LuiText(, , , , , "Nested panel x2"),
+						new LuiPanel(, , , , "Nested panel x3").addContent([
+							new LuiText(, , , , , "Updateble text with binding variable \/"),
+							new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
+						])
+					])
+				]),
+				new LuiSprite( , , , 100, , sCarFlip),
+				new LuiSprite( , , , 256, , sHamburger),
+				new LuiSprite( , , , 200, , sCar),
+				new LuiSprite( , , , 128, , sHamburger),
+			])
 		]);
 	
 	#endregion
