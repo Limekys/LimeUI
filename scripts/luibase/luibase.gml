@@ -379,6 +379,12 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	static setFlexAlignSelf = function(_flex_align) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
+		return self;
+	}
+	
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
@@ -1143,8 +1149,8 @@ function LuiBase() constructor {
 			_luiDrawTextDebug(_x, _y, 
 			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
-			"x: " + string(self.pos_x) + " y: " + string(self.pos_y) + "\n" +
-			"w: " + string(self.width) + " h: " + string(self.height) + "\n" +
+			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
+			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
 			"v: " + string(self.value) + "\n" +
 			"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
 			"z: " + string(self.z));

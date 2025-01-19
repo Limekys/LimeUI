@@ -260,8 +260,8 @@ demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(, , , , "btnMessage", "Show message", function() {
 	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
-})//.setValign(fa_bottom).setHalign(fa_left);
-btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {game_restart()})//.setValign(fa_bottom).setHalign(fa_right);
+});
+btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {game_restart()});
 
 //Add elements to first panel and init some here
 my_panel.addContent([

@@ -211,8 +211,8 @@ function LuiMain() : LuiBase() constructor {
 			_luiDrawTextDebug(_mouse_x, _mouse_y, 
 			"id: " + string(_element.element_id) + "\n" +
 			"name: " + string(_element.name) + "\n" +
-			"x: " + string(_element.pos_x) + " y: " + string(_element.pos_y) + "\n" +
-			"w: " + string(_element.width) + " h: " + string(_element.height) + "\n" +
+			"x: " + string(_element.pos_x) + (_element.auto_x ? " (auto)" : "") + " y: " + string(_element.pos_y) + (_element.auto_y ? " (auto)" : "") + "\n" +
+			"w: " + string(_element.width) + (_element.auto_width ? " (auto)" : "") + " h: " + string(_element.height) + (_element.auto_height ? " (auto)" : "") + "\n" +
 			"v: " + string(_element.value) + "\n" +
 			"hl: " + string(_element.halign) + " vl: " + string(_element.valign) + "\n" +
 			"z: " + string(_element.z));
