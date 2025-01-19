@@ -21,6 +21,13 @@ second_button = new LuiButton( , , , , "btn2", "Demo 1", function() { room_goto(
 third_button = new LuiButton( , , , , "btn3", "Demo 2", function() { room_goto(rDemo2) })//.setHalign(fa_center).setValign(fa_middle);
 
 game_ui.addContent([
+	new LuiText(, , , , , "ABOBA", true).setTextHalign(fa_center),
 	hello_button, 
-	[second_button, third_button]
+	new LuiFlexRow().addContent([
+		second_button, third_button, new LuiFlexColumn().addContent([
+			new LuiText(, , , , , "SUGOMA", true).setTextHalign(fa_center),
+			new LuiText(, , , , , "Amogus", true).setTextHalign(fa_center),
+			new LuiText(, , , , , "Super!", true).setTextHalign(fa_center),
+		])
+	], 0)
 ]);

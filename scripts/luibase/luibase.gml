@@ -1,6 +1,7 @@
 ///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
 function LuiBase() constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
+	if !variable_global_exists("lui_z_index") variable_global_set("lui_z_index", 0);
 	
 	self.element_id = global.lui_element_count++;
 	
@@ -283,43 +284,111 @@ function LuiBase() constructor {
 		}
 	};
 	
-	// Flex init
+	// Flex system
 	self._init_flex = function() {
-		// Flex node
-		self.flex_node = flexpanel_create_node({name: self.name, data: {}});
+		// Flex node (default for all elements)
+		self.flex_node = flexpanel_create_node({
+			name: self.name, 
+			data: {},
+			minWidth: self.min_width,
+			minHeight: self.min_height,
+			flexShrink: 1,
+		});
 		
 		// Position X
-		if self.auto_x {
+		if !self.auto_x {
 			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.pos_x, flexpanel_unit.point);
 		}
 		
 		// Position Y
-		if self.auto_y {
+		if !self.auto_y {
 			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.pos_y, flexpanel_unit.point);
 		}
 		
 		// Width
-		if self.auto_width {
-			flexpanel_node_style_set_flex_grow(self.flex_node, 1);
-		} else {
+		if !self.auto_width {
 			flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
+		} else {
+			//flexpanel_node_style_set_flex_grow(self.flex_node, 1);
+			flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
+			flexpanel_node_style_set_flex_shrink(self.flex_node, 1);
 		}
 		
 		// Height
-		if self.auto_height {
-			//flexpanel_node_style_set_height(self.flex_node, self.min_height, flexpanel_unit.point);
-		} else {
+		if !self.auto_height {
 			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
+		} else {
+			//flexpanel_node_style_set_height(self.flex_node, self.min_height, flexpanel_unit.point);
 		}
-		
-		//flexpanel_node_style_set_justify_content(self.flex_node, flexpanel_justify.start);
-		//flexpanel_node_style_set_align_items(self.flex_node, flexpanel_align.flex_start);
-		
-		flexpanel_node_style_set_min_width(self.flex_node, self.min_width, flexpanel_unit.point);
-		flexpanel_node_style_set_min_height(self.flex_node, self.min_height, flexpanel_unit.point);
 		
 		var _data = flexpanel_node_get_data(self.flex_node);
 		_data.element = self;
+	}
+	
+	static setPositionType = function(_type = flexpanel_position_type.relative) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_position_type(_flex_node, _type);
+		return self;
+	}
+	
+	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO) {
+		var _flex_node = self.flex_node;
+		if _x != LUI_AUTO {
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
+		}
+		if _y != LUI_AUTO {
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
+		}
+		//self.flexUpdateAll(self.flex_node);
+		return self;
+	}
+	
+	static setSize = function(_width = LUI_AUTO, _height = LUI_AUTO) {
+		var _flex_node = self.flex_node;
+		if _width != LUI_AUTO {
+			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
+		}
+		if _height != LUI_AUTO {
+			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
+		}
+		//self.flexUpdateAll(self.flex_node);
+		return self;
+	}
+	
+	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
+		return self;
+	}
+	
+	static setFlexPadding = function(_padding) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
+		return self;
+	}
+	
+	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
+		return self;
+	}
+	
+	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
+		return self;
+	}
+	
+	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
+		return self;
+	}
+	
+	static centerContent = function() {
+		self.setFlexJustifyContent(flexpanel_justify.center)
+			.setFlexAlignItems(flexpanel_align.center);
+		return self;
 	}
 	
 	//Init
@@ -367,12 +436,16 @@ function LuiBase() constructor {
 	///@desc Set name of this element (by which the data of this element can be retrieved in the future)
 	///@return {Struct.LuiBase}
 	static setName = function(_string) {
-		if !variable_struct_exists(self.main_ui.element_names, _string) {
-			self._deleteElementName();
+		if is_undefined(self.main_ui) || !variable_struct_exists(self.main_ui, "element_names") {
 			self.name = _string;
-			self._registerElementName();
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {_string} already exists! Please give another name!");
+			if !variable_struct_exists(self.main_ui.element_names, _string) {
+				self._deleteElementName();
+				self.name = _string;
+				self._registerElementName();
+			} else {
+				if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {_string} already exists! Please give another name!");
+			}
 		}
 		return self;
 	}
@@ -478,33 +551,32 @@ function LuiBase() constructor {
 	///@arg {Any} elements
 	///@arg {Real} _custom_padding
 	static addContent = function(elements, _custom_padding = LUI_AUTO) {
+		
 		//Convert to array if one element
 		if !is_array(elements) elements = [elements];
+		
 		//Check for unordered adding
 		if is_undefined(self.style) {
 			if !is_array(self.delayed_content) self.delayed_content = [];
 			self.delayed_content = array_concat(self.delayed_content, elements);
 			return self;
 		}
+		
+		var _elements_count = array_length(elements);
+		
+		//Take ranges from array
+		var _ranges = [];
+		if is_array(elements[_elements_count-1]) {
+			_ranges = elements[_elements_count-1];
+			_elements_count--;
+		}
+		
 		//Adding
 		var _local_z = 0;
-		for (var i = 0; i < array_length(elements); i++) {
+		for (var i = 0; i < _elements_count; i++) {
 		    
 			//Get
-			var _row_elements = elements[i];
-			
-			//Convert to array if one element
-			if !is_array(_row_elements) {
-				_row_elements = [_row_elements];
-			}
-			var _row_element_count = array_length(_row_elements);
-			
-			//Take ranges from array
-			var _ranges = [];
-			if is_array(_row_elements[_row_element_count-1]) {
-				_ranges = _row_elements[_row_element_count-1];
-				_row_element_count--;
-			}
+			var _element = elements[i];
 			
 			// Padding
 			var _padding = _custom_padding;
@@ -512,51 +584,39 @@ function LuiBase() constructor {
 				_padding = self.style.padding;
 			}
 			
-			// Flex node row
-			var _flex_node_row = flexpanel_create_node();
-			flexpanel_node_style_set_flex_direction(_flex_node_row, flexpanel_flex_direction.row);
-			flexpanel_node_style_set_gap(_flex_node_row, flexpanel_gutter.all_gutters, _padding);
-			flexpanel_node_insert_child(self.flex_node, _flex_node_row, flexpanel_node_get_num_children(self.flex_node));
+			//Set parent, main ui and style
+			_element.parent = self;
+			_element.main_ui = _element.parent.main_ui;
+			_element.style = self.style;
+			//_element.z = _element.element_id; //_element.parent.z + 1//++_local_z;
+			if !_element.parent.visible _element.visible = false;
 			
-			//Adding elements in row
-			for (var j = 0; j < _row_element_count; j++) {
-				//Get
-				var _element = _row_elements[j];
-				var _last = getLast();
-				
-				//Set parent, main ui and style
-				_element.parent = self;
-				_element.main_ui = _element.parent.main_ui;
-				_element.style = self.style;
-				_element.z = _element.element_id; //_element.parent.z + 1//++_local_z;
-				if !_element.parent.visible _element.visible = false;
-				
-				//Save new start x y position
-				_element.start_x = _element.pos_x;
-				_element.start_y = _element.pos_y;
-				
-				//Register element name
-				_element._registerElementName();
-				
-				//Add delayed contents
-				if !is_undefined(_element.delayed_content) {
-					_element.addContent(_element.delayed_content);
-				}
-				
-				// Flex
-				flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding);
-				flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding);
-				if array_length(_ranges) > 0 flexpanel_node_style_set_width(_element.flex_node, _ranges[j]*90, flexpanel_unit.percent);
-				flexpanel_node_insert_child(_flex_node_row, _element.flex_node, flexpanel_node_get_num_children(_flex_node_row));
-				
-				//Call create function
-				_element.create();
-				
-				//Add to content array
-				array_push(self.content, _element);
+			//Save new start x y position
+			_element.start_x = _element.pos_x;
+			_element.start_y = _element.pos_y;
+			
+			//Register element name
+			_element._registerElementName();
+			
+			// Flex setting up
+			flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding); 							// gap
+			flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding); 							// padding
+			if array_length(_ranges) > 0 flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]); 						// ranges
+			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node)); 	// binding
+			
+			//Add delayed contents
+			if !is_undefined(_element.delayed_content) {
+				_element.addContent(_element.delayed_content);
 			}
+			
+			//Call create function
+			_element.create();
+			
+			//Add to content array
+			array_push(self.content, _element);
 		}
 		self.alignAllElements();
+		global.lui_z_index = 0;
 		self.flexUpdateAll(self.flex_node);
 		self.setNeedToUpdateContent(true);
 		return self;
@@ -742,6 +802,7 @@ function LuiBase() constructor {
 			_element.pos_y = _pos.top;
 			_element.width = _pos.width;
 			_element.height = _pos.height;
+			_element.z = global.lui_z_index++;
 		}
 		
 		// Call for children (recursive)
@@ -821,6 +882,8 @@ function LuiBase() constructor {
 	static updateMainUiSurface = function() {
 		self.main_ui.update_ui_screen_surface = true;
 		self.updateParentRelativeSurface();
+		global.lui_z_index = 0;
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	///@desc Update parent relative surface
@@ -971,6 +1034,7 @@ function LuiBase() constructor {
 			// Get absolute position
 			_element.x = _element.pos_x;
 			_element.y = _element.pos_y;
+			//_element.z = self.z + i + 1;
 			
 			// Update element
 			_element.update(_element.x, _element.y);
@@ -996,17 +1060,17 @@ function LuiBase() constructor {
 				
 				// Check if element is inside parent when position updates
 				_element.inside_parent = rectangle_in_rectangle(
-					_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
-					_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
-				);
+										_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
+										_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
+										);
 				
 				if (!is_undefined(self.parent_relative)) {
 					_p_x = _element.parent_relative.x;
 					_p_y = _element.parent_relative.y;
 					_element.inside_parent = _element.inside_parent && rectangle_in_rectangle(
-						_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
-						_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
-					);
+											_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
+											_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
+											);
 				}
 				_element.onPositionUpdate();
 				self.updateMainUiSurface();
@@ -1039,12 +1103,18 @@ function LuiBase() constructor {
 			//Check if the element is in the area of its parent and draw
 			if _allow_to_draw {
 				//Draw
-				var _x = _element.x;
-				var _y = _element.y;
-				_element.draw(_x, _y);
-				if _element.render_content_enabled _element.render(_x, _y);
-				if global.lui_debug_mode != 0 _element.renderDebug(_x, _y);
+				_element.draw(_element.x, _element.y);
+				if _element.render_content_enabled _element.render(_element.x, _element.y);
 			}
+		}
+		if global.lui_debug_mode != 0 {
+			for (var i = 0, n = array_length(self.content); i < n; i++) {
+				//Get element
+				var _element = self.content[i];
+				if !_element.visible continue;
+				_element.renderDebug(_element.x, _element.y);
+			}
+			
 		}
 	}
 	
@@ -1056,10 +1126,18 @@ function LuiBase() constructor {
 		}
 		var _prev_color = draw_get_color();
 		var _prev_alpha = draw_get_alpha();
-		draw_set_alpha(0.5);
-		draw_set_color(mouseHover() ? c_red : make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		if mouseHover() {
+			draw_set_alpha(1);
+			draw_set_color(c_red);
+		} else {
+			draw_set_alpha(0.5);
+			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		}
 		//Rectangles
 		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
+		if mouseHover() {
+			draw_rectangle(_x-1, _y-1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
+		}
 		//Text
 		if global.lui_debug_mode == 2 {
 			_luiDrawTextDebug(_x, _y, 
@@ -1202,6 +1280,8 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
+		//flexpanel_delete_node(self.flex_node, false);
+		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
 		global.lui_element_count--;
 		self.updateMainUiSurface();
 		//Delete self from parent content

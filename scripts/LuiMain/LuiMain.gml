@@ -14,9 +14,6 @@ function LuiMain() : LuiBase() constructor {
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
 	flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
 	flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
-	//flexpanel_node_style_set_padding(self.flex_node, flexpanel_edge.all_edges, 16);
-	//flexpanel_node_style_set_gap(self.flex_node, flexpanel_gutter.all_gutters, 16);
-	flexpanel_node_style_set_flex_direction(self.flex_node, flexpanel_flex_direction.column);
 	//flexpanel_node_style_set_justify_content(self.flex_node, flexpanel_justify.start);
 	//flexpanel_node_style_set_align_items(self.flex_node, flexpanel_align.flex_start);
 	

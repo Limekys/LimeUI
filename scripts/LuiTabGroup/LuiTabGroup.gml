@@ -22,8 +22,10 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	static _initHeader = function() {
 		if is_undefined(self.tabgroup_header) {
-			self.tabgroup_header = new LuiContainer(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id));
-			self.addContent([self.tabgroup_header], 0);
+			self.tabgroup_header = new LuiContainer(0, 0, self.width, self.tab_height, "_tabgroup_header_" + string(self.element_id))
+				.setFlexDirection(flexpanel_flex_direction.row);
+			flexpanel_node_style_set_padding(self.flex_node, flexpanel_edge.all_edges, 0);
+			self.addContent([self.tabgroup_header]);
 		}
 	}
 	
@@ -44,10 +46,10 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			// Add tab container to tabgroup
 			self.addContent(_tab.tab_container);
 			// Adjust position and size of container
-			_tab.tab_container.pos_x = 0;
-			_tab.tab_container.pos_y = self.tab_height;
-			_tab.tab_container.width = self.width;
-			_tab.tab_container.height = self.height - self.tab_height;
+			flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
+			flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
+			flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
+			flexpanel_node_style_set_height(_tab.tab_container.flex_node, self.height - self.tab_height, flexpanel_unit.point);
 		}
 		//Add tab to header of tabgroup
 		self.tabgroup_header.addContent([self.tabs], 0);

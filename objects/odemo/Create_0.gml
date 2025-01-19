@@ -12,6 +12,7 @@ debug_grid = false;
 
 demo_login = "";
 demo_password = "";
+long_text = "This button with a really long text that probably won't fit in this element!";
 
 #endregion
 
@@ -227,12 +228,14 @@ my_ui = new LuiMain().setStyle(demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);
+tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);//.setPositionType(flexpanel_position_type.absolute);
 
 //Add panels to main ui container
 my_ui.addContent([
-	[my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]],	//Adding panels in one row with automatic width with proportions 40% 40% 20%
-	tab_group												//Adding tab group below these panels
+	new LuiFlexRow().addContent([
+		my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]
+	]),
+	//tab_group												//Adding tab group below these panels
 ]);
 
 //Create tabs for tabGroup
@@ -242,32 +245,48 @@ tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
 tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
-tab_group_target_x = tab_group.pos_x;
-tab_group_target_y = tab_group.pos_y;
-tab_group_min_x = tab_group.start_x;
-tab_group_max_x = room_width - tab_group.width - tab_group.style.padding;
-tab_group_min_y = tab_group.start_y;
-tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
+tab_group_target_x = 0;
+tab_group_target_y = 0;
+//tab_group_min_x = tab_group.start_x;
+//tab_group_max_x = room_width - tab_group.width - tab_group.style.padding;
+//tab_group_min_y = tab_group.start_y;
+//tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
+tab_group_min_x = 0;
+tab_group_max_x = 0;
+tab_group_min_y = 0;
+tab_group_max_y = 0;
 //Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
-btn_show_msg = new LuiButton(16, my_panel.height - 32 - 16, , , , "Show message", function() {
+btn_show_msg = new LuiButton(, , , , "btnMessage", "Show message", function() {
 	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
-}).setValign(fa_bottom).setHalign(fa_left);
-btn_restart = new LuiButton(, , , , , "Restart", function() {game_restart()}).setValign(fa_bottom).setHalign(fa_right);
+})//.setValign(fa_bottom).setHalign(fa_left);
+btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {game_restart()})//.setValign(fa_bottom).setHalign(fa_right);
 
 //Add elements to first panel and init some here
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
-	[new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, tab_group.pos_x, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]],
-	[new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, tab_group.pos_y, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]],
-	[demo_loading],
-	[new LuiCheckbox( , , 32, 32, , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), new LuiText( , , , , , "Progress loading")],
-	[new LuiText( , , , , , "Textbox"), new LuiTextbox( , , , , , "some text"), [0.2, 0.8]],
-	new LuiTextbox( , , , , , , "login", false).setBinding(oDemo, "demo_login"),
-	new LuiTextbox( , , , , , , "password", true).setBinding(oDemo, "demo_password"),
-	[new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)],
-	[btn_show_msg, btn_restart]
+	new LuiFlexRow().addContent([
+		new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, tab_group.pos_x, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]
+	]),
+	new LuiFlexRow().addContent([
+		new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, tab_group.pos_y, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]
+	]),
+	new LuiFlexRow().addContent([
+		new LuiCheckbox( , , 32, 32, , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), demo_loading
+	]),
+	new LuiFlexRow().addContent([
+		new LuiText( , , , , , "Login: "), new LuiTextbox( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
+	]),
+	new LuiFlexRow().addContent([
+		new LuiText( , , , , , "Password: "), new LuiTextbox( , , , , , , "qwerty12345", true).setBinding(oDemo, "demo_password"), [0.2, 0.8]
+	]),	
+	new LuiFlexRow().addContent([
+		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
+	]),
+	new LuiFlexRow().addContent([
+		btn_show_msg, btn_restart
+	]),
 ]);
 
 //Set colors to buttons 
@@ -281,14 +300,20 @@ deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
 	self.destroy();
 	oDemo.deactivated_button = -1;
 }).deactivate();
+activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
+	if is_struct(oDemo.deactivated_button) {
+		oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE";
+	} 
+});
 my_panel_in_second_1.addContent([
 	new LuiText( , , , , , "Panel in panel").setTextHalign(fa_center),
-	[new LuiButton( , , , , , "ACTIVATE", function() {if is_struct(oDemo.deactivated_button) {oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE"}}),
+	new LuiFlexRow().addContent([
+		activate_button, deactivated_button
+	]),	
 	new LuiButton( , , , , "btnVisibility", "Visible", function() {
 		oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
-	})],
-	new LuiButton( , , , , , "This button with a really long text that probably won't fit in this button!", ).setTooltip("This button with a really long text that probably won't fit in this button!"),
-	deactivated_button,
+	}),
+	new LuiButton( , , , , , long_text, ).setTooltip(long_text),
 ]);
 my_panel_in_second_2 = new LuiPanel();
 //Create to arrays with sprite buttons
@@ -303,13 +328,11 @@ for (var i = 0; i < 8; ++i) {
 }
 //Add these to arrays to second panel of second main panel
 //Since these are arrays with buttons, they will be added each in a row
-my_panel_in_second_2.addContent(
-	[
-		new LuiText( , , , , , "Panel with sprites buttons"),
-		_buttons1,
-		_buttons2
-	]
-);
+my_panel_in_second_2.addContent([
+	new LuiText( , , , , , "Panel with sprites buttons"),
+	new LuiFlexRow().addContent(_buttons1),
+	new LuiFlexRow().addContent(_buttons2),
+]);
 //my_panel_in_second_2.addContent([_buttons1, _buttons2]);
 //my_panel_in_second_2.addContent([_buttons1]);
 //my_panel_in_second_2.addContent([_buttons2]);
@@ -371,25 +394,25 @@ big_button_3 = new LuiButton(, , , 64, , "", function() {});
 //In each big button we adding sprite and text with ignore mouse hovering
 //And we get big buttons with icon and text
 big_button.addContent([
-	[new LuiSprite(, , 32, 32, , sHamburger).ignoreMouseHover(), new LuiText(, , , , , "Hamburger!").ignoreMouseHover()]
+	new LuiSprite(, , 32, 32, , sHamburger).ignoreMouseHover(), new LuiText(, , , , , "Hamburger!").ignoreMouseHover()
 ]);
 big_button_2.addContent([
-	[new LuiSprite(, , 32, 32, , sBoxDemo).ignoreMouseHover(), new LuiText(, , , , , "A box!").ignoreMouseHover()]
+	new LuiSprite(, , 32, 32, , sBoxDemo).ignoreMouseHover(), new LuiText(, , , , , "A box!").ignoreMouseHover()
 ]);
 big_button_3.addContent([
-	[new LuiSprite(, , 32, 32, , sLogoDemo).ignoreMouseHover(), new LuiText(, , , , , "Game Maker!").ignoreMouseHover()]
+	new LuiSprite(, , 32, 32, , sLogoDemo).ignoreMouseHover(), new LuiText(, , , , , "Game Maker!").ignoreMouseHover()
 ]);
 
 //Add elements to third main panel
 my_panel_3.addContent([
 	new LuiText( , , , , , "Third panel", true).setTextHalign(fa_center),
 	dropdown_menu,
-	new LuiText(, , , , , "This is a really long text that probably won't fit in this panel!").setTooltip("This is a really long text that probably won't fit in this panel!"),
+	new LuiText(, , , , , long_text).setTooltip(long_text),
 	big_button,
 	big_button_2,
 	big_button_3
 ]);
-
+/*
 #region Fill all tabs in tabGroup
 
 	#region Add scroll panel in tab_panels
@@ -528,7 +551,7 @@ my_panel_3.addContent([
 	#endregion
 
 #endregion
-
+*/
 // Create buttons to go another demo room
 button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
 	room_goto(rDemo2);

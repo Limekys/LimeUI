@@ -8,13 +8,20 @@
 ///@arg {Function} callback
 function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiDropDown", hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
 	
-	self.value = "";
-	
 	self.hint = hint;
 	self.items = undefined;
 	self.is_open = false;
 	self.dropdown_panel = undefined;
 	self.text_width = self.width;
+	
+	///@ignore
+	static _calculateTextWidth = function() {
+		if !is_undefined(self.style) && !is_undefined(self.style.sprite_dropdown_arrow) {
+			self.text_width = self.width - sprite_get_width(self.style.sprite_dropdown_arrow)*4;
+		} else {
+			self.text_width = self.width;
+		}
+	}
 	
 	///@ignore
 	static _initDropdownPanel = function() {
@@ -26,6 +33,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
 		self.dropdown_panel.setDepth(array_last(self.parent.content).z + 1);
+		self.dropdown_panel.setPositionType(flexpanel_position_type.absolute);
 	}
 	
 	///@ignore
@@ -52,8 +60,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Set position of dropdown panel
 		var _x = self.x;
 		var _y = self.y + self.height;
-		self.dropdown_panel.pos_x = _x;
-		self.dropdown_panel.pos_y = _y;
+		self.dropdown_panel.setPosition(_x, _y);
 		//Open and change visibility
 		self.is_open = !self.is_open;
 		self.dropdown_panel.setVisibilitySwitching(true);
@@ -131,11 +138,11 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	self.create = function() {
-		if !is_undefined(self.style.sprite_dropdown_arrow) {
-			self.text_width = self.width - sprite_get_width(self.style.sprite_dropdown_arrow)*4;
-		} else {
-			self.text_width = self.width;
-		}
+		self._calculateTextWidth();
+	}
+	
+	self.onValueUpdate = function() {
+		self._calculateTextWidth();
 	}
 	
 	self.onMouseLeftReleased = function() {

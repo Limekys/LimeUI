@@ -119,9 +119,9 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"rInit","path":"rooms/rInit/rInit.yy",},},
-    {"roomId":{"name":"rDemo3","path":"rooms/rDemo3/rDemo3.yy",},},
     {"roomId":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},},
     {"roomId":{"name":"rDemo2","path":"rooms/rDemo2/rDemo2.yy",},},
+    {"roomId":{"name":"rDemo3","path":"rooms/rDemo3/rDemo3.yy",},},
   ],
   "templateType":null,
   "TextureGroups":[
