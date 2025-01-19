@@ -417,7 +417,7 @@ my_panel_3.addContent([
 	
 		//Create scroll panel with different elements
 		tab_panels.addContent([
-			new LuiScrollPanel(, , , 252, "firstScrollPanel").addContent([
+			new LuiScrollPanel(, , , , "firstScrollPanel").addContent([
 				new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 				new LuiTextbox(, , , , , , "textbox in scroll panel"),
 				new LuiPanel( , , , , "Panel in scroll panel").addContent([
@@ -486,7 +486,7 @@ my_panel_3.addContent([
 			new LuiButton(, , , , , "777", oDemo.deleteSelf),
 		]);
 		textbox_search = new LuiTextbox(, , , , "textboxSearch", , "Search...", , 256, filterElements);
-		control_panel = new LuiPanel(, , , 268 - 16, "ControlPanel");
+		control_panel = new LuiPanel(, , , , "ControlPanel");
 		control_textbox = new LuiTextbox(, , , , , , "new element name", false, 32);
 		control_btn_add = new LuiButton(, , , , , "Add element", function() {
 			var _button_name = oDemo.control_textbox.get();
@@ -499,6 +499,7 @@ my_panel_3.addContent([
 			control_btn_add,
 			control_btn_clear
 		]);
+		
 		tab_search.addContent([
 			new LuiFlexRow().addContent([
 				new LuiFlexColumn().addContent([
@@ -517,6 +518,7 @@ my_panel_3.addContent([
 		sprite_car_2 = new LuiSprite( , , , 256, , sCar, , , , false);
 		sprite_car_3 = new LuiSprite( , , , 256, , sCarFlip);
 		sprite_car_4 = new LuiSprite( , , , 256, , sCarFlip, , , , false);
+		
 		tab_sprites.addContent([
 			new LuiFlexRow().addContent([
 				sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4
@@ -536,6 +538,7 @@ my_panel_3.addContent([
 		sprite_vk = new LuiSpriteButton(, , , 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
 		sprite_youtube = new LuiSpriteButton(, , , 64, , sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setValign(fa_bottom);
+		
 		tab_about.addContent([
 			new LuiFlexRow().addContent([
 				sprite_limekys, text_about
