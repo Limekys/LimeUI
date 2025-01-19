@@ -50,7 +50,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			// Adjust position and size of container
 			//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
 			//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
-			flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
+			//flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
 			flexpanel_node_style_set_height(_tab.tab_container.flex_node, self.height - self.tab_height, flexpanel_unit.point);
 		}
 		//Add tab to header of tabgroup
