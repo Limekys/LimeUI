@@ -228,14 +228,14 @@ my_ui = new LuiMain().setStyle(demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);//.setPositionType(flexpanel_position_type.absolute);
+tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);
 
 //Add panels to main ui container
 my_ui.addContent([
 	new LuiFlexRow().addContent([
 		my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]
 	]),
-	//tab_group												//Adding tab group below these panels
+	tab_group //Adding tab group below these panels
 ]);
 
 //Create tabs for tabGroup
@@ -244,17 +244,13 @@ tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 0.5);
 tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
 tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
 //Add tabs to tabgroup
-tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]).centerHorizontally(); //And center tab_group horizontally
+tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]); //And center tab_group horizontally
 tab_group_target_x = 0;
 tab_group_target_y = 0;
-//tab_group_min_x = tab_group.start_x;
-//tab_group_max_x = room_width - tab_group.width - tab_group.style.padding;
-//tab_group_min_y = tab_group.start_y;
-//tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
-tab_group_min_x = 0;
-tab_group_max_x = 0;
-tab_group_min_y = 0;
-tab_group_max_y = 0;
+tab_group_min_x = tab_group.start_x;
+tab_group_max_x = room_width - tab_group.width - tab_group.style.padding;
+tab_group_min_y = tab_group.start_y;
+tab_group_max_y = room_height - tab_group.height - tab_group.style.padding;
 //Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
@@ -333,9 +329,6 @@ my_panel_in_second_2.addContent([
 	new LuiFlexRow().addContent(_buttons1),
 	new LuiFlexRow().addContent(_buttons2),
 ]);
-//my_panel_in_second_2.addContent([_buttons1, _buttons2]);
-//my_panel_in_second_2.addContent([_buttons1]);
-//my_panel_in_second_2.addContent([_buttons2]);
 
 //Then add its to second panel
 my_panel_2.addContent([
@@ -393,14 +386,21 @@ big_button_3 = new LuiButton(, , , 64, , "", function() {});
 
 //In each big button we adding sprite and text with ignore mouse hovering
 //And we get big buttons with icon and text
+//???//
 big_button.addContent([
-	new LuiSprite(, , 32, 32, , sHamburger).ignoreMouseHover(), new LuiText(, , , , , "Hamburger!").ignoreMouseHover()
+	new LuiFlexRow().ignoreMouseHover().addContent([
+		new LuiSprite(, , 32, 32, , sHamburger).ignoreMouseHover(), new LuiText(, , , , , "Hamburger!").ignoreMouseHover()
+	])
 ]);
 big_button_2.addContent([
-	new LuiSprite(, , 32, 32, , sBoxDemo).ignoreMouseHover(), new LuiText(, , , , , "A box!").ignoreMouseHover()
+	new LuiFlexRow().ignoreMouseHover().addContent([
+		new LuiSprite(, , 32, 32, , sBoxDemo).ignoreMouseHover(), new LuiText(, , , , , "A box!").ignoreMouseHover()
+	])
 ]);
 big_button_3.addContent([
-	new LuiSprite(, , 32, 32, , sLogoDemo).ignoreMouseHover(), new LuiText(, , , , , "Game Maker!").ignoreMouseHover()
+	new LuiFlexRow().ignoreMouseHover().addContent([
+		new LuiSprite(, , 32, 32, , sLogoDemo).ignoreMouseHover(), new LuiText(, , , , , "Game Maker!").ignoreMouseHover()
+	])
 ]);
 
 //Add elements to third main panel
@@ -412,7 +412,7 @@ my_panel_3.addContent([
 	big_button_2,
 	big_button_3
 ]);
-/*
+
 #region Fill all tabs in tabGroup
 
 	#region Add scroll panel in tab_panels
@@ -425,14 +425,14 @@ my_panel_3.addContent([
 		nested_panel.addContent([
 			new LuiText(, , , , , "Nested panel x1"),
 			new LuiButton( , , , , , "Nested button"),
-			[new LuiCheckbox( , , , , , false, function() {
+			new LuiCheckbox( , , , , , false, function() {
 				if get() == true {
 					showLuiMessage(oDemo.my_ui, , , "Checkbox in nested panel of scroll panel!");
 				} else {
 					showLuiMessage(oDemo.my_ui, , , ":(");
 				}
 			}),
-			new LuiText(, , , , , "Check me!")],
+			new LuiText(, , , , , "Check me!"),
 			new LuiPanel(, , , , "Nested panel x2").addContent([
 				new LuiText(, , , , , "Nested panel x2"),
 				new LuiPanel(, , , , "Nested panel x3").addContent([
@@ -490,7 +490,7 @@ my_panel_3.addContent([
 			}
 		}
 		//Other elements
-		search_panel = new LuiScrollPanel(, , , 268 - 48 - 16, "SearchPanel").addContent([
+		search_panel = new LuiScrollPanel(, , , , "SearchPanel").addContent([
 			new LuiButton(, , , , , "Aboba", oDemo.deleteSelf),
 			new LuiButton(, , , , , "Microba", oDemo.deleteSelf),
 			new LuiButton(, , , , , "Foo", oDemo.deleteSelf),
@@ -513,11 +513,14 @@ my_panel_3.addContent([
 			control_btn_clear
 		]);
 		tab_search.addContent([
-			textbox_search,
-			[search_panel, control_panel]
+			new LuiFlexRow().addContent([
+				new LuiFlexColumn().addContent([
+					textbox_search,
+					search_panel,
+				]),
+				control_panel
+			])
 		]);
-		textbox_search.width = search_panel.width;
-		control_panel.pos_y = textbox_search.pos_y;
 	
 	#endregion
 
@@ -527,7 +530,11 @@ my_panel_3.addContent([
 		sprite_car_2 = new LuiSprite( , , , 256, , sCar, , , , false);
 		sprite_car_3 = new LuiSprite( , , , 256, , sCarFlip);
 		sprite_car_4 = new LuiSprite( , , , 256, , sCarFlip, , , , false);
-		tab_sprites.addContent([[sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4]]);
+		tab_sprites.addContent([
+			new LuiFlexRow().addContent([
+				sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4
+			])
+		]);
 	
 	#endregion
 
@@ -543,15 +550,19 @@ my_panel_3.addContent([
 		sprite_youtube = new LuiSpriteButton(, , , 64, , sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setValign(fa_bottom);
 		tab_about.addContent([
-			[sprite_limekys, text_about],
-			[sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube],
+			new LuiFlexRow().addContent([
+				sprite_limekys, text_about
+			]),
+			new LuiFlexRow().addContent([
+				sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube
+			]),
 			text_version
 		]);
 	
 	#endregion
 
 #endregion
-*/
+
 // Create buttons to go another demo room
 button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
 	room_goto(rDemo2);

@@ -195,6 +195,11 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
+		// Draw debug screen grid
+		if global.lui_debug_grid {
+			self._drawScreenGrid();
+		}
+		
 		// Draw debug info under mouse
 		if global.lui_debug_mode != 0 && !is_undefined(_element) {
 			if !is_undefined(self.style.font_debug) {

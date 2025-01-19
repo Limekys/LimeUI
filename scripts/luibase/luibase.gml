@@ -1,5 +1,6 @@
 ///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
 function LuiBase() constructor {
+	if !variable_global_exists("lui_debug_grid") variable_global_set("lui_debug_grid", false);
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	if !variable_global_exists("lui_z_index") variable_global_set("lui_z_index", 0);
 	
@@ -364,6 +365,12 @@ function LuiBase() constructor {
 	static setFlexPadding = function(_padding) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
+		return self;
+	}
+	
+	static setFlexGap = function(_gap) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
 		return self;
 	}
 	
@@ -1287,7 +1294,7 @@ function LuiBase() constructor {
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
 		//flexpanel_delete_node(self.flex_node, false);
-		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
+		//flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none); //???//
 		global.lui_element_count--;
 		self.updateMainUiSurface();
 		//Delete self from parent content
