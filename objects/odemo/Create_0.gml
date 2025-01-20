@@ -228,7 +228,7 @@ my_ui = new LuiMain().setStyle(demo_style_dark);
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
-tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46);
+tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46).setPositionType(flexpanel_position_type.absolute);
 
 //Add panels to main ui container
 my_ui.addContent([
@@ -245,12 +245,12 @@ tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
 tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
 //Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]); //And center tab_group horizontally
-tab_group_target_x = 0;
-tab_group_target_y = 0;
-tab_group_min_x = 0;
-tab_group_max_x = room_width/2;
-tab_group_min_y = 0;
-tab_group_max_y = 100;
+tab_group_min_x = 16;
+tab_group_max_x = room_width - tab_group.width;
+tab_group_min_y = 200;
+tab_group_max_y = room_height - tab_group.height;
+tab_group_target_x = tab_group_min_x;
+tab_group_target_y = my_panel.y + my_panel.height + my_ui.style.padding*2;
 //Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
@@ -554,8 +554,8 @@ my_panel_3.addContent([
 #endregion
 
 // Create buttons to go another demo room
-button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
-	room_goto(rDemo2);
-}).setHalign(fa_right).setValign(fa_bottom);
-
-my_ui.addContent(button_next_demo);
+my_ui.addContent([
+	new LuiButton(room_width - 256 - my_ui.style.padding, room_height - 32 - my_ui.style.padding, 256, , "buttonNextDemo", "Next demo -->", function() {
+		room_goto(rDemo2);
+	}).setPositionType(flexpanel_position_type.absolute)
+]);
