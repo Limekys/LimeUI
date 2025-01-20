@@ -143,6 +143,8 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		self.is_active = true;
 		self.tab_container.setVisible(true);
 		flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.flex);
+		self.flexCalculateLayout();
+		self.flexUpdateAll(self.main_ui.flex_node); //???//check if this updates really need here
 	}
 	
 	///@desc Deactivate current tab

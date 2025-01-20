@@ -514,13 +514,13 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		sprite_car_1 = new LuiSprite( , , , 256, , sCar);
-		sprite_car_2 = new LuiSprite( , , , 256, , sCar, , , , false);
-		sprite_car_3 = new LuiSprite( , , , 256, , sCarFlip);
-		sprite_car_4 = new LuiSprite( , , , 256, , sCarFlip, , , , false);
+		sprite_car_1 = new LuiSprite( , , , , , sCar);
+		sprite_car_2 = new LuiSprite( , , , , , sCar, , , , false);
+		sprite_car_3 = new LuiSprite( , , , , , sCarFlip);
+		sprite_car_4 = new LuiSprite( , , , , , sCarFlip, , , , false);
 		
 		tab_sprites.addContent([
-			new LuiFlexRow().addContent([
+			new LuiFlexRow( , , , 300).addContent([
 				sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4
 			])
 		]);

@@ -33,14 +33,17 @@ game_ui.addContent([
 	])
 ]);
 
-tabgroup = new LuiTabGroup(, , , 300, "testTabGroup", 32);
+tabgroup = new LuiTabGroup(, , 512, 300, "testTabGroup", 32);
 tab1 = new LuiTab(, "Tab1");
 tab2 = new LuiTab(, "Tab2");
+tab3 = new LuiTab(, "Tab3");
 
-tabgroup.addTabs([tab1, tab2]);
+tabgroup.addTabs([tab1, tab2, tab3]);
 
 game_ui.addContent([
-	tabgroup
+	new LuiContainer().centerContent().addContent([
+		tabgroup
+	])
 ]);
 
 tab1.addContent([
@@ -57,4 +60,8 @@ tab2.addContent([
 	new LuiFlexRow().addContent([
 		new LuiText(, , , , , "Text in row 1", true).setTextHalign(fa_center), new LuiText(, , , , , "Text in row 2", true).setTextHalign(fa_center),
 	])
+]);
+
+tab3.addContent([
+	new LuiText(, , , , , "Extra 33", true).setTextHalign(fa_center),
 ]);
