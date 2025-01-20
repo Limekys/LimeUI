@@ -280,7 +280,7 @@ my_panel.addContent([
 	new LuiFlexRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
 	]),
-	new LuiFlexRow().addContent([
+	new LuiFlexRow().addContent([ //.setFlexAlignSelf(flexpanel_align.flex_end)
 		btn_show_msg, btn_restart
 	]),
 ]);
@@ -423,22 +423,22 @@ my_panel_3.addContent([
 				new LuiPanel( , , , , "Panel in scroll panel").addContent([
 					new LuiText(, , , , , "Nested panel x1"),
 					new LuiButton( , , , , , "Nested button"),
-					new LuiCheckbox( , , , , , false, function() {
+					new LuiCheckbox( , , 32, 32, , false, function() {
 						showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 					}),
-					new LuiText(, , , , , "Check me!"),
-					new LuiPanel(, , , , "Nested panel x2").addContent([
-						new LuiText(, , , , , "Nested panel x2"),
-						new LuiPanel(, , , , "Nested panel x3").addContent([
-							new LuiText(, , , , , "Updateble text with binding variable \/"),
-							new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
-						])
-					])
+					//new LuiText(, , , , , "Check me!"),
+					//new LuiPanel(, , , , "Nested panel x2").addContent([
+						//new LuiText(, , , , , "Nested panel x2"),
+						//new LuiPanel(, , , , "Nested panel x3").addContent([
+							//new LuiText(, , , , , "Updateble text with binding variable \/"),
+							//new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
+						//])
+					//])
 				]),
-				new LuiSprite( , , , 100, , sCarFlip),
-				new LuiSprite( , , , 256, , sHamburger),
-				new LuiSprite( , , , 200, , sCar),
-				new LuiSprite( , , , 128, , sHamburger),
+				//new LuiSprite( , , , 100, , sCarFlip),
+				//new LuiSprite( , , , 256, , sHamburger),
+				//new LuiSprite( , , , 200, , sCar),
+				//new LuiSprite( , , , 128, , sHamburger),
 			])
 		]);
 	
@@ -536,7 +536,7 @@ my_panel_3.addContent([
 		sprite_twitch = new LuiSpriteButton(, , , 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")}).setTooltip("My Twitch channel");
 		sprite_twitter = new LuiSpriteButton(, , , 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")}).setTooltip("My X (Twitter)");
 		sprite_vk = new LuiSpriteButton(, , , 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
-		sprite_youtube = new LuiSpriteButton(, , , 64, , sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
+		sprite_youtube = new LuiSpriteButton(, , , 64, "sprYT", sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setValign(fa_bottom);
 		
 		tab_about.addContent([

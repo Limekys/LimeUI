@@ -13,7 +13,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.height = height;
 	initElement();
 	
-	self.render_content_enabled = false;
+	//self.render_content_enabled = false;
 	self.panel_surface = -1;
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
@@ -62,7 +62,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	static _applyScroll = function() {
 		array_foreach(self.content, function(_elm) {
 			//_elm.pos_y = _elm.start_y + self.scroll_offset_y;
-			flexpanel_node_style_set_position(_elm.flex_node, flexpanel_edge.top, _elm.start_y + self.scroll_offset_y, flexpanel_unit.point);
+			//flexpanel_node_style_set_position(_elm.flex_node, flexpanel_edge.top, _elm.start_y + self.scroll_offset_y, flexpanel_unit.point);
 		});
 		_updateScrollSurface();
 	}
@@ -75,20 +75,20 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.preDraw = function() {
 		//Create surface
-		if !surface_exists(self.panel_surface) && self.width > 0 && self.height > 0 {
-			self.panel_surface = surface_create(self.width, self.height - self.surface_offset.top - self.surface_offset.bottom);
-			_updateScrollSurface();
-		}
+		//if !surface_exists(self.panel_surface) && self.width > 0 && self.height > 0 {
+			//self.panel_surface = surface_create(self.width, self.height - self.surface_offset.top - self.surface_offset.bottom);
+			//_updateScrollSurface();
+		//}
 		//if self.update_scroll_surface {
 		//Draw on surface
-		if surface_exists(self.panel_surface) {
-			surface_set_target(self.panel_surface);
-			gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
-			draw_clear_alpha(self.style.color_main, 0); //???//
-			self.render();
-			gpu_set_blendequation(bm_eq_add);
-			surface_reset_target();
-		}
+		//if surface_exists(self.panel_surface) {
+			//surface_set_target(self.panel_surface);
+			//gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
+			//draw_clear_alpha(self.style.color_main, 0); //???//
+			//self.render();
+			//gpu_set_blendequation(bm_eq_add);
+			//surface_reset_target();
+		//}
 		//self.update_scroll_surface = false;
 		//}
 	}
@@ -103,10 +103,10 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			draw_sprite_stretched_ext(self.style.sprite_panel, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
 		}
 		//Surface
-		if surface_exists(self.panel_surface) {
-			draw_set_alpha(1);
-			draw_surface(self.panel_surface, self.x, self.y + self.surface_offset.top);
-		}
+		//if surface_exists(self.panel_surface) {
+			//draw_set_alpha(1);
+			//draw_surface(self.panel_surface, self.x, self.y + self.surface_offset.top);
+		//}
 		//Scroll slider
 		var _scroll_slider_offset = 8;
 		var _scroll_slider_x = draw_x + self.width - _scroll_slider_offset - _scroll_slider_offset div 2;

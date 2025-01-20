@@ -8,5 +8,5 @@ if demo_loading_state {
 }
 
 // Smooth moving for tab_group lerp(tab_group.pos_y, tab_group_target_y, 0.25)
-tab_group.setPosition(lerp(tab_group.pos_x, tab_group_target_x, 0.25), tab_group_target_y);
+tab_group.setPosition(tab_group_target_x, tab_group_target_y);
 

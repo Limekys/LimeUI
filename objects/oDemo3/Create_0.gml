@@ -37,11 +37,11 @@ tabgroup = new LuiTabGroup(, , , 300, "testTabGroup", 32);
 tab1 = new LuiTab(, "Tab1");
 tab2 = new LuiTab(, "Tab2");
 
+tabgroup.addTabs([tab1, tab2]);
+
 game_ui.addContent([
 	tabgroup
-])
-
-tabgroup.addTabs([tab1, tab2]);
+]);
 
 tab1.addContent([
 	new LuiText(, , , , , "Some content in tab1", true).setTextHalign(fa_center),

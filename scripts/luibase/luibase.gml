@@ -18,12 +18,14 @@ function LuiBase() constructor {
 	self.pos_y = 0;								//Offset y position this element relative parent
 	self.target_x = 0;							//Target x position this element relative parent (for animation) //???//
 	self.target_y = 0;							//Target y position this element relative parent (for animation) //???//
-	self.start_x = 0;							//First x position
-	self.start_y = 0;							//First y position
+	self.start_x = -1;							//First x position
+	self.start_y = -1;							//First y position
 	self.previous_x = -1;						//Previous floor(x) position on the screen
 	self.previous_y = -1;						//Previous floor(y) position on the screen
-	self.grid_previous_x = -1;					//Previous floor(x / LUI_GRID_ACCURACY) position on the grid
-	self.grid_previous_y = -1;					//Previous floor(y / LUI_GRID_ACCURACY) position on the grid
+	self.grid_previous_x1 = -1;					//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
+	self.grid_previous_y1 = -1;					//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
+	self.grid_previous_x2 = -1;					//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
+	self.grid_previous_y2 = -1;					//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
 	self.width = 32;							//Actual width
 	self.height = 32;							//Actual height
 	self.target_width = 32;						//Target width (for animation) //???//
@@ -170,7 +172,7 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _gridAdd = function() {
-		if (self.inside_parent == 0 || !self.visible) return false;
+		if (self.inside_parent == 0 || !self.visible) return false; // remove check visible? //???//
 		
 		var _grid_size = LUI_GRID_SIZE;
 		
@@ -293,7 +295,7 @@ function LuiBase() constructor {
 			data: {},
 			minWidth: self.min_width,
 			minHeight: self.min_height,
-			flexShrink: 1,
+			//flexShrink: 1,
 		});
 		
 		// Position X
@@ -310,7 +312,6 @@ function LuiBase() constructor {
 		if !self.auto_width {
 			flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
 		} else {
-			//flexpanel_node_style_set_flex_grow(self.flex_node, 1);
 			flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
 			flexpanel_node_style_set_flex_shrink(self.flex_node, 1);
 		}
@@ -324,6 +325,50 @@ function LuiBase() constructor {
 		
 		var _data = flexpanel_node_get_data(self.flex_node);
 		_data.element = self;
+	}
+	
+	///@desc Calculate all sizes and positions of elements
+	static flexCalculateLayout = function() {
+		flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+	}
+	
+	///@desc Update position, size and z depth of all elements
+	static flexUpdate = function(_node) {
+		
+		// Get layout data
+		var _pos = flexpanel_node_layout_get_position(_node, false);
+		
+		// Update element
+		var _data = flexpanel_node_get_data(_node);
+		if struct_exists(_data, "element") {
+			var _element = _data.element;
+			_element.pos_x = _pos.left;
+			_element.pos_y = _pos.top;
+			_element.width = _pos.width;
+			_element.height = _pos.height;
+			if (_element.start_x == -1) {
+				_element.start_x = _element.pos_x;
+			}
+			if (_element.start_y == -1) {
+				_element.start_y = _element.pos_y;
+			}
+			_element.z = global.lui_z_index++;
+		}
+		
+		// Call for children (recursive)
+		var _children_count = flexpanel_node_get_num_children(_node);
+		for (var i = 0; i < _children_count; i++) {
+			var _child = flexpanel_node_get_child(_node, i);
+			flexUpdate(_child);
+		}
+	}
+	
+	///@desc Update position, size and z depth of all elements with depth reset
+	static flexUpdateAll = function(_node) {
+		// Reset z depth index
+		global.lui_z_index = 0;
+		// Update all elements
+		flexUpdate(_node);
 	}
 	
 	static setPositionType = function(_type = flexpanel_position_type.relative) {
@@ -340,7 +385,8 @@ function LuiBase() constructor {
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
-		//self.flexUpdateAll(self.flex_node);
+		self.flexCalculateLayout();
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -352,7 +398,8 @@ function LuiBase() constructor {
 		if _height != LUI_AUTO {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
-		//self.flexUpdateAll(self.flex_node);
+		self.flexCalculateLayout();
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -507,6 +554,10 @@ function LuiBase() constructor {
 				self.visible = _visible;
 				if !is_undefined(self.main_ui) {
 					self._gridUpdate();
+					self.grid_previous_x1 = -1;
+					self.grid_previous_y1 = -1;
+					self.grid_previous_x2 = -1;
+					self.grid_previous_y2 = -1; //???// 
 				}
 				//Set visible to all childs
 				array_foreach(self.content, function(_elm) {
@@ -565,10 +616,10 @@ function LuiBase() constructor {
 	///@arg {Real} _custom_padding
 	static addContent = function(elements, _custom_padding = LUI_AUTO) {
 		
-		//Convert to array if one element
+		// Convert to array if one element
 		if !is_array(elements) elements = [elements];
 		
-		//Check for unordered adding
+		// Update array with delayed content for unordered adding
 		if is_undefined(self.style) {
 			if !is_array(self.delayed_content) self.delayed_content = [];
 			self.delayed_content = array_concat(self.delayed_content, elements);
@@ -577,38 +628,36 @@ function LuiBase() constructor {
 		
 		var _elements_count = array_length(elements);
 		
-		//Take ranges from array
+		// Take ranges from array
 		var _ranges = [];
 		if is_array(elements[_elements_count-1]) {
 			_ranges = elements[_elements_count-1];
 			_elements_count--;
 		}
 		
-		//Adding
-		var _local_z = 0;
+		// Adding
 		for (var i = 0; i < _elements_count; i++) {
 		    
-			//Get
+			// Get element
 			var _element = elements[i];
 			
-			// Padding
+			// Get custom padding
 			var _padding = _custom_padding;
 			if _padding == LUI_AUTO {
 				_padding = self.style.padding;
 			}
 			
-			//Set parent, main ui and style
+			// Set parent, main ui and style
 			_element.parent = self;
 			_element.main_ui = _element.parent.main_ui;
 			_element.style = self.style;
-			//_element.z = _element.element_id; //_element.parent.z + 1//++_local_z;
-			if !_element.parent.visible _element.visible = false;
+			if !_element.parent.visible _element.visible = false; //???//
 			
-			//Save new start x y position
+			// Save new start x y position //???//
 			_element.start_x = _element.pos_x;
 			_element.start_y = _element.pos_y;
 			
-			//Register element name
+			// Register element name
 			_element._registerElementName();
 			
 			// Flex setting up
@@ -617,19 +666,20 @@ function LuiBase() constructor {
 			if array_length(_ranges) > 0 flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]); 						// ranges
 			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node)); 	// binding
 			
-			//Add delayed contents
+			// Add delayed content
 			if !is_undefined(_element.delayed_content) {
 				_element.addContent(_element.delayed_content);
 			}
 			
-			//Call create function
+			// Call create function of element
 			_element.create();
 			
-			//Add to content array
+			// Add to content array
 			array_push(self.content, _element);
 		}
+		// Apply alignment 
 		self.alignAllElements();
-		global.lui_z_index = 0;
+		self.flexCalculateLayout();
 		self.flexUpdateAll(self.flex_node);
 		self.setNeedToUpdateContent(true);
 		return self;
@@ -716,9 +766,9 @@ function LuiBase() constructor {
 	static stretchHorizontally = function(padding) {
 		var _last = parent.getLast();
 		if (_last) && (_last.pos_x + _last.width < parent.width - self.min_width - padding) {
-			self.width = parent.width - (_last.pos_x + _last.width) - padding*2;
+			//self.width = parent.width - (_last.pos_x + _last.width) - padding*2;
 		} else {
-			self.width = parent.width - padding*2;
+			//self.width = parent.width - padding*2;
 		}
 		return self;
 	}
@@ -727,9 +777,9 @@ function LuiBase() constructor {
 	static stretchVertically = function(padding) {
 		var _last = parent.getLast();
 		if (_last) && (_last.pos_y + _last.height < parent.height - self.min_height - padding) {
-			self.height = parent.height - (_last.pos_y + _last.height) - padding*2;
+			//self.height = parent.height - (_last.pos_y + _last.height) - padding*2;
 		} else {
-			self.height = parent.height - padding*2;
+			//self.height = parent.height - padding*2;
 		}
 		return self;
 	}
@@ -798,32 +848,6 @@ function LuiBase() constructor {
 			_element.alignAllElements();
 		}
 		return self;
-	}
-	
-	static flexUpdateAll = function(_node) {
-		// Calculate all sizes and positions of elements
-		flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-		
-		// Get layout data
-		var _pos = flexpanel_node_layout_get_position(_node, false);
-		
-		// Update element
-		var _data = flexpanel_node_get_data(_node);
-		if struct_exists(_data, "element") {
-			var _element = _data.element;
-			_element.pos_x = _pos.left;
-			_element.pos_y = _pos.top;
-			_element.width = _pos.width;
-			_element.height = _pos.height;
-			_element.z = global.lui_z_index++;
-		}
-		
-		// Call for children (recursive)
-		var _children_count = flexpanel_node_get_num_children(_node);
-		for (var i = 0; i < _children_count; i++) {
-			var _child = flexpanel_node_get_child(_node, i);
-			flexUpdateAll(_child);
-		}
 	}
 	
 	//Design
@@ -895,8 +919,6 @@ function LuiBase() constructor {
 	static updateMainUiSurface = function() {
 		self.main_ui.update_ui_screen_surface = true;
 		self.updateParentRelativeSurface();
-		global.lui_z_index = 0;
-		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	///@desc Update parent relative surface
@@ -1047,7 +1069,6 @@ function LuiBase() constructor {
 			// Get absolute position
 			_element.x = _element.pos_x;
 			_element.y = _element.pos_y;
-			//_element.z = self.z + i + 1;
 			
 			// Update element
 			_element.update(_element.x, _element.y);
@@ -1093,14 +1114,19 @@ function LuiBase() constructor {
 			_element.previous_y = _cur_y;
 			
 			// Update grid position
-			var _grid_x = floor(_element.x / LUI_GRID_ACCURACY);
-			var _grid_y = floor(_element.y / LUI_GRID_ACCURACY);
-			if (_element.grid_previous_x != _grid_x || _element.grid_previous_y != _grid_y) {
+			var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
+			var _grid_y1 = floor(_element.y / LUI_GRID_ACCURACY);
+			var _grid_x2 = floor((_element.x + _element.width) / LUI_GRID_ACCURACY);
+			var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
+			if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1) 
+			|| (_element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
 				_element._gridUpdate();
 			}
 			
-			_element.grid_previous_x = _grid_x;
-			_element.grid_previous_y = _grid_y;
+			_element.grid_previous_x1 = _grid_x1;
+			_element.grid_previous_y1 = _grid_y1;
+			_element.grid_previous_x2 = _grid_x2;
+			_element.grid_previous_y2 = _grid_y2;
 		}
 	}
 	
@@ -1293,7 +1319,7 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
-		//flexpanel_delete_node(self.flex_node, false);
+		flexpanel_delete_node(self.flex_node, false);
 		//flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none); //???//
 		global.lui_element_count--;
 		self.updateMainUiSurface();
