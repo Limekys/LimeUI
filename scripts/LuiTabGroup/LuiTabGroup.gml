@@ -58,7 +58,6 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Deactivate all and activate first
 		self.tabDeactivateAll();
 		self.tabs[0].tabActivate();
-		print(tabs[0].x, tabs[0].y);
 	}
 	
 	///@desc Add LuiTab's
@@ -156,11 +155,9 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	
 	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
 	self.addContent = function(elements) {
-		if is_undefined(self.tabgroup) {
-			throw ("Order has been broken! First add tabs to TabGroup, then add content to tabs!");
-		}
 		self._initContainer();
 		self.tab_container.addContent(elements);
+		return self;
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
