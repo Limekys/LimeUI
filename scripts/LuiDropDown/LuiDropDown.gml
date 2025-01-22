@@ -32,7 +32,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Create dropdown panel
 		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
-		self.dropdown_panel.setDepth(array_last(self.parent.content).z + 1);
 		self.dropdown_panel.setPositionType(flexpanel_position_type.absolute);
 	}
 	
@@ -47,7 +46,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			_item.height = self.height;
 			_item.auto_height = false;
 			self.dropdown_panel.addContent([_item]);
-			_item.setDepth(_item.z + array_last(self.parent.content).z + i);
 		}
 	}
 	

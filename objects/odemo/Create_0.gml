@@ -414,10 +414,10 @@ my_panel_3.addContent([
 #region Fill all tabs in tabGroup
 
 	#region Add scroll panel in tab_panels
-	
+		scroll_panel_super = new LuiScrollPanel(, , , 512, "firstScrollPanel");
 		//Create scroll panel with different elements
 		tab_panels.addContent([
-			new LuiScrollPanel(, , , , "firstScrollPanel").addContent([
+			scroll_panel_super.addContent([
 				new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 				new LuiTextbox(, , , , , , "textbox in scroll panel"),
 				new LuiPanel( , , , , "Panel in scroll panel").addContent([
@@ -426,22 +426,46 @@ my_panel_3.addContent([
 					new LuiCheckbox( , , 32, 32, , false, function() {
 						showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 					}),
-					//new LuiText(, , , , , "Check me!"),
-					//new LuiPanel(, , , , "Nested panel x2").addContent([
-						//new LuiText(, , , , , "Nested panel x2"),
-						//new LuiPanel(, , , , "Nested panel x3").addContent([
-							//new LuiText(, , , , , "Updateble text with binding variable \/"),
-							//new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
-						//])
-					//])
+					new LuiText(, , , , , "Check me!"),
+					new LuiPanel(, , , , "Nested panel x2").addContent([
+						new LuiText(, , , , , "Nested panel x2"),
+						new LuiPanel(, , , , "Nested panel x3").addContent([
+							new LuiText(, , , , , "Updateble text with binding variable \/"),
+							new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
+						])
+					])
 				]),
-				//new LuiSprite( , , , 100, , sCarFlip),
-				//new LuiSprite( , , , 256, , sHamburger),
-				//new LuiSprite( , , , 200, , sCar),
-				//new LuiSprite( , , , 128, , sHamburger),
+				new LuiSprite( , , , 100, , sCarFlip),
+				new LuiSprite( , , , 256, , sHamburger),
+				new LuiSprite( , , , 200, , sCar),
+				new LuiSprite( , , , 128, , sHamburger),
 			])
 		]);
-	
+		
+
+scroll_panel_super.addContent([
+	new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
+	new LuiTextbox(, , , , , , "textbox in scroll panel"),
+	new LuiPanel( , , , , "Panel in scroll panel").addContent([
+		new LuiText(, , , , , "Nested panel x1"),
+		new LuiButton( , , , , , "Nested button"),
+		new LuiCheckbox( , , 32, 32, , false, function() {
+			showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
+		}),
+		new LuiText(, , , , , "Check me!"),
+		new LuiPanel(, , , , "Nested panel x2").addContent([
+			new LuiText(, , , , , "Nested panel x2"),
+			new LuiPanel(, , , , "Nested panel x3").addContent([
+				new LuiText(, , , , , "Updateble text with binding variable \/"),
+				new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
+			])
+		])
+	]),
+	new LuiSprite( , , , 100, , sCarFlip),
+	new LuiSprite( , , , 256, , sHamburger),
+	new LuiSprite( , , , 200, , sCar),
+	new LuiSprite( , , , 128, , sHamburger),
+])
 	#endregion
 
 	#region Add elements in tab_search
@@ -557,5 +581,5 @@ my_panel_3.addContent([
 my_ui.addContent([
 	new LuiButton(room_width - 256 - my_ui.style.padding, room_height - 32 - my_ui.style.padding, 256, , "buttonNextDemo", "Next demo -->", function() {
 		room_goto(rDemo2);
-	}).setPositionType(flexpanel_position_type.absolute)
+	}).setPositionType(flexpanel_position_type.absolute),
 ]);

@@ -41,14 +41,14 @@ function LuiBase() constructor {
 	self.parent = undefined;
 	self.callback = undefined;
 	self.content = [];
-	self.marked_to_delete = false;				//Deprecated variable
+	self.marked_to_delete = false;				//Deprecated variable //???//
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
 	self.visible = true;
 	self.visibility_switching = true;
 	self.has_focus = false;
-	self.halign = undefined;
-	self.valign = undefined;
+	self.halign = undefined; //???//
+	self.valign = undefined; //???//
 	self.draw_relative = false;
 	self.parent_relative = undefined;
 	self.inside_parent = 2;
@@ -61,7 +61,7 @@ function LuiBase() constructor {
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.main_ui = self;
-	self.allow_height_extend = true;
+	self.allow_height_extend = true;			//Deprecated variable //???//
 	self.tooltip = "";
 	self.binding_variable = -1;
 	
@@ -620,7 +620,7 @@ function LuiBase() constructor {
 		if !is_array(elements) elements = [elements];
 		
 		// Update array with delayed content for unordered adding
-		if is_undefined(self.style) {
+		if is_undefined(self.parent) && !is_instanceof(self, LuiMain) {
 			if !is_array(self.delayed_content) self.delayed_content = [];
 			self.delayed_content = array_concat(self.delayed_content, elements);
 			return self;
@@ -649,7 +649,7 @@ function LuiBase() constructor {
 			
 			// Set parent, main ui and style
 			_element.parent = self;
-			_element.main_ui = _element.parent.main_ui;
+			_element.main_ui = self.main_ui;
 			_element.style = self.style;
 			if !_element.parent.visible _element.visible = false; //???//
 			
@@ -666,13 +666,13 @@ function LuiBase() constructor {
 			if array_length(_ranges) > 0 flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]); 						// ranges
 			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node)); 	// binding
 			
-			// Add delayed content
-			if !is_undefined(_element.delayed_content) {
-				_element.addContent(_element.delayed_content);
-			}
-			
 			// Call create function of element
 			_element.create();
+			
+			print("--" + _element.name);
+			
+			// Add delayed content
+			_element.addDelayedContent();
 			
 			// Add to content array
 			array_push(self.content, _element);
@@ -683,6 +683,14 @@ function LuiBase() constructor {
 		self.flexUpdateAll(self.flex_node);
 		self.setNeedToUpdateContent(true);
 		return self;
+	}
+	
+	static addDelayedContent = function() {
+		// Add delayed content
+		if !is_undefined(self.delayed_content) && array_length(self.delayed_content) > 0 {
+			self.addContent(self.delayed_content);
+			self.delayed_content = -1;
+		}
 	}
 	
 	// Getters
@@ -1319,8 +1327,9 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
+		
+		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none); //???//
 		flexpanel_delete_node(self.flex_node, false);
-		//flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none); //???//
 		global.lui_element_count--;
 		self.updateMainUiSurface();
 		//Delete self from parent content

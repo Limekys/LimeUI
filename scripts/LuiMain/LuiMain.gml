@@ -9,6 +9,7 @@ function LuiMain() : LuiBase() constructor {
 	self.update_ui_screen_surface = true;
 	self.pre_draw_list = [];
 	self.element_names = {};
+	//self.main_ui = self;
 	
 	// Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -213,8 +214,8 @@ function LuiMain() : LuiBase() constructor {
 				draw_set_font(self.style.font_debug);
 			}
 			//Text on mouse
-			var _mouse_x = device_mouse_x_to_gui(0) + 16;
-			var _mouse_y = device_mouse_y_to_gui(0) + 0;
+			var _mouse_x = device_mouse_x_to_gui(0) + 24;
+			var _mouse_y = device_mouse_y_to_gui(0) + 24;
 			//Text
 			var _prev_color = draw_get_color();
 			var _prev_alpha = draw_get_alpha();

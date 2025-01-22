@@ -14,7 +14,7 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 	initElement();
 }
 
-///@desc An empty, invisible container for elements. //???//
+///@desc An empty, invisible container with no padding on the sides for elements with ROW stacking
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -27,7 +27,7 @@ function LuiFlexRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	}
 }
 
-///@desc An empty, invisible container for elements. //???//
+///@desc An empty, invisible container with no padding on the sides for elements with COLUMN stacking
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -37,5 +37,23 @@ function LuiFlexColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LU
 	
 	self.create = function() {
 		self.setFlexPadding(0).setFlexDirection(flexpanel_flex_direction.column);
+	}
+}
+
+///@desc An empty, invisible container with no padding on the sides with absolute position on the screen for elements
+///@arg {Real} x
+///@arg {Real} y
+///@arg {Real} width
+///@arg {Real} height
+///@arg {String} name
+function LuiAbsContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiAbsContainer") : LuiContainer(x, y, width, height, name) constructor {
+	
+	self.create = function() {
+		self.setFlexPadding(0).setPositionType(flexpanel_position_type.absolute);
+	}
+	
+	self.draw = function() {
+		draw_set_color(c_red);
+		draw_rectangle(x, y, x + width - 1, y + height - 1, false);
 	}
 }
