@@ -129,7 +129,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	}
 	
 	self.onMouseWheel = function() {
-		var _wheel_step = 2;
+		var _wheel_step = max(self.rounding, (self.value_max - self.value_min) * 0.02);
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;
