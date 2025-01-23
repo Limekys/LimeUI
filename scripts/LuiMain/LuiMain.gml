@@ -9,7 +9,7 @@ function LuiMain() : LuiBase() constructor {
 	self.update_ui_screen_surface = true;
 	self.pre_draw_list = [];
 	self.element_names = {};
-	//self.main_ui = self;
+	self.main_ui = self;
 	
 	// Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});

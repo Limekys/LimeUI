@@ -49,11 +49,12 @@ function LuiFlexColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LU
 function LuiAbsContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiAbsContainer") : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.create = function() {
-		self.setFlexPadding(0).setPositionType(flexpanel_position_type.absolute);
+		self.setPositionType(flexpanel_position_type.absolute);
 	}
 	
 	self.draw = function() {
 		draw_set_color(c_red);
+		draw_set_alpha(0.25)
 		draw_rectangle(x, y, x + width - 1, y + height - 1, false);
 	}
 }

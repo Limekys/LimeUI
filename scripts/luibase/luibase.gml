@@ -60,14 +60,16 @@ function LuiBase() constructor {
 	self.element_in_focus = undefined;
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
-	self.main_ui = self;
+	self.main_ui = undefined;
 	self.allow_height_extend = true;			//Deprecated variable //???//
 	self.tooltip = "";
 	self.binding_variable = -1;
+	self.is_initialized = false;
+	self.is_adding = false;
 	
 	//Custom functions for elements
 	
-	//Called after this item has been added
+	//Called after this item has been added somewhere
 	self.create = function() {
 		//Custom for each element
 	}
@@ -329,7 +331,11 @@ function LuiBase() constructor {
 	
 	///@desc Calculate all sizes and positions of elements
 	static flexCalculateLayout = function() {
-		flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+		if !is_undefined(self.main_ui) {
+			flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+			return true;
+		}
+		return false;
 	}
 	
 	///@desc Update position, size and z depth of all elements
@@ -406,42 +412,56 @@ function LuiBase() constructor {
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
+		self.flexCalculateLayout();
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
 	static setFlexPadding = function(_padding) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
+		self.flexCalculateLayout(); 
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
 	static setFlexGap = function(_gap) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
+		self.flexCalculateLayout(); 
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
+		self.flexCalculateLayout(); 
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
+		self.flexCalculateLayout(); 
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
 	static setFlexAlignSelf = function(_flex_align) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
+		self.flexCalculateLayout(); 
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
+		self.flexCalculateLayout(); 
+		self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -453,10 +473,12 @@ function LuiBase() constructor {
 	
 	//Init
 	static initElement = function() {
-		if self.pos_x == LUI_AUTO || self.pos_y == LUI_AUTO {
+		if self.pos_x == LUI_AUTO {
 			self.auto_x = true;
-			self.auto_y = true;
 			self.pos_x = 0;
+		}
+		if self.pos_y == LUI_AUTO {
+			self.auto_y = true;
 			self.pos_y = 0;
 		}
 		if self.width == LUI_AUTO {
@@ -548,7 +570,7 @@ function LuiBase() constructor {
 	///@desc setVisible(true/false)
 	///@return {Struct.LuiBase}
 	static setVisible = function(_visible) {
-		if self.visibility_switching {
+		//if self.visibility_switching {
 			if self.visible != _visible {
 				//Change visible
 				self.visible = _visible;
@@ -566,13 +588,12 @@ function LuiBase() constructor {
 				//Call event onShow / onHide
 				if _visible {
 					self.onShow();
-					self.updateMainUiSurface();
 				} else {
 					self.onHide();
-					self.updateMainUiSurface();
 				}
+				self.updateMainUiSurface();
 			}
-		}
+		//}
 		return self;
 	}
 	
@@ -620,7 +641,7 @@ function LuiBase() constructor {
 		if !is_array(elements) elements = [elements];
 		
 		// Update array with delayed content for unordered adding
-		if is_undefined(self.parent) && !is_instanceof(self, LuiMain) {
+		if is_undefined(self.main_ui) {
 			if !is_array(self.delayed_content) self.delayed_content = [];
 			self.delayed_content = array_concat(self.delayed_content, elements);
 			return self;
@@ -630,8 +651,13 @@ function LuiBase() constructor {
 		
 		// Take ranges from array
 		var _ranges = [];
-		if is_array(elements[_elements_count-1]) {
-			_ranges = elements[_elements_count-1];
+		if is_array(elements[_elements_count - 1]) {
+			if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
+				if LUI_LOG_ERROR_MODE == 2 {
+					print($"WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
+				}
+			}
+			_ranges = elements[_elements_count - 1];
 			_elements_count--;
 		}
 		
@@ -641,55 +667,60 @@ function LuiBase() constructor {
 			// Get element
 			var _element = elements[i];
 			
+			// Recursion prevention
+			if _element.is_adding continue;
+			_element.is_adding = true;
+			
+			// Inherit variables
+			_element.parent ??= self;
+			_element.main_ui ??= self.main_ui;
+			_element.style ??= self.style;
+			
+			// Set visible
+			//_element.visible = self.visible; //???//
+			
 			// Get custom padding
 			var _padding = _custom_padding;
 			if _padding == LUI_AUTO {
 				_padding = self.style.padding;
 			}
 			
-			// Set parent, main ui and style
-			_element.parent = self;
-			_element.main_ui = self.main_ui;
-			_element.style = self.style;
-			if !_element.parent.visible _element.visible = false; //???//
-			
-			// Save new start x y position //???//
-			_element.start_x = _element.pos_x;
-			_element.start_y = _element.pos_y;
+			// Flex setting up
+			flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _element.style.padding); 			// gap
+			flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _element.style.padding); 			// padding
+			if array_length(_ranges) == _elements_count  {
+				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
+			}
+			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node)); 	// binding
 			
 			// Register element name
 			_element._registerElementName();
 			
-			// Flex setting up
-			flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding); 							// gap
-			flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding); 							// padding
-			if array_length(_ranges) > 0 flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]); 						// ranges
-			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node)); 	// binding
-			
-			// Call create function of element
-			_element.create();
-			
-			print("--" + _element.name);
-			
-			// Add delayed content
-			_element.addDelayedContent();
-			
 			// Add to content array
 			array_push(self.content, _element);
+			
+			_element.addDelayedContent();
+			
+			// Call custom method create
+			_element.create();
+			
+			_element.is_adding = false;
 		}
 		// Apply alignment 
 		self.alignAllElements();
 		self.flexCalculateLayout();
-		self.flexUpdateAll(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		self.setNeedToUpdateContent(true);
 		return self;
 	}
 	
+	///@desc Add delayed content
 	static addDelayedContent = function() {
-		// Add delayed content
-		if !is_undefined(self.delayed_content) && array_length(self.delayed_content) > 0 {
-			self.addContent(self.delayed_content);
-			self.delayed_content = -1;
+		if is_array(self.delayed_content) {
+			if !is_undefined(self.delayed_content) && array_length(self.delayed_content) > 0 {
+				self.addContent(self.delayed_content);
+				self.delayed_content = -1;
+			}
 		}
 	}
 	
@@ -925,6 +956,7 @@ function LuiBase() constructor {
 	///@desc Update main ui surface
 	///@return {Struct.LuiBase}
 	static updateMainUiSurface = function() {
+		if is_undefined(self.main_ui) return self;
 		self.main_ui.update_ui_screen_surface = true;
 		self.updateParentRelativeSurface();
 		return self;
@@ -1327,7 +1359,7 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
-		
+		self.is_adding = false;
 		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none); //???//
 		flexpanel_delete_node(self.flex_node, false);
 		global.lui_element_count--;

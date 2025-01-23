@@ -244,7 +244,7 @@ tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 0.5);
 tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
 tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
 //Add tabs to tabgroup
-tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]); //And center tab_group horizontally
+tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
 tab_group_min_x = 16;
 tab_group_max_x = room_width - tab_group.width;
 tab_group_min_y = 200;
@@ -414,11 +414,11 @@ my_panel_3.addContent([
 #region Fill all tabs in tabGroup
 
 	#region Add scroll panel in tab_panels
-		scroll_panel_super = new LuiScrollPanel(, , , 512, "firstScrollPanel");
+
 		//Create scroll panel with different elements
 		tab_panels.addContent([
-			scroll_panel_super.addContent([
-				new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
+			new LuiScrollPanel(, , , 512, "firstScrollPanel").addContent([
+			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 				new LuiTextbox(, , , , , , "textbox in scroll panel"),
 				new LuiPanel( , , , , "Panel in scroll panel").addContent([
 					new LuiText(, , , , , "Nested panel x1"),
@@ -442,30 +442,6 @@ my_panel_3.addContent([
 			])
 		]);
 		
-
-scroll_panel_super.addContent([
-	new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
-	new LuiTextbox(, , , , , , "textbox in scroll panel"),
-	new LuiPanel( , , , , "Panel in scroll panel").addContent([
-		new LuiText(, , , , , "Nested panel x1"),
-		new LuiButton( , , , , , "Nested button"),
-		new LuiCheckbox( , , 32, 32, , false, function() {
-			showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
-		}),
-		new LuiText(, , , , , "Check me!"),
-		new LuiPanel(, , , , "Nested panel x2").addContent([
-			new LuiText(, , , , , "Nested panel x2"),
-			new LuiPanel(, , , , "Nested panel x3").addContent([
-				new LuiText(, , , , , "Updateble text with binding variable \/"),
-				new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
-			])
-		])
-	]),
-	new LuiSprite( , , , 100, , sCarFlip),
-	new LuiSprite( , , , 256, , sHamburger),
-	new LuiSprite( , , , 200, , sCar),
-	new LuiSprite( , , , 128, , sHamburger),
-])
 	#endregion
 
 	#region Add elements in tab_search

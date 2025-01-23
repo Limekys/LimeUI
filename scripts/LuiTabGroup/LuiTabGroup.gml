@@ -20,44 +20,55 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.tabgroup_header = undefined;
 	
+	self.create = function() {
+		// Setting up padding for tabgroup
+		self.setFlexPadding(0).setFlexGap(0);
+		// Init header container for tabs
+		self._initHeader();
+		// Add header to tabgroup
+		self.addContent(self.tabgroup_header, 0);
+		self.tabgroup_header.setFlexGap(0);
+		// Init tabs
+		self._initTabs();
+	}
+	
+	///@desc Create header container for tabs
+	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.tabgroup_header) {
-			// Create header element
 			self.tabgroup_header = new LuiFlexRow(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id));
-			// Setting up padding for tabgroup
-			self.setFlexPadding(0).setFlexGap(0);
-			// Add header to tabgroup
-			self.addContent(self.tabgroup_header, 0);
 		}
 	}
 	
+	///@desc Create tabs
 	///@ignore
 	static _initTabs = function() {
-		//Add tabs
-		if !is_array(self.tabs) self.tabs = [self.tabs];
-		var _tab_count = array_length(self.tabs);
-		for (var i = 0; i < _tab_count; ++i) {
-		    // Get tab
-			var _tab = self.tabs[i];
-			// Set tab sizes
-			_tab.height = self.tab_height;
-			// Init tab container
-			_tab._initContainer();
-			// Set tabgroup parent for tab
-			_tab.tabgroup = self;
-			// Add tab container to tabgroup
-			self.addContent(_tab.tab_container);
-			// Adjust position and size of container
-			//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
-			//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
-			//flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
-			flexpanel_node_style_set_height(_tab.tab_container.flex_node, self.height - self.tab_height, flexpanel_unit.point);
+		if !is_undefined(self.tabs) {
+			if !is_array(self.tabs) self.tabs = [self.tabs];
+			var _tab_count = array_length(self.tabs);
+			for (var i = 0; i < _tab_count; ++i) {
+			    // Get tab
+				var _tab = self.tabs[i];
+				// Set tab sizes
+				_tab.height = self.tab_height;
+				// Init tab container
+				_tab._initContainer();
+				// Set tabgroup parent for tab
+				_tab.tabgroup = self;
+				// Add tab container to tabgroup
+				self.addContent(_tab.tab_container);
+				// Adjust position and size of container
+				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
+				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
+				//flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
+				flexpanel_node_style_set_height(_tab.tab_container.flex_node, self.height - self.tab_height, flexpanel_unit.point);
+			}
+			//Add tab to header of tabgroup
+			self.tabgroup_header.addContent(self.tabs);
+			//Deactivate all and activate first
+			self.tabDeactivateAll();
+			self.tabs[0].tabActivate();
 		}
-		//Add tab to header of tabgroup
-		self.tabgroup_header.addContent(self.tabs);
-		//Deactivate all and activate first
-		self.tabDeactivateAll();
-		self.tabs[0].tabActivate();
 	}
 	
 	///@desc Add LuiTab's
@@ -101,15 +112,6 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.create = function() {
-		if !is_undefined(self.style) {
-			self._initHeader();
-			if !is_undefined(self.tabs) {
-				self._initTabs();
-			}
-		}
-	}
-	
 	self.onShow = function() {
 		//Turn of visible of deactivated tab_container's
 		var _tab_count = array_length(self.tabs);
@@ -131,6 +133,11 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.tabgroup = undefined;
 	self.tab_container = undefined;
 	
+	self.create = function() {
+		self._initContainer();
+		if sprite_exists(self.icon.sprite) self._calcIconSize();
+	}
+	
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
 			self.tab_container = new LuiContainer(, , , , $"_tab_container_{self.element_id}").setVisible(false);
@@ -142,8 +149,6 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		self.is_active = true;
 		self.tab_container.setVisible(true);
 		flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.flex);
-		self.flexCalculateLayout();
-		self.flexUpdateAll(self.main_ui.flex_node); //???//check if this updates really need here
 	}
 	
 	///@desc Deactivate current tab
@@ -204,11 +209,6 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		if !is_undefined(self.style.sprite_tab_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 		}
-	}
-	
-	self.create = function() {
-		self._initContainer();
-		if sprite_exists(self.icon.sprite) self._calcIconSize();
 	}
 	
 	self.onMouseLeftReleased = function() {
