@@ -40,7 +40,7 @@ function LuiFlexColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LU
 	}
 }
 
-///@desc An empty, invisible container with no padding on the sides with absolute position on the screen for elements
+///@desc An empty, invisible container with absolute position on the screen for elements
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
