@@ -14,6 +14,10 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.dropdown_panel = undefined;
 	self.text_width = self.width;
 	
+	self.create = function() {
+		self._calculateTextWidth();
+	}
+	
 	///@ignore
 	static _calculateTextWidth = function() {
 		if !is_undefined(self.style) && !is_undefined(self.style.sprite_dropdown_arrow) {
@@ -133,10 +137,6 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.style.sprite_dropdown_border) {
 			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_dropdown_border, 1);
 		}
-	}
-	
-	self.create = function() {
-		self._calculateTextWidth();
 	}
 	
 	self.onValueUpdate = function() {

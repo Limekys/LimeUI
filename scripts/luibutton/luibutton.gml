@@ -30,6 +30,10 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		alpha : 1,
 	}
 	
+	self.create = function() {
+		if sprite_exists(self.icon.sprite) self._calcIconSize();
+	}
+	
 	///@func setColor(_button_color)
 	///@arg _button_color
 	self.setColor = function(_button_color) {
@@ -117,10 +121,6 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !is_undefined(self.style.sprite_button_border) {
 			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
 		}
-	}
-	
-	self.create = function() {
-		if sprite_exists(self.icon.sprite) self._calcIconSize();
 	}
 	
 	self.onMouseLeftPressed = function() {

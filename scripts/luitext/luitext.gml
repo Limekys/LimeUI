@@ -19,6 +19,14 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.text_valign = fa_middle;
 	self.scale_to_fit = scale_to_fit;
 	
+	self.create = function() {
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
+		self.min_width = self.auto_width == true ? string_width(self.value) : self.width;
+		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
+	}
+	
 	///@desc Set horizontal aligment of text.
 	static setTextHalign = function(halign) {
 		self.text_halign = halign;
@@ -81,13 +89,5 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 				draw_text_transformed(_txt_x, _txt_y, _text, _scale, _scale, 0);
 			}
 		}
-	}
-	
-	self.create = function() {
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
-		}
-		self.min_width = self.auto_width == true ? string_width(self.value) : self.width;
-		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
 	}
 }
