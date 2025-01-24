@@ -84,7 +84,7 @@ demo_style_light = {
 	padding : 16,
 	checkbox_pin_margin : 0,
 	scroll_step : 32,
-	scroll_surface_offset : [0,0,1,3],
+	scroll_region_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•"
                                                                     }; // TEMP: Just for fix stupid feather >_<
@@ -155,7 +155,7 @@ demo_style_dark = {
 	padding : 16,
 	checkbox_pin_margin : 0,
 	scroll_step : 32,
-	scroll_surface_offset : [0,0,1,3],
+	scroll_region_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•",
 	//Render functions
@@ -214,7 +214,7 @@ demo_style_modern = {
 	padding : 16,
 	checkbox_pin_margin : 0,
 	scroll_step : 32,
-	scroll_surface_offset : [0,0,0,0],
+	scroll_region_offset : [0,0,0,0],
 	textbox_cursor : "|",
 	textbox_password : "*"
                                                                     }; // TEMP: Just for fix stupid feather >_<
@@ -386,18 +386,18 @@ big_button_3 = new LuiButton(, , , 64, , "", function() {});
 //And we get big buttons with icon and text
 //???//
 big_button.addContent([
-	new LuiFlexRow().ignoreMouseHover().addContent([
-		new LuiSprite(, , 32, 32, , sHamburger).ignoreMouseHover(), new LuiText(, , , , , "Hamburger!").ignoreMouseHover()
+	new LuiFlexRow().setMouseIgnore().addContent([
+		new LuiSprite(, , 32, 32, , sHamburger).setMouseIgnore(), new LuiText(, , , , , "Hamburger!").setMouseIgnore()
 	])
 ]);
 big_button_2.addContent([
-	new LuiFlexRow().ignoreMouseHover().addContent([
-		new LuiSprite(, , 32, 32, , sBoxDemo).ignoreMouseHover(), new LuiText(, , , , , "A box!").ignoreMouseHover()
+	new LuiFlexRow().setMouseIgnore().addContent([
+		new LuiSprite(, , 32, 32, , sBoxDemo).setMouseIgnore(), new LuiText(, , , , , "A box!").setMouseIgnore()
 	])
 ]);
 big_button_3.addContent([
-	new LuiFlexRow().ignoreMouseHover().addContent([
-		new LuiSprite(, , 32, 32, , sLogoDemo).ignoreMouseHover(), new LuiText(, , , , , "Game Maker!").ignoreMouseHover()
+	new LuiFlexRow().setMouseIgnore().addContent([
+		new LuiSprite(, , 32, 32, , sLogoDemo).setMouseIgnore(), new LuiText(, , , , , "Game Maker!").setMouseIgnore()
 	])
 ]);
 
@@ -417,20 +417,26 @@ my_panel_3.addContent([
 
 		//Create scroll panel with different elements
 		tab_panels.addContent([
-			new LuiScrollPanel(, , , 512, "firstScrollPanel").addContent([
+			new LuiScrollPanel(, , , , "firstScrollPanel").addContent([
 			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 				new LuiTextbox(, , , , , , "textbox in scroll panel"),
 				new LuiPanel( , , , , "Panel in scroll panel").addContent([
 					new LuiText(, , , , , "Nested panel x1"),
 					new LuiButton( , , , , , "Nested button"),
-					new LuiCheckbox( , , 32, 32, , false, function() {
-						showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
-					}),
-					new LuiText(, , , , , "Check me!"),
+					new LuiFlexRow().addContent([
+						new LuiCheckbox( , , 32, 32, , false, function() {
+							showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
+						}),
+						new LuiText(, , , , , "Check me!"),
+					]),
 					new LuiPanel(, , , , "Nested panel x2").addContent([
 						new LuiText(, , , , , "Nested panel x2"),
+						new LuiFlexRow().addContent([
+							new LuiSlider( , , , , , 0, 100, 25, 1),
+							new LuiText(, , , , , "Slide me!"),
+						]),
 						new LuiPanel(, , , , "Nested panel x3").addContent([
-							new LuiText(, , , , , "Updateble text with binding variable \/"),
+							new LuiText(, , , , , "Updateble text with binding variable below").setTooltip("Try to change login in first panel"),
 							new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
 						])
 					])

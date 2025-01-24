@@ -57,6 +57,9 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 				_tab.tabgroup = self;
 				// Add tab container to tabgroup
 				self.addContent(_tab.tab_container);
+				_tab.tab_container.setSize(self.width);
+				_tab.tab_container.setPosition(0, self.tab_height);
+				//_tab.tab_container.setFlexPadding(0);
 				// Adjust position and size of container
 				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
 				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
@@ -74,7 +77,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	///@desc Add LuiTab's
 	self.addTabs = function(_tabs) {
         self.tabs = _tabs;
-		if !is_undefined(self.style) self._initTabs();
+		if !is_undefined(self.main_ui) self._initTabs();
         return self;
     }
 	
@@ -140,7 +143,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
-			self.tab_container = new LuiContainer(, , , , $"_tab_container_{self.element_id}").setVisible(false);
+			self.tab_container = new LuiAbsContainer(0, 0, , , $"_tab_container_{self.element_id}").setVisible(false);
 		}
 	}
 	
@@ -148,14 +151,14 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.tabActivate = function() {
 		self.is_active = true;
 		self.tab_container.setVisible(true);
-		flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.flex);
+		//flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.flex);
 	}
 	
 	///@desc Deactivate current tab
 	self.tabDeactivate = function() {
 		self.is_active = false;
 		self.tab_container.setVisible(false);
-		flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.none);
+		//flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.none);
 	}
 	
 	///@desc Works like usual addContent, but redirect add content to tab_container of this tab

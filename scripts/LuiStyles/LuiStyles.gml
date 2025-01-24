@@ -71,7 +71,7 @@ function LuiStyle(_style) constructor {
 	padding = _style[$ "padding"] ?? 16;
 	checkbox_pin_margin = _style[$ "checkbox_pin_margin"] ?? 0;
 	scroll_step = _style[$ "scroll_step"] ?? 32;
-	scroll_surface_offset = _style[$ "scroll_surface_offset"] ?? [0,0,0,0];
+	scroll_region_offset = _style[$ "scroll_region_offset"] ?? [0,0,0,0];
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
 	//Render functions

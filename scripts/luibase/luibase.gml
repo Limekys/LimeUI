@@ -66,6 +66,7 @@ function LuiBase() constructor {
 	self.binding_variable = -1;
 	self.is_initialized = false;
 	self.is_adding = false;
+	self.draw_content_in_cutted_region = false;
 	
 	//Custom functions for elements
 	
@@ -392,7 +393,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -405,7 +406,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -413,7 +414,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
 		self.flexCalculateLayout();
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -421,7 +422,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
 		self.flexCalculateLayout(); 
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -429,7 +430,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
 		self.flexCalculateLayout(); 
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -437,7 +438,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
 		self.flexCalculateLayout(); 
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -445,7 +446,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
 		self.flexCalculateLayout(); 
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -453,7 +454,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
 		self.flexCalculateLayout(); 
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -461,7 +462,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
 		self.flexCalculateLayout(); 
-		self.flexUpdateAll(self.main_ui.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
 		return self;
 	}
 	
@@ -604,9 +605,9 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc ignoreMouseHover(true/false)
+	///@desc Enables/Disables mouse ignore mode
 	///@return {Struct.LuiBase}
-	static ignoreMouseHover = function(_ignore = true) {
+	static setMouseIgnore = function(_ignore = true) {
 		self.ignore_mouse = _ignore;
 		return self;
 	}
@@ -672,9 +673,9 @@ function LuiBase() constructor {
 			_element.is_adding = true;
 			
 			// Inherit variables
-			_element.parent ??= self;
-			_element.main_ui ??= self.main_ui;
-			_element.style ??= self.style;
+			_element.parent = self;
+			_element.main_ui = self.main_ui;
+			_element.style = self.style;
 			
 			// Set visible
 			//_element.visible = self.visible; //???//
@@ -706,6 +707,14 @@ function LuiBase() constructor {
 			
 			_element.is_adding = false;
 		}
+		//for (var i = 0; i < _elements_count; i++) {
+			//
+			//// Get element
+			//var _element = elements[i];
+			//
+			//// Call custom method create
+			//_element.create();
+		//}
 		// Apply alignment 
 		self.alignAllElements();
 		self.flexCalculateLayout();
@@ -961,11 +970,11 @@ function LuiBase() constructor {
 		self.updateParentRelativeSurface();
 		return self;
 	}
-	///@desc Update parent relative surface
+	///@desc Update parent relative surface //???//
 	///@return {Struct.LuiBase}
 	static updateParentRelativeSurface = function() {
 		if !is_undefined(self.parent_relative) {
-			self.parent_relative._updateScrollSurface();
+			//self.parent_relative._updateScrollSurface();
 		}
 		return self;
 	}
@@ -998,7 +1007,7 @@ function LuiBase() constructor {
 		return self.waiting_for_keyboard_input;
 	}
 	
-	///@desc mouseHover()
+	///@desc Determines whether the mouse is hovering over this item or not in main_ui //???// переместить в main_ui
 	static mouseHover = function() {
 		return self.is_mouse_hovered;
 	}
@@ -1022,6 +1031,18 @@ function LuiBase() constructor {
 			return self.parent.mouseHoverAny(_mouse_x, _mouse_y);
 		} else {
 			return self.parent_relative.mouseHoverAny(_mouse_x, _mouse_y);
+		}
+	}
+	
+	///@desc mouseHoverParents()
+	static mouseHoverParents = function() {
+		if is_undefined(self.parent) return true;
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+		if self.mouseHoverAny() {
+			return self.parent.mouseHoverParents();
+		} else {
+			return false;
 		}
 	}
 	
@@ -1049,12 +1070,9 @@ function LuiBase() constructor {
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
 		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
 		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
-			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.visible && !_elm.ignore_mouse;
+			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.mouseHoverParents() && _elm.visible && !_elm.ignore_mouse;
 		});
 		array_sort(_array, function(_elm1, _elm2) {
-			//var _z1 = !is_undefined(_elm1.parent) ? _elm1.parent.z + _elm1.z : _elm1.z;
-			//var _z2 = !is_undefined(_elm2.parent) ? _elm2.parent.z + _elm2.z : _elm2.z;
-			//return _z1 - _z2;
 			return _elm1.z - _elm2.z;
 		});
 		return array_last(_array);
@@ -1134,16 +1152,16 @@ function LuiBase() constructor {
 				
 				// Check if element is inside parent when position updates
 				_element.inside_parent = rectangle_in_rectangle(
-										_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
-										_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
+											_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
+											_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
 										);
 				
-				if (!is_undefined(self.parent_relative)) {
+				if (!is_undefined(_element.parent_relative)) {
 					_p_x = _element.parent_relative.x;
 					_p_y = _element.parent_relative.y;
 					_element.inside_parent = _element.inside_parent && rectangle_in_rectangle(
-											_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
-											_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
+												_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
+												_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
 											);
 				}
 				_element.onPositionUpdate();
@@ -1181,9 +1199,19 @@ function LuiBase() constructor {
 			var _allow_to_draw = _element.inside_parent != 0;
 			//Check if the element is in the area of its parent and draw
 			if _allow_to_draw {
-				//Draw
+				// Draw self
 				_element.draw(_element.x, _element.y);
-				if _element.render_content_enabled _element.render(_element.x, _element.y);
+				// Draw content
+				if _element.render_content_enabled {
+					if self.draw_content_in_cutted_region {
+						var _gpu_scissor = gpu_get_scissor();
+						gpu_set_scissor(self.x, self.y, self.width, self.height);
+					}
+					_element.render(_element.x, _element.y);
+					if self.draw_content_in_cutted_region {
+						gpu_set_scissor(_gpu_scissor);
+					}
+				}
 			}
 		}
 		if global.lui_debug_mode != 0 {
@@ -1226,6 +1254,8 @@ function LuiBase() constructor {
 			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
 			"v: " + string(self.value) + "\n" +
 			"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
+			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
+			"parent: " + self.parent.name + " / " + (is_undefined(self.parent_relative) ? "undefined" : self.parent_relative.name) + "\n" +
 			"z: " + string(self.z));
 		}
 		draw_set_color(_prev_color);

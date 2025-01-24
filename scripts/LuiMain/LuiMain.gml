@@ -228,6 +228,8 @@ function LuiMain() : LuiBase() constructor {
 			"w: " + string(_element.width) + (_element.auto_width ? " (auto)" : "") + " h: " + string(_element.height) + (_element.auto_height ? " (auto)" : "") + "\n" +
 			"v: " + string(_element.value) + "\n" +
 			"hl: " + string(_element.halign) + " vl: " + string(_element.valign) + "\n" +
+			"content: " + string(array_length(_element.content)) + "/" + string(array_length(_element.delayed_content)) + "\n" +
+			"parent: " + _element.parent.name + " / " + (is_undefined(_element.parent_relative) ? "undefined" : _element.parent_relative.name) + "\n" +
 			"z: " + string(_element.z));
 			draw_set_color(_prev_color);
 			draw_set_alpha(_prev_alpha);

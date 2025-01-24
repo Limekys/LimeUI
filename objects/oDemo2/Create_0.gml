@@ -48,7 +48,7 @@ demo2_style = {
 	padding : 24,
 	checkbox_pin_margin : 0,
 	scroll_step : 32,
-	scroll_surface_offset : [0,0,1,3],
+	scroll_region_offset : [0,0,1,3],
 	textbox_cursor : "|",
 	textbox_password : "•"
                                                                     }; // TEMP: Just for fix stupid feather >_<

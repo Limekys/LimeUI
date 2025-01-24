@@ -16,16 +16,27 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.scroll_container = undefined;
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
-	self.surface_offset = undefined;
-	self.update_scroll_surface = true;
+	self.region_offset = undefined;
 	self.drag_start_y = -1;
 	self.drag_y = -1;
 	
+	self.draw_content_in_cutted_region = true;
+	
 	self.create = function() {
 		self._initScrollContainer();
-		self.main_ui.addContent(self.scroll_container);
-		print($"self.width is {self.width}")
-		self.scroll_container.setSize(self.width, LUI_AUTO);
+		self.addContentOriginal(self.scroll_container);
+		if self.auto_height self.setSize(, self.scroll_container.height);
+	}
+	
+	///@desc Set offset region for render content
+	///@arg {array} _region array[left, right, top, bottom]
+	static setRegionOffset = function(_region) {
+		self.region_offset = {
+			left : _region[0],
+			right : _region[1],
+			top : _region[2],
+			bottom : _region[3]
+		}
 	}
 	
 	///@desc Create scroll container
@@ -35,11 +46,12 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	//self.addContentOriginal = method(self, addContent);
+	self.addContentOriginal = method(self, addContent);
 	///@desc Redirect addContent to scroll_container
 	self.addContent = function(elements) {
 		self._initScrollContainer();
 		self.scroll_container.addContent(elements);
+		
 		return self;
 	}
 	
@@ -74,6 +86,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			//flexpanel_node_style_set_position(_elm.flex_node, flexpanel_edge.top, _elm.start_y + self.scroll_offset_y, flexpanel_unit.point);
 		//});
 		//_updateScrollSurface();
+		self.scroll_container.setPosition(, self.scroll_offset_y);
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
@@ -102,22 +115,14 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.step = function() {
-		var _x = self.scroll_container.x;
-		var _y = self.scroll_container.y;
-		
-		if _x != self.x || _y != self.y {
-			//self.scroll_container.setPosition(self.x, self.y);
-		}
-			
-		/*
 		// Mouse wheel input
-		if mouseHoverAny() && false {
+		if mouseHoverAny() {
 			var _wheel_up = mouse_wheel_up() ? 1 : 0;
 			var _wheel_down = mouse_wheel_down() ? 1 : 0;
 			var _wheel = _wheel_up - _wheel_down;
 			if _wheel != 0 {
 				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
-				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.getLast().start_y + self.getLast().height + self.style.padding - self.height), 0);
+				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
 			}
 			// Touch compatibility
 			if self.drag_start_y == -1 && mouse_check_button_pressed(mb_left) {
@@ -131,7 +136,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 				self.drag_y = device_mouse_y_to_gui(0);
 				self.scroll_target_offset_y = self.scroll_target_offset_y - self.drag_start_y + self.drag_y;
 				self.drag_start_y = SmoothApproachDelta(self.drag_start_y, self.drag_y, 1.1);
-				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.getLast().start_y + self.getLast().height + self.style.padding - self.height), 0);
+				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
 			}
 			if mouse_check_button_released(mb_left) {
 				self.drag_start_y = -1;
@@ -142,7 +147,10 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
 			self._applyScroll();
 		}
-		 */
+	}
+	
+	self.onMouseWheel = function() {
+		
 	}
 	
 	self.onContentUpdate = function() {
@@ -150,11 +158,11 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.onShow = function() {
-		self.scroll_container.setVisible(true);
+		//self.scroll_container.setVisible(true);
 	}
 	
 	self.onHide = function() {
-		self.scroll_container.setVisible(false);
+		//self.scroll_container.setVisible(false);
 	}
 	
 	self.onDestroy = function() {
