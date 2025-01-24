@@ -57,7 +57,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 				_tab.tabgroup = self;
 				// Add tab container to tabgroup
 				self.addContent(_tab.tab_container);
-				_tab.tab_container.setSize(self.width);
+				//_tab.tab_container.setSize(self.width);
 				_tab.tab_container.setPosition(0, self.tab_height);
 				//_tab.tab_container.setFlexPadding(0);
 				// Adjust position and size of container
