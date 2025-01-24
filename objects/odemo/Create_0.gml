@@ -277,7 +277,7 @@ my_panel.addContent([
 		new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, 0, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]
 	]),
 	new LuiFlexRow().addContent([
-		new LuiCheckbox( , , 32, 32, , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), demo_loading
+		new LuiCheckbox( , , 32, , , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), demo_loading
 	]),
 	new LuiFlexRow().addContent([
 		new LuiText( , , , , , "Login: "), new LuiTextbox( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
@@ -428,7 +428,7 @@ my_panel_3.addContent([
 					new LuiText(, , , , , "Nested panel x1"),
 					new LuiButton( , , , , , "Nested button"),
 					new LuiFlexRow().addContent([
-						new LuiCheckbox( , , 32, 32, , false, function() {
+						new LuiCheckbox( , , 32, , , false, function() {
 							showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 						}),
 						new LuiText(, , , , , "Check me!"),

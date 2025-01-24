@@ -24,12 +24,6 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.pin_margin = self.style.checkbox_pin_margin;
 	}
 	
-	//Make the maximum size of the checkbox minimal so that it does not stretch at auto size
-	if self.auto_width == true || self.auto_height == true {
-		self.max_width = self.min_width;
-		self.max_height = self.min_height;
-	}
-	
 	static setPinMargin = function(_value) {
 		self.pin_margin = _value;
 		return self;
@@ -42,7 +36,9 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+			var _draw_width = min(self.width, self.height);
+			var _draw_height = min(self.width, self.height);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, draw_x, draw_y, _draw_width, _draw_height, _blend_color, 1);
 		}
 		//Pin
 		if !is_undefined(self.style.sprite_checkbox_pin) {
@@ -54,11 +50,15 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, draw_x + self.pin_margin, draw_y + self.pin_margin, self.width - self.pin_margin*2, self.height - self.pin_margin*2, _blend_color, 1);
+			var _draw_width = min(self.width, self.height);
+			var _draw_height = min(self.width, self.height);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, draw_x + self.pin_margin, draw_y + self.pin_margin, _draw_width - self.pin_margin*2, _draw_height - self.pin_margin*2, _blend_color, 1);
 		}
 		//Border
 		if !is_undefined(self.style.sprite_checkbox_border) {
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_checkbox_border, 1);
+			var _draw_width = min(self.width, self.height);
+			var _draw_height = min(self.width, self.height);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, draw_x, draw_y, _draw_width, _draw_height, self.style.color_checkbox_border, 1);
 		}
 	}
 	
