@@ -464,25 +464,23 @@ my_panel_3.addContent([
 		filterElements = function() {
 			with(oDemo) {
 				// Hide all
-				array_foreach(search_panel.content, function(_elm) {
+				array_foreach(search_panel.scroll_container.content, function(_elm) {
 					_elm.setVisible(false);
-					_elm.setVisibilitySwitching(false);
+					flexpanel_node_style_set_display(_elm.flex_node, flexpanel_display.none);
 				});
 				// Filter
-				var _filtered_elements = array_filter(search_panel.content, function(_elm) {
+				var _filtered_elements = array_filter(search_panel.scroll_container.content, function(_elm) {
 					var _elm_name = _elm.get();
 					var _search_string = textbox_search.get();
 					var _founded = string_pos(string_lower(_search_string), string_lower(_elm_name));
 					if _founded != 0 return true;
 					return false;
 				});
-				// Rearrange filtered positions and made it visible
+				// Show filtered elements
 				for (var i = 0, n = array_length(_filtered_elements); i < n; ++i) {
 				    var _element = _filtered_elements[i];
-					_element.setVisibilitySwitching(true);
 					_element.setVisible(true);
-					_element.pos_y = _element.style.padding + i * (_element.height + _element.style.padding);
-					_element.start_y = _element.pos_y;
+					flexpanel_node_style_set_display(_element.flex_node, flexpanel_display.flex);
 				}
 			}
 		}
