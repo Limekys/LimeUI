@@ -41,7 +41,6 @@ function LuiBase() constructor {
 	self.parent = undefined;
 	self.callback = undefined;
 	self.content = [];
-	self.marked_to_delete = false;				//Deprecated variable //???//
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
 	self.visible = true;
@@ -50,7 +49,7 @@ function LuiBase() constructor {
 	self.halign = undefined; //???//
 	self.valign = undefined; //???//
 	self.draw_relative = false;
-	self.parent_relative = undefined;
+	self.parent_relative = undefined; //???// Deprecated ?
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.render_content_enabled = true;
@@ -61,17 +60,15 @@ function LuiBase() constructor {
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.main_ui = undefined;
-	self.allow_height_extend = true;			//Deprecated variable //???//
 	self.tooltip = "";
 	self.binding_variable = -1;
-	self.is_initialized = false;
 	self.is_adding = false;
 	self.draw_content_in_cutted_region = false;
 	
 	//Custom functions for elements
 	
 	//Called after this item has been added somewhere
-	self.create = function() {
+	self.onCreate = function() {
 		//Custom for each element
 	}
 	
@@ -175,7 +172,9 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _gridAdd = function() {
-		if (self.inside_parent == 0 || !self.visible) return false; // remove check visible? //???//
+		if (self.inside_parent == 0 || !self.visible) {
+			return false;
+		}
 		
 		var _grid_size = LUI_GRID_SIZE;
 		
@@ -322,8 +321,6 @@ function LuiBase() constructor {
 		// Height
 		if !self.auto_height {
 			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
-		} else {
-			//flexpanel_node_style_set_height(self.flex_node, self.min_height, flexpanel_unit.point);
 		}
 		
 		var _data = flexpanel_node_get_data(self.flex_node);
@@ -378,12 +375,14 @@ function LuiBase() constructor {
 		flexUpdate(_node);
 	}
 	
+	///@desc Set flexpanel(element) position type
 	static setPositionType = function(_type = flexpanel_position_type.relative) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_position_type(_flex_node, _type);
 		return self;
 	}
 	
+	///@desc Set flexpanel(element) position
 	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
@@ -397,6 +396,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel(element) size
 	static setSize = function(_width = LUI_AUTO, _height = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _width != LUI_AUTO {
@@ -410,6 +410,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel direction
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
@@ -418,6 +419,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel padding
 	static setFlexPadding = function(_padding) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
@@ -426,6 +428,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel gap
 	static setFlexGap = function(_gap) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
@@ -434,6 +437,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel justify content
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
@@ -442,6 +446,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel align items
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
@@ -450,6 +455,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel align self
 	static setFlexAlignSelf = function(_flex_align) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
@@ -458,6 +464,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel align content
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
@@ -466,13 +473,14 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Centered content in flexpanel(element)
 	static centerContent = function() {
 		self.setFlexJustifyContent(flexpanel_justify.center)
 			.setFlexAlignItems(flexpanel_align.center);
 		return self;
 	}
 	
-	//Init
+	///@desc Init element variables
 	static initElement = function() {
 		if self.pos_x == LUI_AUTO {
 			self.auto_x = true;
@@ -493,7 +501,7 @@ function LuiBase() constructor {
 		self._init_flex();
 	}
 	
-	//Element names
+	//Element names registration
 	///@ignore
 	static _registerElementName = function() {
 		if !variable_struct_exists(self.main_ui.element_names, self.name) {
@@ -612,16 +620,6 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	//???//
-	///@return {Struct.LuiBase}
-	static setInsideParent = function(_inside) {
-		self.inside_parent = _inside;
-		array_foreach(self.content, function(_elm) {
-			_elm.setInsideParent(self.inside_parent);
-		});
-		return self;
-	}
-	
 	//Add content
 	///@desc getFirst
 	static getFirst = function() {
@@ -656,6 +654,9 @@ function LuiBase() constructor {
 			if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
 				if LUI_LOG_ERROR_MODE == 2 {
 					print($"WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
+					//???// Добавить возможность использования не подходящего количества соотношений, 
+					//		если больше чем надо, выбирать из первых доступных по порядку, 
+					//		если меньше оставшиеся подсчитывать соотношение из имеющихся
 				}
 			}
 			_ranges = elements[_elements_count - 1];
@@ -703,18 +704,10 @@ function LuiBase() constructor {
 			_element.addDelayedContent();
 			
 			// Call custom method create
-			_element.create();
+			_element.onCreate();
 			
 			_element.is_adding = false;
 		}
-		//for (var i = 0; i < _elements_count; i++) {
-			//
-			//// Get element
-			//var _element = elements[i];
-			//
-			//// Call custom method create
-			//_element.create();
-		//}
 		// Apply alignment 
 		self.alignAllElements();
 		self.flexCalculateLayout();
@@ -812,23 +805,13 @@ function LuiBase() constructor {
 	//Alignment and sizes
 	///@desc stretchHorizontally(padding) //???//
 	static stretchHorizontally = function(padding) {
-		var _last = parent.getLast();
-		if (_last) && (_last.pos_x + _last.width < parent.width - self.min_width - padding) {
-			//self.width = parent.width - (_last.pos_x + _last.width) - padding*2;
-		} else {
-			//self.width = parent.width - padding*2;
-		}
+		
 		return self;
 	}
 	
 	///@desc stretchVertically(padding) //???//
 	static stretchVertically = function(padding) {
-		var _last = parent.getLast();
-		if (_last) && (_last.pos_y + _last.height < parent.height - self.min_height - padding) {
-			//self.height = parent.height - (_last.pos_y + _last.height) - padding*2;
-		} else {
-			//self.height = parent.height - padding*2;
-		}
+		
 		return self;
 	}
 	
@@ -846,16 +829,14 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	//???//
-	///@desc Center element horizontally on the parent element
+	///@desc Center element horizontally on the parent element //???//
 	///@return {Struct.LuiBase}
 	static centerHorizontally = function() {
 		//self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
 		return self;
 	}
 	
-	//???//
-	///@desc Center element vertically on the parent element
+	///@desc Center element vertically on the parent element //???//
 	///@return {Struct.LuiBase}
 	static centerVertically = function() {
 		//self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
@@ -967,15 +948,6 @@ function LuiBase() constructor {
 	static updateMainUiSurface = function() {
 		if is_undefined(self.main_ui) return self;
 		self.main_ui.update_ui_screen_surface = true;
-		self.updateParentRelativeSurface();
-		return self;
-	}
-	///@desc Update parent relative surface //???//
-	///@return {Struct.LuiBase}
-	static updateParentRelativeSurface = function() {
-		if !is_undefined(self.parent_relative) {
-			//self.parent_relative._updateScrollSurface();
-		}
 		return self;
 	}
 	
@@ -1070,7 +1042,7 @@ function LuiBase() constructor {
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
 		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
 		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
-			return _elm.mouseHoverAny() && _elm.mouseHoverParent() && _elm.mouseHoverParents() && _elm.visible && !_elm.ignore_mouse;
+			return _elm.mouseHoverAny() && _elm.mouseHoverParents() && _elm.visible && !_elm.ignore_mouse;
 		});
 		array_sort(_array, function(_elm1, _elm2) {
 			return _elm1.z - _elm2.z;
@@ -1389,8 +1361,7 @@ function LuiBase() constructor {
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
-		self.is_adding = false;
-		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none); //???//
+		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
 		flexpanel_delete_node(self.flex_node, false);
 		global.lui_element_count--;
 		self.updateMainUiSurface();

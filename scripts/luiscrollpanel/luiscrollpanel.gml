@@ -1,4 +1,4 @@
-///@desc Visually visible panel, but with the ability to scroll down/up.
+///@desc Panel with the ability to scroll down/up.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -22,10 +22,12 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.draw_content_in_cutted_region = true;
 	
-	self.create = function() {
+	self.onCreate = function() {
 		self._initScrollContainer();
 		self.addContentOriginal(self.scroll_container);
-		if self.auto_height self.setSize(, self.scroll_container.height);
+		if self.auto_height {
+			self.setSize(LUI_AUTO, self.scroll_container.height);
+		}
 	}
 	
 	///@desc Set offset region for render content
@@ -46,47 +48,26 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
+	///@desc Original addContent for compatibility
 	self.addContentOriginal = method(self, addContent);
+	
 	///@desc Redirect addContent to scroll_container
 	self.addContent = function(elements) {
 		self._initScrollContainer();
 		self.scroll_container.addContent(elements);
-		
 		return self;
 	}
 	
+	///@desc Delete scroll panel content
 	static cleanScrollPanel = function() {
-		//self.destroyContent();
-		//self.scroll_offset_y = 0;
-		//self.scroll_target_offset_y = 0;
-	}
-	
-	static rearrangeElements = function() {
-		//for (var i = 0, n = array_length(self.content); i < n; ++i) {
-		    //var _element = self.content[i];
-			//if i == 0 {
-				//_element.pos_y = self.style.padding;
-			//} else {
-				//var _prev_element = self.content[i-1];
-				//if _prev_element.start_y == _element.start_y {
-					//_element.pos_y = _prev_element.start_y;
-				//} else {
-					//_element.pos_y = _prev_element.pos_y + _prev_element.height + self.style.padding;
-				//}
-			//}
-			//_element.start_y = _element.pos_y;
-		//}
-		//self._applyScroll();
+		self.scroll_container.destroyContent();
+		self.scroll_offset_y = 0;
+		self.scroll_target_offset_y = 0;
 	}
 	
 	///@ignore
 	static _applyScroll = function() {
-		//array_foreach(self.content, function(_elm) {
-			//_elm.pos_y = _elm.start_y + self.scroll_offset_y;
-			//flexpanel_node_style_set_position(_elm.flex_node, flexpanel_edge.top, _elm.start_y + self.scroll_offset_y, flexpanel_unit.point);
-		//});
-		//_updateScrollSurface();
-		self.scroll_container.setPosition(, self.scroll_offset_y);
+		self.scroll_container.setPosition(LUI_AUTO, self.scroll_offset_y);
 	}
 	
 	self.draw = function(draw_x = 0, draw_y = 0) {
@@ -105,7 +86,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider_back, 0, _scroll_slider_x, draw_y + _scroll_slider_offset, _scroll_slider_offset, self.height - _scroll_slider_offset*2, self.style.color_scroll_slider_back, 1);
 		}
 		if !is_undefined(self.style.sprite_scroll_slider) && array_length(self.content) > 0 {
-			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.getLast().start_y + self.getLast().height + self.style.padding - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
+			var _scroll_slider_y = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), 0, self.height - self.style.padding - _scroll_slider_offset);
 			draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, draw_y + _scroll_slider_offset + _scroll_slider_y, _scroll_slider_offset, _scroll_slider_offset, self.style.color_scroll_slider, 1);
 		}
 		//Panel border
@@ -147,25 +128,5 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
 			self._applyScroll();
 		}
-	}
-	
-	self.onMouseWheel = function() {
-		
-	}
-	
-	self.onContentUpdate = function() {
-		
-	}
-	
-	self.onShow = function() {
-		//self.scroll_container.setVisible(true);
-	}
-	
-	self.onHide = function() {
-		//self.scroll_container.setVisible(false);
-	}
-	
-	self.onDestroy = function() {
-		
 	}
 }

@@ -14,7 +14,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.dropdown_panel = undefined;
 	self.text_width = self.width;
 	
-	self.create = function() {
+	self.onCreate = function() {
 		self._calculateTextWidth();
 	}
 	

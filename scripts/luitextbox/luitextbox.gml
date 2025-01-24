@@ -34,7 +34,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		self.updateMainUiSurface();
 	}, [], -1);
 	
-	self.create = function() {
+	self.onCreate = function() {
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
 		}

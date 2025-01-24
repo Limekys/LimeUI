@@ -221,45 +221,53 @@ demo_style_modern = {
 
 #endregion
 
-//Create the main ui container
+// Create the main ui container
 my_ui = new LuiMain().setStyle(demo_style_dark);
 
 //Create some panels
 my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
 my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
 my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
+
+// Create TabGroup with absolute position on the screen
 tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46).setPositionType(flexpanel_position_type.absolute);
 
-//Add panels to main ui container
+// Add panels to main ui container
 my_ui.addContent([
 	new LuiFlexRow().addContent([
-		my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2]
+		my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2] // Add panels with a width ratio of 40% 40% and 20%
 	]),
 	tab_group //Adding tab group below these panels
 ]);
 
-//Create tabs for tabGroup
+// Create tabs for tabGroup
 tab_panels = new LuiTab("tabPanels", "Panels").setIcon(sIconMenu, 0.5);
 tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 0.5);
 tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
 tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
-//Add tabs to tabgroup
+
+// Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
+
+// Adjust TabGroup position on the screen
 tab_group_min_x = 16;
 tab_group_max_x = room_width - tab_group.width;
 tab_group_min_y = 200;
 tab_group_max_y = room_height - tab_group.height;
 tab_group_target_x = tab_group_min_x;
 tab_group_target_y = my_panel.y + my_panel.height + my_ui.style.padding*2;
-//Create some elements
+
+// Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
 btn_show_msg = new LuiButton(, , , , "btnMessage", "Show message", function() {
 	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
-btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {game_restart()});
+btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {
+	game_restart();
+});
 
-//Add elements to first panel and init some here
+// Add elements to first panel and init some new here
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiFlexRow().addContent([
@@ -280,31 +288,29 @@ my_panel.addContent([
 	new LuiFlexRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
 	]),
-	new LuiFlexRow().addContent([ //.setFlexAlignSelf(flexpanel_align.flex_end)
-		btn_show_msg, btn_restart
+	new LuiFlexRow().addContent([
+		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
 	]),
 ]);
 
-//Set colors to buttons 
-btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5));
-btn_restart.setColor(merge_color(#FF7777, c_black, 0.5));
-
-//Create some panels
-my_panel_in_second_1 = new LuiPanel();
+// Create some panels
 my_panel_in_second_2 = new LuiPanel();
-//Create deactivated button
+
+// Create deactivated button
 deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
 	self.destroy();
 	oDemo.deactivated_button = -1;
 }).deactivate();
+
 activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
 	if is_struct(oDemo.deactivated_button) {
 		oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE";
 	} 
 });
-//Create two arrays with sprite buttons and function to change its color
+
+// Create two arrays with sprite buttons and function to change its color
 changeButtonColor = function() {
-	self.setColorBlend(merge_color(choose(c_red, c_orange, c_yellow, c_lime, c_blue, c_purple), c_white, 0.5));
+	self.setColorBlend(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
 }
 var _buttons1 = [], _buttons2 = [];
 for (var i = 0; i < 8; ++i) {
@@ -313,12 +319,19 @@ for (var i = 0; i < 8; ++i) {
 	else
 	array_push(_buttons2, _button);
 }
-//Add these two arrays to second panel of second main panel
-//Since these are arrays with buttons, they will be added each in a row
-//Then add all together to second panel
+
+// Add these two arrays to second panel of second main panel
+// Since these are arrays with buttons, they will be added each in a row
+my_panel_in_second_2.addContent([
+	new LuiText( , , , , , "Panel with sprites buttons"),
+	new LuiFlexRow().addContent(_buttons1),
+	new LuiFlexRow().addContent(_buttons2)
+]).setVisible(false)
+
+// Then add all together to second panel
 my_panel_2.addContent([
 	new LuiText( , , , , , "Second panel", true).setTextHalign(fa_center),
-	my_panel_in_second_1.addContent([
+	new LuiPanel().addContent([
 		new LuiText( , , , , , "Panel in panel").setTextHalign(fa_center),
 		new LuiFlexRow().addContent([
 			activate_button, deactivated_button
@@ -328,14 +341,10 @@ my_panel_2.addContent([
 		}),
 		new LuiButton( , , , , , long_text, ).setTooltip(long_text),
 	]),
-	my_panel_in_second_2.addContent([
-		new LuiText( , , , , , "Panel with sprites buttons"),
-		new LuiFlexRow().addContent(_buttons1),
-		new LuiFlexRow().addContent(_buttons2),
-	])
+	my_panel_in_second_2
 ]);
 
-//Create drop down menu and some items in it
+// Create drop down menu and some items in it
 dropdown_menu = new LuiDropDown(, , , , , "Select theme...").set("Dark").setTooltip("Change UI theme\nWIP");
 drop_item1 = new LuiDropDownItem( , "Dark", function() {
 	with(oDemo) {
@@ -377,36 +386,31 @@ drop_item3 = new LuiDropDownItem( , "Modern", function() {
 });
 dropdown_menu.addItems([drop_item1, drop_item2, drop_item3]);
 
-//Create big empty buttons (see forward why)
-big_button = new LuiButton(, , , 64, , "", function() {});
-big_button_2 = new LuiButton(, , , 64, , "", function() {});
-big_button_3 = new LuiButton(, , , 64, , "", function() {});
-
-//In each big button we adding sprite and text with ignore mouse hovering
-//And we get big buttons with icon and text
-//???//
-big_button.addContent([
+// Create big buttons with sprite and text
+// In each button we adding sprite and text with ignore mouse hovering
+// And we get big buttons with icon and text
+big_button_1 = new LuiButton().addContent([
 	new LuiFlexRow().setMouseIgnore().addContent([
 		new LuiSprite(, , 32, 32, , sHamburger).setMouseIgnore(), new LuiText(, , , , , "Hamburger!").setMouseIgnore()
 	])
 ]);
-big_button_2.addContent([
+big_button_2 = new LuiButton().addContent([
 	new LuiFlexRow().setMouseIgnore().addContent([
 		new LuiSprite(, , 32, 32, , sBoxDemo).setMouseIgnore(), new LuiText(, , , , , "A box!").setMouseIgnore()
 	])
 ]);
-big_button_3.addContent([
+big_button_3 = new LuiButton().addContent([
 	new LuiFlexRow().setMouseIgnore().addContent([
 		new LuiSprite(, , 32, 32, , sLogoDemo).setMouseIgnore(), new LuiText(, , , , , "Game Maker!").setMouseIgnore()
 	])
 ]);
 
-//Add elements to third main panel
+// Add elements to third main panel
 my_panel_3.addContent([
 	new LuiText( , , , , , "Third panel", true).setTextHalign(fa_center),
 	dropdown_menu,
 	new LuiText(, , , , , long_text).setTooltip(long_text),
-	big_button,
+	big_button_1,
 	big_button_2,
 	big_button_3
 ]);
@@ -415,7 +419,7 @@ my_panel_3.addContent([
 
 	#region Add scroll panel in tab_panels
 
-		//Create scroll panel with different elements
+		// Create scroll panel with different elements
 		tab_panels.addContent([
 			new LuiScrollPanel(, , , , "firstScrollPanel").addContent([
 			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
@@ -452,19 +456,19 @@ my_panel_3.addContent([
 
 	#region Add elements in tab_search
 		
-		//Function for buttons
+		// Function for buttons
 		deleteSelf = function() {
 			self.destroy(); oDemo.filterElements()
 		};
-		//Function for search system
+		// Function for search system
 		filterElements = function() {
 			with(oDemo) {
-				//Hide all
+				// Hide all
 				array_foreach(search_panel.content, function(_elm) {
 					_elm.setVisible(false);
 					_elm.setVisibilitySwitching(false);
 				});
-				//Filter
+				// Filter
 				var _filtered_elements = array_filter(search_panel.content, function(_elm) {
 					var _elm_name = _elm.get();
 					var _search_string = textbox_search.get();
@@ -472,7 +476,7 @@ my_panel_3.addContent([
 					if _founded != 0 return true;
 					return false;
 				});
-				//Rearrange filtered positions and made it visible
+				// Rearrange filtered positions and made it visible
 				for (var i = 0, n = array_length(_filtered_elements); i < n; ++i) {
 				    var _element = _filtered_elements[i];
 					_element.setVisibilitySwitching(true);
@@ -482,7 +486,7 @@ my_panel_3.addContent([
 				}
 			}
 		}
-		//Other elements
+		// Other elements
 		search_panel = new LuiScrollPanel(, , , , "SearchPanel").addContent([
 			new LuiButton(, , , , , "Aboba", oDemo.deleteSelf),
 			new LuiButton(, , , , , "Microba", oDemo.deleteSelf),
@@ -505,7 +509,6 @@ my_panel_3.addContent([
 			control_btn_add,
 			control_btn_clear
 		]);
-		
 		tab_search.addContent([
 			new LuiFlexRow().addContent([
 				new LuiFlexColumn().addContent([
@@ -524,9 +527,8 @@ my_panel_3.addContent([
 		sprite_car_2 = new LuiSprite( , , , , , sCar, , , , false);
 		sprite_car_3 = new LuiSprite( , , , , , sCarFlip);
 		sprite_car_4 = new LuiSprite( , , , , , sCarFlip, , , , false);
-		
 		tab_sprites.addContent([
-			new LuiFlexRow( , , , 300).addContent([
+			new LuiFlexRow( , , , 500).addContent([
 				sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4
 			])
 		]);

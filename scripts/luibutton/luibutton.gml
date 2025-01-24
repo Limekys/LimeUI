@@ -30,7 +30,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		alpha : 1,
 	}
 	
-	self.create = function() {
+	self.onCreate = function() {
 		if sprite_exists(self.icon.sprite) self._calcIconSize();
 	}
 	

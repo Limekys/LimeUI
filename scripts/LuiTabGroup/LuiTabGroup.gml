@@ -20,7 +20,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.tabgroup_header = undefined;
 	
-	self.create = function() {
+	self.onCreate = function() {
 		// Setting up padding for tabgroup
 		self.setFlexPadding(0).setFlexGap(0);
 		// Init header container for tabs
@@ -136,7 +136,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.tabgroup = undefined;
 	self.tab_container = undefined;
 	
-	self.create = function() {
+	self.onCreate = function() {
 		self._initContainer();
 		if sprite_exists(self.icon.sprite) self._calcIconSize();
 	}

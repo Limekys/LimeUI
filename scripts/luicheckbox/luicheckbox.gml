@@ -20,7 +20,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.is_pressed = false;
 	self.pin_margin = 0;
 	
-	self.create = function() {
+	self.onCreate = function() {
 		self.pin_margin = self.style.checkbox_pin_margin;
 	}
 	

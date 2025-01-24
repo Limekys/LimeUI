@@ -19,7 +19,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.text_valign = fa_middle;
 	self.scale_to_fit = scale_to_fit;
 	
-	self.create = function() {
+	self.onCreate = function() {
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);
 		}

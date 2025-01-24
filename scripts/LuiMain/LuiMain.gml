@@ -56,7 +56,6 @@ function LuiMain() : LuiBase() constructor {
 				_previous_hovered_element.is_mouse_hovered = false;
 				_previous_hovered_element.onMouseLeave();
 				_previous_hovered_element.updateMainUiSurface();
-				//_previous_hovered_element.updateParentRelativeSurface(); //???//
 			}
 			
 			if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
@@ -64,7 +63,6 @@ function LuiMain() : LuiBase() constructor {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					self.topmost_hovered_element.onMouseEnter();
 					self.topmost_hovered_element.updateMainUiSurface();
-					//self.topmost_hovered_element.updateParentRelativeSurface(); //???//
 				}
 				
 				if (mouse_check_button(mb_left)) {
