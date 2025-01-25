@@ -1227,7 +1227,7 @@ function LuiBase() constructor {
 			"v: " + string(self.value) + "\n" +
 			"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
-			"parent: " + self.parent.name + " / " + (is_undefined(self.parent_relative) ? "undefined" : self.parent_relative.name) + "\n" +
+			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + " / " + (is_undefined(self.parent_relative) ? "undefined" : self.parent_relative.name) + "\n" +
 			"z: " + string(self.z));
 		}
 		draw_set_color(_prev_color);

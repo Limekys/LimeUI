@@ -60,7 +60,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 				//_tab.tab_container.setSize(self.width);
 				_tab.tab_container.setPosition(0, self.tab_height);
 				//_tab.tab_container.setFlexPadding(0);
-				// Adjust position and size of container
+				// Adjust position and size of container //???// mess of comments
 				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
 				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
 				//flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
