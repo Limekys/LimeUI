@@ -437,7 +437,7 @@ my_panel_3.addContent([
 						new LuiText(, , , , , "Nested panel x2"),
 						new LuiFlexRow().addContent([
 							new LuiSlider( , , , , , 0, 100, 25, 1),
-							new LuiText(, , , , , "Slide me!"),
+							new LuiText(, , , , "txtSlideMe", "Slide me!"),
 						]),
 						new LuiPanel(, , , , "Nested panel x3").addContent([
 							new LuiText(, , , , , "Updateble text with binding variable below").setTooltip("Try to change login in first panel"),
@@ -448,7 +448,7 @@ my_panel_3.addContent([
 				new LuiSprite( , , , 100, , sCarFlip),
 				new LuiSprite( , , , 256, , sHamburger),
 				new LuiSprite( , , , 200, , sCar),
-				new LuiSprite( , , , 128, , sHamburger),
+				new LuiSprite( , , , 128, , sHamburger, , , , false),
 			])
 		]);
 		

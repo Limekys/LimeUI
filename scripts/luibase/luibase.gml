@@ -48,7 +48,7 @@ function LuiBase() constructor {
 	self.has_focus = false;
 	self.halign = undefined; //???//
 	self.valign = undefined; //???//
-	self.draw_relative = false;
+	self.draw_relative = false; //???// Deprecated ?
 	self.parent_relative = undefined; //???// Deprecated ?
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
@@ -346,6 +346,8 @@ function LuiBase() constructor {
 		var _data = flexpanel_node_get_data(_node);
 		if struct_exists(_data, "element") {
 			var _element = _data.element;
+			_element.x = _pos.left;
+			_element.y = _pos.top;
 			_element.pos_x = _pos.left;
 			_element.pos_y = _pos.top;
 			_element.width = _pos.width;
@@ -925,6 +927,7 @@ function LuiBase() constructor {
 	
 	///@desc Set draw_relative to all descendants
 	///@return {Struct.LuiBase}
+	///@deprecated
 	static setDrawRelative = function(_relative, _parent_relative = self) {
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
 		    self.content[i].draw_relative = _relative;
@@ -995,6 +998,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc mouseHoverParent()
+	///@deprecated
 	static mouseHoverParent = function() {
 		if is_undefined(self.parent) return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
@@ -1009,10 +1013,24 @@ function LuiBase() constructor {
 	///@desc mouseHoverParents()
 	static mouseHoverParents = function() {
 		if is_undefined(self.parent) return true;
-		var _mouse_x = device_mouse_x_to_gui(0);
-		var _mouse_y = device_mouse_y_to_gui(0);
 		if self.mouseHoverAny() {
 			return self.parent.mouseHoverParents();
+		} else {
+			return false;
+		}
+	}
+	
+	///@desc checkInsideParents()
+	static checkInsideParents = function(_x1, _y1, _x2, _y2) {
+		if is_undefined(self.parent) return true;
+		var _parent_x = self.parent.x;
+		var _parent_y = self.parent.y;
+		var _inside_parent = rectangle_in_rectangle(
+			_x1, _y1, _x2, _y2,
+			_parent_x, _parent_y, _parent_x + self.parent.width, _parent_y + self.parent.height
+		);
+		if _inside_parent {
+			return self.parent.checkInsideParents(_x1, _y1, _x2, _y2);
 		} else {
 			return false;
 		}
@@ -1096,10 +1114,6 @@ function LuiBase() constructor {
 		for (var i = content_length - 1; i >= 0; --i) {
 			var _element = self.content[i];
 			
-			// Get absolute position
-			_element.x = _element.pos_x;
-			_element.y = _element.pos_y;
-			
 			// Update element
 			_element.update(_element.x, _element.y);
 			
@@ -1108,38 +1122,25 @@ function LuiBase() constructor {
 				_element.updateFromBinding();
 			}
 			
-			// Update content script if needed
+			// Call onContentUpdate of each lement if need it
 			if (_element.need_to_update_content) {
 				_element.onContentUpdate();
 				_element.need_to_update_content = false;
 			}
 			
-			// Update current position
+			// On position update logic
 			var _cur_x = floor(_element.x);
 			var _cur_y = floor(_element.y);
 			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
-				// Get absolute parent position
-				var _p_x = base_x;
-				var _p_y = base_y;
-				
-				// Check if element is inside parent when position updates
-				_element.inside_parent = rectangle_in_rectangle(
-											_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
-											_p_x, _p_y, _p_x + _element.parent.width, _p_y + _element.parent.height
-										);
-				
-				if (!is_undefined(_element.parent_relative)) {
-					_p_x = _element.parent_relative.x;
-					_p_y = _element.parent_relative.y;
-					_element.inside_parent = _element.inside_parent && rectangle_in_rectangle(
-												_element.x, _element.y, _element.x + _element.width, _element.y + _element.height,
-												_p_x, _p_y, _p_x + _element.parent_relative.width, _p_y + _element.parent_relative.height
-											);
-				}
+				// Check if element is inside parents when position updates
+				_element.inside_parent = checkInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
+				// Call onPositionUpdate method of each element
 				_element.onPositionUpdate();
+				// Update main surface
 				self.updateMainUiSurface();
 			}
 			
+			// Save previous position
 			_element.previous_x = _cur_x;
 			_element.previous_y = _cur_y;
 			
@@ -1153,6 +1154,7 @@ function LuiBase() constructor {
 				_element._gridUpdate();
 			}
 			
+			// Save grid previous position
 			_element.grid_previous_x1 = _grid_x1;
 			_element.grid_previous_y1 = _grid_y1;
 			_element.grid_previous_x2 = _grid_x2;
@@ -1213,9 +1215,10 @@ function LuiBase() constructor {
 			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
 		}
 		//Rectangles
-		draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
 		if mouseHover() {
 			draw_rectangle(_x-1, _y-1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
+		} else {
+			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
 		}
 		//Text
 		if global.lui_debug_mode == 2 {
