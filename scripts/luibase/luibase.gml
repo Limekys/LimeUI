@@ -336,7 +336,7 @@ function LuiBase() constructor {
 		return false;
 	}
 	
-	///@desc Update position, size and z depth of all elements
+	///@desc Update position, size and z depth for specified flex node
 	static flexUpdate = function(_node) {
 		
 		// Get layout data
@@ -375,6 +375,8 @@ function LuiBase() constructor {
 		global.lui_z_index = 0;
 		// Update all elements
 		flexUpdate(_node);
+		
+		//global.debug_counter++; //???//
 	}
 	
 	///@desc Set flexpanel(element) position type
@@ -394,7 +396,8 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		//if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -408,7 +411,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -417,7 +420,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
 		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -426,7 +429,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
 		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -435,7 +438,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
 		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -444,7 +447,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
 		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -453,7 +456,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
 		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -462,7 +465,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
 		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -471,7 +474,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
 		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node);
+		self.flexUpdate(self.flex_node);
 		return self;
 	}
 	
@@ -714,6 +717,7 @@ function LuiBase() constructor {
 		self.alignAllElements();
 		self.flexCalculateLayout();
 		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		//if !is_undefined(self.main_ui) self.main_ui.to_update_flex = true; //???//
 		self.setNeedToUpdateContent(true);
 		return self;
 	}
@@ -1361,7 +1365,9 @@ function LuiBase() constructor {
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
 		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
+		self.flexCalculateLayout();
 		flexpanel_delete_node(self.flex_node, false);
+		if !is_undefined(self.parent) self.flexUpdate(self.parent.flex_node);
 		global.lui_element_count--;
 		self.updateMainUiSurface();
 		//Delete self from parent content

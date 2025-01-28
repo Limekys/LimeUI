@@ -19,7 +19,7 @@ function LuiMain() : LuiBase() constructor {
 	//flexpanel_node_style_set_align_items(self.flex_node, flexpanel_align.flex_start);
 	var _data = flexpanel_node_get_data(self.flex_node);
 	_data.element = self;
-	//self.to_update_flex = true;
+	self.to_update_flex = true;
 	
 	// Screen grid
 	self._screen_grid = {};
@@ -34,15 +34,14 @@ function LuiMain() : LuiBase() constructor {
 	self.base_update = method(self, update);
 	self.update = function() {
 		
-		// Update all elements
-		self.base_update();
-		
 		// Update flexpanels and Z depth
 		//if self.to_update_flex {
 			//self.to_update_flex = false;
-			//global.lui_z_index = 0;
 			//self.flexUpdateAll(self.flex_node);
 		//}
+		
+		// Update all elements
+		self.base_update();
 			
 		// Mouse position
 		var _mouse_x = device_mouse_x_to_gui(0);
