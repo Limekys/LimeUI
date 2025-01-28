@@ -1092,21 +1092,15 @@ function LuiBase() constructor {
 	
 	//Update
 	///@desc update()
-	static update = function(base_x = 0, base_y = 0) {
+	static update = function() {
 		// Limit updates
 		if (!self.visible || self.deactivated || self.inside_parent == 0) {
 			return false;
 		}
 		
 		// Check if the element is in the area of its parent and call its step function
-		if (!self.draw_relative) {
-			if (self.inside_parent == 1) {
-				self.step();
-			}
-		} else {
-			if (self.inside_parent == 1 || self.inside_parent == 2) {
-				self.step();
-			}
+		if (self.inside_parent) {
+			self.step();
 		}
 		
 		// Update all elements inside
@@ -1115,7 +1109,7 @@ function LuiBase() constructor {
 			var _element = self.content[i];
 			
 			// Update element
-			_element.update(_element.x, _element.y);
+			_element.update();
 			
 			// Update binding variable
 			if _element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable) {
@@ -1134,10 +1128,12 @@ function LuiBase() constructor {
 			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
 				// Check if element is inside parents when position updates
 				_element.inside_parent = checkInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
-				// Call onPositionUpdate method of each element
-				_element.onPositionUpdate();
-				// Update main surface
-				self.updateMainUiSurface();
+				if _element.inside_parent {
+					// Call onPositionUpdate method of each element
+					_element.onPositionUpdate();
+					// Update main surface
+					self.updateMainUiSurface();
+				}
 			}
 			
 			// Save previous position
