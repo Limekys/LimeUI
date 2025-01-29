@@ -25,7 +25,9 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.onCreate = function() {
 		self._initScrollContainer();
 		self.addContentOriginal(self.scroll_container);
-		flexpanel_node_style_set_flex(self.flex_node, 1);
+		if self.auto_height {
+			flexpanel_node_style_set_flex(self.flex_node, 1);
+		}
 	}
 	
 	///@desc Change getContainer function for compatibility with setFlex... functions
