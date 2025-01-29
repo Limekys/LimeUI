@@ -28,6 +28,13 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if self.auto_height {
 			self.setSize(LUI_AUTO, self.scroll_container.height);
 		}
+		
+	}
+	
+	///@desc Change getContainer function for compatibility with setFlex... functions
+	self.getContainer = function() {
+		self._initScrollContainer();
+		return self.container;
 	}
 	
 	///@desc Set offset region for render content
@@ -45,6 +52,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	static _initScrollContainer = function() {
 		if is_undefined(self.scroll_container) {
 			self.scroll_container = new LuiAbsContainer(0, 0, LUI_AUTO, LUI_AUTO, $"_scroll_container_{self.element_id}");
+			self.setContainer(self.scroll_container);
 		}
 	}
 	

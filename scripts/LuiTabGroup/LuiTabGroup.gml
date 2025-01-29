@@ -141,9 +141,16 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		if sprite_exists(self.icon.sprite) self._calcIconSize();
 	}
 	
+	///@desc Change getContainer function for compatibility with setFlex... functions
+	self.getContainer = function() {
+		self._initContainer();
+		return self.container;
+	}
+	
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
 			self.tab_container = new LuiAbsContainer(0, 0, , , $"_tab_container_{self.element_id}").setVisible(false);
+			self.setContainer(self.tab_container);
 		}
 	}
 	

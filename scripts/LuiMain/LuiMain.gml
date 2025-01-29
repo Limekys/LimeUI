@@ -15,8 +15,6 @@ function LuiMain() : LuiBase() constructor {
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
 	flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
 	flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
-	//flexpanel_node_style_set_justify_content(self.flex_node, flexpanel_justify.start);
-	//flexpanel_node_style_set_align_items(self.flex_node, flexpanel_align.flex_start);
 	var _data = flexpanel_node_get_data(self.flex_node);
 	_data.element = self;
 	self.to_update_flex = true;
@@ -250,7 +248,7 @@ function LuiMain() : LuiBase() constructor {
 		if variable_struct_exists(self.element_names, _name) {
 			return variable_struct_get(self.element_names, _name);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR: Can't find element {_name}!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find element {_name}!");
 			return -1;
 		}
 	}

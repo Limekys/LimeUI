@@ -64,6 +64,7 @@ function LuiBase() constructor {
 	self.binding_variable = -1;
 	self.is_adding = false;
 	self.draw_content_in_cutted_region = false;
+	self.container = self; //Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...).
 	
 	//Custom functions for elements
 	
@@ -172,7 +173,7 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _gridAdd = function() {
-		if (self.inside_parent == 0 || !self.visible) {
+		if (!self.inside_parent || !self.visible) {
 			return false;
 		}
 		
@@ -284,7 +285,7 @@ function LuiBase() constructor {
 					//draw_text_ext(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, -1, LUI_GRID_SIZE);
 					//_luiDrawTextCutoff(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, LUI_GRID_SIZE);
 					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
-					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18) + "...");
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
 				}
 				draw_set_color(c_red);
 			}
@@ -397,7 +398,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -409,7 +410,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -425,7 +426,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -437,7 +438,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -449,7 +450,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -465,7 +466,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -477,7 +478,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -489,7 +490,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -501,7 +502,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -513,7 +514,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -537,27 +538,27 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 		}
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel padding
 	///@arg {real} _padding
 	static setFlexPadding = function(_padding) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel gap
 	///@arg {real} _gap
 	static setFlexGap = function(_gap) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -565,60 +566,60 @@ function LuiBase() constructor {
 	///@desc Set flexpanel direction (default is flexpanel_flex_direction.column)
 	///@arg {constant.flexpanel_flex_direction} [_direction]
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel wrap type (default is flexpanel_wrap.no_wrap)
 	///@arg {constant.flexpanel_wrap} [_wrap]
 	static setFlexWrap = function(_wrap = flexpanel_wrap.no_wrap) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_wrap(_flex_node, _wrap);
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel grow (default is 1)
 	///@arg {real} [_grow]
 	static setFlexGrow = function(_grow = 1) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_grow(_flex_node, _grow);
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel shrink type (default is 1)
 	///@arg {real} [_shrink]
 	static setFlexShrink = function(_shrink = 1) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_shrink(_flex_node, _shrink);
 		self.flexCalculateLayout();
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel justify content (default is flexpanel_justify.start)
 	///@arg {constant.flexpanel_justify} [_flex_justify]
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel align items (default is flexpanel_align.stretch)
 	///@arg {constant.flexpanel_align} [_flex_align]
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -628,17 +629,17 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
 	///@desc Set flexpanel align content (default is flexpanel_justify.start)
 	///@arg {constant.flexpanel_justify} [_flex_justify]
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
-		var _flex_node = self.flex_node;
+		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -655,7 +656,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_display(_flex_node, _flex_display);
 		self.flexCalculateLayout(); 
-		self.flexUpdate(self.flex_node);
+		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
 		return self;
 	}
 	
@@ -680,14 +681,22 @@ function LuiBase() constructor {
 		self._init_flex();
 	}
 	
+	static setContainer = function(_container) {
+		self.container = _container;
+	}
+	
+	self.getContainer = function() {
+		return self.container;
+	}
+	
 	//Element names registration
 	///@ignore
 	static _registerElementName = function() {
 		if !variable_struct_exists(self.main_ui.element_names, self.name) {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {self.name} already exists! Please give another name!");
-			var _new_name = "_" + md5_string_utf8(self.name + string(self.element_id));
+			if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: This element name {self.name} already exists! A new name will be given automatically");
+			var _new_name = self.name + "_" + string(self.element_id) + "_" + md5_string_utf8(self.name + string(self.element_id));
 			variable_struct_set(self.main_ui.element_names, _new_name, self);
 			self.name = _new_name;
 		}
@@ -698,7 +707,7 @@ function LuiBase() constructor {
 			if variable_struct_exists(self.main_ui.element_names, self.name) {
 				variable_struct_remove(self.main_ui.element_names, self.name);
 			} else {
-				if LUI_LOG_ERROR_MODE >= 1 print($"ERROR: Can't find name {self.name}!");
+				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find name {self.name}!");
 			}
 		}
 	}
@@ -714,7 +723,7 @@ function LuiBase() constructor {
 				self.name = _string;
 				self._registerElementName();
 			} else {
-				if LUI_LOG_ERROR_MODE == 2 print($"WARNING: This element name {_string} already exists! Please give another name!");
+				if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: This element name {_string} already exists! Please give another name!");
 			}
 		}
 		return self;
@@ -832,7 +841,7 @@ function LuiBase() constructor {
 		if is_array(elements[_elements_count - 1]) {
 			if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
 				if LUI_LOG_ERROR_MODE == 2 {
-					print($"WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
+					print($"LIME_UI.WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
 					//???// Добавить возможность использования не подходящего количества соотношений, 
 					//		если больше чем надо, выбирать из первых доступных по порядку, 
 					//		если меньше оставшиеся подсчитывать соотношение из имеющихся
@@ -950,10 +959,10 @@ function LuiBase() constructor {
 				variable : _variable
 			}
 			if LUI_LOG_ERROR_MODE == 2 && !variable_instance_exists(_source, _variable) {
-				print($"WARNING({self.name}): Can't find variable '{_variable}'!");
+				print($"LIME_UI.WARNING({self.name}): Can't find variable '{_variable}'!");
 			}
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): Wrong variable name or instance!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): Wrong variable name or instance!");
 		}
 		return self;
 	}
@@ -966,7 +975,7 @@ function LuiBase() constructor {
 			var _source_value = variable_instance_get(_source, _variable);
 			set(_source_value);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): The binding variable is no longer available!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
 		}
 	}
 	
@@ -978,7 +987,7 @@ function LuiBase() constructor {
 			var _element_value = get();
 			variable_instance_set(_source, _variable, _element_value);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"ERROR({self.name}): The binding variable is no longer available!");
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
 		}
 	}
 	
