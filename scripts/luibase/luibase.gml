@@ -373,11 +373,13 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Update position, size and z depth of all elements with depth reset
-	static flexUpdateAll = function(_node) {
-		// Reset z depth index
-		global.lui_z_index = 0;
-		// Update all elements
-		flexUpdate(_node);
+	static flexUpdateAll = function() {
+		if !is_undefined(main_ui) {
+			// Reset z depth index
+			global.lui_z_index = 0;
+			// Update all elements
+			flexUpdate(self.main_ui.flex_node);
+		}
 	}
 	
 	///@desc Set flexpanel(element) position type (default is flexpanel_position_type.relative)
@@ -876,8 +878,7 @@ function LuiBase() constructor {
 		// Apply alignment 
 		self.alignAllElements();
 		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
-		//if !is_undefined(self.main_ui) self.main_ui.to_update_flex = true; //???//
+		self.flexUpdateAll();
 		self.setNeedToUpdateContent(true);
 		return self;
 	}

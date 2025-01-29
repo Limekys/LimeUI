@@ -119,7 +119,7 @@ function LuiMain() : LuiBase() constructor {
 		if self.needs_flex_update {
 			self.needs_flex_update = false;
 			self.flexCalculateLayout();
-			self.flexUpdateAll(self.flex_node);
+			self.flexUpdateAll();
 		}
 	}
 	
