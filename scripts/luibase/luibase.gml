@@ -229,7 +229,7 @@ function LuiBase() constructor {
 			if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
 				var _array = self.main_ui._screen_grid[$ _key];
 				var _array_length = array_length(_array);
-				for (var j = 0; j < _array_length; ++j) {
+				for (var j = _array_length-1; j >= 0; --j) {
 					if (_array[j].element_id == self.element_id) {
 						array_delete(_array, j, 1);
 						break;
@@ -347,28 +347,26 @@ function LuiBase() constructor {
 		
 		// Update element
 		var _data = flexpanel_node_get_data(_node);
-		if struct_exists(_data, "element") {
-			var _element = _data.element;
-			_element.x = _pos.left;
-			_element.y = _pos.top;
-			_element.pos_x = _pos.left;
-			_element.pos_y = _pos.top;
-			_element.width = _pos.width;
-			_element.height = _pos.height;
-			if (_element.start_x == -1) {
-				_element.start_x = _element.pos_x;
-			}
-			if (_element.start_y == -1) {
-				_element.start_y = _element.pos_y;
-			}
-			_element.z = global.lui_z_index++;
+		var _element = _data.element;
+		_element.x = _pos.left;
+		_element.y = _pos.top;
+		_element.pos_x = _pos.left;
+		_element.pos_y = _pos.top;
+		_element.width = _pos.width;
+		_element.height = _pos.height;
+		if (_element.start_x == -1) {
+			_element.start_x = _element.pos_x;
 		}
+		if (_element.start_y == -1) {
+			_element.start_y = _element.pos_y;
+		}
+		_element.z = global.lui_z_index++;
 		
 		// Call for children (recursive)
 		var _children_count = flexpanel_node_get_num_children(_node);
 		for (var i = 0; i < _children_count; i++) {
 			var _child = flexpanel_node_get_child(_node, i);
-			flexUpdate(_child);
+			_element.flexUpdate(_child);
 		}
 	}
 	
@@ -1273,6 +1271,28 @@ function LuiBase() constructor {
 		for (var i = content_length - 1; i >= 0; --i) {
 			var _element = self.content[i];
 			
+			// On position update logic
+			var _cur_x = floor(_element.x);
+			var _cur_y = floor(_element.y);
+			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
+				// Check if element is inside parents
+				_element.inside_parent = checkInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
+				if _element.inside_parent {
+					// Call onPositionUpdate method of each element
+					_element.onPositionUpdate();
+					// Update main surface
+					self.updateMainUiSurface();
+				}
+			}
+			
+			// Save previous position
+			_element.previous_x = _cur_x;
+			_element.previous_y = _cur_y;
+			
+			if !_element.inside_parent {
+				continue;
+			}
+			
 			// Update element
 			_element.update();
 			
@@ -1286,24 +1306,6 @@ function LuiBase() constructor {
 				_element.onContentUpdate();
 				_element.need_to_update_content = false;
 			}
-			
-			// On position update logic
-			var _cur_x = floor(_element.x);
-			var _cur_y = floor(_element.y);
-			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
-				// Check if element is inside parents when position updates
-				_element.inside_parent = checkInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
-				if _element.inside_parent {
-					// Call onPositionUpdate method of each element
-					_element.onPositionUpdate();
-					// Update main surface
-					self.updateMainUiSurface();
-				}
-			}
-			
-			// Save previous position
-			_element.previous_x = _cur_x;
-			_element.previous_y = _cur_y;
 			
 			// Update grid position
 			var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
