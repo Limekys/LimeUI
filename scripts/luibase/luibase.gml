@@ -378,8 +378,6 @@ function LuiBase() constructor {
 		global.lui_z_index = 0;
 		// Update all elements
 		flexUpdate(_node);
-		
-		//global.debug_counter++; //???//
 	}
 	
 	///@desc Set flexpanel(element) position type (default is flexpanel_position_type.relative)
@@ -387,6 +385,7 @@ function LuiBase() constructor {
 	static setPositionType = function(_type = flexpanel_position_type.relative) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_position_type(_flex_node, _type);
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -397,8 +396,7 @@ function LuiBase() constructor {
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -409,8 +407,7 @@ function LuiBase() constructor {
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -425,8 +422,7 @@ function LuiBase() constructor {
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -437,8 +433,7 @@ function LuiBase() constructor {
 		if _width != LUI_AUTO {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -449,8 +444,7 @@ function LuiBase() constructor {
 		if _height != LUI_AUTO {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -465,8 +459,7 @@ function LuiBase() constructor {
 		if _height != LUI_AUTO {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -477,8 +470,7 @@ function LuiBase() constructor {
 		if _min_width != LUI_AUTO {
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -489,8 +481,7 @@ function LuiBase() constructor {
 		if _max_width != LUI_AUTO {
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -501,8 +492,7 @@ function LuiBase() constructor {
 		if _min_height != LUI_AUTO {
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -513,8 +503,7 @@ function LuiBase() constructor {
 		if _max_height != LUI_AUTO {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -537,8 +526,7 @@ function LuiBase() constructor {
 		if _max_height != LUI_AUTO {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 		}
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -547,8 +535,7 @@ function LuiBase() constructor {
 	static setFlexPadding = function(_padding) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -557,8 +544,7 @@ function LuiBase() constructor {
 	static setFlexGap = function(_gap) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -568,8 +554,7 @@ function LuiBase() constructor {
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -578,8 +563,7 @@ function LuiBase() constructor {
 	static setFlexWrap = function(_wrap = flexpanel_wrap.no_wrap) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_wrap(_flex_node, _wrap);
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -588,8 +572,7 @@ function LuiBase() constructor {
 	static setFlexGrow = function(_grow = 1) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_grow(_flex_node, _grow);
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -598,8 +581,7 @@ function LuiBase() constructor {
 	static setFlexShrink = function(_shrink = 1) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_shrink(_flex_node, _shrink);
-		self.flexCalculateLayout();
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -608,8 +590,7 @@ function LuiBase() constructor {
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -618,8 +599,7 @@ function LuiBase() constructor {
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -628,8 +608,7 @@ function LuiBase() constructor {
 	static setFlexAlignSelf = function(_flex_align) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -638,8 +617,7 @@ function LuiBase() constructor {
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -655,8 +633,7 @@ function LuiBase() constructor {
 	static setFlexDisplay = function(_flex_display = flexpanel_display.flex) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_display(_flex_node, _flex_display);
-		self.flexCalculateLayout(); 
-		if !is_undefined(self.main_ui) self.flexUpdateAll(self.main_ui.flex_node); //???//
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	

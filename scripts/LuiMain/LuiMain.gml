@@ -17,7 +17,7 @@ function LuiMain() : LuiBase() constructor {
 	flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
 	var _data = flexpanel_node_get_data(self.flex_node);
 	_data.element = self;
-	self.to_update_flex = true;
+	self.needs_flex_update = true;
 	
 	// Screen grid
 	self._screen_grid = {};
@@ -31,12 +31,6 @@ function LuiMain() : LuiBase() constructor {
 	// Update
 	self.base_update = method(self, update);
 	self.update = function() {
-		
-		// Update flexpanels and Z depth
-		//if self.to_update_flex {
-			//self.to_update_flex = false;
-			//self.flexUpdateAll(self.flex_node);
-		//}
 		
 		// Update all elements
 		self.base_update();
@@ -119,6 +113,13 @@ function LuiMain() : LuiBase() constructor {
 				self.element_in_focus = undefined;
 				self.updateMainUiSurface();
 			}
+		}
+		
+		// Update all elements from flexpanels data and Z depth
+		if self.needs_flex_update {
+			self.needs_flex_update = false;
+			self.flexCalculateLayout();
+			self.flexUpdateAll(self.flex_node);
 		}
 	}
 	
