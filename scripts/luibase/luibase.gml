@@ -283,8 +283,10 @@ function LuiBase() constructor {
 				for (var i = 0, n = array_length(_array); i < n; ++i) {
 					//draw_text_ext(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, -1, LUI_GRID_SIZE);
 					//_luiDrawTextCutoff(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, LUI_GRID_SIZE);
-					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
+					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18) + "...");
 				}
+				draw_set_color(c_red);
 			}
 		}
 	};
