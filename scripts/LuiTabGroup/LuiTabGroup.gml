@@ -26,7 +26,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		// Init header container for tabs
 		self._initHeader();
 		// Add header to tabgroup
-		self.addContent(self.tabgroup_header, 0);
+		self.addContent(self.tabgroup_header);
 		self.tabgroup_header.setFlexGap(0);
 		// Init tabs
 		self._initTabs();
@@ -36,7 +36,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.tabgroup_header) {
-			self.tabgroup_header = new LuiFlexRow(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id));
+			self.tabgroup_header = new LuiFlexRow(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id)).setMinHeight(self.tab_height);
 		}
 	}
 	
@@ -49,22 +49,12 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			for (var i = 0; i < _tab_count; ++i) {
 			    // Get tab
 				var _tab = self.tabs[i];
-				// Set tab sizes
-				_tab.height = self.tab_height;
 				// Init tab container
 				_tab._initContainer();
 				// Set tabgroup parent for tab
 				_tab.tabgroup = self;
 				// Add tab container to tabgroup
 				self.addContent(_tab.tab_container);
-				//_tab.tab_container.setSize(self.width);
-				_tab.tab_container.setPosition(0, self.tab_height);
-				//_tab.tab_container.setFlexPadding(0);
-				// Adjust position and size of container //???// mess of comments
-				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.left, 0, flexpanel_unit.point);
-				//flexpanel_node_style_set_position(_tab.tab_container.flex_node, flexpanel_edge.top, self.tab_height, flexpanel_unit.point);
-				//flexpanel_node_style_set_width(_tab.tab_container.flex_node, self.width, flexpanel_unit.point);
-				flexpanel_node_style_set_height(_tab.tab_container.flex_node, self.height - self.tab_height, flexpanel_unit.point);
 			}
 			//Add tab to header of tabgroup
 			self.tabgroup_header.addContent(self.tabs);
@@ -149,7 +139,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
-			self.tab_container = new LuiAbsContainer(0, 0, , , $"_tab_container_{self.element_id}").setVisible(false);
+			self.tab_container = new LuiContainer(0, 0, , , $"_tab_container_{self.element_id}").setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
 			self.setContainer(self.tab_container);
 		}
 	}
@@ -157,15 +147,13 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	///@desc Activate current tab
 	self.tabActivate = function() {
 		self.is_active = true;
-		self.tab_container.setVisible(true);
-		//flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.flex);
+		self.tab_container.setVisible(true).setFlexDisplay(flexpanel_display.flex);
 	}
 	
 	///@desc Deactivate current tab
 	self.tabDeactivate = function() {
 		self.is_active = false;
-		self.tab_container.setVisible(false);
-		//flexpanel_node_style_set_display(self.tab_container.flex_node, flexpanel_display.none);
+		self.tab_container.setVisible(false).setFlexDisplay(flexpanel_display.none);
 	}
 	
 	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
