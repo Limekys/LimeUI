@@ -271,7 +271,7 @@ btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiFlexRow().addContent([
-		new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, 0, 0).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]
+		new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tab_group_min_x, tab_group_max_x, 0, 1).setBinding(oDemo, "tab_group_target_x"), [0.2, 0.8]
 	]),
 	new LuiFlexRow().addContent([
 		new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tab_group_min_y, tab_group_max_y, 0, 1).setBinding(oDemo, "tab_group_target_y"), [0.2, 0.8]
@@ -422,7 +422,7 @@ my_panel_3.addContent([
 		// Create scroll panel with different elements
 		tab_panels.addContent([
 			new LuiScrollPanel(, , , , "firstScrollPanel").addContent([
-			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
+				new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 				new LuiTextbox(, , , , , , "textbox in scroll panel"),
 				new LuiPanel( , , , , "Panel in scroll panel").addContent([
 					new LuiText(, , , , , "Nested panel x1"),
@@ -453,6 +453,19 @@ my_panel_3.addContent([
 		]);
 		
 	#endregion
+
+//numb = 0;
+//repeat (1000) {
+	//numb++;
+	//my_ui.getElement("firstScrollPanel").addContent([
+		//choose(
+			//new LuiButton(, , , , , string(numb)), 
+			//new LuiSprite(, , , , , sLogoDemo, , make_color_hsv(irandom(255), 255, 255), , choose(true, false)),
+			//new LuiSlider(, , , , , 0, 100, numb, 1),
+			//new LuiTextbox(, , , , , choose("", "aboba", string(numb)), choose("", "aboba", string(numb))),
+		//)
+	//])
+//}
 
 	#region Add elements in tab_search
 		
@@ -508,7 +521,7 @@ my_panel_3.addContent([
 			control_btn_clear
 		]);
 		tab_search.addContent([
-			new LuiFlexRow().addContent([
+			new LuiFlexRow().setFlexGrow(1).addContent([
 				new LuiFlexColumn().addContent([
 					textbox_search,
 					search_panel,
