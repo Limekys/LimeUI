@@ -38,6 +38,9 @@ demo_style_light = {
 	sprite_progress_bar : sUI_panel,
 	sprite_progress_bar_value : sUI_panel,
 	sprite_progress_bar_border : sUI_panel_border,
+	sprite_progress_ring : sRing,
+	sprite_progress_ring_value : sRing,
+	//sprite_progress_ring_border : sRingBorder,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
@@ -66,6 +69,8 @@ demo_style_light = {
 	color_progress_bar : c_white,
 	color_progress_bar_value : #45C952,
 	color_progress_bar_border : merge_colour(c_white, c_black, 0.5),
+	color_progress_ring : merge_colour(c_white, c_black, 0.5),
+	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
 	color_textbox : c_white,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
 	color_scroll_slider : c_white,
@@ -109,6 +114,9 @@ demo_style_dark = {
 	sprite_progress_bar : sUI_panel,
 	sprite_progress_bar_value : sUI_panel,
 	sprite_progress_bar_border : sUI_panel_border,
+	sprite_progress_ring : sRing,
+	sprite_progress_ring_value : sRing,
+	//sprite_progress_ring_border : sRingBorder,
 	sprite_slider_knob : sUI_panel,
 	sprite_slider_knob_border : sUI_panel_border,
 	sprite_scroll_slider : sUI_scroll_slider,
@@ -137,6 +145,8 @@ demo_style_dark = {
 	color_progress_bar : #393c4f,
 	color_progress_bar_value : #3a7d44,
 	color_progress_bar_border : merge_color(#393c4f, c_black, 0.5),
+	color_progress_ring : merge_color(#393c4f, c_black, 0.5),
+	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
 	color_textbox : #393c4f,
 	color_textbox_border : merge_color(#393c4f, c_black, 0.5),
 	color_scroll_slider : #393c4f,
@@ -179,6 +189,8 @@ demo_style_modern = {
 	sprite_checkbox_pin : sUI_checkbox_pin,
 	sprite_progress_bar : sUI_Square_6r,
 	sprite_progress_bar_value : sUI_Square_6r,
+	sprite_progress_ring : sRing,
+	sprite_progress_ring_value : sRing,
 	sprite_slider_knob : sUI_Square_6r,
 	sprite_scroll_slider : sUI_scroll_slider,
 	sprite_scroll_slider_back : sUI_scroll_slider,
@@ -199,6 +211,8 @@ demo_style_modern = {
 	color_checkbox_pin : #64d0b9,
 	color_progress_bar : #4d515e,
 	color_progress_bar_value : #64d0b9,
+	color_progress_ring : #4d515e,
+	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
 	color_textbox : #4d515e,
 	color_scroll_slider : #4d515e,
 	color_scroll_slider_back : merge_color(#4d515e, c_black, 0.5),
@@ -308,25 +322,23 @@ activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
 	} 
 });
 
-// Create two arrays with sprite buttons and function to change its color
+// Create sprite buttons and function to change its color
 changeButtonColor = function() {
 	self.setColorBlend(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
 }
-var _buttons1 = [], _buttons2 = [];
+var _sprite_buttons = [];
 for (var i = 0; i < 8; ++i) {
-    var _button = new LuiSpriteButton( , , , 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i < 4 ? true : false, changeButtonColor);
-	if i < 4 array_push(_buttons1, _button);
-	else
-	array_push(_buttons2, _button);
+    var _button = new LuiSpriteButton( , , 70, 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i mod 2 == 0 ? true : false, changeButtonColor);
+	array_push(_sprite_buttons, _button);
 }
 
-// Add these two arrays to second panel of second main panel
-// Since these are arrays with buttons, they will be added each in a row
+// Add array with sprite buttons to second panel of second main panel
 my_panel_in_second_2.addContent([
 	new LuiText( , , , , , "Panel with sprites buttons"),
-	new LuiFlexRow().addContent(_buttons1),
-	new LuiFlexRow().addContent(_buttons2)
-]).setVisible(false)
+	new LuiFlexRow().setFlexJustifyContent(flexpanel_justify.space_around).setFlexWrap(flexpanel_wrap.wrap).addContent(
+		_sprite_buttons
+	)
+]);
 
 // Then add all together to second panel
 my_panel_2.addContent([
@@ -389,17 +401,20 @@ dropdown_menu.addItems([drop_item1, drop_item2, drop_item3]);
 // Create big buttons with sprite and text
 // In each button we adding sprite and text with ignore mouse hovering
 // And we get big buttons with icon and text
-big_button_1 = new LuiButton().addContent([
+changeRingValue = function() {
+	oDemo.my_ui.getElement("luiRing").set(irandom(100));
+}
+big_button_1 = new LuiButton().setCallback(changeRingValue).addContent([
 	new LuiFlexRow().setMouseIgnore().addContent([
 		new LuiSprite(, , 32, 32, , sHamburger).setMouseIgnore(), new LuiText(, , , , , "Hamburger!").setMouseIgnore()
 	])
 ]);
-big_button_2 = new LuiButton().addContent([
+big_button_2 = new LuiButton().setCallback(changeRingValue).addContent([
 	new LuiFlexRow().setMouseIgnore().addContent([
 		new LuiSprite(, , 32, 32, , sBoxDemo).setMouseIgnore(), new LuiText(, , , , , "A box!").setMouseIgnore()
 	])
 ]);
-big_button_3 = new LuiButton().addContent([
+big_button_3 = new LuiButton().setCallback(changeRingValue).addContent([
 	new LuiFlexRow().setMouseIgnore().addContent([
 		new LuiSprite(, , 32, 32, , sLogoDemo).setMouseIgnore(), new LuiText(, , , , , "Game Maker!").setMouseIgnore()
 	])
@@ -412,7 +427,8 @@ my_panel_3.addContent([
 	new LuiText(, , , , , long_text).setTooltip(long_text),
 	big_button_1,
 	big_button_2,
-	big_button_3
+	big_button_3,
+	new LuiProgressRing( , , , , "luiRing", 0, 100, true, 75, 1).setFlexGrow(1)
 ]);
 
 #region Fill all tabs in tabGroup

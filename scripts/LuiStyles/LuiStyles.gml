@@ -23,6 +23,9 @@ function LuiStyle(_style) constructor {
 	sprite_progress_bar = _style[$ "sprite_progress_bar"] ?? undefined;
 	sprite_progress_bar_value = _style[$ "sprite_progress_bar_value"] ?? undefined;
 	sprite_progress_bar_border = _style[$ "sprite_progress_bar_border"] ?? undefined;
+	sprite_progress_ring = _style[$ "sprite_progress_ring"] ?? undefined;
+	sprite_progress_ring_value = _style[$ "sprite_progress_ring_value"] ?? undefined;
+	sprite_progress_ring_border = _style[$ "sprite_progress_ring_border"] ?? undefined;
 	sprite_slider_knob = _style[$ "sprite_slider_knob"] ?? undefined;
 	sprite_slider_knob_border = _style[$ "sprite_slider_knob_border"] ?? undefined;
 	sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
@@ -52,6 +55,9 @@ function LuiStyle(_style) constructor {
 	color_progress_bar = _style[$ "color_progress_bar"] ?? c_white;
 	color_progress_bar_value = _style[$ "color_progress_bar_value"] ?? #45C952;
 	color_progress_bar_border = _style[$ "color_progress_bar_border"] ?? c_gray;
+	color_progress_ring = _style[$ "color_progress_ring"] ?? c_white;
+	color_progress_ring_value = _style[$ "color_progress_ring_value"] ?? #45C952;
+	color_progress_ring_border = _style[$ "color_progress_ring_border"] ?? c_gray;
 	color_textbox = _style[$ "color_textbox"] ?? c_white;
 	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
 	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_white;
