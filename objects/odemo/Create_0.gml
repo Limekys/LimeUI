@@ -19,221 +19,28 @@ long_text = "This is a really long text that probably won't fit in this element!
 #region Create styles
 
 //Light theme
-demo_style_light = {
-	//Fonts
-	font_default : fDemo,
-	font_buttons : fDemo,
-	font_sliders : fDemo,
-	font_debug : fDebug,
-	//Sprites
-	sprite_panel : sUI_panel,
-	sprite_panel_border : sUI_panel_border,
-	sprite_textbox : sUI_textbox,
-	sprite_textbox_border : sUI_textbox_border,
-	sprite_button : sUI_button,
-	sprite_button_border : sUI_button_border,
-	sprite_checkbox : sUI_button,
-	sprite_checkbox_pin : sUI_checkbox_pin,
-	sprite_checkbox_border : sUI_button_border,
-	sprite_progress_bar : sUI_panel,
-	sprite_progress_bar_value : sUI_panel,
-	sprite_progress_bar_border : sUI_panel_border,
-	sprite_progress_ring : sRing,
-	sprite_progress_ring_value : sRing,
-	//sprite_progress_ring_border : sRingBorder,
-	sprite_slider_knob : sUI_panel,
-	sprite_slider_knob_border : sUI_panel_border,
-	sprite_scroll_slider : sUI_scroll_slider,
-	sprite_scroll_slider_back : sUI_scroll_slider,
-	sprite_dropdown : sUI_button,
-	sprite_dropdown_border : sUI_button_border,
-	sprite_dropdown_item : sUI_button,
-	sprite_tooltip : sUI_panel,
-	sprite_tooltip_border : sUI_panel_border,
-	sprite_dropdown_arrow : sUI_dropdown_arrow,
-	sprite_tab : sUI_tab,
-	sprite_tab_border : sUI_tab_border,
-	sprite_tabgroup : sUI_tabgroup,
-	sprite_tabgroup_border : sUI_tabgroup_border,
-	//Colors
-	color_font : merge_colour(c_black, c_white, 0.2),
-	color_font_hint : c_gray,
-	color_main : c_white,
-	color_border : merge_colour(c_white, c_black, 0.5),
-	color_button : c_white,
-	color_button_border : merge_colour(c_white, c_black, 0.5),
-	color_hover : c_gray,
-	color_checkbox : c_white,
-	color_checkbox_pin : #45C952,
-	color_checkbox_border : merge_colour(c_white, c_black, 0.5),
-	color_progress_bar : c_white,
-	color_progress_bar_value : #45C952,
-	color_progress_bar_border : merge_colour(c_white, c_black, 0.5),
-	color_progress_ring : merge_colour(c_white, c_black, 0.5),
-	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
-	color_progress_ring_border : merge_colour(c_white, c_black, 0.5),
-	color_textbox : c_white,
-	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
-	color_scroll_slider : c_white,
-	color_scroll_slider_back : c_gray,
-	color_dropdown : c_white,
-	color_dropdown_border : merge_colour(c_white, c_black, 0.5),
-	color_dropdown_item : c_white,
-	color_dropdown_arrow : merge_colour(c_white, c_black, 0.5),
-	color_tooltip : c_white,
-	color_tooltip_border : merge_colour(c_white, c_black, 0.5),
-	//Sounds
-	sound_click : sndBasicClick,
-	//Settings
-	default_min_width : 32,
-	default_min_height : 32,
-	padding : 16,
-	checkbox_pin_margin : 0,
-	scroll_step : 32,
-	scroll_region_offset : [0,0,1,3],
-	textbox_cursor : "|",
-	textbox_password : "•"
-                                                                    }; // TEMP: Just for fix stupid feather >_<
+demo_style_light = new LuiStyle()
+	.setSettings(32, 32, 16, 0, 32, [0,0,1,3], "|", "•")
+	.setFonts(fDemo, fDemo, fDebug)
+	.setSprites(sUI_panel, sUI_panel_border,  sUI_button, sUI_button_border, sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
+	.setColors(c_white, merge_colour(c_white, c_black, 0.5), c_white, merge_colour(c_white, c_black, 0.5), #45C952, merge_colour(c_black, c_white, 0.2), c_gray, c_gray)
+	.setSounds(sndBasicClick);
 
 //Dark theme
-demo_style_dark = {
-	//Fonts
-	font_default : fDemo,
-	font_buttons : fDemo,
-	font_sliders : fDemo,
-	font_debug : fDebug,
-	//Sprites
-	sprite_panel : sUI_panel,
-	sprite_panel_border : sUI_panel_border,
-	sprite_textbox : sUI_textbox,
-	sprite_textbox_border : sUI_textbox_border,
-	sprite_button : sUI_button,
-	sprite_button_border : sUI_button_border,
-	sprite_checkbox : sUI_button,
-	sprite_checkbox_pin : sUI_checkbox_pin,
-	sprite_checkbox_border : sUI_button_border,
-	sprite_progress_bar : sUI_panel,
-	sprite_progress_bar_value : sUI_panel,
-	sprite_progress_bar_border : sUI_panel_border,
-	sprite_progress_ring : sRing,
-	sprite_progress_ring_value : sRing,
-	//sprite_progress_ring_border : sRingBorder,
-	sprite_slider_knob : sUI_panel,
-	sprite_slider_knob_border : sUI_panel_border,
-	sprite_scroll_slider : sUI_scroll_slider,
-	sprite_scroll_slider_back : sUI_scroll_slider,
-	sprite_dropdown : sUI_button,
-	sprite_dropdown_border : sUI_button_border,
-	sprite_dropdown_item : sUI_button,
-	sprite_tooltip : sUI_panel,
-	sprite_tooltip_border : sUI_panel_border,
-	sprite_dropdown_arrow : sUI_dropdown_arrow,
-	sprite_tab : sUI_tab,
-	sprite_tab_border : sUI_tab_border,
-	sprite_tabgroup : sUI_tabgroup,
-	sprite_tabgroup_border : sUI_tabgroup_border,
-	//Colors
-	color_font : merge_color(c_white, #393c4f, 0.2),
-	color_font_hint : #77726e,
-	color_main : #393c4f,
-	color_border : merge_color(#393c4f, c_black, 0.5),
-	color_button : #393c4f,
-	color_button_border : merge_color(#393c4f, c_black, 0.5),
-	color_hover : c_gray,
-	color_checkbox : #393c4f,
-	color_checkbox_pin : #3a7d44,
-	color_checkbox_border : merge_color(#393c4f, c_black, 0.5),
-	color_progress_bar : #393c4f,
-	color_progress_bar_value : #3a7d44,
-	color_progress_bar_border : merge_color(#393c4f, c_black, 0.5),
-	color_progress_ring : merge_color(#393c4f, c_black, 0.5),
-	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
-	color_progress_ring_border : merge_color(#393c4f, c_black, 0.5),
-	color_textbox : #393c4f,
-	color_textbox_border : merge_color(#393c4f, c_black, 0.5),
-	color_scroll_slider : #393c4f,
-	color_scroll_slider_back : merge_color(#393c4f, c_black, 0.5),
-	color_dropdown : #393c4f,
-	color_dropdown_border : merge_color(#393c4f, c_black, 0.5),
-	color_dropdown_item : #393c4f,
-	color_dropdown_arrow : merge_color(#393c4f, c_black, 0.5),
-	color_tooltip : c_black,
-	color_tooltip_border : c_black,
-	//Sounds
-	sound_click : sndBasicClick,
-	//Settings
-	default_min_width : 32,
-	default_min_height : 32,
-	padding : 16,
-	checkbox_pin_margin : 0,
-	scroll_step : 32,
-	scroll_region_offset : [0,0,1,3],
-	textbox_cursor : "|",
-	textbox_password : "•",
-	//Render functions
-	//sprite_render_function : function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha) {
-	//	draw_sprite_stretched_ext(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha);
-	//}
-                                                                    }; // TEMP: Just for fix stupid feather >_<
+demo_style_dark = new LuiStyle()
+	.setSettings(32, 32, 16, 0, 32, [0,0,1,3], "|", "•")
+	.setFonts(fDemo, fDemo, fDebug)
+	.setSprites(sUI_panel, sUI_panel_border,  sUI_button, sUI_button_border, sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
+	.setColors(#393c4f, merge_color(#393c4f, c_black, 0.5), #393c4f, merge_color(#393c4f, c_black, 0.5), #3a7d44, merge_color(c_white, #393c4f, 0.2), #77726e, c_gray)
+	.setSounds(sndBasicClick);
 
 //Modern theme
-demo_style_modern = {
-	//Fonts
-	font_default : fModern,
-	font_buttons : fModern,
-	font_sliders : fModern,
-	font_debug : fDebug,
-	//Sprites
-	sprite_panel : sUI_Square_21r,
-	sprite_textbox : sUI_Square_6r,
-	sprite_button : sUI_Square_6r,
-	sprite_checkbox : sUI_Square_6r,
-	sprite_checkbox_pin : sUI_checkbox_pin,
-	sprite_progress_bar : sUI_Square_6r,
-	sprite_progress_bar_value : sUI_Square_6r,
-	sprite_progress_ring : sRing,
-	sprite_progress_ring_value : sRing,
-	sprite_slider_knob : sUI_Square_6r,
-	sprite_scroll_slider : sUI_scroll_slider,
-	sprite_scroll_slider_back : sUI_scroll_slider,
-	sprite_dropdown : sUI_Square_6r,
-	sprite_dropdown_item : sUI_Square_6r,
-	sprite_dropdown_item_border : sUI_Square_6r_dropdown_item_border,
-	sprite_dropdown_arrow : sUI_dropdown_arrow,
-	sprite_tab : sUI_Square_21r,
-	sprite_tabgroup : sUI_Square_21r,
-	sprite_tooltip : sUI_Square_6r,
-	//Colors
-	color_font : #ffffff,
-	color_font_hint : #9a9daf,
-	color_main : #393a44,
-	color_button : #4d515e,
-	color_hover : c_gray,
-	color_checkbox : #4d515e,
-	color_checkbox_pin : #64d0b9,
-	color_progress_bar : #4d515e,
-	color_progress_bar_value : #64d0b9,
-	color_progress_ring : #4d515e,
-	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
-	color_textbox : #4d515e,
-	color_scroll_slider : #4d515e,
-	color_scroll_slider_back : merge_color(#4d515e, c_black, 0.5),
-	color_dropdown : #4d515e,
-	color_dropdown_item : #4d515e,
-	color_dropdown_item_border : merge_color(#4d515e, c_black, 0.5),
-	color_dropdown_arrow : merge_color(#4d515e, c_black, 0.5),
-	//Sounds
-	sound_click : sndBasicClick,
-	//Settings
-	default_min_width : 32,
-	default_min_height : 32,
-	padding : 16,
-	checkbox_pin_margin : 0,
-	scroll_step : 32,
-	scroll_region_offset : [0,0,0,0],
-	textbox_cursor : "|",
-	textbox_password : "*"
-                                                                    }; // TEMP: Just for fix stupid feather >_<
+demo_style_modern = new LuiStyle()
+	.setSettings(32, 32, 16, 0, 32, [0,0,0,0], "|", "*")
+	.setFonts(fModern, fModern, fDebug)
+	.setSprites(sUI_Square_21r, ,  sUI_Square_6r, , sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
+	.setColors(#393a44, , merge_color(#393a44, c_white, 0.1), , #64d0b9, #ffffff, #9a9daf, c_gray)
+	.setSounds(sndBasicClick);
 
 #endregion
 
@@ -430,7 +237,7 @@ my_panel_3.addContent([
 	big_button_1,
 	big_button_2,
 	big_button_3,
-	new LuiProgressRing( , , , , "luiRing", 0, 100, true, 75, 1).setFlexGrow(1)
+	new LuiProgressRing( , , , , "luiRing", 0, 100, true, 65, 1).setFlexGrow(1)
 ]);
 
 #region Fill all tabs in tabGroup

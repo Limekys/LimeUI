@@ -68,8 +68,8 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, draw_x, draw_y, width, height, self.style.color_progress_bar_border, 1);
 		}
 		// Text value
-		if !is_undefined(self.style.font_sliders) {
-			draw_set_font(self.style.font_sliders);
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
 		}
 		if !self.deactivated {
 			draw_set_color(self.style.color_font);

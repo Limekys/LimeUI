@@ -5,7 +5,6 @@ demo2_style = {
 	//Fonts
 	font_default : fntDemo2,
 	font_buttons : fntDemo2,
-	font_sliders : fntDemo2,
 	font_debug : fDebug,
 	//Sprites
 	sprite_panel : sPanelDemo2,

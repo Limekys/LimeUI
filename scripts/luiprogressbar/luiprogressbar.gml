@@ -63,7 +63,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		
 		//Text value
 		if self.show_value {
-			if !is_undefined(self.style.font_sliders) draw_set_font(self.style.font_sliders);
+			if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
 			if !self.deactivated {
 				draw_set_color(self.style.color_font);
 			} else {

@@ -4,11 +4,10 @@ enum LUI_ANIM {
 
 ///@desc Style for UI
 ///@arg {Struct} _style
-function LuiStyle(_style) constructor {
+function LuiStyle(_style = {}) constructor {
 	//Fonts
 	font_default = _style[$ "font_default"] ?? undefined;
 	font_buttons = _style[$ "font_buttons"] ?? undefined;
-	font_sliders = _style[$ "font_sliders"] ?? undefined;
 	font_debug = _style[$ "font_debug"] ?? undefined;
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
@@ -64,7 +63,7 @@ function LuiStyle(_style) constructor {
 	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
 	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
 	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
-	color_dropdown_item = _style[$ "color_dropdown_item"] ?? c_gray;
+	color_dropdown_item = _style[$ "color_dropdown_item"] ?? c_white;
 	color_dropdown_item_border = _style[$ "color_dropdown_item_border"] ?? c_gray;
 	color_dropdown_arrow = _style[$ "color_dropdown_arrow"] ?? c_gray;
 	color_tooltip = _style[$ "color_tooltip"] ?? c_black;
@@ -87,4 +86,112 @@ function LuiStyle(_style) constructor {
 	anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
 	anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;
 	anim_on_mouse_leave = _style[$ "anim_on_mouse_leave"] ?? LUI_ANIM.none;
+	
+	// Functions
+	setFonts = function(_default = undefined, _buttons = undefined, _debug = undefined) {
+		// Fonts
+		font_default = _default;
+		font_buttons = _buttons;
+		font_debug = _debug;
+		
+		return self;
+	}
+	
+	setSprites = function(_panel = undefined, _panel_border = undefined, _element = undefined, _element_border = undefined, _checkbox_pin = undefined, _dropdown_arrow = undefined, _ring = undefined, _ring_border = undefined) {
+		// Panel
+		sprite_panel = _panel;
+		sprite_panel_border = _panel_border;
+		sprite_tab = _panel;
+		sprite_tab_border = _panel_border;
+		sprite_tabgroup = _panel;
+		sprite_tabgroup_border = _panel_border;
+		// Element
+		sprite_textbox = _element;
+		sprite_button = _element;
+		sprite_checkbox = _element;
+		sprite_progress_bar = _element;
+		sprite_progress_bar_value = _element;
+		sprite_slider_knob = _element;
+		sprite_scroll_slider = _element;
+		sprite_dropdown = _element;
+		sprite_dropdown_item = _element;
+		sprite_tooltip = _element;
+		// Border
+		sprite_textbox_border = _element_border;
+		sprite_button_border = _element_border;
+		sprite_checkbox_border = _element_border;
+		sprite_progress_bar_border = _element_border;
+		sprite_slider_knob_border = _element_border;
+		sprite_scroll_slider_back = _element_border;
+		sprite_dropdown_border = _element_border;
+		sprite_dropdown_item_border = _element_border;
+		sprite_tooltip_border = _element_border;
+		// Other
+		sprite_checkbox_pin = _checkbox_pin;
+		sprite_dropdown_arrow = _dropdown_arrow;
+		sprite_progress_ring = _ring;
+		sprite_progress_ring_value = _ring;
+		sprite_progress_ring_border = _ring_border;
+		
+		return self;
+	}
+	
+	setColors = function(_panel = c_white, _panel_border = c_gray, _element = c_white, _element_border = c_gray, _value = c_green, _font = c_black, _font_hint = c_gray, _hover = c_gray) {
+		// Panel
+		color_main = _panel;
+		color_border = _panel_border;
+		// Element
+		color_button = _element;
+		color_checkbox = _element;
+		color_progress_bar = _element;
+		color_textbox = _element;
+		color_scroll_slider = _element;
+		color_dropdown = _element;
+		color_dropdown_item = _element;
+		color_tooltip = _element;
+		// Border
+		color_button_border = _element_border;
+		color_checkbox_border = _element_border;
+		color_progress_bar_border = _element_border;
+		color_progress_ring = _element_border;
+		color_progress_ring_border = _element_border;
+		color_textbox_border = _element_border;
+		color_scroll_slider_back = _element_border;
+		color_dropdown_border = _element_border;
+		color_dropdown_item_border = _element_border;
+		color_dropdown_arrow = _element_border;
+		color_tooltip_border = _element_border;
+		// Value
+		color_checkbox_pin = _value;
+		color_progress_bar_value = _value;
+		color_progress_ring_value = _value;
+		// Fonts
+		color_font = _font;
+		color_font_hint = _font_hint;
+		// Other
+		color_hover = _hover;
+		
+		return self;
+	}
+	
+	setSounds = function(_click = undefined) {
+		// Sounds
+		sound_click = _click;
+		
+		return self;
+	}
+	
+	setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _scroll_region_offset = [0,0,0,0], _symbol_cursor = "|", _symbol_password = "•") {
+		// Settings
+		default_min_width = _min_width;
+		default_min_height = _min_height;
+		padding = _padding;
+		checkbox_pin_margin = _checkbox_pin_margin;
+		scroll_step = _scroll_step;
+		scroll_region_offset = _scroll_region_offset;
+		textbox_cursor = _symbol_cursor;
+		textbox_password = _symbol_password;
+		
+		return self;
+	}
 }
