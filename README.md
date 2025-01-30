@@ -37,6 +37,10 @@ _*Right now the system is in a very early stage of development and with each upd
 - Keyboard controls binding
 - Animations
 
+### Compatibility:
+Game Maker runtime version
+2024.11.0.226+
+
 # Screenshots
 ![2025_01_17_18_15_Runner_6MyWilpRGK](https://github.com/user-attachments/assets/71de4a67-57e9-4891-b797-b9a0914cd027)
 ![2024_06_10_18_13_Runner_4aDms0PEf1](https://github.com/Limekys/LimeUI/assets/58959645/4dd2b6d6-d591-47cf-a0ab-a030b5569e92)
