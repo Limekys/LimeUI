@@ -1,7 +1,7 @@
 // Feather ignore all
 
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2025.01.08"
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2025.01.14"
 
 // Debug timers (used to test prerfomance)
 // add DEBUG_INIT_TIMER before code you want to test
@@ -526,5 +526,114 @@ function ArrayShuffle(array) {
 			array[j] = k;
 		}
 	}
+}
+
+/**
+* Draws a sprite with a fill in the circle (by YAL)
+* @param {asset.gmsprite} _sprite Sprite asset
+* @param {real} _subimg image index
+* @param {real} _value 0.0 - 1.0
+* @param {real} _x x coordinate to draw
+* @param {real} _y y coordinate to draw
+* @param {real} _xscale horizontal scale
+* @param {real} _yscale vertical scale
+* @param {constant.color} _color color
+* @param {real} _alpha alpha
+* @param {bool} [_uncrop]=true indicates whether the sprite is cropped and should be measured to avoid drawing the polygon bigger than it should be.
+*/
+function drawSpriteRadial(_sprite, _subimg, _value, _x, _y, _xscale, _yscale, _color, _alpha, _uncrop = true) {
+	var _x1, _y1, _x2, _y2;
+	if (_uncrop) {
+		var _ox = sprite_get_xoffset(_sprite);
+		var _oy = sprite_get_yoffset(_sprite);
+		_x1 = _x + _xscale * (sprite_get_bbox_left(_sprite) - _ox);
+		_x2 = _x + _xscale * (sprite_get_bbox_right(_sprite) + 1 - _ox);
+		_y1 = _y + _yscale * (sprite_get_bbox_top(_sprite) - _oy);
+		_y2 = _y + _yscale * (sprite_get_bbox_bottom(_sprite) + 1 - _oy);
+	} else {
+		_x1 =  _x - _xscale * sprite_get_xoffset(_sprite);
+		_x2 = _x1 + _xscale * sprite_get_width(_sprite);
+		_y1 = _y -  _yscale * sprite_get_yoffset(_sprite);
+		_y2 = _y1 + _yscale * sprite_get_height(_sprite);
+	}
+	drawTextureRadial(sprite_get_texture(_sprite, _subimg), _value, _x1, _y1, _x2, _y2, _color, _alpha);
+}
+
+/**
+* Draws a texture with a fill in the circle (by YAL)
+* @param {pointer.texture} _tex Description
+* @param {real} _value Description
+* @param {real} _x1 Description
+* @param {real} _y1 Description
+* @param {real} _x2 Description
+* @param {real} _y2 Description
+* @param {constant.color} _color Description
+* @param {real} _alpha Description
+*/
+function drawTextureRadial(_tex, _value, _x1, _y1, _x2, _y2, _color, _alpha) {
+	if (_value <= 0) exit;
+	if (_value >= 1) {
+		draw_primitive_begin_texture(pr_trianglelist, _tex);
+		draw_vertex_texture_color(_x1, _y1, 0, 0, _color, _alpha);
+		repeat (2) {
+			draw_vertex_texture_color(_x2, _y1, 1, 0, _color, _alpha);
+			draw_vertex_texture_color(_x1, _y2, 0, 1, _color, _alpha);
+		}
+		draw_vertex_texture_color(_x2, _y2, 1, 1, _color, _alpha);
+		draw_primitive_end();
+		exit;
+	}
+	
+	// middle point:
+	var _mx = (_x1 + _x2) / 2;
+	var _my = (_y1 + _y2) / 2;
+	draw_primitive_begin_texture(pr_trianglelist, _tex);
+	draw_vertex_texture_color(_mx, _my, 0.5, 0.5, _color, _alpha);
+	draw_vertex_texture_color(_mx, _y1, 0.5, 0, _color, _alpha);
+	
+	// corners, each of these finishes the last triangle and starts a new one:
+	if (_value >= 1/8) {
+		draw_vertex_texture_color(_x2, _y1, 1, 0, _color, _alpha);
+		//
+		draw_vertex_texture_color(_mx, _my, 0.5, 0.5, _color, _alpha);
+		draw_vertex_texture_color(_x2, _y1, 1, 0, _color, _alpha);
+	}
+	if (_value >= 3/8) {
+		draw_vertex_texture_color(_x2, _y2, 1, 1, _color, _alpha);
+		//
+		draw_vertex_texture_color(_mx, _my, 0.5, 0.5, _color, _alpha);
+		draw_vertex_texture_color(_x2, _y2, 1, 1, _color, _alpha);
+	}
+	if (_value >= 5/8) {
+		draw_vertex_texture_color(_x1, _y2, 0, 1, _color, _alpha);
+		//
+		draw_vertex_texture_color(_mx, _my, 0.5, 0.5, _color, _alpha);
+		draw_vertex_texture_color(_x1, _y2, 0, 1, _color, _alpha);
+	}
+	if (_value >= 7/8) {
+		draw_vertex_texture_color(_x1, _y1, 0, 0, _color, _alpha);
+		//
+		draw_vertex_texture_color(_mx, _my, 0.5, 0.5, _color, _alpha);
+		draw_vertex_texture_color(_x1, _y1, 0, 0, _color, _alpha);
+	}
+	
+	// final vertex (towards value-angle):
+	var _dir = pi * (_value * 2 - 0.5);
+	var _dx = cos(_dir);
+	var _dy = sin(_dir);
+	// normalize:
+	var _dmax = max(abs(_dx), abs(_dy));
+	if (_dmax < 1) {
+		_dx /= _dmax;
+		_dy /= _dmax;
+	}
+	//
+	_dx = (1 + _dx) / 2;
+	_dy = (1 + _dy) / 2;
+	draw_vertex_texture_color(
+		lerp(_x1, _x2, _dx), lerp(_y1, _y2, _dy),
+		_dx, _dy, _color, _alpha
+	);
+	draw_primitive_end();
 }
 
