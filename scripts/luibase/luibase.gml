@@ -899,6 +899,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Returns the lowest point of the elements by height
+	///@deprecated
 	static getLowerPoint = function() {
 		var _lower_point = 0;
 		for (var i = 0, n = array_length(content); i < n; ++i) {

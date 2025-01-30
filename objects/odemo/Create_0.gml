@@ -12,7 +12,7 @@ debug_grid = false;
 
 demo_login = "";
 demo_password = "";
-long_text = "This button with a really long text that probably won't fit in this element!";
+long_text = "This is a really long text that probably won't fit in this element!";
 
 #endregion
 
@@ -71,6 +71,7 @@ demo_style_light = {
 	color_progress_bar_border : merge_colour(c_white, c_black, 0.5),
 	color_progress_ring : merge_colour(c_white, c_black, 0.5),
 	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
+	color_progress_ring_border : merge_colour(c_white, c_black, 0.5),
 	color_textbox : c_white,
 	color_textbox_border : merge_colour(c_white, c_dkgray, 0.5),
 	color_scroll_slider : c_white,
@@ -147,6 +148,7 @@ demo_style_dark = {
 	color_progress_bar_border : merge_color(#393c4f, c_black, 0.5),
 	color_progress_ring : merge_color(#393c4f, c_black, 0.5),
 	color_progress_ring_value : merge_colour(c_red, c_white, 0.25),
+	color_progress_ring_border : merge_color(#393c4f, c_black, 0.5),
 	color_textbox : #393c4f,
 	color_textbox_border : merge_color(#393c4f, c_black, 0.5),
 	color_scroll_slider : #393c4f,
