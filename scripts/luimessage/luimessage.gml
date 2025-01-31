@@ -14,6 +14,7 @@ function showLuiMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "", butt
 		draw_set_font(ui.style.font_default);
 		_calc_width = max(string_width(text), string_width(button_text)) + ui.style.padding * 2;
 	}
+	var _container = new LuiFlexColumn();
 	var _panel = new LuiPanel(, , _calc_width, height, "_lui_popup_panel" + _extra);
 	// Text
 	var _txt = new LuiText(, , , , "_lui_popup_text" + _extra, text).setTextHalign(fa_center);
@@ -24,9 +25,12 @@ function showLuiMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "", butt
 	ui.addContent([
 		_block_area.addContent([
 			_panel.addContent([
-				_txt, 
+				_container.addContent([
+					_txt
+				]),
 				_btn
 			])
 		])
 	]);
+	return _container;
 }
