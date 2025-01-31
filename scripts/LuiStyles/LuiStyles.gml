@@ -200,4 +200,13 @@ function LuiStyle(_style = {}) constructor {
 		
 		return self;
 	}
+	
+	setSpriteTabGroup = function(_tabgroup = undefined, _tabgroup_border = undefined, _tab = undefined, _tab_border = undefined) {
+		sprite_tabgroup = _tabgroup;
+		sprite_tabgroup_border = _tabgroup_border;
+		sprite_tab = _tab;
+		sprite_tab_border = _tab_border;
+		
+		return self;
+	}
 }
