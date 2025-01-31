@@ -107,7 +107,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		if !is_undefined(self.style.sprite_textbox_border) {
 			var _border_color = self.style.color_textbox_border;
 			if self.has_focus {
-				_border_color = self.style.color_hover;
+				_border_color = self.style.color_value;
 			}
 			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
 		}

@@ -11,7 +11,7 @@ long_text = "This is a really long text that probably won't fit in this element!
 
 // Create Light style theme
 demo_style_light = new LuiStyle()
-	.setSettings(32, 32, 16, 0, 32, [0,0,1,3], "|", "•")
+	.setSettings(32, 32, 16, 0, 32, {left : 0, right : 0, top : 1, bottom : 3}, "|", "•")
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_panel_border,  sUI_button, sUI_button_border, sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
 	.setColors(c_white, merge_colour(c_white, c_black, 0.5), c_white, merge_colour(c_white, c_black, 0.5), #45C952, merge_colour(c_black, c_white, 0.2), c_gray, c_gray)
@@ -19,7 +19,7 @@ demo_style_light = new LuiStyle()
 
 // Create Dark style theme
 demo_style_dark = new LuiStyle()
-	.setSettings(32, 32, 16, 0, 32, [0,0,1,3], "|", "•")
+	.setSettings(32, 32, 16, 0, 32, {left : 0, right : 0, top : 1, bottom : 3}, "|", "•")
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_panel_border,  sUI_button, sUI_button_border, sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
 	.setColors(#393c4f, merge_color(#393c4f, c_black, 0.5), #393c4f, merge_color(#393c4f, c_black, 0.5), #3a7d44, merge_color(c_white, #393c4f, 0.2), #77726e, c_gray)
@@ -27,7 +27,7 @@ demo_style_dark = new LuiStyle()
 
 // Create Modern style theme
 demo_style_modern = new LuiStyle()
-	.setSettings(32, 32, 16, 0, 32, [0,0,0,0], "|", "*")
+	.setSettings(32, 32, 16, 0, 32, {left : 0, right : 0, top : 0, bottom : 0}, "|", "*")
 	.setFonts(fModern, fModern, fDebug)
 	.setSprites(sUI_Square_21r, ,  sUI_Square_6r, , sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
 	.setColors(#393a44, , merge_color(#393a44, c_white, 0.1), , #64d0b9, #ffffff, #9a9daf, c_gray)

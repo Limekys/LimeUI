@@ -47,6 +47,7 @@ function LuiStyle(_style = {}) constructor {
 	color_border = _style[$ "color_border"] ?? c_gray;
 	color_button = _style[$ "color_button"] ?? c_white;
 	color_button_border = _style[$ "color_button_border"] ?? c_gray;
+	color_value = _style[$ "color_value"] ?? #45C952;
 	color_hover = _style[$ "color_hover"] ?? c_gray; //mixes the color of the main color of this element by 50%
 	color_checkbox = _style[$ "color_checkbox"] ?? c_white;
 	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
@@ -76,7 +77,7 @@ function LuiStyle(_style = {}) constructor {
 	padding = _style[$ "padding"] ?? 16;
 	checkbox_pin_margin = _style[$ "checkbox_pin_margin"] ?? 0;
 	scroll_step = _style[$ "scroll_step"] ?? 32;
-	scroll_region_offset = _style[$ "scroll_region_offset"] ?? [0,0,0,0];
+	render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
 	//Render functions
@@ -136,7 +137,7 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	setColors = function(_panel = c_white, _panel_border = c_gray, _element = c_white, _element_border = c_gray, _value = c_green, _font = c_black, _font_hint = c_gray, _hover = c_gray) {
+	setColors = function(_panel = c_white, _panel_border = c_gray, _element = c_white, _element_border = c_gray, _value = #45C952, _font = c_black, _font_hint = c_gray, _hover = c_gray) {
 		// Panel
 		color_main = _panel;
 		color_border = _panel_border;
@@ -162,6 +163,7 @@ function LuiStyle(_style = {}) constructor {
 		color_dropdown_arrow = _element_border;
 		color_tooltip_border = _element_border;
 		// Value
+		color_value = _value;
 		color_checkbox_pin = _value;
 		color_progress_bar_value = _value;
 		color_progress_ring_value = _value;
@@ -181,14 +183,14 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _scroll_region_offset = [0,0,0,0], _symbol_cursor = "|", _symbol_password = "•") {
+	setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}, _symbol_cursor = "|", _symbol_password = "•") {
 		// Settings
 		default_min_width = _min_width;
 		default_min_height = _min_height;
 		padding = _padding;
 		checkbox_pin_margin = _checkbox_pin_margin;
 		scroll_step = _scroll_step;
-		scroll_region_offset = _scroll_region_offset;
+		render_region_offset = _render_region_offset;
 		textbox_cursor = _symbol_cursor;
 		textbox_password = _symbol_password;
 		

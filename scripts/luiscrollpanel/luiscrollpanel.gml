@@ -16,7 +16,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.scroll_container = undefined;
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
-	self.region_offset = undefined;
 	self.drag_start_y = -1;
 	self.drag_y = -1;
 	
@@ -28,23 +27,13 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if self.auto_height {
 			flexpanel_node_style_set_flex(self.flex_node, 1);
 		}
+		self.setRenderRegionOffset(self.style.render_region_offset);
 	}
 	
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {
 		self._initScrollContainer();
 		return self.container;
-	}
-	
-	///@desc Set offset region for render content
-	///@arg {array} _region array[left, right, top, bottom]
-	static setRegionOffset = function(_region) {
-		self.region_offset = {
-			left : _region[0],
-			right : _region[1],
-			top : _region[2],
-			bottom : _region[3]
-		}
 	}
 	
 	///@desc Create scroll container

@@ -65,6 +65,7 @@ function LuiBase() constructor {
 	self.is_adding = false;
 	self.draw_content_in_cutted_region = false;
 	self.container = self; //Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...).
+	self.render_region_offset = {left : 0, right : 0, top : 0, bottom : 0};
 	
 	//Custom functions for elements
 	
@@ -779,6 +780,12 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set offset region for render content
+	///@arg {struct} _region struct{left, right, top, bottom}
+	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
+		self.render_region_offset = _region;
+	}
+	
 	///@desc Enables/Disables mouse ignore mode
 	///@return {Struct.LuiBase}
 	static setMouseIgnore = function(_ignore = true) {
@@ -1344,7 +1351,11 @@ function LuiBase() constructor {
 				if _element.render_content_enabled {
 					if self.draw_content_in_cutted_region {
 						var _gpu_scissor = gpu_get_scissor();
-						gpu_set_scissor(self.x, self.y, self.width, self.height);
+						var _x = self.x + self.render_region_offset.left;
+						var _y = self.y + self.render_region_offset.top;
+						var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
+						var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
+						gpu_set_scissor(_x, _y, _w, _h);
 					}
 					_element.render(_element.x, _element.y);
 					if self.draw_content_in_cutted_region {
