@@ -1,24 +1,15 @@
 ///@desc CREATE STYLES AND UI
 
-#region Init debug variables
-
-randomize();
+// Init debug variables
 debug_overlay = false;
 debug_grid = false;
 
-#endregion
-
-#region Init demo variables
-
+// Init demo variables
 demo_login = "";
 demo_password = "";
 long_text = "This is a really long text that probably won't fit in this element!";
 
-#endregion
-
-#region Create styles
-
-//Light theme
+// Create Light style theme
 demo_style_light = new LuiStyle()
 	.setSettings(32, 32, 16, 0, 32, [0,0,1,3], "|", "•")
 	.setFonts(fDemo, fDemo, fDebug)
@@ -26,7 +17,7 @@ demo_style_light = new LuiStyle()
 	.setColors(c_white, merge_colour(c_white, c_black, 0.5), c_white, merge_colour(c_white, c_black, 0.5), #45C952, merge_colour(c_black, c_white, 0.2), c_gray, c_gray)
 	.setSounds(sndBasicClick);
 
-//Dark theme
+// Create Dark style theme
 demo_style_dark = new LuiStyle()
 	.setSettings(32, 32, 16, 0, 32, [0,0,1,3], "|", "•")
 	.setFonts(fDemo, fDemo, fDebug)
@@ -34,15 +25,13 @@ demo_style_dark = new LuiStyle()
 	.setColors(#393c4f, merge_color(#393c4f, c_black, 0.5), #393c4f, merge_color(#393c4f, c_black, 0.5), #3a7d44, merge_color(c_white, #393c4f, 0.2), #77726e, c_gray)
 	.setSounds(sndBasicClick);
 
-//Modern theme
+// Create Modern style theme
 demo_style_modern = new LuiStyle()
 	.setSettings(32, 32, 16, 0, 32, [0,0,0,0], "|", "*")
 	.setFonts(fModern, fModern, fDebug)
 	.setSprites(sUI_Square_21r, ,  sUI_Square_6r, , sUI_checkbox_pin, sUI_dropdown_arrow, sRing)
 	.setColors(#393a44, , merge_color(#393a44, c_white, 0.1), , #64d0b9, #ffffff, #9a9daf, c_gray)
 	.setSounds(sndBasicClick);
-
-#endregion
 
 // Create the main ui container
 my_ui = new LuiMain().setStyle(demo_style_dark);
@@ -60,7 +49,7 @@ my_ui.addContent([
 	new LuiFlexRow().addContent([
 		my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2] // Add panels with a width ratio of 40% 40% and 20%
 	]),
-	tab_group //Adding tab group below these panels
+	tab_group //Adding tab group below these panels (it doesn't matter if we add it before or after, it has an absolute position)
 ]);
 
 // Create tabs for tabGroup
@@ -279,6 +268,7 @@ my_panel_3.addContent([
 		
 	#endregion
 
+// Stress test
 //numb = 0;
 //repeat (1000) {
 	//numb++;
