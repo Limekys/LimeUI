@@ -540,6 +540,16 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel border
+	///@arg {constant.flexpanel_edge} _edge
+	///@arg {real} _border
+	static setFlexBorder = function(_edge, _border) {
+		var _flex_node = self.getContainer().flex_node;
+		flexpanel_node_style_set_border(_flex_node, _edge, _border);
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		return self;
+	}
+	
 	///@desc Set flexpanel gap
 	///@arg {real} _gap
 	static setFlexGap = function(_gap) {
