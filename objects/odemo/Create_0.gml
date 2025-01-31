@@ -294,12 +294,12 @@ my_panel_3.addContent([
 		filterElements = function() {
 			with(oDemo) {
 				// Hide all
-				array_foreach(search_panel.scroll_container.content, function(_elm) {
+				array_foreach(search_panel.getContainer().content, function(_elm) {
 					_elm.setVisible(false);
-					flexpanel_node_style_set_display(_elm.flex_node, flexpanel_display.none);
+					_elm.setFlexDisplay(flexpanel_display.none);
 				});
 				// Filter
-				var _filtered_elements = array_filter(search_panel.scroll_container.content, function(_elm) {
+				var _filtered_elements = array_filter(search_panel.getContainer().content, function(_elm) {
 					var _elm_name = _elm.get();
 					var _search_string = textbox_search.get();
 					var _founded = string_pos(string_lower(_search_string), string_lower(_elm_name));
@@ -310,7 +310,7 @@ my_panel_3.addContent([
 				for (var i = 0, n = array_length(_filtered_elements); i < n; ++i) {
 				    var _element = _filtered_elements[i];
 					_element.setVisible(true);
-					flexpanel_node_style_set_display(_element.flex_node, flexpanel_display.flex);
+					_element.setFlexDisplay(flexpanel_display.flex);
 				}
 			}
 		}
