@@ -11,7 +11,7 @@ demo2_style = new LuiStyle()
 	.setSpriteSliderKnob(sBarBackDemo2)
 	.setSpriteCheckbox(sCheckboxDemo2, sCrossDemo2)
 	.setColors(#7BC0EA, #319DDD)
-	.setColorValue(#45C952)
+	.setColorValue(merge_color(c_fuchsia, c_white, 0.5))
 	.setColorHover(c_gray)
 	.setColorFont(c_white, c_gray)
 	.setSounds(sndBasicClick);

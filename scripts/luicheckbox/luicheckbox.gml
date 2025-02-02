@@ -19,7 +19,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.is_pressed = false;
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_checkbox) {
 			var _blend_color = merge_color(self.style.color_checkbox, c_black, 0.1);
@@ -28,7 +28,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, draw_x, draw_y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
 		//Pin
 		if !is_undefined(self.style.sprite_checkbox_pin) {
@@ -42,13 +42,13 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, draw_x, draw_y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
 		//Border
 		if !is_undefined(self.style.sprite_checkbox_border) {
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, draw_x, draw_y, _draw_width, _draw_height, self.style.color_checkbox_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_checkbox_border, 1);
 		}
 	}
 	

@@ -47,7 +47,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		return string_copy(_string, 1, self.max_length);
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_textbox) {
 			var _blend_color = merge_color(self.style.color_textbox, c_black, 0.1);
@@ -58,7 +58,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Set text properties
@@ -76,8 +76,8 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		
 		//Get text
 		var _margin = 6;
-		var _txt_x = draw_x + _margin;
-		var _txt_y = draw_y + self.height / 2;
+		var _txt_x = self.x + _margin;
+		var _txt_y = self.y + self.height / 2;
 		var _display_text = self.value;
 		
 		//Password dots
@@ -109,7 +109,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			if self.has_focus {
 				_border_color = self.style.color_value;
 			}
-			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, draw_x, draw_y, self.width, self.height, _border_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
 		}
 	}
 	

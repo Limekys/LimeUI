@@ -39,7 +39,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		return self;
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		//Set font properties
 		if !is_undefined(self.style.font_default) {
 			draw_set_font(self.style.font_default);

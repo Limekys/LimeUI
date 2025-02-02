@@ -27,7 +27,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self._initHeader();
 		// Add header to tabgroup
 		self.addContent(self.tabgroup_header);
-		self.tabgroup_header.setFlexGap(0);
+		self.tabgroup_header.setFlexGap(0).setMinHeight(self.tab_height);
 		// Init tabs
 		self._initTabs();
 	}
@@ -36,7 +36,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.tabgroup_header) {
-			self.tabgroup_header = new LuiFlexRow(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id)).setMinHeight(self.tab_height);
+			self.tabgroup_header = new LuiFlexRow(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id));
 		}
 	}
 	
@@ -90,18 +90,18 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
         return self;
     }
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_tabgroup) {
 			var _blend_color = self.style.color_main;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
 		}
 		//Border
 		if !is_undefined(self.style.sprite_tabgroup_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, draw_x, draw_y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
 		}
 	}
 	
@@ -163,7 +163,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		return self;
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_tab) {
 			var _blend_color = self.style.color_main;
@@ -179,7 +179,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tab, 0, draw_x, draw_y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
 		// Icon
@@ -198,14 +198,14 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 			draw_set_alpha(1);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
-			var _txt_x = draw_x + self.width / 2;
-			var _txt_y = draw_y + self.height / 2;
+			var _txt_x = self.x + self.width / 2;
+			var _txt_y = self.y + self.height / 2;
 			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		// Border
 		if !is_undefined(self.style.sprite_tab_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, draw_x, draw_y, self.width, self.height, self.style.color_button_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_button_border, 1);
 		}
 	}
 	

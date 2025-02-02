@@ -68,7 +68,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		self.scroll_container.setPosition(LUI_AUTO, self.scroll_offset_y);
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		//Panel
 		if !is_undefined(self.style.sprite_panel) {
 			var _blend_color = self.style.color_main;

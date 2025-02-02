@@ -13,7 +13,7 @@ function LuiBlockArea(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 		self.setPositionType(flexpanel_position_type.absolute);
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		draw_set_alpha(self.alpha);
 		draw_set_color(self.color);
 		draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, false);

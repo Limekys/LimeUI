@@ -58,7 +58,7 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		return self;
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_progress_ring) {
 			var _blend_color = self.style.color_progress_ring;

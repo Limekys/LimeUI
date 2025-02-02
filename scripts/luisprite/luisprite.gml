@@ -45,7 +45,7 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		self.aspect = self.sprite_real_width / self.sprite_real_height;
 	}
 	
-	self.draw = function(draw_x = 0, draw_y = 0) {
+	self.draw = function() {
 		//Calculate fit size
 		var _width = self.width;
 		var _height = self.height;
@@ -64,8 +64,8 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		//Draw sprite
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
 		_sprite_render_function(self.sprite, self.subimg, 
-									floor(draw_x + self.width/2 - _width/2), 
-									floor(draw_y + self.height/2 - _height/2), 
+									floor(self.x + self.width/2 - _width/2), 
+									floor(self.y + self.height/2 - _height/2), 
 									_width, _height, 
 									_blend_color, self.alpha);
 	}
