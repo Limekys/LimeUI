@@ -41,7 +41,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.draw = function(draw_x = 0, draw_y = 0) {
 		//Base
 		if !is_undefined(self.style.sprite_progress_bar) {
-			var _blend_color = self.style.color_progress_bar;
+			var _blend_color = merge_color(self.style.color_progress_bar, c_black, 0.1);
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}

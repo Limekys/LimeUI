@@ -49,7 +49,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
-			var _blend_color = self.style.color_progress_bar;
+			var _blend_color = merge_color(self.style.color_progress_bar, c_black, 0.1);
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}

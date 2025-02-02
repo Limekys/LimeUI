@@ -1,7 +1,7 @@
 my_style = new LuiStyle()
 	.setPadding(16)
 	.setFonts(fDemo, fDemo)
-	.setSprites(sUI_button, , sUI_button)
+	.setSprites(sUI_button, sUI_button)
 	.setSounds(sndBasicClick);
 
 game_ui = new LuiMain().setStyle(my_style);

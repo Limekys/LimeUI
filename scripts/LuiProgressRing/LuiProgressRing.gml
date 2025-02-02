@@ -34,11 +34,11 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		var _y_scale = _height / _spr_height;
 		var _x_scale = _width / _spr_width;
 		var _scale = min(_x_scale, _y_scale);
-		var _ring_x = self.x + _width/2 - _spr_width*_scale/2;
-		var _ring_y = self.y + _height/2 - _spr_height*_scale/2;
+		var _x = self.x + _width/2 - _spr_width*_scale/2;
+		var _y = self.y + _height/2 - _spr_height*_scale/2;
 		return {
-			x : _ring_x,
-			y : _ring_y,
+			x : _x,
+			y : _y,
 			scale : _scale,
 		}
 	}

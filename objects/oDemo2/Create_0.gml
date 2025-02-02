@@ -6,11 +6,14 @@ demo2_style = new LuiStyle()
 	.setPadding(24)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fntDemo2, fntDemo2, fDebug)
-	.setSprites(sPanelDemo2, ,  sBtnDemo2)
+	.setSprites(sPanelDemo2, sBtnDemo2)
 	.setSpriteProgressBar(sBarBackDemo2, sBarValueDemo2)
 	.setSpriteSliderKnob(sBarBackDemo2)
 	.setSpriteCheckbox(sCheckboxDemo2, sCrossDemo2)
-	.setColors(#7BC0EA, , #319DDD, , #45C952, c_white, c_gray, c_gray)
+	.setColors(#7BC0EA, #319DDD)
+	.setColorValue(#45C952)
+	.setColorHover(c_gray)
+	.setColorFont(c_white, c_gray)
 	.setSounds(sndBasicClick);
 
 

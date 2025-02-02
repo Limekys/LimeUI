@@ -3,7 +3,7 @@ enum LUI_ANIM {
 }
 
 ///@desc Style for UI
-///@arg {Struct} _style
+///@arg {Struct} [_style]
 function LuiStyle(_style = {}) constructor {
 	//Fonts
 	font_default = _style[$ "font_default"] ?? undefined;
@@ -50,6 +50,8 @@ function LuiStyle(_style = {}) constructor {
 	color_button_border = _style[$ "color_button_border"] ?? c_gray;
 	color_value = _style[$ "color_value"] ?? #45C952;
 	color_hover = _style[$ "color_hover"] ?? c_gray; //mixes the color of the main color of this element by 50%
+	color_back = _style[$ "color_back"] ?? c_gray;
+	color_accent = _style[$ "color_accent"] ?? #45C952;
 	color_checkbox = _style[$ "color_checkbox"] ?? c_white;
 	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
 	color_checkbox_border = _style[$ "color_checkbox_border"] ?? c_gray;
@@ -63,7 +65,7 @@ function LuiStyle(_style = {}) constructor {
 	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
 	color_scroll_pin = _style[$ "color_scroll_pin"] ?? c_white;
 	color_scroll_pin_border = _style[$ "color_scroll_pin_border"] ?? c_dkgray;
-	color_scroll_slider_back = _style[$ "color_scroll_slider_back"] ?? c_gray;
+	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_gray;
 	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
 	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
 	color_dropdown_item = _style[$ "color_dropdown_item"] ?? c_white;
@@ -90,7 +92,8 @@ function LuiStyle(_style = {}) constructor {
 	anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;
 	anim_on_mouse_leave = _style[$ "anim_on_mouse_leave"] ?? LUI_ANIM.none;
 	
-	// Functions
+	// FONTS FUNCTIONS
+	
 	static setFonts = function(_default = undefined, _buttons = undefined, _debug = undefined) {
 		// Fonts
 		font_default = _default;
@@ -100,7 +103,10 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	static setSprites = function(_panel = undefined, _panel_border = undefined, _element = undefined, _element_border = undefined) {
+	// SPRITES FUNCTIONS
+	
+	///@func setSprites
+	static setSprites = function(_panel = undefined, _element = undefined, _panel_border = undefined, _element_border = undefined) {
 		// Panel
 		sprite_panel = _panel;
 		sprite_panel_border = _panel_border;
@@ -162,7 +168,7 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	static setSpriteTabGroup = function(_tabgroup = undefined, _tabgroup_border = undefined, _tab = undefined, _tab_border = undefined) {
+	static setSpriteTabGroup = function(_tabgroup = undefined, _tab = undefined, _tabgroup_border = undefined, _tab_border = undefined) {
 		sprite_tabgroup = _tabgroup;
 		sprite_tabgroup_border = _tabgroup_border;
 		sprite_tab = _tab;
@@ -185,7 +191,24 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	static setColors = function(_panel = c_white, _panel_border = c_gray, _element = c_white, _element_border = c_gray, _value = #45C952, _font = c_black, _font_hint = c_gray, _hover = c_gray) {
+	static setSpriteScrollSlider = function(_scroll_slider = undefined, _scroll_pin = undefined, _scroll_pin_border = undefined) {
+		sprite_scroll_slider = _scroll_slider;
+		sprite_scroll_pin = _scroll_pin;
+		sprite_scroll_pin_border = _scroll_pin_border;
+		
+		return self;
+	}
+	
+	static setSpriteTooltip = function(_tooltip = undefined, _tooltip_border = undefined) {
+		sprite_tooltip = _tooltip;
+		sprite_tooltip_border = _tooltip_border;
+		
+		return self;
+	}
+	
+	// COLORS FUNCTIONS
+	
+	static setColors = function(_panel = c_white, _element = c_white, _panel_border = c_gray, _element_border = c_gray) {
 		// Panel
 		color_main = _panel;
 		color_border = _panel_border;
@@ -194,6 +217,7 @@ function LuiStyle(_style = {}) constructor {
 		color_checkbox = _element;
 		color_progress_bar = _element;
 		color_textbox = _element;
+		color_scroll_slider = _element;
 		color_scroll_pin = _element;
 		color_dropdown = _element;
 		color_dropdown_item = _element;
@@ -206,24 +230,44 @@ function LuiStyle(_style = {}) constructor {
 		color_progress_ring_border = _element_border;
 		color_textbox_border = _element_border;
 		color_scroll_pin_border = _element_border;
-		color_scroll_slider_back = _element_border;
 		color_dropdown_border = _element_border;
 		color_dropdown_item_border = _element_border;
 		color_dropdown_arrow = _element_border;
 		color_tooltip_border = _element_border;
-		// Value
+		
+		return self;
+	}
+	
+	static setColorValue = function(_value = c_green) {
 		color_value = _value;
 		color_checkbox_pin = _value;
 		color_progress_bar_value = _value;
 		color_progress_ring_value = _value;
-		// Fonts
-		color_font = _font;
-		color_font_hint = _font_hint;
-		// Other
+		
+		return self;
+	}
+	
+	static setColorHover = function(_hover = c_gray) {
 		color_hover = _hover;
 		
 		return self;
 	}
+	
+	static setColorFont = function(_font = c_black, _font_hint = c_gray) {
+		color_font = _font;
+		color_font_hint = _font_hint;
+		
+		return self;
+	}
+	
+	static setColorTooltip = function(_tooltip = c_white, _tooltip_border = c_black) {
+		color_tooltip = _tooltip;
+		color_tooltip_border = _tooltip_border;
+		
+		return self;
+	}
+	
+	// SOUNDS FUNCTIONS
 	
 	static setSounds = function(_click = undefined) {
 		// Sounds
@@ -231,6 +275,8 @@ function LuiStyle(_style = {}) constructor {
 		
 		return self;
 	}
+	
+	// SETTINGS FUNCTIONS
 	
 	static setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}, _symbol_cursor = "|", _symbol_password = "•") {
 		// Settings
@@ -269,13 +315,16 @@ function LuiStyle(_style = {}) constructor {
 		if is_struct(_render_region_offset) {
 			render_region_offset = _render_region_offset;
 		} else if is_array(_render_region_offset) {
+			if array_length(_render_region_offset) != 4 {
+				array_resize(_render_region_offset, 4);
+			}
 			render_region_offset = {
 				left : _render_region_offset[0],
 				right : _render_region_offset[1],
 				top : _render_region_offset[2],
 				bottom : _render_region_offset[3]
 			}
-		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Wrong type appear, when struct or array is expected, when you set render region offset for style!");
+		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
 		
 		return self;
 	}

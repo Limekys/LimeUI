@@ -84,7 +84,8 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			var _scroll_pin_y_offset = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), self.scroll_pin_edge_offset, self.height - self.scroll_pin_width - self.scroll_pin_edge_offset);
 			// Slider back
 			if !is_undefined(self.style.sprite_scroll_slider) {
-				draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, self.scroll_pin_width, self.height - self.scroll_pin_edge_offset*2, self.style.color_scroll_slider_back, 1);
+				var _color_slider = merge_color(self.style.color_scroll_slider, c_black, 0.1);
+				draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, self.scroll_pin_width, self.height - self.scroll_pin_edge_offset*2, _color_slider, 1);
 			}
 			// Scroll pin
 			if !is_undefined(self.style.sprite_scroll_pin) {
