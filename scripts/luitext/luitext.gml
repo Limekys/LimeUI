@@ -53,28 +53,28 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		draw_set_halign(self.text_halign);
 		draw_set_valign(self.text_valign);
 		//Calculate right text align
-		var _txt_x = draw_x + self.width / 2;
-		var _txt_y = draw_y + self.height / 2;
+		var _txt_x = 0;
+		var _txt_y = 0;
 		switch(self.text_halign) {
 			case fa_left: 
-				_txt_x = draw_x;
+				_txt_x = self.x;
 			break;
 			case fa_center:
-				_txt_x = draw_x + self.width / 2;
+				_txt_x = self.x + self.width / 2;
 			break;
 			case fa_right: 
-				_txt_x = draw_x + self.width - string_width(self.value);
+				_txt_x = self.x + self.width;
 			break;
 		}
 		switch(self.text_valign) {
 			case fa_top: 
-				_txt_y = draw_y;
+				_txt_y = self.y;
 			break;
 			case fa_middle:
-				_txt_y = draw_y + self.height / 2;
+				_txt_y = self.y + self.height / 2;
 			break;
 			case fa_bottom: 
-				_txt_y = draw_y + self.height - string_height(self.value);
+				_txt_y = self.y + self.height;
 			break;
 		}
 		//Draw text
