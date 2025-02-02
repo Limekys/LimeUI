@@ -1,7 +1,7 @@
 ///@desc Just for developer, ignore it!
 
 if !my_ui.isInteractingKeyboard() {
-	var _panel = my_ui.getElement("LuiPanel_1");
+	var _panel = my_panel;
 	//_panel.setVisible(!_panel.visible);
 	//tab_group.setVisible(!tab_group.visible);
 	//_panel.deactivate();

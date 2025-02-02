@@ -39,9 +39,9 @@ demo_style_modern = new LuiStyle()
 my_ui = new LuiMain().setStyle(demo_style_dark);
 
 //Create some panels
-my_panel = new LuiPanel( , , , 512, "LuiPanel_1");
-my_panel_2 = new LuiPanel( , , , 512, "LuiPanel_2");
-my_panel_3 = new LuiPanel( , , , 512, "LuiPanel_3");
+my_panel = new LuiPanel();
+my_panel_2 = new LuiPanel();
+my_panel_3 = new LuiPanel();
 
 // Create TabGroup with absolute position on the screen
 tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46).setPositionType(flexpanel_position_type.absolute);
@@ -66,18 +66,18 @@ tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
 // Adjust TabGroup position on the screen
 tab_group_min_x = 16;
 tab_group_max_x = room_width - tab_group.width;
-tab_group_min_y = 200;
+tab_group_min_y = 540;
 tab_group_max_y = room_height - tab_group.height;
 tab_group_target_x = tab_group_min_x;
-tab_group_target_y = my_panel.y + my_panel.height + my_ui.style.padding*2;
+tab_group_target_y = 590;
 
 // Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
 demo_loading_state = false;
-btn_show_msg = new LuiButton(, , , , "btnMessage", "Show message", function() {
+btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message", function() {
 	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
-btn_restart = new LuiButton( , , , , "btnRestart", "Restart", function() {
+btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
 	game_restart();
 });
 
@@ -102,7 +102,7 @@ my_panel.addContent([
 	new LuiFlexRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
 	]),
-	new LuiFlexRow().addContent([
+	new LuiFlexRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
 	]),
 ]);
@@ -127,8 +127,8 @@ changeButtonColor = function() {
 	self.setColorBlend(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
 }
 var _sprite_buttons = [];
-for (var i = 0; i < 8; ++i) {
-    var _button = new LuiSpriteButton( , , 70, 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i mod 2 == 0 ? true : false, changeButtonColor);
+for (var i = 0; i < 7; ++i) {
+    var _button = new LuiSpriteButton( , , 80, 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i mod 2 == 0 ? true : false, changeButtonColor);
 	array_push(_sprite_buttons, _button);
 }
 
@@ -373,7 +373,7 @@ my_panel_3.addContent([
 		sprite_twitter = new LuiSpriteButton(, , , 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")}).setTooltip("My X (Twitter)");
 		sprite_vk = new LuiSpriteButton(, , , 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
 		sprite_youtube = new LuiSpriteButton(, , , 64, "sprYT", sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
-		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setValign(fa_bottom);
+		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setFlexGrow(1).setTextValign(fa_bottom).setTextHalign(fa_right);
 		
 		tab_about.addContent([
 			new LuiFlexRow().addContent([
@@ -391,7 +391,7 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiButton(room_width - 256 - my_ui.style.padding, room_height - 32 - my_ui.style.padding, 256, , "buttonNextDemo", "Next demo -->", function() {
+	new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
 		room_goto(rDemo2);
-	}).setPositionType(flexpanel_position_type.absolute),
+	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);

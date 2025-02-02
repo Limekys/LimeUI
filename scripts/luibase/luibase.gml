@@ -391,37 +391,71 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set flexpanel(element) X position
-	///@arg {real} [_x]
+	///@arg {real} [_x] left = X
 	static setPosX = function(_x = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
+			self.auto_x = false;
 		}
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
 	///@desc Set flexpanel(element) Y position
-	///@arg {real} [_y]
+	///@arg {real} [_y] top = Y
 	static setPosY = function(_y = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
+			self.auto_y = false;
+		}
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		return self;
+	}
+	
+	///@desc Set flexpanel(element) right position
+	///@arg {real} [_r] right
+	static setPosR = function(_r = LUI_AUTO) {
+		var _flex_node = self.flex_node;
+		if _r != LUI_AUTO {
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
+		}
+		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		return self;
+	}
+	
+	///@desc Set flexpanel(element) bottom position
+	///@arg {real} [_b] bottom
+	static setPosB = function(_b = LUI_AUTO) {
+		var _flex_node = self.flex_node;
+		if _b != LUI_AUTO {
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _b, flexpanel_unit.point);
 		}
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
 	///@desc Set flexpanel(element) position
-	///@arg {real} [_x]
-	///@arg {real} [_y]
-	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO) {
+	///@arg {real} [_x] left = X
+	///@arg {real} [_y] top = Y
+	///@arg {real} [_r] right
+	///@arg {real} [_b] bottom
+	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO, _r = LUI_AUTO, _b = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
+			self.auto_x = false;
 		}
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
+			self.auto_y = false;
+		}
+		if _r != LUI_AUTO {
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
+		}
+		if _b != LUI_AUTO {
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.bottom, _b, flexpanel_unit.point);
 		}
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
@@ -891,8 +925,7 @@ function LuiBase() constructor {
 			
 			_element.is_adding = false;
 		}
-		// Apply alignment 
-		self.alignAllElements();
+		// Apply alignment
 		self.flexCalculateLayout();
 		self.flexUpdateAll();
 		self.setNeedToUpdateContent(true);
@@ -1001,14 +1034,18 @@ function LuiBase() constructor {
 	
 	///@desc Set horizontal element aligment (fa_left, fa_center, fa_right)
 	///@return {Struct.LuiBase}
+	///@deprecated
 	static setHalign = function(halign) {
+		if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING({self.name}):You are using deprecated function setHalign!");
 		self.halign = halign;
 		return self;
 	}
 	
 	///@desc Set vertical element aligment (fa_top, fa_middle, fa_bottom)
 	///@return {Struct.LuiBase}
+	///@deprecated
 	static setValign = function(valign) {
+		if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING({self.name}):You are using deprecated function setValign!");
 		self.valign = valign;
 		return self;
 	}
@@ -1029,34 +1066,41 @@ function LuiBase() constructor {
 	
 	///@desc alignAllElements() //???//
 	///@return {Struct.LuiBase}
+	///@deprecated
 	static alignAllElements = function() {
 		for (var i = array_length(self.content) - 1; i >= 0 ; --i) {
 			var _element = self.content[i];
-			switch(_element.halign) {
-				case fa_left:
-					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_start);
-				break;
-				case fa_center:
-					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.center);
-				break;
-				case fa_right:
-					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_end);
-				break;
-				default:
-				break;
+			if !is_undefined(_element.halign) {
+				flexpanel_node_style_set_position_type(_element.flex_node, flexpanel_position_type.absolute);
+				switch(_element.halign) {
+					case fa_left:
+						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.left, _element.style.padding, flexpanel_unit.point);
+					break;
+					case fa_center:
+						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.left, 50, flexpanel_unit.percent);
+					break;
+					case fa_right:
+						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.right, _element.style.padding, flexpanel_unit.point);
+					break;
+					default:
+					break;
+				}
 			}
-			switch(_element.valign) {
-				case fa_top:
-					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_start);
-				break;
-				case fa_middle:
-					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.center);
-				break;
-				case fa_bottom:
-					flexpanel_node_style_set_align_self(_element.flex_node, flexpanel_align.flex_end);
-				break;
-				default:
-				break;
+			if !is_undefined(_element.valign) {
+				flexpanel_node_style_set_position_type(_element.flex_node, flexpanel_position_type.absolute);
+				switch(_element.valign) {
+					case fa_top:
+						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.top, _element.style.padding, flexpanel_unit.point);
+					break;
+					case fa_middle:
+						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.top, 50, flexpanel_unit.percent);
+					break;
+					case fa_bottom:
+						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.bottom, _element.style.padding, flexpanel_unit.point);
+					break;
+					default:
+					break;
+				}
 			}
 			_element.alignAllElements();
 		}
