@@ -298,10 +298,7 @@ function LuiBase() constructor {
 		// Flex node (default for all elements)
 		self.flex_node = flexpanel_create_node({
 			name: self.name, 
-			data: {},
-			minWidth: self.min_width,
-			minHeight: self.min_height,
-			//flexShrink: 1,
+			data: {}
 		});
 		
 		// Position X
@@ -905,8 +902,10 @@ function LuiBase() constructor {
 			}
 			
 			// Flex setting up
-			flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding); 			// gap
-			flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding); 			// padding
+			flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point); 	// min width
+			flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point); 	// min height
+			flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding); 					// gap
+			flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding); 					// padding
 			if array_length(_ranges) == _elements_count  {
 				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
 			}

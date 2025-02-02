@@ -5,5 +5,8 @@ if !my_ui.isInteractingKeyboard() {
 	//_panel.setVisible(!_panel.visible);
 	//tab_group.setVisible(!tab_group.visible);
 	//_panel.deactivate();
-	if _panel != -1 _panel.destroy();
+	if _panel != -1 {
+		_panel.destroy();
+		my_panel = -1;
+	}
 }

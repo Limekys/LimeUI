@@ -76,11 +76,11 @@ function LuiStyle(_style = {}) constructor {
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
-	default_min_width = _style[$ "default_min_width"] ?? 32;
-	default_min_height = _style[$ "default_min_height"] ?? 32;
+	min_width = _style[$ "min_width"] ?? 32;
+	min_height = _style[$ "min_height"] ?? 32;
 	padding = _style[$ "padding"] ?? 0;
-	checkbox_pin_margin = _style[$ "checkbox_pin_margin"] ?? 0;
 	scroll_step = _style[$ "scroll_step"] ?? 32;
+	scroll_slider_width = _style[$ "scroll_slider_width"] ?? 16;
 	render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
 	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
 	textbox_password = _style[$ "textbox_password"] ?? "•";
@@ -278,23 +278,9 @@ function LuiStyle(_style = {}) constructor {
 	
 	// SETTINGS FUNCTIONS
 	
-	static setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}, _symbol_cursor = "|", _symbol_password = "•") {
-		// Settings
-		default_min_width = _min_width;
-		default_min_height = _min_height;
-		padding = _padding;
-		checkbox_pin_margin = _checkbox_pin_margin;
-		scroll_step = _scroll_step;
-		render_region_offset = _render_region_offset;
-		textbox_cursor = _symbol_cursor;
-		textbox_password = _symbol_password;
-		
-		return self;
-	}
-	
 	static setMinSize = function(_min_width = 32, _min_height = 32) {
-		default_min_width = _min_width;
-		default_min_height = _min_height;
+		min_width = _min_width;
+		min_height = _min_height;
 		
 		return self;
 	}
@@ -307,6 +293,12 @@ function LuiStyle(_style = {}) constructor {
 	
 	static setScrollStep = function(_scroll_step = 32) {
 		scroll_step = _scroll_step;
+		
+		return self;
+	}
+	
+	static setScrollSliderWidth = function(_width = 16) {
+		scroll_slider_width = _width;
 		
 		return self;
 	}
