@@ -76,7 +76,7 @@ function LuiStyle(_style = {}) constructor {
 	//Settings
 	default_min_width = _style[$ "default_min_width"] ?? 32;
 	default_min_height = _style[$ "default_min_height"] ?? 32;
-	padding = _style[$ "padding"] ?? 16;
+	padding = _style[$ "padding"] ?? 0;
 	checkbox_pin_margin = _style[$ "checkbox_pin_margin"] ?? 0;
 	scroll_step = _style[$ "scroll_step"] ?? 32;
 	render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
@@ -91,7 +91,7 @@ function LuiStyle(_style = {}) constructor {
 	anim_on_mouse_leave = _style[$ "anim_on_mouse_leave"] ?? LUI_ANIM.none;
 	
 	// Functions
-	setFonts = function(_default = undefined, _buttons = undefined, _debug = undefined) {
+	static setFonts = function(_default = undefined, _buttons = undefined, _debug = undefined) {
 		// Fonts
 		font_default = _default;
 		font_buttons = _buttons;
@@ -100,7 +100,7 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	setSprites = function(_panel = undefined, _panel_border = undefined, _element = undefined, _element_border = undefined, _checkbox_pin = undefined, _dropdown_arrow = undefined, _ring = undefined, _ring_border = undefined) {
+	static setSprites = function(_panel = undefined, _panel_border = undefined, _element = undefined, _element_border = undefined) {
 		// Panel
 		sprite_panel = _panel;
 		sprite_panel_border = _panel_border;
@@ -114,6 +114,7 @@ function LuiStyle(_style = {}) constructor {
 		sprite_textbox = _element;
 		sprite_button = _element;
 		sprite_checkbox = _element;
+		sprite_checkbox_pin = _element;
 		sprite_progress_bar = _element;
 		sprite_progress_bar_value = _element;
 		sprite_slider_knob = _element;
@@ -121,6 +122,9 @@ function LuiStyle(_style = {}) constructor {
 		sprite_dropdown = _element;
 		sprite_dropdown_item = _element;
 		sprite_tooltip = _element;
+		sprite_progress_ring = _element;
+		sprite_progress_ring_value = _element;
+		sprite_dropdown_arrow = _element;
 		// Border
 		sprite_textbox_border = _element_border;
 		sprite_button_border = _element_border;
@@ -130,17 +134,58 @@ function LuiStyle(_style = {}) constructor {
 		sprite_dropdown_border = _element_border;
 		sprite_dropdown_item_border = _element_border;
 		sprite_tooltip_border = _element_border;
-		// Other
+		sprite_progress_ring_border = _element_border;
+		
+		return self;
+	}
+	
+	static setSpriteCheckbox = function(_checkbox = undefined, _checkbox_pin = undefined, _checkbox_border = undefined) {
+		sprite_checkbox = _checkbox;
+		sprite_checkbox_border = _checkbox_border;
 		sprite_checkbox_pin = _checkbox_pin;
+		
+		return self;
+	}
+	
+	static setSpriteProgressBar = function(_progressbar = undefined, _progressbar_value = undefined, _progressbar_border = undefined) {
+		sprite_progress_bar = _progressbar;
+		sprite_progress_bar_value = _progressbar_value;
+		sprite_progress_bar_border = _progressbar_border;
+		
+		return self;
+	}
+	
+	static setSpriteSliderKnob = function(_slider_knob = undefined, _slider_knob_border = undefined) {
+		sprite_slider_knob = _slider_knob;
+		sprite_slider_knob_border = _slider_knob_border;
+		
+		return self;
+	}
+	
+	static setSpriteTabGroup = function(_tabgroup = undefined, _tabgroup_border = undefined, _tab = undefined, _tab_border = undefined) {
+		sprite_tabgroup = _tabgroup;
+		sprite_tabgroup_border = _tabgroup_border;
+		sprite_tab = _tab;
+		sprite_tab_border = _tab_border;
+		
+		return self;
+	}
+	
+	static setSpriteDropdownArrow = function(_dropdown_arrow = undefined) {
 		sprite_dropdown_arrow = _dropdown_arrow;
+		
+		return self;
+	}
+	
+	static setSpriteRing = function(_ring = undefined, _ring_value = undefined, _ring_border = undefined) {
 		sprite_progress_ring = _ring;
-		sprite_progress_ring_value = _ring;
+		sprite_progress_ring_value = _ring_value;
 		sprite_progress_ring_border = _ring_border;
 		
 		return self;
 	}
 	
-	setColors = function(_panel = c_white, _panel_border = c_gray, _element = c_white, _element_border = c_gray, _value = #45C952, _font = c_black, _font_hint = c_gray, _hover = c_gray) {
+	static setColors = function(_panel = c_white, _panel_border = c_gray, _element = c_white, _element_border = c_gray, _value = #45C952, _font = c_black, _font_hint = c_gray, _hover = c_gray) {
 		// Panel
 		color_main = _panel;
 		color_border = _panel_border;
@@ -180,14 +225,14 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	setSounds = function(_click = undefined) {
+	static setSounds = function(_click = undefined) {
 		// Sounds
 		sound_click = _click;
 		
 		return self;
 	}
 	
-	setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}, _symbol_cursor = "|", _symbol_password = "•") {
+	static setSettings = function(_min_width = 32, _min_height = 32, _padding = 16, _checkbox_pin_margin = 0, _scroll_step = 32, _render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}, _symbol_cursor = "|", _symbol_password = "•") {
 		// Settings
 		default_min_width = _min_width;
 		default_min_height = _min_height;
@@ -201,11 +246,48 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	setSpriteTabGroup = function(_tabgroup = undefined, _tabgroup_border = undefined, _tab = undefined, _tab_border = undefined) {
-		sprite_tabgroup = _tabgroup;
-		sprite_tabgroup_border = _tabgroup_border;
-		sprite_tab = _tab;
-		sprite_tab_border = _tab_border;
+	static setMinSize = function(_min_width = 32, _min_height = 32) {
+		default_min_width = _min_width;
+		default_min_height = _min_height;
+		
+		return self;
+	}
+	
+	static setPadding = function(_padding = 16) {
+		padding = _padding;
+		
+		return self;
+	}
+	
+	static setScrollStep = function(_scroll_step = 32) {
+		scroll_step = _scroll_step;
+		
+		return self;
+	}
+	
+	static setRenderRegionOffset = function(_render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}) {
+		if is_struct(_render_region_offset) {
+			render_region_offset = _render_region_offset;
+		} else if is_array(_render_region_offset) {
+			render_region_offset = {
+				left : _render_region_offset[0],
+				right : _render_region_offset[1],
+				top : _render_region_offset[2],
+				bottom : _render_region_offset[3]
+			}
+		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Wrong type appear, when struct or array is expected, when you set render region offset for style!");
+		
+		return self;
+	}
+	
+	static setSymbolCursor = function(_symbol_cursor = "|") {
+		textbox_cursor = _symbol_cursor;
+		
+		return self;
+	}
+	
+	static setSymbolPassword = function(_symbol_password = "•") {
+		textbox_password = _symbol_password;
 		
 		return self;
 	}

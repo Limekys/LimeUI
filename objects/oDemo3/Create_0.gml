@@ -1,20 +1,8 @@
-my_style = {
-	//Fonts
-	font_default : fDemo,
-	font_buttons : fDemo,
-	//Sprites
-	sprite_button : sUI_button,
-	sprite_tabgroup : sUI_button,
-	sprite_tab : sUI_button,
-	//Colors
-	color_font : merge_colour(c_black, c_white, 0.2),
-	color_button : c_white,
-	color_hover : c_gray,
-	//Sounds
-	sound_click : sndBasicClick,
-	//Settings
-	padding : 16
-};
+my_style = new LuiStyle()
+	.setPadding(16)
+	.setFonts(fDemo, fDemo)
+	.setSprites(sUI_button, , sUI_button)
+	.setSounds(sndBasicClick);
 
 game_ui = new LuiMain().setStyle(my_style);
 
@@ -37,7 +25,6 @@ tabgroup = new LuiTabGroup(, , 512, 300, "testTabGroup", 32);
 tab1 = new LuiTab(, "Tab1");
 tab2 = new LuiTab(, "Tab2");
 tab3 = new LuiTab(, "Tab3");
-
 tabgroup.addTabs([tab1, tab2, tab3]);
 
 game_ui.addContent([

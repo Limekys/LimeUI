@@ -1,56 +1,17 @@
 // Sprites https://wenrexa.itch.io/uilight
 
 //Light theme
-demo2_style = {
-	//Fonts
-	font_default : fntDemo2,
-	font_buttons : fntDemo2,
-	font_debug : fDebug,
-	//Sprites
-	sprite_panel : sPanelDemo2,
-	sprite_textbox : sUI_textbox,
-	sprite_button : sBtnDemo2,
-	sprite_checkbox : sCheckboxDemo2,
-	sprite_checkbox_pin : sCrossDemo2,
-	sprite_progress_bar : sBarBackDemo2,
-	sprite_progress_bar_value : sBarValueDemo2,
-	sprite_slider_knob : sBarValueDemo2,
-	sprite_scroll_pin : sUI_scroll_slider,
-	sprite_scroll_slider : sUI_scroll_slider,
-	sprite_dropdown : sUI_button,
-	sprite_dropdown_item : sUI_button,
-	sprite_tooltip : sUI_panel,
-	sprite_dropdown_arrow : sUI_dropdown_arrow,
-	sprite_tab : sUI_tab,
-	sprite_tabgroup : sUI_tabgroup,
-	//Colors
-	color_font : c_white,
-	color_font_hint : c_gray,
-	color_main : #7BC0EA,
-	color_button : #319DDD,
-	color_hover : c_gray,
-	color_checkbox : #319DDD,
-	color_checkbox_pin : c_white,
-	color_progress_bar : #319DDD,
-	color_progress_bar_value : #45C952,
-	color_textbox : #319DDD,
-	color_scroll_pin : #319DDD,
-	color_scroll_slider_back : c_gray,
-	color_dropdown : #319DDD,
-	color_dropdown_arrow : merge_colour(c_white, c_black, 0.5),
-	color_tooltip : c_white,
-	//Sounds
-	sound_click : sndBasicClick,
-	//Settings
-	default_min_width : 48,
-	default_min_height : 48,
-	padding : 24,
-	checkbox_pin_margin : 0,
-	scroll_step : 32,
-	render_region_offset : {left : 0, right : 0, top : 1, bottom : 3},
-	textbox_cursor : "|",
-	textbox_password : "•"
-                                                                    }; // TEMP: Just for fix stupid feather >_<
+demo2_style = new LuiStyle()
+	.setMinSize(48, 48)
+	.setPadding(24)
+	.setRenderRegionOffset([0,0,1,3])
+	.setFonts(fntDemo2, fntDemo2, fDebug)
+	.setSprites(sPanelDemo2, ,  sBtnDemo2)
+	.setSpriteProgressBar(sBarBackDemo2, sBarValueDemo2)
+	.setSpriteSliderKnob(sBarBackDemo2)
+	.setSpriteCheckbox(sCheckboxDemo2, sCrossDemo2)
+	.setColors(#7BC0EA, , #319DDD, , #45C952, c_white, c_gray, c_gray)
+	.setSounds(sndBasicClick);
 
 
 // Create the main ui container
