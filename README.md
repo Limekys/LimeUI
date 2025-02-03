@@ -25,13 +25,14 @@ _*Right now the system is in a very early stage of development and with each upd
 - Touch support
 - Tooltips
 - Separated logic and render
+- Chain functions
 
 ### In development:
 - Flexpanels implementation (already in source code)
+- ProgressRing (already in source code)
 - RadioButton
 - TreeView
 - ColorPicker
-- ProgressRing
 - Draggable windows
 - VideoPlayer
 - Keyboard controls binding
