@@ -29,6 +29,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		self.value = _calcValue(self.value);
 	}
 	
+	///@ignore
 	static _calcValue = function(value) {
 		var _new_value = 0;
 		if self.rounding > 0 {
@@ -39,6 +40,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		return clamp(_new_value, self.value_min, self.value_max);
 	}
 	
+	//???// inherit grom LuiProgressBar ?
 	static setRounding = function(rounding) {
 		self.rounding = rounding;
 		return self;

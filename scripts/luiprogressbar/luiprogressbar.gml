@@ -24,6 +24,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.rounding = rounding;
 	self.show_value = show_value;
 	
+	///@ignore
 	static _calcValue = function(value) {
 		if self.rounding > 0 {
 			return round(value / (self.rounding)) * (self.rounding);

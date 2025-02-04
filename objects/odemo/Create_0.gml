@@ -303,8 +303,8 @@ my_panel_3.addContent([
 	//numb++;
 	//my_ui.getElement("firstScrollPanel").addContent([
 		//choose(
-			//new LuiButton(, , , , , string(numb)), 
-			//new LuiSprite(, , , , , sLogoDemo, , make_color_hsv(irandom(255), 255, 255), , choose(true, false)),
+			//new LuiButton(, , , irandom_range(32, 64), , string(numb)), 
+			//new LuiSprite(, , , irandom_range(32, 64), , sLogoDemo, , make_color_hsv(irandom(255), 255, 255), , choose(true, false)),
 			//new LuiSlider(, , , , , 0, 100, numb, 1),
 			//new LuiTextbox(, , , , , choose("", "aboba", string(numb)), choose("", "aboba", string(numb))),
 		//)

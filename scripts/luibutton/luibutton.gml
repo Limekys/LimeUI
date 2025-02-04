@@ -36,7 +36,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	///@func setColor(_button_color)
 	///@arg _button_color
-	self.setColor = function(_button_color) {
+	static setColor = function(_button_color) {
 		self.button_color = _button_color;
 		return self;
 	}
@@ -46,7 +46,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	///@arg {real} _angle
 	///@arg {constant.color} _color
 	///@arg {real} _alpha
-	self.setIcon = function(_sprite, _scale = 1, _angle = 0, _color = c_white, _alpha = 1) {
+	static setIcon = function(_sprite, _scale = 1, _angle = 0, _color = c_white, _alpha = 1) {
 		self.icon.sprite = _sprite;
 		self.icon.scale = _scale;
 		self.icon.angle = _angle;

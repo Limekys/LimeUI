@@ -39,6 +39,7 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		return self
 	}
 	
+	///@ignore
 	static _calcSpriteSize = function() {
 		self.sprite_real_width = sprite_get_width(self.sprite);
 		self.sprite_real_height = sprite_get_height(self.sprite);

@@ -65,14 +65,14 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	///@desc Add LuiTab's
-	self.addTabs = function(_tabs) {
+	static addTabs = function(_tabs) {
         self.tabs = _tabs;
 		if !is_undefined(self.main_ui) self._initTabs();
         return self;
     }
 	
 	///@desc Deactivate all tabs
-	self.tabDeactivateAll = function() {
+	static tabDeactivateAll = function() {
 		var _tab_count = array_length(self.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
 		    //Get tab
@@ -83,7 +83,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	///@desc Removes tab (WIP)
-    self.removeTab = function(index) {
+    static removeTab = function(index) {
         if (index >= 0 && index < array_length(self.tabs)) {
             array_delete(self.tabs, index, 1);
         }
@@ -137,6 +137,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		return self.container;
 	}
 	
+	///@ignore
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
 			self.tab_container = new LuiContainer(0, 0, , , $"_tab_container_{self.element_id}").setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
@@ -145,13 +146,13 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	}
 	
 	///@desc Activate current tab
-	self.tabActivate = function() {
+	static tabActivate = function() {
 		self.is_active = true;
 		self.tab_container.setVisible(true).setFlexDisplay(flexpanel_display.flex);
 	}
 	
 	///@desc Deactivate current tab
-	self.tabDeactivate = function() {
+	static tabDeactivate = function() {
 		self.is_active = false;
 		self.tab_container.setVisible(false).setFlexDisplay(flexpanel_display.none);
 	}

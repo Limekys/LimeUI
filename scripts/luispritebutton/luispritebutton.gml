@@ -34,7 +34,7 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.is_pressed = false;
 	
 	///@desc Set blend color for sprite
-	self.setColorBlend = function(color_blend) {
+	static setColorBlend = function(color_blend) {
 		self.color_blend = color_blend;
 	}
 	
