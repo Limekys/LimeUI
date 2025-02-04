@@ -71,7 +71,7 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create TabGroup with absolute position on the screen
-tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 46).setPositionType(flexpanel_position_type.absolute);
+tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 48).setPositionType(flexpanel_position_type.absolute);
 
 // Add panels to main ui container
 my_ui.addContent([
@@ -82,10 +82,10 @@ my_ui.addContent([
 ]);
 
 // Create tabs for tabGroup
-tab_panels = new LuiTab("tabPanels", "Panels").setIcon(sIconMenu, 0.5);
-tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 0.5);
-tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 0.5);
-tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 0.5);
+tab_panels = new LuiTab("tabPanels", "Home").setIcon(sIconHome, 1);
+tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 1);
+tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 1);
+tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 1);
 
 // Add tabs to tabgroup
 tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
