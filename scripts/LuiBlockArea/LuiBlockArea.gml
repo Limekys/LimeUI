@@ -9,10 +9,6 @@ function LuiBlockArea(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 	self.color = c_black;
 	self.alpha = 0.5;
 	
-	self.onCreate = function() {
-		self.setPositionType(flexpanel_position_type.absolute);
-	}
-	
 	self.draw = function() {
 		draw_set_alpha(self.alpha);
 		draw_set_color(self.color);

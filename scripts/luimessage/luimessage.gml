@@ -7,7 +7,7 @@ function showLuiMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "", butt
 	// Extra string for message elements
 	var _extra = md5_string_utf8(text);
 	// Black block area
-	var _block_area = new LuiBlockArea(0, 0, display_get_gui_width(), display_get_gui_height(), "_lui_block_area_" + _extra).centerContent();
+	var _block_area = new LuiBlockArea(0, 0, display_get_gui_width(), display_get_gui_height(), "_lui_block_area_" + _extra).centerContent().setPositionType(flexpanel_position_type.absolute);
 	// Pop up message panel
 	var _calc_width = width;
 	if _calc_width == LUI_AUTO {
