@@ -20,7 +20,7 @@ function showLuiMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "", butt
 	var _txt = new LuiText(, , , , "_lui_popup_text" + _extra, text).setTextHalign(fa_center);
 	// Button
 	var _btn = new LuiButton(, , , , "_lui_popup_button" + _extra, button_text, function() {
-		self.parent.parent.destroy();
+		self.parent.parent.parent.destroy();
 	});
 	ui.addContent([
 		_block_area.addContent([
@@ -28,7 +28,9 @@ function showLuiMessage(ui, width = LUI_AUTO, height = LUI_AUTO, text = "", butt
 				_container.addContent([
 					_txt
 				]),
-				_btn
+				new LuiFlexColumn().setFlexGrow(1).setFlexJustifyContent(flexpanel_justify.flex_end).addContent([
+					_btn
+				])
 			])
 		])
 	]);
