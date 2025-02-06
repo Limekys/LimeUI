@@ -1,6 +1,5 @@
 ///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
 function LuiBase() constructor {
-	if !variable_global_exists("lui_debug_grid") variable_global_set("lui_debug_grid", false);
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	if !variable_global_exists("lui_z_index") variable_global_set("lui_z_index", 0);
 	
@@ -55,9 +54,6 @@ function LuiBase() constructor {
 	self.render_content_enabled = true;
 	self.delayed_content = undefined;
 	self.need_to_update_content = false;
-	self.topmost_hovered_element = undefined;
-	self.element_in_focus = undefined;
-	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
@@ -714,7 +710,7 @@ function LuiBase() constructor {
 		if !variable_struct_exists(self.main_ui.element_names, self.name) {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: This element name {self.name} already exists! A new name will be given automatically");
+			if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
 			var _new_name = self.name + "_" + string(self.element_id) + "_" + md5_string_utf8(self.name + string(self.element_id));
 			variable_struct_set(self.main_ui.element_names, _new_name, self);
 			self.name = _new_name;
@@ -726,7 +722,7 @@ function LuiBase() constructor {
 			if variable_struct_exists(self.main_ui.element_names, self.name) {
 				variable_struct_remove(self.main_ui.element_names, self.name);
 			} else {
-				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find name {self.name}!");
+				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find name \"{self.name}\"!");
 			}
 		}
 	}
@@ -742,7 +738,7 @@ function LuiBase() constructor {
 				self.name = _string;
 				self._registerElementName();
 			} else {
-				if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: This element name {_string} already exists! Please give another name!");
+				if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{_string}\" already exists! Please give another name!");
 			}
 		}
 		return self;
@@ -1457,9 +1453,8 @@ function LuiBase() constructor {
 			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
 			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
 			"v: " + string(self.value) + "\n" +
-			"hl: " + string(self.halign) + " vl: " + string(self.valign) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
-			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + " / " + (is_undefined(self.parent_relative) ? "undefined" : self.parent_relative.name) + "\n" +
+			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
 			"z: " + string(self.z));
 		}
 		draw_set_color(_prev_color);
@@ -1585,8 +1580,8 @@ function LuiBase() constructor {
 			}
 		}
 		if self == main_ui.element_in_focus {
-			main_ui.element_in_focus.removeFocus();
-			main_ui.element_in_focus = undefined;
+			self.main_ui.element_in_focus.removeFocus();
+			self.main_ui.element_in_focus = undefined;
 		}
 		self.onDestroy();
 		self._deleteElementName();

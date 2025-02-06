@@ -1,8 +1,9 @@
 //Info
-#macro LIMEUI_VERSION "2025.02.03"
+#macro LIMEUI_VERSION "2025.02.06"
 
 //Globals
 global.lui_debug_mode =	0;						// Enable/Disable debug mode
+global.lui_debug_render_grid = false;			// Enable/Disable render of debug grid
 
 //System (do not change!)
 #macro LUI_AUTO							-1		// Auto position/size of an element

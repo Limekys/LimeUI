@@ -97,6 +97,7 @@ tab_group_min_y = 540;
 tab_group_max_y = room_height - tab_group.height;
 tab_group_target_x = tab_group_min_x;
 tab_group_target_y = 590;
+tab_group.setPosition(tab_group_target_x, tab_group_target_y);
 
 // Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);

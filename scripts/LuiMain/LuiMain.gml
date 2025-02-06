@@ -10,8 +10,11 @@ function LuiMain() : LuiBase() constructor {
 	self.pre_draw_list = [];
 	self.element_names = {};
 	self.main_ui = self;
+	self.element_in_focus = undefined;
+	self.topmost_hovered_element = undefined;
+	self.display_focused_element = true;
 	
-	// Flex
+	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
 	flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
 	flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
@@ -19,7 +22,7 @@ function LuiMain() : LuiBase() constructor {
 	_data.element = self;
 	self.needs_flex_update = true;
 	
-	// Screen grid
+	// Init Screen grid
 	self._screen_grid = {};
 	for (var _x = 0, _width = ceil(display_get_gui_width() / LUI_GRID_SIZE); _x <= _width; ++_x) {
 		for (var _y = 0, _height = ceil(display_get_gui_height() / LUI_GRID_SIZE); _y <= _height; ++_y) {
@@ -176,18 +179,18 @@ function LuiMain() : LuiBase() constructor {
 		// Draw tooltip text
 		if !is_undefined(_element) {
 			if _element.tooltip != "" {
-				var _padding = 16; //Screen border indentation
-				var _padding_text = 8; //Text border indentation inside tooltip box
-				draw_set_font(_element.style.font_default);
+				var _padding = self.style.padding; //Screen border indentation
+				var _padding_text = self.style.padding; //Text border indentation inside tooltip box
+				draw_set_font(self.style.font_default);
 				var _width = string_width(_element.tooltip) + _padding_text*2;
 				var _height = string_height(_element.tooltip) + _padding_text*2;
 				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
 				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
-				// Draw sprite/rectangle
+				// Draw tooltip sprite back
 				if !is_undefined(self.style.sprite_tooltip) {
 					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip, 1);
 				}
-				// Draw border sprite/rectangle
+				// Draw tooltip sprite border
 				if !is_undefined(self.style.sprite_tooltip_border) {
 					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip_border, 1);
 				}
@@ -200,7 +203,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		// Draw debug screen grid
-		if global.lui_debug_grid {
+		if global.lui_debug_render_grid {
 			self._drawScreenGrid();
 		}
 		
@@ -223,9 +226,8 @@ function LuiMain() : LuiBase() constructor {
 			"x: " + string(_element.pos_x) + (_element.auto_x ? " (auto)" : "") + " y: " + string(_element.pos_y) + (_element.auto_y ? " (auto)" : "") + "\n" +
 			"w: " + string(_element.width) + (_element.auto_width ? " (auto)" : "") + " h: " + string(_element.height) + (_element.auto_height ? " (auto)" : "") + "\n" +
 			"v: " + string(_element.value) + "\n" +
-			"hl: " + string(_element.halign) + " vl: " + string(_element.valign) + "\n" +
 			"content: " + string(array_length(_element.content)) + "/" + string(array_length(_element.delayed_content)) + "\n" +
-			"parent: " + (is_undefined(_element.parent) ? "undefined" : _element.parent.name) + " / " + (is_undefined(_element.parent_relative) ? "undefined" : _element.parent_relative.name) + "\n" +
+			"parent: " + (is_undefined(_element.parent) ? "undefined" : _element.parent.name) + "\n" +
 			"z: " + string(_element.z));
 			draw_set_color(_prev_color);
 			draw_set_alpha(_prev_alpha);
@@ -234,13 +236,15 @@ function LuiMain() : LuiBase() constructor {
 	
 	// Cleanup
 	self.onDestroy = function() {
-		self.pre_draw_list = -1;
 		if surface_exists(self.ui_screen_surface) {
 			surface_free(self.ui_screen_surface);
 		}
-		//delete self._screen_grid;
-		//delete self.element_names;
+		self.pre_draw_list = -1;
+		self.element_in_focus = undefined;
+		delete self._screen_grid;
+		delete self.element_names;
 		global.lui_element_count = 0;
+		global.lui_z_index = 0;
 	}
 	
 	///@desc Get element by name
