@@ -12,7 +12,7 @@ function LuiMain() : LuiBase() constructor {
 	self.main_ui = self;
 	self.element_in_focus = undefined;
 	self.topmost_hovered_element = undefined;
-	self.display_focused_element = true;
+	self.display_focused_element = false;
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});

@@ -793,10 +793,6 @@ function LuiBase() constructor {
 					self.grid_previous_x2 = -1;
 					self.grid_previous_y2 = -1; //???// 
 				}
-				//Set visible to all childs
-				array_foreach(self.content, function(_elm) {
-					_elm.setVisible(self.visible);
-				});
 				//Call event onShow / onHide
 				if _visible {
 					self.onShow();
@@ -1290,6 +1286,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc getTopmostElementOld
+	///@deprecated
 	static getTopmostElementOld = function(_mouse_x, _mouse_y) {
 		var topmost_element = undefined;
 		for (var i = array_length(self.content) - 1; i >= 0; --i) {
