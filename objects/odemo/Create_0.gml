@@ -71,7 +71,7 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create TabGroup with absolute position on the screen
-tab_group = new LuiTabGroup( , , 550, 332, "LuiTabGroup", 48).setPositionType(flexpanel_position_type.absolute);
+tab_group = new LuiTabGroup( , , 550, 350, "LuiTabGroup", 48).setPositionType(flexpanel_position_type.absolute);
 
 // Add panels to main ui container
 my_ui.addContent([
@@ -265,34 +265,41 @@ my_panel_3.addContent([
 
 		// Create scroll panel with different elements
 		tab_panels.addContent([
-			new LuiScrollPanel(, , , , "firstScrollPanel").addContent([
-				new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
-				new LuiTextbox(, , , , , , "textbox in scroll panel"),
-				new LuiPanel( , , , , "Panel in scroll panel").addContent([
-					new LuiText(, , , , , "Nested panel x1"),
-					new LuiButton( , , , , , "Nested button"),
+			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
+			new LuiScrollPanel().addContent([
+				new LuiTextbox(, , , , , , "Type in me!"),
+				new LuiPanel().addContent([
+					new LuiText(, , , , , "Nested panel 1.1"),
 					new LuiFlexRow().addContent([
 						new LuiCheckbox( , , 32, , , false, function() {
 							showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 						}),
 						new LuiText(, , , , , "Check me!"),
 					]),
-					new LuiPanel(, , , , "Nested panel x2").addContent([
-						new LuiText(, , , , , "Nested panel x2"),
+					new LuiPanel().addContent([
+						new LuiText(, , , , , "Nested panel 2.1"),
 						new LuiFlexRow().addContent([
 							new LuiSlider( , , , , , 0, 100, 25, 1),
-							new LuiText(, , , , "txtSlideMe", "Slide me!"),
+							new LuiText(, , , , , "Slide me!"),
 						]),
-						new LuiPanel(, , , , "Nested panel x3").addContent([
+						new LuiPanel().addContent([
+							new LuiText(, , , , , "Nested panel 3.1"),
 							new LuiText(, , , , , "Updateble text with binding variable below").setTooltip("Try to change login in first panel"),
 							new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
 						])
+					]),
+					new LuiPanel().addContent([
+						new LuiText(, , , , , "Nested panel 2.2"),
+						new LuiButton( , , , , , "Press me!"),
+						new LuiPanel().addContent([
+							new LuiText(, , , , , "Nested panel 3.2"),
+							new LuiFlexRow().addContent([
+								new LuiSpriteButton( , , 56, 56, , sLogoDemo, 0, c_white, 1, true, changeButtonColor),
+								new LuiText(, , , , , "Press me!"),
+							])
+						])
 					])
-				]),
-				new LuiSprite( , , , 100, , sCarFlip),
-				new LuiSprite( , , , 256, , sHamburger),
-				new LuiSprite( , , , 200, , sCar),
-				new LuiSprite( , , , 128, , sHamburger, , , , false),
+				])
 			])
 		]);
 		
@@ -381,8 +388,8 @@ my_panel_3.addContent([
 	
 		sprite_car_1 = new LuiSprite( , , , , , sCar);
 		sprite_car_2 = new LuiSprite( , , , , , sCar, , , , false);
-		sprite_car_3 = new LuiSprite( , , , , , sCarFlip);
-		sprite_car_4 = new LuiSprite( , , , , , sCarFlip, , , , false);
+		sprite_car_3 = new LuiSprite( , , , , , sHamburger);
+		sprite_car_4 = new LuiSprite( , , , , , sHamburger, , , , false);
 		tab_sprites.addContent([
 			new LuiFlexRow( , , , 500).addContent([
 				sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4
