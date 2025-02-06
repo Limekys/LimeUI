@@ -608,7 +608,7 @@ function LuiBase() constructor {
 	///@desc Set flexpanel grow (default is 1)
 	///@arg {real} [_grow]
 	static setFlexGrow = function(_grow = 1) {
-		var _flex_node = self.getContainer().flex_node;
+		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_grow(_flex_node, _grow);
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;
@@ -617,7 +617,7 @@ function LuiBase() constructor {
 	///@desc Set flexpanel shrink type (default is 1)
 	///@arg {real} [_shrink]
 	static setFlexShrink = function(_shrink = 1) {
-		var _flex_node = self.getContainer().flex_node;
+		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_shrink(_flex_node, _shrink);
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 		return self;

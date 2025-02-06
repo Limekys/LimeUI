@@ -114,8 +114,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 		
 		//Text
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
+		if !is_undefined(self.style.font_buttons) {
+			draw_set_font(self.style.font_buttons);
 		}
 		if !self.deactivated {
 			draw_set_color(self.style.color_font);
