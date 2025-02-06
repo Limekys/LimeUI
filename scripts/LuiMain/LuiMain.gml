@@ -129,6 +129,14 @@ function LuiMain() : LuiBase() constructor {
 	// Render
 	self.base_render = method(self, render);
 	self.render = function() {
+		 
+		// Get previous alpha
+		var _prev_alpha = draw_get_alpha();
+		
+		// Set alpha before render
+		if LUI_FORCE_ALPHA_1 {
+			draw_set_alpha(1);
+		}
 		
 		// Pre draw events
 		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
@@ -144,6 +152,9 @@ function LuiMain() : LuiBase() constructor {
 		
 		// Update main ui surface
 		if self.update_ui_screen_surface {
+			// Set alpha 1 for drawing surface
+			draw_set_alpha(1);
+			
 			// Set ui surface
 			surface_set_target(self.ui_screen_surface);
 			draw_clear_alpha(c_black, 0);
@@ -156,12 +167,15 @@ function LuiMain() : LuiBase() constructor {
 			gpu_set_blendequation(bm_eq_add);
 			surface_reset_target();
 			self.update_ui_screen_surface = false;
+			
+			// Reset alpha
+			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 		}
 		
 		// Draw all to screen
 		if self.visible {
 			//Draw main ui surface
-			draw_surface_ext(self.ui_screen_surface, self.x, self.y, 1, 1, 0, c_white, 1);
+			draw_surface_ext(self.ui_screen_surface, self.x, self.y, 1, 1, 0, c_white, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 			//Draw other stuff
 			if self.display_focused_element {
 				if !is_undefined(self.element_in_focus) {
@@ -188,11 +202,11 @@ function LuiMain() : LuiBase() constructor {
 				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
 				// Draw tooltip sprite back
 				if !is_undefined(self.style.sprite_tooltip) {
-					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip, 1);
+					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
 				// Draw tooltip sprite border
 				if !is_undefined(self.style.sprite_tooltip_border) {
-					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip_border, 1);
+					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
 				// Draw text
 				draw_set_color(self.style.color_font);
@@ -217,7 +231,6 @@ function LuiMain() : LuiBase() constructor {
 			var _mouse_y = device_mouse_y_to_gui(0) + 24;
 			//Text
 			var _prev_color = draw_get_color();
-			var _prev_alpha = draw_get_alpha();
 			draw_set_alpha(1);
 			draw_set_color(c_white);
 			_luiDrawTextDebug(_mouse_x, _mouse_y, 
@@ -230,7 +243,7 @@ function LuiMain() : LuiBase() constructor {
 			"parent: " + (is_undefined(_element.parent) ? "undefined" : _element.parent.name) + "\n" +
 			"z: " + string(_element.z));
 			draw_set_color(_prev_color);
-			draw_set_alpha(_prev_alpha);
+			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 		}
 	}
 	
