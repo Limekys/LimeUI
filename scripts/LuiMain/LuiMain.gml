@@ -118,7 +118,7 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
-		// Update all elements from flexpanels data and Z depth
+		// Update all elements and Z depth from flexpanels data
 		if self.needs_flex_update {
 			self.needs_flex_update = false;
 			self.flexCalculateLayout();

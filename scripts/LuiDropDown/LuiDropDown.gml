@@ -35,7 +35,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
 		//Create dropdown panel
-		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, _height, "LuiDropDownPanel").setVisibilitySwitching(false);
+		self.dropdown_panel = new LuiDropdownPanel(0, 0, _width, , "LuiDropDownPanel").setVisibilitySwitching(false);
 		self.main_ui.addContent([self.dropdown_panel]);
 		self.dropdown_panel.setPositionType(flexpanel_position_type.absolute);
 	}
@@ -72,7 +72,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		return self;
     }
 	
-	///@desc Add items to dropwdown menu
+	///@desc Add items to dropwdown menu //???//
 	static addItems = function(_items) {
         self.items = _items;
         return self;
