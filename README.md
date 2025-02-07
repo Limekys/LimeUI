@@ -1,5 +1,5 @@
 # LimeUI
-Free UI system for Game Maker games
+Free UI system for Game Maker games with flexpanels implementation
 
 For documentaion check [wiki page](https://github.com/Limekys/LimeUI/wiki)
 
@@ -14,6 +14,7 @@ _*Right now the system is in a very early stage of development and with each upd
 - Text
 - Textbox
 - ProgressBar
+- ProgressRing
 - Slider
 - Sprite
 - SpriteButton
@@ -21,6 +22,7 @@ _*Right now the system is in a very early stage of development and with each upd
 - TabGroup
 
 ### Features:
+- Flexpanels implementation
 - Styles
 - Touch support
 - Tooltips
@@ -28,8 +30,6 @@ _*Right now the system is in a very early stage of development and with each upd
 - Chain functions
 
 ### In development:
-- Flexpanels implementation (already in source code)
-- ProgressRing (already in source code)
 - RadioButton
 - TreeView
 - ColorPicker
@@ -43,12 +43,12 @@ Game Maker runtime version
 2024.11.0.226+
 
 # Screenshots
-![2025_01_17_18_15_Runner_6MyWilpRGK](https://github.com/user-attachments/assets/71de4a67-57e9-4891-b797-b9a0914cd027)
-![2024_06_10_18_13_Runner_4aDms0PEf1](https://github.com/Limekys/LimeUI/assets/58959645/4dd2b6d6-d591-47cf-a0ab-a030b5569e92)
-![2024_06_10_18_15_Runner_tMxiRNI0m1](https://github.com/Limekys/LimeUI/assets/58959645/6e65210c-549b-4e5e-b1e4-2d7276fa8982)
-![2024_06_10_18_15_Runner_LLVwkZXFzE](https://github.com/Limekys/LimeUI/assets/58959645/a25923cb-c01d-4fb0-9f57-b0d27881d1e3)
-![2024_06_10_18_14_Runner_sactJTmW61](https://github.com/Limekys/LimeUI/assets/58959645/fb7308e7-850d-41df-a3d7-037f2fd45653)
-![2024_06_10_18_20_Runner_bvRNsYZ9rM](https://github.com/Limekys/LimeUI/assets/58959645/560d8d17-f088-4ded-99df-f6798940bc0b)
+![2025_02_07_17_41_Runner_0ZsNxyA2iH](https://github.com/user-attachments/assets/538272b0-d68a-4af2-868f-17cafc84b081)
+![image](https://github.com/user-attachments/assets/31688271-bdc6-42c5-aaee-a61aaae6e8f0)
+![image](https://github.com/user-attachments/assets/48bbbb5e-8bce-4e54-aaca-f19f82f90c92)
+![image](https://github.com/user-attachments/assets/86471427-477b-4b74-ac3a-577bf9afc488)
+![image](https://github.com/user-attachments/assets/1673b007-3378-4f4a-b00a-ff7cce3bc53f)
+![image](https://github.com/user-attachments/assets/dfa6ad8f-57f1-4537-b760-5d0ccdfa5d58)
 
 # Example of practical use:
 ![2024_06_05_18_46_Runner_CMb21IN1Zc](https://github.com/Limekys/LimeUI/assets/58959645/819f2999-4040-41a5-aa86-d43d8c5a2f58)
