@@ -51,5 +51,5 @@ Game Maker runtime version
 ![image](https://github.com/user-attachments/assets/dfa6ad8f-57f1-4537-b760-5d0ccdfa5d58)
 
 # Example of practical use:
-![2024_06_05_18_46_Runner_CMb21IN1Zc](https://github.com/Limekys/LimeUI/assets/58959645/819f2999-4040-41a5-aa86-d43d8c5a2f58)
+![image](https://github.com/user-attachments/assets/c256e7bd-989e-47b2-9d46-429707d086c0)
 ![2024_07_06_23_53_Runner_9kB1prHBDR](https://github.com/Limekys/LimeUI/assets/58959645/d160a519-a463-4198-8404-fe037fd558dc)
