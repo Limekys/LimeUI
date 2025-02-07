@@ -15,7 +15,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	setCallback(callback);
 	
 	self.is_pressed = false;
@@ -84,7 +84,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			var _blend_color = self.style.color_button;
 			if !is_undefined(self.button_color) _blend_color = self.button_color;
 			if !self.deactivated {
-				if self.mouseHover() {
+				if self.isMouseHovered() {
 					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
 						_blend_color = merge_colour(_blend_color, c_black, 0.5);

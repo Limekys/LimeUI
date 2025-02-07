@@ -303,18 +303,18 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	static setRenderRegionOffset = function(_render_region_offset = {left : 0, right : 0, top : 0, bottom : 0}) {
-		if is_struct(_render_region_offset) {
-			render_region_offset = _render_region_offset;
-		} else if is_array(_render_region_offset) {
-			if array_length(_render_region_offset) != 4 {
-				array_resize(_render_region_offset, 4);
+	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
+		if is_struct(_region) {
+			render_region_offset = _region;
+		} else if is_array(_region) {
+			if array_length(_region) != 4 {
+				array_resize(_region, 4);
 			}
 			render_region_offset = {
-				left : _render_region_offset[0],
-				right : _render_region_offset[1],
-				top : _render_region_offset[2],
-				bottom : _render_region_offset[3]
+				left : _region[0],
+				right : _region[1],
+				top : _region[2],
+				bottom : _region[3]
 			}
 		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
 		

@@ -11,10 +11,10 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 }
 
-///@desc An empty, invisible container with no padding on the sides for elements with ROW stacking
+///@desc An empty, invisible container with no padding on the sides for elements with row stacking
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -27,7 +27,7 @@ function LuiFlexRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	}
 }
 
-///@desc An empty, invisible container with no padding on the sides for elements with COLUMN stacking
+///@desc An empty, invisible container with no padding on the sides for elements with column stacking
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

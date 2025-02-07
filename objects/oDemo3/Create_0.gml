@@ -1,14 +1,50 @@
 my_style = new LuiStyle()
-	.setPadding(16)
-	.setFonts(fDemo, fDemo)
-	.setSprites(sUI_button, sUI_button)
-	.setSounds(sndBasicClick);
+	.setPadding(16)	// Padding for all elements is 16
+	.setFonts(fDemo, fDemo)	// Default font and font for interactive elements
+	.setSprites(sUI_button, sUI_button)	// The same sprite for panels and for elements
+	.setSounds(sndBasicClick); // Click sound
 
-game_ui = new LuiMain().setStyle(my_style);
+game_ui = new LuiMain().setStyle(my_style).centerContent();
 
-hello_button = new LuiButton( , , , , "btnHelloWorld", "Hello world!");
-second_button = new LuiButton( , , , , "btn2", "Demo 1", function() { room_goto(rDemo) });
-third_button = new LuiButton( , , , , "btn3", "Demo 2", function() { room_goto(rDemo2) });
+hello_button = new LuiButton( , , 128, 32, "btnHelloWorld", "Hello world!");
+second_button = new LuiButton( , , 128, 32, "btn2", "Second button", function() { room_goto(rDemo) });
+third_button = new LuiButton( , , 128, 32, "btn3", "Third button", function() { room_goto(rDemo2) });
+
+game_ui.addContent([
+		hello_button
+]);
+
+//game_ui.addContent(hello_button);
+//game_ui.addContent(second_button);
+//game_ui.addContent(third_button);
+
+//game_ui.addContent([
+	//new LuiFlexRow().addContent([
+		//hello_button, second_button, third_button, [0.3, 0.6, 0.1]
+	//])
+//]);
+
+//game_ui.addContent(hello_button);
+
+//game_ui.addContent([
+	//hello_button,
+	//second_button,
+	//third_button
+//]);
+
+/*
+game_ui.addContent([
+	hello_button,
+	new LuiPanel().addContent([
+		second_button,
+		new LuiPanel().addContent([
+			third_button
+		])
+	])
+]);
+*/
+ 
+/*
 game_ui.addContent([
 	new LuiText(, , , , , "ABOBA", true).setTextHalign(fa_center),
 	hello_button, 
@@ -52,3 +88,4 @@ tab2.addContent([
 tab3.addContent([
 	new LuiText(, , , , , "Extra 33", true).setTextHalign(fa_center),
 ]);
+*/

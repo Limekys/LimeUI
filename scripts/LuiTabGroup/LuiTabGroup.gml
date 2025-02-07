@@ -12,7 +12,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	
 	self.is_pressed = false;
 	self.tabs = undefined;
@@ -170,7 +170,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 			var _blend_color = self.style.color_main;
 			if !self.is_active {
 				_blend_color = merge_colour(_blend_color, c_black, 0.25);
-				if self.mouseHover() {
+				if self.isMouseHovered() {
 					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
 						_blend_color = merge_colour(_blend_color, c_black, 0.5);

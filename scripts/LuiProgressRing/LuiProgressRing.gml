@@ -1,4 +1,4 @@
-///@desc A progress bar/loading/filling anything.
+///@desc A progress ring for display loading/filling anything
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -16,7 +16,7 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	
 	self.value = value;
 	self.value_min = min(value_min, value_max);

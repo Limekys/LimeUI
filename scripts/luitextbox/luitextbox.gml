@@ -17,7 +17,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	setCallback(callback);
 	
 	self.hint = hint;
@@ -52,7 +52,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		if !is_undefined(self.style.sprite_textbox) {
 			var _blend_color = merge_color(self.style.color_textbox, c_black, 0.1);
 			if !self.deactivated {
-				if !self.has_focus && self.mouseHover() {
+				if !self.has_focus && self.isMouseHovered() {
 					_blend_color = merge_colour(self.style.color_textbox, self.style.color_hover, 0.5);
 				}
 			} else {

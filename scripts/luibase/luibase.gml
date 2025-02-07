@@ -60,10 +60,11 @@ function LuiBase() constructor {
 	self.binding_variable = -1;
 	self.is_adding = false;
 	self.draw_content_in_cutted_region = false;
-	self.container = self; //Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...).
+	self.container = self; //Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	self.render_region_offset = {left : 0, right : 0, top : 0, bottom : 0};
+	self._grid_location = []; //Screen grid to optimize the search for items under the mouse cursor
 	
-	//Custom functions for elements
+	// Custom methods for element
 	
 	//Called after this item has been added somewhere
 	self.onCreate = function() {
@@ -165,213 +166,95 @@ function LuiBase() constructor {
 		//Custom for each element
 	}
 	
-	//Screen grid to optimize the search for items under the mouse cursor
-	self._grid_location = [];
+	// GETTERS
 	
-	///@ignore
-	static _gridAdd = function() {
-		if (!self.inside_parent || !self.visible) {
-			return false;
-		}
-		
-		var _grid_size = LUI_GRID_SIZE;
-		
-		var _elm_x = floor(self.x / _grid_size);
-		var _elm_y = floor(self.y / _grid_size);
-		var _width = ceil(self.width / _grid_size);
-		var _height = ceil(self.height / _grid_size);
-		
-		var abs_x_end = self.x + self.width;
-		var abs_y_end = self.y + self.height;
-		
-		for (var _x = _elm_x; _x <= _elm_x + _width; ++_x) {
-			for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
-				var grid_x_start = _x * _grid_size;
-				var grid_y_start = _y * _grid_size;
-				var grid_x_end = grid_x_start + _grid_size;
-				var grid_y_end = grid_y_start + _grid_size;
-				
-				var _inside = rectangle_in_rectangle(
-					self.x, self.y, abs_x_end, abs_y_end,
-					grid_x_start, grid_y_start, grid_x_end, grid_y_end
-				);
-				
-				if (_inside == 0) continue;
-				
-				var _key = string(_x) + "_" + string(_y);
-				
-				if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
-					var _array = self.main_ui._screen_grid[$ _key];
-					array_push(_array, self);
-					array_push(self._grid_location, _key);
-				}
-			}
-		}
-	};
-	
-	///@ignore
-	static _gridDelete = function() {
-		
-		var _grid_size = LUI_GRID_SIZE;
-		
-		var _elm_x = floor(self.x / _grid_size);
-		var _elm_y = floor(self.y / _grid_size);
-		var _width = ceil(self.width / _grid_size);
-		var _height = ceil(self.height / _grid_size);
-		
-		var _grid_location_length = array_length(self._grid_location);
-		for (var i = _grid_location_length - 1; i >= 0; --i) {
-			var _key = self._grid_location[i];
-			
-			if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
-				var _array = self.main_ui._screen_grid[$ _key];
-				var _array_length = array_length(_array);
-				for (var j = _array_length-1; j >= 0; --j) {
-					if (_array[j].element_id == self.element_id) {
-						array_delete(_array, j, 1);
-						break;
-					}
-				}
-			}
-		}
-		
-		self._grid_location = [];
-	};
-	
-	///@ignore
-	static _gridUpdate = function() {
-		self._gridDelete();
-		self._gridAdd();
+	///@desc Get value of this element
+	static get = function() {
+		return self.value;
 	}
 	
-	///@ignore
-	static _gridCleanUp = function() {
-		self._gridDelete();
-		self._grid_location = -1;
+	///@desc Returns the lowest point of the elements by height
+	///@deprecated
+	static getLowerPoint = function() {
+		var _lower_point = 0;
+		for (var i = 0, n = array_length(content); i < n; ++i) {
+		    var _elm = content[i];
+			_lower_point = max(_lower_point, _elm.pos_y + _elm.height);
+		}
+		return _lower_point;
 	}
 	
-	///@ignore
-	static _drawScreenGrid = function() {
-		draw_set_alpha(1);
-		draw_set_color(c_red);
-		draw_set_halign(fa_left);
-		draw_set_valign(fa_top);
-		draw_set_font(fDebug);
-		
-		var grid_size = LUI_GRID_SIZE;
-		var gui_width = display_get_gui_width();
-		var gui_height = display_get_gui_height();
-		
-		var _width = ceil(gui_width / grid_size);
-		var _height = ceil(gui_height / grid_size);
-		
-		for (var _x = 0; _x <= _width; ++_x) {
-			var x_pos = _x * grid_size;
-			draw_line(x_pos, 0, x_pos, gui_height);
-			
-			for (var _y = 0; _y <= _height; ++_y) {
-				var y_pos = _y * grid_size;
-				
-				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
-				
-				var _key = string(_x) + "_" + string(_y);
-				var _array = self.main_ui._screen_grid[$ _key];
-				draw_text(x_pos + 2, y_pos + 1, string(_key));
-				
-				for (var i = 0, n = array_length(_array); i < n; ++i) {
-					//draw_text_ext(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, -1, LUI_GRID_SIZE);
-					//_luiDrawTextCutoff(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, LUI_GRID_SIZE);
-					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
-					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
-				}
-				draw_set_color(c_red);
+	///@desc get style
+	static getStyle = function() {
+		if (!is_undefined(self.style)) {
+			return self.style;
+		}
+		if (!is_undefined(self.parent)) {
+			var _style = self.parent.getStyle();
+			if (!is_undefined(_style)) {
+				return _style;
 			}
 		}
+		return undefined;
+	}
+	
+	///@desc Get first element in content array
+	static getFirst = function() {
+		return array_first(self.content);
 	};
 	
-	// Flex system
-	self._init_flex = function() {
-		// Flex node (default for all elements)
-		self.flex_node = flexpanel_create_node({
-			name: self.name, 
-			data: {}
+	///@desc Get last element in content array
+	static getLast = function() {
+		return array_last(self.content);
+	};
+	
+	///@desc Get container element
+	self.getContainer = function() {
+		return self.container;
+	}
+	
+	///@desc Returns topmost element on UI
+	static getTopmostElement = function(_mouse_x, _mouse_y) {
+		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
+		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
+			return _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents() && _elm.visible && !_elm.ignore_mouse;
 		});
-		
-		// Position X
-		if !self.auto_x {
-			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.pos_x, flexpanel_unit.point);
+		array_sort(_array, function(_elm1, _elm2) {
+			return _elm1.z - _elm2.z;
+		});
+		return array_last(_array);
+	}
+	
+	// SETTERS
+	
+	///@desc Set value
+	static set = function(_value) {
+		if self.value != _value {
+			self.value = _value;
+			if self.binding_variable != -1 {
+				self.updateToBinding();
+			}
+			self.onValueUpdate();
+			self.updateMainUiSurface();
 		}
-		
-		// Position Y
-		if !self.auto_y {
-			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.pos_y, flexpanel_unit.point);
-		}
-		
-		// Width
-		if !self.auto_width {
-			flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
+		return self;
+	}
+	
+	///@desc Set element unique identificator name (Used for get element from main ui container via getElement())
+	///@return {Struct.LuiBase}
+	static setName = function(_string) {
+		if is_undefined(self.main_ui) || !variable_struct_exists(self.main_ui, "element_names") {
+			self.name = _string;
 		} else {
-			flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
-			flexpanel_node_style_set_flex_shrink(self.flex_node, 1);
+			if !variable_struct_exists(self.main_ui.element_names, _string) {
+				self._deleteElementName();
+				self.name = _string;
+				self._registerElementName();
+			} else {
+				if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{_string}\" already exists! Please give another name!");
+			}
 		}
-		
-		// Height
-		if !self.auto_height {
-			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
-		}
-		
-		var _data = flexpanel_node_get_data(self.flex_node);
-		_data.element = self;
-	}
-	
-	///@desc Calculate all sizes and positions of elements
-	static flexCalculateLayout = function() {
-		if !is_undefined(self.main_ui) {
-			flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-			return true;
-		}
-		return false;
-	}
-	
-	///@desc Update position, size and z depth for specified flex node
-	static flexUpdate = function(_node) {
-		
-		// Get layout data
-		var _pos = flexpanel_node_layout_get_position(_node, false);
-		
-		// Update element
-		var _data = flexpanel_node_get_data(_node);
-		var _element = _data.element;
-		_element.x = _pos.left;
-		_element.y = _pos.top;
-		_element.pos_x = _pos.left;
-		_element.pos_y = _pos.top;
-		_element.width = _pos.width;
-		_element.height = _pos.height;
-		if (_element.start_x == -1) {
-			_element.start_x = _element.pos_x;
-		}
-		if (_element.start_y == -1) {
-			_element.start_y = _element.pos_y;
-		}
-		_element.z = global.lui_z_index++;
-		
-		// Call for children (recursive)
-		var _children_count = flexpanel_node_get_num_children(_node);
-		for (var i = 0; i < _children_count; i++) {
-			var _child = flexpanel_node_get_child(_node, i);
-			_element.flexUpdate(_child);
-		}
-	}
-	
-	///@desc Update position, size and z depth of all elements with depth reset
-	static flexUpdateAll = function() {
-		if !is_undefined(main_ui) {
-			// Reset z depth index
-			global.lui_z_index = 0;
-			// Update all elements
-			flexUpdate(self.main_ui.flex_node);
-		}
+		return self;
 	}
 	
 	///@desc Set flexpanel(element) position type (default is flexpanel_position_type.relative)
@@ -659,13 +542,6 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Centered content in flexpanel(element). Call setFlexJustifyContent and setFlexAlignItems to center
-	static centerContent = function() {
-		self.setFlexJustifyContent(flexpanel_justify.center)
-			.setFlexAlignItems(flexpanel_align.center);
-		return self;
-	}
-	
 	///@desc Set flexpanel display(flex) or not(none) (default is flexpanel_display.flex)
 	///@arg {constant.flexpanel_display} [_flex_display]
 	static setFlexDisplay = function(_flex_display = flexpanel_display.flex) {
@@ -675,76 +551,12 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Init element variables
-	static initElement = function() {
-		if self.pos_x == LUI_AUTO {
-			self.auto_x = true;
-			self.pos_x = 0;
-		}
-		if self.pos_y == LUI_AUTO {
-			self.auto_y = true;
-			self.pos_y = 0;
-		}
-		if self.width == LUI_AUTO {
-			self.auto_width = true;
-			self.width = self.min_width;
-		}
-		if self.height == LUI_AUTO {
-			self.auto_height = true;
-			self.height = self.min_height;
-		}
-		self._init_flex();
-	}
-	
+	///@desc Set container, Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	static setContainer = function(_container) {
 		self.container = _container;
-	}
-	
-	self.getContainer = function() {
-		return self.container;
-	}
-	
-	//Element names registration
-	///@ignore
-	static _registerElementName = function() {
-		if !variable_struct_exists(self.main_ui.element_names, self.name) {
-			variable_struct_set(self.main_ui.element_names, self.name, self);
-		} else {
-			if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
-			var _new_name = self.name + "_" + string(self.element_id) + "_" + md5_string_utf8(self.name + string(self.element_id));
-			variable_struct_set(self.main_ui.element_names, _new_name, self);
-			self.name = _new_name;
-		}
-	}
-	///@ignore
-	static _deleteElementName = function() {
-		if self != self.main_ui {
-			if variable_struct_exists(self.main_ui.element_names, self.name) {
-				variable_struct_remove(self.main_ui.element_names, self.name);
-			} else {
-				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find name \"{self.name}\"!");
-			}
-		}
-	}
-	
-	///@desc Set name of this element (by which the data of this element can be retrieved in the future)
-	///@return {Struct.LuiBase}
-	static setName = function(_string) {
-		if is_undefined(self.main_ui) || !variable_struct_exists(self.main_ui, "element_names") {
-			self.name = _string;
-		} else {
-			if !variable_struct_exists(self.main_ui.element_names, _string) {
-				self._deleteElementName();
-				self.name = _string;
-				self._registerElementName();
-			} else {
-				if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{_string}\" already exists! Please give another name!");
-			}
-		}
 		return self;
 	}
 	
-	//Focusing
 	///@desc setFocus
 	///@return {Struct.LuiBase}
 	static setFocus = function() {
@@ -752,34 +564,79 @@ function LuiBase() constructor {
 		self.onFocusSet();
 		return self;
 	}
-	///@desc removeFocus
-	///@return {Struct.LuiBase}
-	static removeFocus = function() {
-		self.has_focus = false;
-		self.onFocusRemove();
+	
+	///@desc Set popup text to element when mouse on it
+	static setTooltip = function(_string) {
+		self.tooltip = _string;
 		return self;
 	}
 	
-	//Functions
-	///@desc activate
-	///@return {Struct.LuiBase}
-	static activate = function() {
-		self.deactivated = false;
-		array_foreach(self.content, function(_elm) {
-			_elm.activate();
-		});
+	///@desc Binds the object/struct variable to the element value
+	static setBinding = function(_source, _variable) {
+		if (_source != noone && _variable != "") {
+			self.binding_variable = {
+				source : _source,
+				variable : _variable
+			}
+			if LUI_LOG_ERROR_MODE == 2 && !variable_instance_exists(_source, _variable) {
+				print($"LIME_UI.WARNING({self.name}): Can't find variable '{_variable}'!");
+			}
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): Wrong variable name or instance!");
+		}
 		return self;
 	}
-	///@desc deactivate
-	///@return {Struct.LuiBase}
-	static deactivate = function() {
-		self.deactivated = true;
+	
+	///@desc Set style
+	static setStyle = function(_style) {
+		self.style = new LuiStyle(_style);
+		self.custom_style_is_setted = true;
 		array_foreach(self.content, function(_elm) {
-			_elm.deactivate();
+			_elm.setStyleChilds(self.style);
 		});
+		
+		// Flex
+		flexpanel_node_style_set_padding(self.flex_node, flexpanel_edge.all_edges, self.style.padding);
+		flexpanel_node_style_set_gap(self.flex_node, flexpanel_gutter.all_gutters, self.style.padding);
+		
 		return self;
 	}
-	///@desc setVisible(true/false)
+	
+	///@desc Set style for child elements
+	static setStyleChilds = function(_style) {
+		if self.custom_style_is_setted == false {
+			self.style = _style;
+		}
+		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
+			var _element = self.content[i];
+			_element.setStyleChilds(_style);
+		}
+		return self;
+	}
+	
+	///@desc Set callback function
+	///@return {Struct.LuiBase}
+	static setCallback = function(callback) {
+		if callback == undefined {
+			if LUI_DEBUG_CALLBACK {
+				self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
+			} else {
+				self.callback = function() { };
+			}
+		} else {
+			self.callback = method(self, callback);
+		}
+		return self;
+	}
+	
+	///@desc Set flag to update content
+	static setNeedToUpdateContent = function(_update_parent) {
+		if is_undefined(self.parent) return true;
+		self.need_to_update_content = true;
+		self.parent.setNeedToUpdateContent(_update_parent);
+	}
+	
+	///@desc Set element visibility
 	///@return {Struct.LuiBase}
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
@@ -808,15 +665,29 @@ function LuiBase() constructor {
 	
 	///@desc Enable or disable visibility switching by function setVisible()
 	///@return {Struct.LuiBase}
-	static setVisibilitySwitching = function(_bool) {
-		self.visibility_switching = _bool;
+	static setVisibilitySwitching = function(_allow) {
+		self.visibility_switching = _allow;
 		return self;
 	}
 	
 	///@desc Set offset region for render content
-	///@arg {struct} _region struct{left, right, top, bottom}
+	///@arg {struct} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
 	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
-		self.render_region_offset = _region;
+		if is_struct(_region) {
+			render_region_offset = _region;
+		} else if is_array(_region) {
+			if array_length(_region) != 4 {
+				array_resize(_region, 4);
+			}
+			render_region_offset = {
+				left : _region[0],
+				right : _region[1],
+				top : _region[2],
+				bottom : _region[3]
+			}
+		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
+		
+		return self;
 	}
 	
 	///@desc Enables/Disables mouse ignore mode
@@ -826,16 +697,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	//Add content
-	///@desc getFirst
-	static getFirst = function() {
-		return array_first(self.content);
-	};
-	
-	///@desc getLast
-	static getLast = function() {
-		return array_last(self.content);
-	};
+	// SYSTEM
 	
 	///@desc addContent(elements, _custom_padding)
 	///@arg {Any} elements
@@ -871,7 +733,7 @@ function LuiBase() constructor {
 		
 		// Adding
 		for (var i = 0; i < _elements_count; i++) {
-		    
+			
 			// Get element
 			var _element = elements[i];
 			
@@ -909,7 +771,7 @@ function LuiBase() constructor {
 			// Add to content array
 			array_push(self.content, _element);
 			
-			_element.addDelayedContent();
+			_element._addDelayedContent();
 			
 			// Call custom method create
 			_element.onCreate();
@@ -923,393 +785,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Add delayed content
-	static addDelayedContent = function() {
-		if is_array(self.delayed_content) {
-			if !is_undefined(self.delayed_content) && array_length(self.delayed_content) > 0 {
-				self.addContent(self.delayed_content);
-				self.delayed_content = -1;
-			}
-		}
-	}
-	
-	// Getters
-	///@desc Get value of this element
-	static get = function() {
-		return self.value;
-	}
-	
-	///@desc Returns the lowest point of the elements by height
-	///@deprecated
-	static getLowerPoint = function() {
-		var _lower_point = 0;
-		for (var i = 0, n = array_length(content); i < n; ++i) {
-		    var _elm = content[i];
-			_lower_point = max(_lower_point, _elm.pos_y + _elm.height);
-		}
-		return _lower_point;
-	}
-	
-	// Setters
-	///@desc Set value of this element
-	static set = function(_value) {
-		if self.value != _value {
-			self.value = _value;
-			if self.binding_variable != -1 {
-				self.updateToBinding();
-			}
-			self.onValueUpdate();
-			self.updateMainUiSurface();
-		}
-		return self;
-	}
-	
-	///@desc Set popup text to element when mouse on it
-	static setTooltip = function(_string) {
-		self.tooltip = _string;
-		return self;
-	}
-	
-	///@desc Binds the object/struct variable to the element value
-	static setBinding = function(_source, _variable) {
-		if (_source != noone && _variable != "") {
-			self.binding_variable = {
-				source : _source,
-				variable : _variable
-			}
-			if LUI_LOG_ERROR_MODE == 2 && !variable_instance_exists(_source, _variable) {
-				print($"LIME_UI.WARNING({self.name}): Can't find variable '{_variable}'!");
-			}
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): Wrong variable name or instance!");
-		}
-		return self;
-	}
-	
-	///@desc Update element value from binding variable
-	static updateFromBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _source_value = variable_instance_get(_source, _variable);
-			set(_source_value);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
-		}
-	}
-	
-	///@desc Update binding variable from element value
-	static updateToBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _element_value = get();
-			variable_instance_set(_source, _variable, _element_value);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
-		}
-	}
-	
-	//Alignment and sizes
-	///@desc stretchHorizontally(padding) //???//
-	static stretchHorizontally = function(padding) {
-		
-		return self;
-	}
-	
-	///@desc stretchVertically(padding) //???//
-	static stretchVertically = function(padding) {
-		
-		return self;
-	}
-	
-	///@desc Set horizontal element aligment (fa_left, fa_center, fa_right)
-	///@return {Struct.LuiBase}
-	///@deprecated
-	static setHalign = function(halign) {
-		if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING({self.name}):You are using deprecated function setHalign!");
-		self.halign = halign;
-		return self;
-	}
-	
-	///@desc Set vertical element aligment (fa_top, fa_middle, fa_bottom)
-	///@return {Struct.LuiBase}
-	///@deprecated
-	static setValign = function(valign) {
-		if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING({self.name}):You are using deprecated function setValign!");
-		self.valign = valign;
-		return self;
-	}
-	
-	///@desc Center element horizontally on the parent element //???//
-	///@return {Struct.LuiBase}
-	static centerHorizontally = function() {
-		//self.pos_x = floor(self.parent.width / 2) - floor(self.width / 2);
-		return self;
-	}
-	
-	///@desc Center element vertically on the parent element //???//
-	///@return {Struct.LuiBase}
-	static centerVertically = function() {
-		//self.pos_y = floor(self.parent.height / 2) - floor(self.height / 2);
-		return self;
-	}
-	
-	///@desc alignAllElements() //???//
-	///@return {Struct.LuiBase}
-	///@deprecated
-	static alignAllElements = function() {
-		for (var i = array_length(self.content) - 1; i >= 0 ; --i) {
-			var _element = self.content[i];
-			if !is_undefined(_element.halign) {
-				flexpanel_node_style_set_position_type(_element.flex_node, flexpanel_position_type.absolute);
-				switch(_element.halign) {
-					case fa_left:
-						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.left, _element.style.padding, flexpanel_unit.point);
-					break;
-					case fa_center:
-						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.left, 50, flexpanel_unit.percent);
-					break;
-					case fa_right:
-						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.right, _element.style.padding, flexpanel_unit.point);
-					break;
-					default:
-					break;
-				}
-			}
-			if !is_undefined(_element.valign) {
-				flexpanel_node_style_set_position_type(_element.flex_node, flexpanel_position_type.absolute);
-				switch(_element.valign) {
-					case fa_top:
-						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.top, _element.style.padding, flexpanel_unit.point);
-					break;
-					case fa_middle:
-						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.top, 50, flexpanel_unit.percent);
-					break;
-					case fa_bottom:
-						flexpanel_node_style_set_position(_element.flex_node, flexpanel_edge.bottom, _element.style.padding, flexpanel_unit.point);
-					break;
-					default:
-					break;
-				}
-			}
-			_element.alignAllElements();
-		}
-		return self;
-	}
-	
-	//Design
-	///@desc setStyle(_style)
-	///@return {Struct.LuiBase}
-	static setStyle = function(_style) {
-		self.style = new LuiStyle(_style);
-		self.custom_style_is_setted = true;
-		array_foreach(self.content, function(_elm) {
-			_elm.setStyleChilds(self.style);
-		});
-		
-		// Flex
-		flexpanel_node_style_set_padding(self.flex_node, flexpanel_edge.all_edges, self.style.padding);
-		flexpanel_node_style_set_gap(self.flex_node, flexpanel_gutter.all_gutters, self.style.padding);
-		
-		return self;
-	}
-	
-	///@desc setStyleChilds(_style)
-	///@return {Struct.LuiBase}
-	static setStyleChilds = function(_style) {
-		if self.custom_style_is_setted == false {
-			self.style = _style;
-		}
-		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
-			var _element = self.content[i];
-			_element.setStyleChilds(_style);
-		}
-		return self;
-	}
-	
-	///@desc get style
-	static getStyle = function() {
-		if (!is_undefined(self.style)) {
-			return self.style;
-		}
-		if (!is_undefined(self.parent)) {
-			var _style = self.parent.getStyle();
-			if (!is_undefined(_style)) {
-				return _style;
-			}
-		}
-		return undefined;
-	}
-	
-	///@desc Set draw_relative to all descendants
-	///@return {Struct.LuiBase}
-	///@deprecated
-	static setDrawRelative = function(_relative, _parent_relative = self) {
-		for (var i = 0, n = array_length(self.content); i < n; ++i) {
-		    self.content[i].draw_relative = _relative;
-		    self.content[i].parent_relative = _parent_relative;
-			self.content[i].setDrawRelative(_relative, self.content[i].parent_relative);
-		}
-		return self;
-	}
-	
-	///@desc Set depth to the element
-	///@return {Struct.LuiBase}
-	static setDepth = function(_depth) {
-		self.z = _depth;
-		array_foreach(self.content, function(_elm, _ind) {
-			_elm.setDepth(self.z + _ind + 1);
-		});
-		return self;
-	}
-	///@desc Update main ui surface
-	///@return {Struct.LuiBase}
-	static updateMainUiSurface = function() {
-		if is_undefined(self.main_ui) return self;
-		self.main_ui.update_ui_screen_surface = true;
-		return self;
-	}
-	
-	//Interactivity
-	///@desc setCallback(callback)
-	///@return {Struct.LuiBase}
-	static setCallback = function(callback) {
-		if callback == undefined {
-			if LUI_DEBUG_CALLBACK {
-				self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
-			} else {
-				self.callback = function() { };
-			}
-		} else {
-			self.callback = method(self, callback);
-		}
-		return self;
-	}
-	
-	static isInteracting = function() {
-		return self.isInteractingMouse() || self.isInteractingKeyboard();
-	}
-	
-	static isInteractingMouse = function() {
-		return self.mouseHoverChilds();
-	}
-	
-	static isInteractingKeyboard = function() {
-		return self.waiting_for_keyboard_input;
-	}
-	
-	///@desc Determines whether the mouse is hovering over this item or not in main_ui //???// переместить в main_ui
-	static mouseHover = function() {
-		return self.is_mouse_hovered;
-	}
-	
-	///@desc mouseHoverAny()
-	static mouseHoverAny = function() {
-		var _mouse_x = device_mouse_x_to_gui(0);
-		var _mouse_y = device_mouse_y_to_gui(0);
-		var _element_x = self.x;
-		var _element_y = self.y;
-		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
-		return _on_this && self.visible;
-	}
-	
-	///@desc mouseHoverParent()
-	///@deprecated
-	static mouseHoverParent = function() {
-		if is_undefined(self.parent) return false;
-		var _mouse_x = device_mouse_x_to_gui(0);
-		var _mouse_y = device_mouse_y_to_gui(0);
-		if is_undefined(self.parent_relative) {
-			return self.parent.mouseHoverAny(_mouse_x, _mouse_y);
-		} else {
-			return self.parent_relative.mouseHoverAny(_mouse_x, _mouse_y);
-		}
-	}
-	
-	///@desc mouseHoverParents()
-	static mouseHoverParents = function() {
-		if is_undefined(self.parent) return true;
-		if self.mouseHoverAny() {
-			return self.parent.mouseHoverParents();
-		} else {
-			return false;
-		}
-	}
-	
-	///@desc checkInsideParents()
-	static checkInsideParents = function(_x1, _y1, _x2, _y2) {
-		if is_undefined(self.parent) return true;
-		var _parent_x = self.parent.x;
-		var _parent_y = self.parent.y;
-		var _inside_parent = rectangle_in_rectangle(
-			_x1, _y1, _x2, _y2,
-			_parent_x, _parent_y, _parent_x + self.parent.width, _parent_y + self.parent.height
-		);
-		if _inside_parent {
-			return self.parent.checkInsideParents(_x1, _y1, _x2, _y2);
-		} else {
-			return false;
-		}
-	}
-	
-	///@desc mouseHoverChilds()
-	static mouseHoverChilds = function() {
-		var _mouse_x = device_mouse_x_to_gui(0);
-		var _mouse_y = device_mouse_y_to_gui(0);
-		var _on_element = false;
-		if self.visible
-		for (var i = 0, _n = array_length(self.content); i < _n; ++i) {
-		    var _element = self.content[i];
-			_on_element = _element.mouseHoverAny();
-			if _on_element break;
-		}
-		return _on_element;
-	}
-	
-	///@desc pointOnElement
-	static pointOnElement = function(point_x, point_y) {
-		var _abs_x = self.x;
-		var _abs_y = self.y;
-		return point_in_rectangle(point_x, point_y, _abs_x, _abs_y, _abs_x + self.width - 1, _abs_y + self.height - 1);
-	}
-	///@desc getTopmostElement
-	static getTopmostElement = function(_mouse_x, _mouse_y) {
-		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
-		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
-			return _elm.mouseHoverAny() && _elm.mouseHoverParents() && _elm.visible && !_elm.ignore_mouse;
-		});
-		array_sort(_array, function(_elm1, _elm2) {
-			return _elm1.z - _elm2.z;
-		});
-		return array_last(_array);
-	}
-	
-	///@desc getTopmostElementOld
-	///@deprecated
-	static getTopmostElementOld = function(_mouse_x, _mouse_y) {
-		var topmost_element = undefined;
-		for (var i = array_length(self.content) - 1; i >= 0; --i) {
-			var _element = self.content[i];
-			if _element.visible && !_element.ignore_mouse && _element.pointOnElement(_mouse_x, _mouse_y) {
-				topmost_element = _element.getTopmostElementOld(_mouse_x, _mouse_y);
-				if topmost_element == undefined {
-					return _element;
-				}
-				break;
-			}
-		}
-		return topmost_element;
-	}
-	
-	static setNeedToUpdateContent = function(_update_parent) {
-		if is_undefined(self.parent) return true;
-		self.need_to_update_content = true;
-		self.parent.setNeedToUpdateContent(_update_parent);
-	}
-	
-	//Update
-	///@desc update()
+	///@desc This function updates all nested elements
 	static update = function() {
 		// Limit updates
 		if (!self.visible || self.deactivated || self.inside_parent == 0) {
@@ -1331,7 +807,7 @@ function LuiBase() constructor {
 			var _cur_y = floor(_element.y);
 			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
 				// Check if element is inside parents
-				_element.inside_parent = checkInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
+				_element.inside_parent = isInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
 				if _element.inside_parent {
 					// Call onPositionUpdate method of each element
 					_element.onPositionUpdate();
@@ -1380,7 +856,6 @@ function LuiBase() constructor {
 		}
 	}
 	
-	//Render
 	///@desc This function draws all nested elements
 	static render = function(base_x = 0, base_y = 0) {
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
@@ -1415,150 +890,201 @@ function LuiBase() constructor {
 				//Get element
 				var _element = self.content[i];
 				if !_element.visible continue;
-				_element.renderDebug(_element.x, _element.y);
+				_element._renderDebug(_element.x, _element.y);
 			}
 			
 		}
 	}
 	
-	///@desc renderDebug()
-	///@ignore
-	static renderDebug = function(_x = 0, _y = 0) {
-		if !is_undefined(self.style.font_debug) {
-			draw_set_font(self.style.font_debug);
+	///@desc Centered content in flexpanel(element). Call setFlexJustifyContent and setFlexAlignItems to center
+	static centerContent = function() {
+		self.setFlexJustifyContent(flexpanel_justify.center)
+			.setFlexAlignItems(flexpanel_align.center);
+		return self;
+	}
+	
+	///@desc removeFocus
+	///@return {Struct.LuiBase}
+	static removeFocus = function() {
+		self.has_focus = false;
+		self.onFocusRemove();
+		return self;
+	}
+	
+	///@desc activate
+	///@return {Struct.LuiBase}
+	static activate = function() {
+		self.deactivated = false;
+		array_foreach(self.content, function(_elm) {
+			_elm.activate();
+		});
+		return self;
+	}
+	
+	///@desc deactivate
+	///@return {Struct.LuiBase}
+	static deactivate = function() {
+		self.deactivated = true;
+		array_foreach(self.content, function(_elm) {
+			_elm.deactivate();
+		});
+		return self;
+	}
+	
+	///@desc Calculate all sizes and positions of elements
+	static flexCalculateLayout = function() {
+		if !is_undefined(self.main_ui) {
+			flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+			return true;
 		}
-		var _prev_color = draw_get_color();
-		var _prev_alpha = draw_get_alpha();
-		if mouseHover() {
-			draw_set_alpha(1);
-			draw_set_color(c_red);
+		return false;
+	}
+	
+	///@desc Update position, size and z depth for specified flex node
+	static flexUpdate = function(_node) {
+		
+		// Get layout data
+		var _pos = flexpanel_node_layout_get_position(_node, false);
+		
+		// Update element
+		var _data = flexpanel_node_get_data(_node);
+		var _element = _data.element;
+		_element.x = _pos.left;
+		_element.y = _pos.top;
+		_element.pos_x = _pos.left;
+		_element.pos_y = _pos.top;
+		_element.width = _pos.width;
+		_element.height = _pos.height;
+		if (_element.start_x == -1) {
+			_element.start_x = _element.pos_x;
+		}
+		if (_element.start_y == -1) {
+			_element.start_y = _element.pos_y;
+		}
+		_element.z = global.lui_z_index++;
+		
+		// Call for children (recursive)
+		var _children_count = flexpanel_node_get_num_children(_node);
+		for (var i = 0; i < _children_count; i++) {
+			var _child = flexpanel_node_get_child(_node, i);
+			_element.flexUpdate(_child);
+		}
+	}
+	
+	///@desc Update position, size and z depth of all elements with depth reset
+	static flexUpdateAll = function() {
+		if !is_undefined(main_ui) {
+			// Reset z depth index
+			global.lui_z_index = 0;
+			// Update all elements
+			flexUpdate(self.main_ui.flex_node);
+		}
+	}
+	
+	///@desc Update element value from binding variable
+	static updateFromBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _source_value = variable_instance_get(_source, _variable);
+			set(_source_value);
 		} else {
-			draw_set_alpha(0.5);
-			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
 		}
-		//Rectangles
-		if mouseHover() {
-			draw_rectangle(_x-1, _y-1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
+	}
+	
+	///@desc Update binding variable from element value
+	static updateToBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _element_value = get();
+			variable_instance_set(_source, _variable, _element_value);
 		} else {
-			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
 		}
-		//Text
-		if global.lui_debug_mode == 2 {
-			_luiDrawTextDebug(_x, _y, 
-			"id: " + string(self.element_id) + "\n" +
-			"name: " + string(self.name) + "\n" +
-			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
-			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
-			"v: " + string(self.value) + "\n" +
-			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
-			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
-			"z: " + string(self.z));
-		}
-		draw_set_color(_prev_color);
-		draw_set_alpha(_prev_alpha);
 	}
 	
-	///@desc _luiDrawTextDebug(x, y, text)
-	///@ignore
-	static _luiDrawTextDebug = function(_text_x, _text_y, text) {
-		var _text_width = string_width(text);
-		var _text_height = string_height(text);
-		_text_x = clamp(_text_x, 0, display_get_gui_width() - _text_width);
-		_text_y = clamp(_text_y, 0, display_get_gui_height() - _text_height);
-		draw_set_color(c_black);
-		draw_rectangle(_text_x, _text_y, _text_x + _text_width, _text_y + _text_height, false);
-		draw_set_halign(fa_left);
-		draw_set_valign(fa_top);
-		draw_set_color(c_white);
-		draw_text(_text_x, _text_y, text);
+	///@desc Update main ui surface
+	static updateMainUiSurface = function() {
+		if is_undefined(self.main_ui) return self;
+		self.main_ui.update_ui_screen_surface = true;
+		return self;
 	}
 	
-	///@desc returns text fit to width
-	///@ignore
-	static _luiGetTextCutoff = function(_string, _width = infinity) {
-		// Calculate initial text width
-		var _str_to_draw = _string;
-		var _str_width = string_width(_str_to_draw);
-		
-		// Check if the text needs to be truncated
-		if (_str_width > _width) {
-			// Calculate the width of "..." once, to use in our calculations
-			var _ellipsis = "...";
-			var _ellipsis_width = string_width(_ellipsis);
-			
-			// Calculate the width available for the main part of the string
-			var _available_width = _width - _ellipsis_width;
-			
-			// Initialize binary search bounds
-			var _low = 1;
-			var _high = string_length(_string);
-			var _mid;
-			
-			// Perform binary search to find the cutoff point
-			while (_low < _high) {
-				_mid = floor((_low + _high) / 2);
-				_str_to_draw = string_copy(_string, 1, _mid);
-				_str_width = string_width(_str_to_draw);
-				
-				if (_str_width < _available_width) {
-					_low = _mid + 1;
-				} else {
-					_high = _mid;
-				}
-			}
-			
-			// The final string should be within the bounds
-			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
-		}
-		
-		// Return the final text
-		return _str_to_draw;
-	};
+	///@desc Return true if we interacting with UI
+	static isInteracting = function() {
+		return self.isInteractingMouse() || self.isInteractingKeyboard();
+	}
 	
-	///@desc draw text fit to width
-	///@ignore
-	static _luiDrawTextCutoff = function(_x, _y, _string, _width = infinity) {
-		// Calculate initial text width
-		var _str_to_draw = _string;
-		var _str_width = string_width(_str_to_draw);
-		
-		// Check if the text needs to be truncated
-		if (_str_width > _width) {
-			// Calculate the width of "..." once, to use in our calculations
-			var _ellipsis = "...";
-			var _ellipsis_width = string_width(_ellipsis);
-			
-			// Calculate the width available for the main part of the string
-			var _available_width = _width - _ellipsis_width;
-			
-			// Initialize binary search bounds
-			var _low = 1;
-			var _high = string_length(_string);
-			var _mid;
-			
-			// Perform binary search to find the cutoff point
-			while (_low < _high) {
-				_mid = floor((_low + _high) / 2);
-				_str_to_draw = string_copy(_string, 1, _mid);
-				_str_width = string_width(_str_to_draw);
-				
-				if (_str_width < _available_width) {
-					_low = _mid + 1;
-				} else {
-					_high = _mid;
-				}
-			}
-			
-			// The final string should be within the bounds
-			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
-		}
-		
-		// Draw the final text
-		draw_text(_x, _y, _str_to_draw);
-	};
+	///@desc Return true if we interacting with UI with mouse
+	static isInteractingMouse = function() {
+		return self.isMouseHoveredChilds();
+	}
 	
-	//Clean up
-	///@desc destroy()
+	///@desc Return true if we interacting with UI with keyboard
+	static isInteractingKeyboard = function() {
+		return self.waiting_for_keyboard_input;
+	}
+	
+	///@desc Returns true if the mouse is hovered over this element
+	static isMouseHovered = function() {
+		return self.is_mouse_hovered;
+	}
+	
+	///@desc Returns true if the mouse is hovered over this element, excluding all elements above it
+	static isMouseHoveredExc = function() {
+		if !self.visible return false;
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+		var _element_x = self.x;
+		var _element_y = self.y;
+		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
+		return _on_this;
+	}
+	
+	///@desc Returns true if the mouse is hovered over this element and its parent
+	static isMouseHoveredParents = function() {
+		if is_undefined(self.parent) return true;
+		if self.isMouseHoveredExc() {
+			return self.parent.isMouseHoveredParents();
+		} else {
+			return false;
+		}
+	}
+	
+	///@desc Returns true if the specified rectangle is within the parent and its parents at the same time
+	static isInsideParents = function(_x1, _y1, _x2, _y2) {
+		if is_undefined(self.parent) return true;
+		var _parent_x = self.parent.x;
+		var _parent_y = self.parent.y;
+		var _inside_parent = rectangle_in_rectangle(
+			_x1, _y1, _x2, _y2,
+			_parent_x, _parent_y, _parent_x + self.parent.width, _parent_y + self.parent.height
+		);
+		if _inside_parent {
+			return self.parent.isInsideParents(_x1, _y1, _x2, _y2);
+		} else {
+			return false;
+		}
+	}
+	
+	///@desc Returns true if the mouse is hovered over the descendants of this element
+	static isMouseHoveredChilds = function() {
+		if !self.visible return false;
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+		var _on_element = false;
+		for (var i = 0, _n = array_length(self.content); i < _n; ++i) {
+		    var _element = self.content[i];
+			if _element.isMouseHoveredChilds() {
+				return true;
+			}
+		}
+		return self.isMouseHovered() ? true : false;
+	}
+	
+	///@desc This function destroys self and all nested elements
 	static destroy = function() {
 		for (var i = array_length(self.content) - 1; i >= 0; --i) {
 			
@@ -1602,7 +1128,7 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc destroyContent()
+	///@desc This function destroys all nested elements
 	static destroyContent = function() {
 		if array_length(self.content) > 0 {
 			for (var i = array_length(self.content) - 1;  i >= 0; --i) {
@@ -1611,4 +1137,360 @@ function LuiBase() constructor {
 			}
 		}
 	}
+	
+	// PRIVATE SYSTEM
+	
+	///@desc Init element variables
+	///@ignore
+	static _initElement = function() {
+		if self.pos_x == LUI_AUTO {
+			self.auto_x = true;
+			self.pos_x = 0;
+		}
+		if self.pos_y == LUI_AUTO {
+			self.auto_y = true;
+			self.pos_y = 0;
+		}
+		if self.width == LUI_AUTO {
+			self.auto_width = true;
+			self.width = self.min_width;
+		}
+		if self.height == LUI_AUTO {
+			self.auto_height = true;
+			self.height = self.min_height;
+		}
+		self._init_flex();
+	}
+	
+	///@desc Initialize flex node
+	///@ignore
+	static _init_flex = function() {
+		// Flex node (default for all elements)
+		self.flex_node = flexpanel_create_node({
+			name: self.name, 
+			data: {}
+		});
+		
+		// Position X
+		if !self.auto_x {
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.pos_x, flexpanel_unit.point);
+		}
+		
+		// Position Y
+		if !self.auto_y {
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.pos_y, flexpanel_unit.point);
+		}
+		
+		// Width
+		if !self.auto_width {
+			flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
+		} else {
+			flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
+			flexpanel_node_style_set_flex_shrink(self.flex_node, 1);
+		}
+		
+		// Height
+		if !self.auto_height {
+			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
+		}
+		
+		var _data = flexpanel_node_get_data(self.flex_node);
+		_data.element = self;
+	}
+	
+	///@desc Add delayed content
+	///@ignore
+	static _addDelayedContent = function() {
+		if is_array(self.delayed_content) {
+			if !is_undefined(self.delayed_content) && array_length(self.delayed_content) > 0 {
+				self.addContent(self.delayed_content);
+				self.delayed_content = -1;
+			}
+		}
+	}
+	
+	///@desc Render debug info of element
+	///@ignore
+	static _renderDebug = function(_x = 0, _y = 0) {
+		if !is_undefined(self.style.font_debug) {
+			draw_set_font(self.style.font_debug);
+		}
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
+		if isMouseHovered() {
+			draw_set_alpha(1);
+			draw_set_color(c_red);
+		} else {
+			draw_set_alpha(0.5);
+			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		}
+		//Rectangles
+		if isMouseHovered() {
+			draw_rectangle(_x-1, _y-1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
+		} else {
+			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
+		}
+		//Text
+		if global.lui_debug_mode == 2 {
+			_luiDrawTextDebug(_x, _y, 
+			"id: " + string(self.element_id) + "\n" +
+			"name: " + string(self.name) + "\n" +
+			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
+			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
+			"v: " + string(self.value) + "\n" +
+			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
+			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
+			"z: " + string(self.z));
+		}
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
+	}
+	
+	///@desc Draw debug text with rectangle
+	///@ignore
+	static _luiDrawTextDebug = function(_x, _y, text) {
+		var _text_width = string_width(text);
+		var _text_height = string_height(text);
+		_x = clamp(_x, 0, display_get_gui_width() - _text_width);
+		_y = clamp(_y, 0, display_get_gui_height() - _text_height);
+		draw_set_color(c_black);
+		draw_rectangle(_x, _y, _x + _text_width, _y + _text_height, false);
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_top);
+		draw_set_color(c_white);
+		draw_text(_x, _y, text);
+	}
+	
+	///@desc Returns text fit to width
+	///@return {string}
+	///@ignore
+	static _luiGetTextCutoff = function(_string, _width = infinity) {
+		// Calculate initial text width
+		var _str_to_draw = _string;
+		var _str_width = string_width(_str_to_draw);
+		
+		// Check if the text needs to be truncated
+		if (_str_width > _width) {
+			// Calculate the width of "..." once, to use in our calculations
+			var _ellipsis = "...";
+			var _ellipsis_width = string_width(_ellipsis);
+			
+			// Calculate the width available for the main part of the string
+			var _available_width = _width - _ellipsis_width;
+			
+			// Initialize binary search bounds
+			var _low = 1;
+			var _high = string_length(_string);
+			var _mid;
+			
+			// Perform binary search to find the cutoff point
+			while (_low < _high) {
+				_mid = floor((_low + _high) / 2);
+				_str_to_draw = string_copy(_string, 1, _mid);
+				_str_width = string_width(_str_to_draw);
+				
+				if (_str_width < _available_width) {
+					_low = _mid + 1;
+				} else {
+					_high = _mid;
+				}
+			}
+			
+			// The final string should be within the bounds
+			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
+		}
+		
+		// Return the final text
+		return _str_to_draw;
+	};
+	
+	///@desc Draw text fit to width
+	///@ignore
+	static _luiDrawTextCutoff = function(_x, _y, _string, _width = infinity) {
+		// Calculate initial text width
+		var _str_to_draw = _string;
+		var _str_width = string_width(_str_to_draw);
+		
+		// Check if the text needs to be truncated
+		if (_str_width > _width) {
+			// Calculate the width of "..." once, to use in our calculations
+			var _ellipsis = "...";
+			var _ellipsis_width = string_width(_ellipsis);
+			
+			// Calculate the width available for the main part of the string
+			var _available_width = _width - _ellipsis_width;
+			
+			// Initialize binary search bounds
+			var _low = 1;
+			var _high = string_length(_string);
+			var _mid;
+			
+			// Perform binary search to find the cutoff point
+			while (_low < _high) {
+				_mid = floor((_low + _high) / 2);
+				_str_to_draw = string_copy(_string, 1, _mid);
+				_str_width = string_width(_str_to_draw);
+				
+				if (_str_width < _available_width) {
+					_low = _mid + 1;
+				} else {
+					_high = _mid;
+				}
+			}
+			
+			// The final string should be within the bounds
+			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
+		}
+		
+		// Draw the final text
+		draw_text(_x, _y, _str_to_draw);
+	};
+	
+	///@ignore
+	static _registerElementName = function() {
+		if !variable_struct_exists(self.main_ui.element_names, self.name) {
+			variable_struct_set(self.main_ui.element_names, self.name, self);
+		} else {
+			if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
+			var _new_name = self.name + "_" + string(self.element_id) + "_" + md5_string_utf8(self.name + string(self.element_id));
+			variable_struct_set(self.main_ui.element_names, _new_name, self);
+			self.name = _new_name;
+		}
+	}
+	///@ignore
+	static _deleteElementName = function() {
+		if self != self.main_ui {
+			if variable_struct_exists(self.main_ui.element_names, self.name) {
+				variable_struct_remove(self.main_ui.element_names, self.name);
+			} else {
+				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find name \"{self.name}\"!");
+			}
+		}
+	}
+	
+	///@desc Add element in system ui grid
+	///@ignore
+	static _gridAdd = function() {
+		if (!self.inside_parent || !self.visible) {
+			return false;
+		}
+		
+		var _grid_size = LUI_GRID_SIZE;
+		
+		var _elm_x = floor(self.x / _grid_size);
+		var _elm_y = floor(self.y / _grid_size);
+		var _width = ceil(self.width / _grid_size);
+		var _height = ceil(self.height / _grid_size);
+		
+		var abs_x_end = self.x + self.width;
+		var abs_y_end = self.y + self.height;
+		
+		for (var _x = _elm_x; _x <= _elm_x + _width; ++_x) {
+			for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
+				var grid_x_start = _x * _grid_size;
+				var grid_y_start = _y * _grid_size;
+				var grid_x_end = grid_x_start + _grid_size;
+				var grid_y_end = grid_y_start + _grid_size;
+				
+				var _inside = rectangle_in_rectangle(
+					self.x, self.y, abs_x_end, abs_y_end,
+					grid_x_start, grid_y_start, grid_x_end, grid_y_end
+				);
+				
+				if (_inside == 0) continue;
+				
+				var _key = string(_x) + "_" + string(_y);
+				
+				if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
+					var _array = self.main_ui._screen_grid[$ _key];
+					array_push(_array, self);
+					array_push(self._grid_location, _key);
+				}
+			}
+		}
+	};
+	
+	///@desc Delete lement from system ui grid
+	///@ignore
+	static _gridDelete = function() {
+		
+		var _grid_size = LUI_GRID_SIZE;
+		
+		var _elm_x = floor(self.x / _grid_size);
+		var _elm_y = floor(self.y / _grid_size);
+		var _width = ceil(self.width / _grid_size);
+		var _height = ceil(self.height / _grid_size);
+		
+		var _grid_location_length = array_length(self._grid_location);
+		for (var i = _grid_location_length - 1; i >= 0; --i) {
+			var _key = self._grid_location[i];
+			
+			if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
+				var _array = self.main_ui._screen_grid[$ _key];
+				var _array_length = array_length(_array);
+				for (var j = _array_length-1; j >= 0; --j) {
+					if (_array[j].element_id == self.element_id) {
+						array_delete(_array, j, 1);
+						break;
+					}
+				}
+			}
+		}
+		
+		self._grid_location = [];
+	};
+	
+	///@desc Update element in system ui grid
+	///@ignore
+	static _gridUpdate = function() {
+		self._gridDelete();
+		self._gridAdd();
+	}
+	
+	///@desc Delete element from grid and clean up array
+	///@ignore
+	static _gridCleanUp = function() {
+		self._gridDelete();
+		self._grid_location = -1;
+	}
+	
+	///@desc Draw debug grid info
+	///@ignore
+	static _drawScreenGrid = function() {
+		draw_set_alpha(1);
+		draw_set_color(c_red);
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_top);
+		draw_set_font(fDebug);
+		
+		var grid_size = LUI_GRID_SIZE;
+		var gui_width = display_get_gui_width();
+		var gui_height = display_get_gui_height();
+		
+		var _width = ceil(gui_width / grid_size);
+		var _height = ceil(gui_height / grid_size);
+		
+		for (var _x = 0; _x <= _width; ++_x) {
+			var x_pos = _x * grid_size;
+			draw_line(x_pos, 0, x_pos, gui_height);
+			
+			for (var _y = 0; _y <= _height; ++_y) {
+				var y_pos = _y * grid_size;
+				
+				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
+				
+				var _key = string(_x) + "_" + string(_y);
+				var _array = self.main_ui._screen_grid[$ _key];
+				draw_text(x_pos + 2, y_pos + 1, string(_key));
+				
+				for (var i = 0, n = array_length(_array); i < n; ++i) {
+					//draw_text_ext(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, -1, LUI_GRID_SIZE);
+					//_luiDrawTextCutoff(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, LUI_GRID_SIZE);
+					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
+				}
+				draw_set_color(c_red);
+			}
+		}
+	};
 }

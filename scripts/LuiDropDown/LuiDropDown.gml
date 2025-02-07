@@ -91,7 +91,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.style.sprite_dropdown) {
 			var _blend_color = self.style.color_dropdown;
 			if !self.deactivated {
-				if self.mouseHover() {
+				if self.isMouseHovered() {
 					_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
 						_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
@@ -187,7 +187,7 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 		//Base
 		if !is_undefined(self.style.sprite_dropdown_item) {
 			var _blend_color = self.style.color_dropdown_item;
-			if !self.deactivated && self.mouseHover() {
+			if !self.deactivated && self.isMouseHovered() {
 				_blend_color = merge_colour(self.style.color_dropdown_item, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
 					_blend_color = merge_colour(self.style.color_dropdown_item, c_black, 0.5);
@@ -241,7 +241,7 @@ function LuiDropdownPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height =
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	
 	self.draw = function() {
 		//Base

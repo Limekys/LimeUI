@@ -10,32 +10,51 @@
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 ///@arg {Function} callback
-function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiSpriteButton", sprite, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
+function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiSpriteButton", sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	setCallback(callback);
 	
 	self.value = sprite;
 	self.sprite = sprite;
 	self.subimg = subimg;
-	self.alpha = alpha;
 	self.color_blend = color;
-	
-	self.sprite_real_width = sprite_get_width(self.sprite);
-	self.sprite_real_height = sprite_get_height(self.sprite);
+	self.alpha = alpha;
 	self.maintain_aspect = maintain_aspect;
-	self.aspect = self.sprite_real_width / self.sprite_real_height;
+	self.sprite_real_width = 0;
+	self.sprite_real_height = 0;
+	self.aspect = 1;
 	
 	self.is_pressed = false;
 	
+	self.onCreate = function() {
+		self._calcSpriteSize();
+	}
+	
 	///@desc Set blend color for sprite
-	static setColorBlend = function(color_blend) {
+	static setColor = function(color_blend) {
 		self.color_blend = color_blend;
+	}
+	
+	///@desc Set sprite
+	static setSprite = function(_sprite) {
+		self.sprite = _sprite;
+		self._calcSpriteSize();
+		return self
+	}
+	
+	///@ignore
+	static _calcSpriteSize = function() {
+		if !is_undefined(self.sprite) && sprite_exists(self.sprite) {
+			self.sprite_real_width = sprite_get_width(self.sprite);
+			self.sprite_real_height = sprite_get_height(self.sprite);
+			self.aspect = self.sprite_real_width / self.sprite_real_height;
+		}
 	}
 	
 	self.draw = function() {
@@ -52,7 +71,7 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		//Get blend color
 		var _blend_color = self.color_blend;
 		if !self.deactivated {
-			if self.mouseHover() {
+			if self.isMouseHovered() {
 				_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 				if self.is_pressed {
 					_blend_color = merge_colour(_blend_color, c_black, 0.5);
@@ -63,11 +82,13 @@ function LuiSpriteButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 		//Draw sprite button
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
-		_sprite_render_function(self.sprite, self.subimg, 
-									floor(self.x + self.width/2 - _width/2), 
-									floor(self.y + self.height/2 - _height/2), 
-									_width, _height, 
-									_blend_color, self.alpha);
+		if !is_undefined(self.sprite) && sprite_exists(self.sprite) {
+			_sprite_render_function(self.sprite, self.subimg, 
+										floor(self.x + self.width/2 - _width/2), 
+										floor(self.y + self.height/2 - _height/2), 
+										_width, _height, 
+										_blend_color, self.alpha);
+		}
 	}
 	
 	self.onMouseLeftPressed = function() {

@@ -152,7 +152,7 @@ activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
 
 // Create sprite buttons and function to change its color
 changeButtonColor = function() {
-	self.setColorBlend(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
+	self.setColor(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
 }
 var _sprite_buttons = [];
 for (var i = 0; i < 7; ++i) {
@@ -191,7 +191,7 @@ drop_item1 = new LuiDropDownItem( , "Dark", function() {
 		my_ui.setStyle(demo_style_dark);
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #191919);
-		var _b = layer_background_get_id("bgSprites");
+		_b = layer_background_get_id("bgSprites");
 		layer_background_blend(_b, #333333);
 		layer_background_visible(_b, true);
 		//Set colors to buttons 
@@ -204,7 +204,7 @@ drop_item2 = new LuiDropDownItem( , "Light", function() {
 		my_ui.setStyle(demo_style_light);
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, c_ltgray);
-		var _b = layer_background_get_id("bgSprites");
+		_b = layer_background_get_id("bgSprites");
 		layer_background_blend(_b, c_white);
 		layer_background_visible(_b, true);
 		//Set colors to buttons
@@ -217,7 +217,7 @@ drop_item3 = new LuiDropDownItem( , "Modern", function() {
 		my_ui.setStyle(demo_style_modern);
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #32333d);
-		var _b = layer_background_get_id("bgSprites");
+		_b = layer_background_get_id("bgSprites");
 		layer_background_visible(_b, false);
 		//Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#fa9a31, c_white, 0.25));

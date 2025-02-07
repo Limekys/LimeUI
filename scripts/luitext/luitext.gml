@@ -13,7 +13,7 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	
 	self.text_halign = fa_left;
 	self.text_valign = fa_middle;

@@ -14,7 +14,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	setCallback(callback);
 	
 	self.is_pressed = false;
@@ -34,7 +34,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.style.sprite_checkbox_pin) {
 			var _blend_color = self.value ? self.style.color_checkbox_pin : self.style.color_checkbox;
 			if !self.deactivated {
-				if self.mouseHover() {
+				if self.isMouseHovered() {
 					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
 				}
 			} else {

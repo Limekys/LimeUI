@@ -1,4 +1,4 @@
-///@desc A progress bar/loading/filling anything.
+///@desc A progress bar for display loading/filling anything
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -16,13 +16,17 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.pos_y = y;
 	self.width = width;
 	self.height = height;
-	initElement();
+	_initElement();
 	
 	self.value = value;
 	self.value_min = min(value_min, value_max);
 	self.value_max = max(value_min, value_max);
 	self.rounding = rounding;
 	self.show_value = show_value;
+	
+	self.onCreate = function() {
+		self.value = _calcValue(self.value);
+	}
 	
 	///@ignore
 	static _calcValue = function(value) {
