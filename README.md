@@ -42,8 +42,9 @@ _*Right now the system is in a very early stage of development and with each upd
 Game Maker runtime version
 2024.11.0.226+
 
-# Screenshots
+# GIF Preview
 ![2025_02_07_17_41_Runner_0ZsNxyA2iH](https://github.com/user-attachments/assets/538272b0-d68a-4af2-868f-17cafc84b081)
+# Screenshots
 ![image](https://github.com/user-attachments/assets/31688271-bdc6-42c5-aaee-a61aaae6e8f0)
 ![image](https://github.com/user-attachments/assets/48bbbb5e-8bce-4e54-aaca-f19f82f90c92)
 ![image](https://github.com/user-attachments/assets/86471427-477b-4b74-ac3a-577bf9afc488)
