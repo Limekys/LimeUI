@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiTextbox",
   "parent":{
-    "name":"LimeUI",
-    "path":"folders/Limekys/LimeUI.yy",
+    "name":"Components",
+    "path":"folders/Limekys/LimeUI/Components.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
