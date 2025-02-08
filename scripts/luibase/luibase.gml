@@ -4,31 +4,28 @@ function LuiBase() constructor {
 	if !variable_global_exists("lui_z_index") variable_global_set("lui_z_index", 0);
 	
 	self.element_id = global.lui_element_count++;
-	
-	self.name = "LuiBase";
-	self.value = undefined;
-	self.style = undefined;
-	self.custom_style_is_setted = false;
-	
-	self.x = 0;									//Actual x position on the screen
-	self.y = 0;									//Actual y position on the screen
-	self.z = 0;									//Depth
-	self.pos_x = 0;								//Offset x position this element relative parent
-	self.pos_y = 0;								//Offset y position this element relative parent
-	self.target_x = 0;							//Target x position this element relative parent (for animation) //???//
-	self.target_y = 0;							//Target y position this element relative parent (for animation) //???//
-	self.start_x = -1;							//First x position
-	self.start_y = -1;							//First y position
-	self.previous_x = -1;						//Previous floor(x) position on the screen
-	self.previous_y = -1;						//Previous floor(y) position on the screen
-	self.grid_previous_x1 = -1;					//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
-	self.grid_previous_y1 = -1;					//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
-	self.grid_previous_x2 = -1;					//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
-	self.grid_previous_y2 = -1;					//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
-	self.width = 32;							//Actual width
-	self.height = 32;							//Actual height
-	self.target_width = 32;						//Target width (for animation) //???//
-	self.target_height = 32;					//Target height (for animation) //???//
+	self.name = "LuiBase";							//Unique element identifier
+	self.value = undefined;							//Value
+	self.style = undefined;							//Style struct
+	self.x = 0;										//Actual x position on the screen
+	self.y = 0;										//Actual y position on the screen
+	self.z = 0;										//Depth
+	self.pos_x = 0;									//Offset x position this element relative parent //???//
+	self.pos_y = 0;									//Offset y position this element relative parent //???//
+	self.target_x = 0;								//Target x position this element relative parent (for animation) //???//
+	self.target_y = 0;								//Target y position this element relative parent (for animation) //???//
+	self.start_x = -1;								//First x position
+	self.start_y = -1;								//First y position
+	self.previous_x = -1;							//Previous floor(x) position on the screen
+	self.previous_y = -1;							//Previous floor(y) position on the screen
+	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
+	self.grid_previous_y1 = -1;						//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
+	self.grid_previous_x2 = -1;						//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
+	self.grid_previous_y2 = -1;						//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
+	self.width = 32;								//Actual width
+	self.height = 32;								//Actual height
+	self.target_width = 32;							//Target width (for animation) //???//
+	self.target_height = 32;						//Target height (for animation) //???//
 	self.min_width = 32;
 	self.min_height = 32;
 	self.max_width = 3200;
@@ -41,8 +38,7 @@ function LuiBase() constructor {
 	self.callback = undefined;
 	self.content = [];
 	self.delayed_content = undefined;
-	self.container = self; 						//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
-	self.is_mouse_hovered = false;
+	self.container = self; 							//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	self.deactivated = false;
 	self.visible = true;
 	self.visibility_switching = true;
@@ -54,7 +50,9 @@ function LuiBase() constructor {
 	self.main_ui = undefined;
 	self.tooltip = "";
 	self.binding_variable = -1;
+	self.is_mouse_hovered = false;
 	self.is_adding = false;
+	self.is_custom_style_setted = false;
 	self.draw_content_in_cutted_region = false;
 	self.render_region_offset = {
 		left : 0,
@@ -62,7 +60,7 @@ function LuiBase() constructor {
 		top : 0,
 		bottom : 0
 	};
-	self._grid_location = []; 					//Screen grid to optimize the search for items under the mouse cursor
+	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
 	
 	// Custom methods for element
 	
@@ -131,17 +129,6 @@ function LuiBase() constructor {
 	///@desc Get value of this element
 	static get = function() {
 		return self.value;
-	}
-	
-	///@desc Returns the lowest point of the elements by height
-	///@deprecated
-	static getLowerPoint = function() {
-		var _lower_point = 0;
-		for (var i = 0, n = array_length(content); i < n; ++i) {
-		    var _elm = content[i];
-			_lower_point = max(_lower_point, _elm.pos_y + _elm.height);
-		}
-		return _lower_point;
 	}
 	
 	///@desc get style
@@ -550,7 +537,7 @@ function LuiBase() constructor {
 	///@desc Set style
 	static setStyle = function(_style) {
 		self.style = new LuiStyle(_style);
-		self.custom_style_is_setted = true;
+		self.is_custom_style_setted = true;
 		array_foreach(self.content, function(_elm) {
 			_elm.setStyleChilds(self.style);
 		});
@@ -564,7 +551,7 @@ function LuiBase() constructor {
 	
 	///@desc Set style for child elements
 	static setStyleChilds = function(_style) {
-		if self.custom_style_is_setted == false {
+		if self.is_custom_style_setted == false {
 			self.style = _style;
 		}
 		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
