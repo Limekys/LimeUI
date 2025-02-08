@@ -13,6 +13,7 @@ function LuiMain() : LuiBase() constructor {
 	self.element_in_focus = undefined;
 	self.topmost_hovered_element = undefined;
 	self.display_focused_element = false;
+	self.waiting_for_keyboard_input = false;
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -258,6 +259,21 @@ function LuiMain() : LuiBase() constructor {
 		delete self.element_names;
 		global.lui_element_count = 0;
 		global.lui_z_index = 0;
+	}
+	
+	///@desc Return true if we interacting with UI
+	static isInteracting = function() {
+		return self.isInteractingKeyboard() || self.isInteractingMouse();
+	}
+	
+	///@desc Return true if we interacting with UI with mouse
+	static isInteractingMouse = function() {
+		return !is_undefined(self.topmost_hovered_element);
+	}
+	
+	///@desc Return true if we interacting with UI with keyboard
+	static isInteractingKeyboard = function() {
+		return self.waiting_for_keyboard_input;
 	}
 	
 	///@desc Get element by name

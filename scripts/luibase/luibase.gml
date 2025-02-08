@@ -54,7 +54,6 @@ function LuiBase() constructor {
 	self.render_content_enabled = true;
 	self.delayed_content = undefined;
 	self.need_to_update_content = false;
-	self.waiting_for_keyboard_input = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
 	self.binding_variable = -1;
@@ -1010,21 +1009,6 @@ function LuiBase() constructor {
 		if is_undefined(self.main_ui) return self;
 		self.main_ui.update_ui_screen_surface = true;
 		return self;
-	}
-	
-	///@desc Return true if we interacting with UI
-	static isInteracting = function() {
-		return self.isInteractingMouse() || self.isInteractingKeyboard();
-	}
-	
-	///@desc Return true if we interacting with UI with mouse
-	static isInteractingMouse = function() {
-		return self.isMouseHoveredChilds();
-	}
-	
-	///@desc Return true if we interacting with UI with keyboard
-	static isInteractingKeyboard = function() {
-		return self.waiting_for_keyboard_input;
 	}
 	
 	///@desc Returns true if the mouse is hovered over this element
