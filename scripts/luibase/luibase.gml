@@ -40,130 +40,91 @@ function LuiBase() constructor {
 	self.parent = undefined;
 	self.callback = undefined;
 	self.content = [];
+	self.delayed_content = undefined;
+	self.container = self; 						//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	self.is_mouse_hovered = false;
 	self.deactivated = false;
 	self.visible = true;
 	self.visibility_switching = true;
 	self.has_focus = false;
-	self.halign = undefined; //???//
-	self.valign = undefined; //???//
-	self.draw_relative = false; //???// Deprecated ?
-	self.parent_relative = undefined; //???// Deprecated ?
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.render_content_enabled = true;
-	self.delayed_content = undefined;
 	self.need_to_update_content = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
 	self.binding_variable = -1;
 	self.is_adding = false;
 	self.draw_content_in_cutted_region = false;
-	self.container = self; //Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
-	self.render_region_offset = {left : 0, right : 0, top : 0, bottom : 0};
-	self._grid_location = []; //Screen grid to optimize the search for items under the mouse cursor
+	self.render_region_offset = {
+		left : 0,
+		right : 0,
+		top : 0,
+		bottom : 0
+	};
+	self._grid_location = []; 					//Screen grid to optimize the search for items under the mouse cursor
 	
 	// Custom methods for element
 	
 	//Called after this item has been added somewhere
-	self.onCreate = function() {
-		//Custom for each element
-	}
+	self.onCreate = undefined;
 	
 	///@desc step()
-	self.step = function() {
-		//Custom for each element
-	}
+	self.step = undefined;
 	
 	///@desc Called when adding or deleting elements inside
-	self.onContentUpdate = function() {
-		//Custom for each element
-	}
+	self.onContentUpdate = undefined;
 	
 	///@desc Pre draw method call before draw method (for surfaces for example)
-	self.preDraw = function() {
-		//Custom for each element
-	}
+	self.preDraw = undefined;
 	
 	///@desc Draw method for element
-	self.draw = function() {
-		//Custom for each element
-	}
+	self.draw = undefined;
 	
 	///@desc Called when this element is deleted (for example to clear surfaces)
-	self.onDestroy = function() {
-		//Custom for each element
-	};
+	self.onDestroy = undefined;
 	
 	///@desc Called when you click on an element with the left mouse button
-	self.onMouseLeft = function() {
-		//Custom for each element
-	}
+	self.onMouseLeft = undefined;
 	
 	///@desc Called once when you click on an element with the left mouse button
-	self.onMouseLeftPressed = function() {
-		//Custom for each element
-	}
+	self.onMouseLeftPressed = undefined;
 	
 	///@desc Called once when the mouse left button is released
-	self.onMouseLeftReleased = function() {
-		//Custom for each element
-	}
+	self.onMouseLeftReleased = undefined;
 	
 	///@desc Called when the mouse wheel moves up or down
-	self.onMouseWheel = function() {
-		//Custom for each element
-	}
+	self.onMouseWheel = undefined;
 	
 	///@desc Called once when mouse enter on an element
-	self.onMouseEnter = function() {
-		//Custom for each element
-	}
+	self.onMouseEnter = undefined;
 	
 	///@desc Called once when mouse leave from an element
-	self.onMouseLeave = function() {
-		//Custom for each element
-	}
+	self.onMouseLeave = undefined;
 	
 	///@desc Called during keyboard input if the item is in focus
-	self.onKeyboardInput = function() {
-		//Custom for each element
-	}
+	self.onKeyboardInput = undefined;
 	
 	///@desc Called during keyboard release if the item is in focus
-	self.onKeyboardRelease = function() {
-		//Custom for each element
-	}
+	self.onKeyboardRelease = undefined;
 	
 	///@desc Called when element change his position
-	self.onPositionUpdate = function() {
-		//Custom for each element
-	}
+	self.onPositionUpdate = undefined;
 	
 	///@desc Called once when an element gets the focus
-	self.onFocusSet = function() {
-		//Custom for each element
-	}
+	self.onFocusSet = undefined;
 	
 	///@desc Called once when an element has lost focus
-	self.onFocusRemove = function() {
-		//Custom for each element
-	}
+	self.onFocusRemove = undefined;
 	
 	///@desc Called when an element has change value
-	self.onValueUpdate = function() {
-		//Custom for each element
-	}
+	self.onValueUpdate = undefined;
 	
 	///@desc Called when an element has change visible to true
-	self.onShow = function() {
-		//Custom for each element
-	}
+	self.onShow = undefined;
 	
 	///@desc Called when an element has change visible to false
-	self.onHide = function() {
-		//Custom for each element
-	}
+	self.onHide = undefined;
 	
 	// GETTERS
 	
@@ -233,7 +194,7 @@ function LuiBase() constructor {
 			if self.binding_variable != -1 {
 				self.updateToBinding();
 			}
-			self.onValueUpdate();
+			if is_method(self.onValueUpdate) self.onValueUpdate();
 			self.updateMainUiSurface();
 		}
 		return self;
@@ -560,7 +521,7 @@ function LuiBase() constructor {
 	///@return {Struct.LuiBase}
 	static setFocus = function() {
 		self.has_focus = true;
-		self.onFocusSet();
+		if is_method(self.onFocusSet) self.onFocusSet();
 		return self;
 	}
 	
@@ -651,9 +612,9 @@ function LuiBase() constructor {
 				}
 				//Call event onShow / onHide
 				if _visible {
-					self.onShow();
+					if is_method(self.onShow) self.onShow();
 				} else {
-					self.onHide();
+					if is_method(self.onHide) self.onHide();
 				}
 				self.updateMainUiSurface();
 				if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
@@ -773,7 +734,7 @@ function LuiBase() constructor {
 			_element._addDelayedContent();
 			
 			// Call custom method create
-			_element.onCreate();
+			if is_method(_element.onCreate) _element.onCreate();
 			
 			_element.is_adding = false;
 		}
@@ -792,7 +753,7 @@ function LuiBase() constructor {
 		}
 		
 		// Check if the element is in the area of its parent and call its step function
-		if (self.inside_parent) {
+		if (self.inside_parent && is_method(self.step)) {
 			self.step();
 		}
 		
@@ -809,7 +770,7 @@ function LuiBase() constructor {
 				_element.inside_parent = isInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
 				if _element.inside_parent {
 					// Call onPositionUpdate method of each element
-					_element.onPositionUpdate();
+					if is_method(_element.onPositionUpdate) _element.onPositionUpdate();
 					// Update main surface
 					self.updateMainUiSurface();
 				}
@@ -833,7 +794,7 @@ function LuiBase() constructor {
 			
 			// Call onContentUpdate of each lement if need it
 			if (_element.need_to_update_content) {
-				_element.onContentUpdate();
+				if is_method(_element.onContentUpdate) _element.onContentUpdate();
 				_element.need_to_update_content = false;
 			}
 			
@@ -856,7 +817,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc This function draws all nested elements
-	static render = function(base_x = 0, base_y = 0) {
+	static render = function() {
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
 			//Get element
 			var _element = self.content[i];
@@ -866,7 +827,7 @@ function LuiBase() constructor {
 			//Check if the element is in the area of its parent and draw
 			if _allow_to_draw {
 				// Draw self
-				_element.draw(_element.x, _element.y);
+				if is_method(_element.draw) _element.draw();
 				// Draw content
 				if _element.render_content_enabled {
 					if self.draw_content_in_cutted_region {
@@ -877,7 +838,7 @@ function LuiBase() constructor {
 						var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
 						gpu_set_scissor(_x, _y, _w, _h);
 					}
-					_element.render(_element.x, _element.y);
+					_element.render();
 					if self.draw_content_in_cutted_region {
 						gpu_set_scissor(_gpu_scissor);
 					}
@@ -906,7 +867,7 @@ function LuiBase() constructor {
 	///@return {Struct.LuiBase}
 	static removeFocus = function() {
 		self.has_focus = false;
-		self.onFocusRemove();
+		if is_method(self.onFocusRemove) self.onFocusRemove();
 		return self;
 	}
 	
@@ -1090,7 +1051,7 @@ function LuiBase() constructor {
 			self.main_ui.element_in_focus.removeFocus();
 			self.main_ui.element_in_focus = undefined;
 		}
-		self.onDestroy();
+		if is_method(self.onDestroy) self.onDestroy();
 		self._deleteElementName();
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);

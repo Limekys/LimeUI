@@ -266,7 +266,7 @@ my_panel_3.addContent([
 		// Create scroll panel with different elements
 		tab_panels.addContent([
 			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
-			new LuiScrollPanel().addContent([
+			new LuiScrollPanel( , , , , "firstScrollPanel").addContent([
 				new LuiTextbox(, , , , , , "Type in me!"),
 				new LuiPanel().addContent([
 					new LuiText(, , , , , "Nested panel 1.1"),
@@ -307,15 +307,19 @@ my_panel_3.addContent([
 
 // Stress test
 //numb = 0;
-//repeat (1000) {
-	//numb++;
+//_random_element = function(_number) {
+		//return choose(
+					//new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)), 
+					//new LuiSprite(, , , irandom_range(32, 128), , sLogoDemo, , make_color_hsv(irandom(255), 255, 255), , choose(true, false)),
+					//new LuiSlider(, , , , , 0, 100, _number, 1),
+					//new LuiTextbox(, , , , , choose("", "aboba", string(_number)), choose("", "aboba", string(_number))),
+				//)
+//}
+//repeat (250) {
 	//my_ui.getElement("firstScrollPanel").addContent([
-		//choose(
-			//new LuiButton(, , , irandom_range(32, 64), , string(numb)), 
-			//new LuiSprite(, , , irandom_range(32, 64), , sLogoDemo, , make_color_hsv(irandom(255), 255, 255), , choose(true, false)),
-			//new LuiSlider(, , , , , 0, 100, numb, 1),
-			//new LuiTextbox(, , , , , choose("", "aboba", string(numb)), choose("", "aboba", string(numb))),
-		//)
+		//new LuiFlexRow().addContent([
+			//_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++)
+		//])
 	//])
 //}
 

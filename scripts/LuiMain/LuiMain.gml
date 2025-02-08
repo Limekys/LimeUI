@@ -49,23 +49,23 @@ function LuiMain() : LuiBase() constructor {
 			self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 				_previous_hovered_element.is_mouse_hovered = false;
-				_previous_hovered_element.onMouseLeave();
+				if is_method(_previous_hovered_element.onMouseLeave) _previous_hovered_element.onMouseLeave();
 				_previous_hovered_element.updateMainUiSurface();
 			}
 			
 			if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
 				if self.topmost_hovered_element.is_mouse_hovered == false {
 					self.topmost_hovered_element.is_mouse_hovered = true;
-					self.topmost_hovered_element.onMouseEnter();
+					if is_method(self.topmost_hovered_element.onMouseEnter) self.topmost_hovered_element.onMouseEnter();
 					self.topmost_hovered_element.updateMainUiSurface();
 				}
 				
-				if (mouse_check_button(mb_left)) {
+				if (is_method(self.topmost_hovered_element.onMouseLeft) && mouse_check_button(mb_left)) {
 					self.topmost_hovered_element.onMouseLeft();
 					//self.updateMainUiSurface();
 				}
 				if (mouse_check_button_pressed(mb_left)) {
-					self.topmost_hovered_element.onMouseLeftPressed();
+					if is_method(self.topmost_hovered_element.onMouseLeftPressed) self.topmost_hovered_element.onMouseLeftPressed();
 					// Set focus on element
 					if self.element_in_focus != self.topmost_hovered_element {
 						// Remove focus from previous element
@@ -79,7 +79,7 @@ function LuiMain() : LuiBase() constructor {
 					self.updateMainUiSurface();
 				}
 				if (mouse_check_button_released(mb_left)) {
-					self.topmost_hovered_element.onMouseLeftReleased();
+					if is_method(self.topmost_hovered_element.onMouseLeftReleased) self.topmost_hovered_element.onMouseLeftReleased();
 					// Remove focus from element
 					if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
 						self.element_in_focus.removeFocus();
@@ -87,7 +87,7 @@ function LuiMain() : LuiBase() constructor {
 					}
 					self.updateMainUiSurface();
 				}
-				if (mouse_wheel_down() || mouse_wheel_up()) {
+				if is_method(self.topmost_hovered_element.onMouseWheel) && (mouse_wheel_down() || mouse_wheel_up()) {
 					self.topmost_hovered_element.onMouseWheel();
 					self.updateMainUiSurface();
 				}
@@ -105,11 +105,11 @@ function LuiMain() : LuiBase() constructor {
 		
 		// Keyboard events
 		if !is_undefined(self.element_in_focus) {
-			if keyboard_check(vk_anykey) {
+			if is_method(self.element_in_focus.onKeyboardInput) && keyboard_check(vk_anykey) {
 				self.element_in_focus.onKeyboardInput();
 				self.updateMainUiSurface();
 			}
-			if keyboard_check_released(vk_anykey) {
+			if is_method(self.element_in_focus.onKeyboardRelease) && keyboard_check_released(vk_anykey) {
 				self.element_in_focus.onKeyboardRelease();
 			}
 			if keyboard_check_pressed(vk_escape) {
@@ -142,7 +142,7 @@ function LuiMain() : LuiBase() constructor {
 		// Pre draw events
 		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
 			var _element = self.pre_draw_list[i];
-			_element.preDraw();
+			if is_method(_element.preDraw) _element.preDraw();
 		}
 		
 		// Create main ui surface
