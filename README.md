@@ -5,21 +5,25 @@ For documentaion check [wiki page](https://github.com/Limekys/LimeUI/wiki)
 
 _*Right now the system is in a very early stage of development and with each update I may change things drastically_
 
-### Elements:
-- Container
-- Panel
-- ScrollPanel
+### Components:
+- AbsContainer
+- BlockArea
 - Button
 - Checkbox
-- Text
-- Textbox
+- Container
+- DropdownList
+- FlexColumn
+- FlexRow
+- Panel
 - ProgressBar
 - ProgressRing
+- ScrollPanel
 - Slider
 - Sprite
 - SpriteButton
-- DropdownList
 - TabGroup
+- Text
+- Textbox
 
 ### Features:
 - Flexpanels implementation
