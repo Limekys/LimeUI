@@ -124,6 +124,9 @@ function LuiBase() constructor {
 	///@desc Called when an element has change visible to false
 	self.onHide = undefined;
 	
+	///@desc Called when element change his size
+	self.onSizeUpdate = undefined;
+	
 	// GETTERS
 	
 	///@desc Get value of this element
@@ -292,6 +295,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
 		}
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		if is_method(self.onSizeUpdate) self.onSizeUpdate();
 		return self;
 	}
 	
@@ -303,6 +307,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		if is_method(self.onSizeUpdate) self.onSizeUpdate();
 		return self;
 	}
 	
@@ -318,6 +323,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
 		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		if is_method(self.onSizeUpdate) self.onSizeUpdate();
 		return self;
 	}
 	
@@ -1307,22 +1313,20 @@ function LuiBase() constructor {
 			return false;
 		}
 		
-		var _grid_size = LUI_GRID_SIZE;
-		
-		var _elm_x = floor(self.x / _grid_size);
-		var _elm_y = floor(self.y / _grid_size);
-		var _width = ceil(self.width / _grid_size);
-		var _height = ceil(self.height / _grid_size);
+		var _elm_x = floor(self.x / LUI_GRID_SIZE);
+		var _elm_y = floor(self.y / LUI_GRID_SIZE);
+		var _width = ceil(self.width / LUI_GRID_SIZE);
+		var _height = ceil(self.height / LUI_GRID_SIZE);
 		
 		var abs_x_end = self.x + self.width;
 		var abs_y_end = self.y + self.height;
 		
 		for (var _x = _elm_x; _x <= _elm_x + _width; ++_x) {
 			for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
-				var grid_x_start = _x * _grid_size;
-				var grid_y_start = _y * _grid_size;
-				var grid_x_end = grid_x_start + _grid_size;
-				var grid_y_end = grid_y_start + _grid_size;
+				var grid_x_start = _x * LUI_GRID_SIZE;
+				var grid_y_start = _y * LUI_GRID_SIZE;
+				var grid_x_end = grid_x_start + LUI_GRID_SIZE;
+				var grid_y_end = grid_y_start + LUI_GRID_SIZE;
 				
 				var _inside = rectangle_in_rectangle(
 					self.x, self.y, abs_x_end, abs_y_end,
@@ -1346,12 +1350,10 @@ function LuiBase() constructor {
 	///@ignore
 	static _gridDelete = function() {
 		
-		var _grid_size = LUI_GRID_SIZE;
-		
-		var _elm_x = floor(self.x / _grid_size);
-		var _elm_y = floor(self.y / _grid_size);
-		var _width = ceil(self.width / _grid_size);
-		var _height = ceil(self.height / _grid_size);
+		var _elm_x = floor(self.x / LUI_GRID_SIZE);
+		var _elm_y = floor(self.y / LUI_GRID_SIZE);
+		var _width = ceil(self.width / LUI_GRID_SIZE);
+		var _height = ceil(self.height / LUI_GRID_SIZE);
 		
 		var _grid_location_length = array_length(self._grid_location);
 		for (var i = _grid_location_length - 1; i >= 0; --i) {
@@ -1395,19 +1397,18 @@ function LuiBase() constructor {
 		draw_set_valign(fa_top);
 		draw_set_font(fDebug);
 		
-		var grid_size = LUI_GRID_SIZE;
 		var gui_width = display_get_gui_width();
 		var gui_height = display_get_gui_height();
 		
-		var _width = ceil(gui_width / grid_size);
-		var _height = ceil(gui_height / grid_size);
+		var _width = ceil(gui_width / LUI_GRID_SIZE);
+		var _height = ceil(gui_height / LUI_GRID_SIZE);
 		
 		for (var _x = 0; _x <= _width; ++_x) {
-			var x_pos = _x * grid_size;
+			var x_pos = _x * LUI_GRID_SIZE;
 			draw_line(x_pos, 0, x_pos, gui_height);
 			
 			for (var _y = 0; _y <= _height; ++_y) {
-				var y_pos = _y * grid_size;
+				var y_pos = _y * LUI_GRID_SIZE;
 				
 				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
 				

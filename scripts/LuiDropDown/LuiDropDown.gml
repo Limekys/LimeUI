@@ -60,10 +60,10 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			self._initDropdownPanel();
 			self._initItems();
 		}
-		//Set position of dropdown panel
+		//Set position and size of dropdown panel
 		var _x = self.x;
 		var _y = self.y + self.height;
-		self.dropdown_panel.setPosition(_x, _y);
+		self.dropdown_panel.setPosition(_x, _y).setWidth(self.width);
 		//Open and change visibility
 		self.is_open = !self.is_open;
 		self.dropdown_panel.setVisibilitySwitching(true);

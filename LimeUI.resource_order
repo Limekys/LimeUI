@@ -22,6 +22,7 @@
     {"name":"rDemo","order":4,"path":"rooms/rDemo/rDemo.yy",},
     {"name":"rDemo3","order":1,"path":"rooms/rDemo3/rDemo3.yy",},
     {"name":"rInit","order":7,"path":"rooms/rInit/rInit.yy",},
+    {"name":"Additional","order":8,"path":"scripts/Additional/Additional.yy",},
     {"name":"LimekysUsefulFunctions","order":1,"path":"scripts/LimekysUsefulFunctions/LimekysUsefulFunctions.yy",},
     {"name":"LuiBlockArea","order":1,"path":"scripts/LuiBlockArea/LuiBlockArea.yy",},
     {"name":"LuiButton","order":2,"path":"scripts/LuiButton/LuiButton.yy",},

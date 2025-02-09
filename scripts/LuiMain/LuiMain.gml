@@ -17,19 +17,30 @@ function LuiMain() : LuiBase() constructor {
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
-	flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
-	flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
+	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
+	flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
 	var _data = flexpanel_node_get_data(self.flex_node);
 	_data.element = self;
 	self.needs_flex_update = true;
 	
 	// Init Screen grid
 	self._screen_grid = {};
-	for (var _x = 0, _width = ceil(display_get_gui_width() / LUI_GRID_SIZE); _x <= _width; ++_x) {
-		for (var _y = 0, _height = ceil(display_get_gui_height() / LUI_GRID_SIZE); _y <= _height; ++_y) {
-			var _key = string(_x) + "_" + string(_y);
-			self._screen_grid[$ _key] = array_create(0);
+	static recalculateScreenGrid = function() {
+		for (var _x = 0, _width = ceil(display_get_gui_width() / LUI_GRID_SIZE); _x < _width; ++_x) {
+			for (var _y = 0, _height = ceil(display_get_gui_height() / LUI_GRID_SIZE); _y < _height; ++_y) {
+				var _key = string(_x) + "_" + string(_y);
+				if !is_array(self._screen_grid[$ _key]) {
+					self._screen_grid[$ _key] = array_create(0);
+				}
+			}
 		}
+		return self;
+	}
+	self.recalculateScreenGrid();
+	
+	// Recalculate grid size on size change
+	self.onSizeUpdate = function() {
+		self.recalculateScreenGrid();
 	}
 	
 	// Update
@@ -151,6 +162,11 @@ function LuiMain() : LuiBase() constructor {
 			self.update_ui_screen_surface = true;
 		}
 		
+		// Check surface size
+		if surface_get_width(self.ui_screen_surface) != self.width || surface_get_height(self.ui_screen_surface) != self.height {
+			surface_resize(self.ui_screen_surface, self.width, self.height);
+		}
+		
 		// Update main ui surface
 		if self.update_ui_screen_surface {
 			// Set alpha 1 for drawing surface
@@ -261,6 +277,8 @@ function LuiMain() : LuiBase() constructor {
 		global.lui_z_index = 0;
 	}
 	
+	// CHECKERS
+	
 	///@desc Return true if we interacting with UI
 	static isInteracting = function() {
 		return self.isInteractingKeyboard() || self.isInteractingMouse();
@@ -275,6 +293,8 @@ function LuiMain() : LuiBase() constructor {
 	static isInteractingKeyboard = function() {
 		return self.waiting_for_keyboard_input;
 	}
+	
+	// GETTERS
 	
 	///@desc Get element by name
 	///@return {Struct}

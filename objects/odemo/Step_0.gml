@@ -12,3 +12,4 @@ if tab_group.x != tab_group_target_x || tab_group.y != tab_group_target_y {
 	tab_group.setPosition(tab_group_target_x, tab_group_target_y);
 }
 
+checkAndRescaleWindow(my_ui);
