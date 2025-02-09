@@ -70,6 +70,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		} else {
 			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
 		}
+		var _prev_alpha = draw_get_alpha();
 		draw_set_alpha(1);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_middle);
@@ -102,6 +103,8 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		if _display_text != "" || self.has_focus {
 			draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
 		}
+		
+		draw_set_alpha(_prev_alpha);
 		
 		//Border
 		if !is_undefined(self.style.sprite_textbox_border) {
