@@ -65,7 +65,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	///@ignore
 	static _applyScroll = function() {
-		self.scroll_container.setPosition(LUI_AUTO, clamp(self.scroll_offset_y, -(self.scroll_container.height - self.height), 0));
+		self.scroll_container.setPosition(LUI_AUTO, self.scroll_offset_y);
 	}
 	
 	self.draw = function() {
@@ -131,6 +131,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 		// Scrolling
 		if self.scroll_offset_y != self.scroll_target_offset_y {
+			self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, 2, 1);
 			self._applyScroll();
 		}
