@@ -134,18 +134,19 @@ function LuiBase() constructor {
 		return self.value;
 	}
 	
-	///@desc get style
+	///@desc Get style
 	static getStyle = function() {
-		if (!is_undefined(self.style)) {
-			return self.style;
-		}
-		if (!is_undefined(self.parent)) {
-			var _style = self.parent.getStyle();
-			if (!is_undefined(_style)) {
-				return _style;
-			}
-		}
-		return undefined;
+		return self.style;
+		//if (!is_undefined(self.style)) {
+			//return self.style;
+		//}
+		//if (!is_undefined(self.parent)) {
+			//var _style = self.parent.getStyle();
+			//if (!is_undefined(_style)) {
+				//return _style;
+			//}
+		//}
+		//return undefined;
 	}
 	
 	///@desc Get first element in content array
@@ -167,7 +168,7 @@ function LuiBase() constructor {
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
 		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
 		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
-			return _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents() && _elm.visible && !_elm.ignore_mouse;
+			return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
 		});
 		array_sort(_array, function(_elm1, _elm2) {
 			return _elm1.z - _elm2.z;
@@ -212,7 +213,7 @@ function LuiBase() constructor {
 	static setPositionType = function(_type = flexpanel_position_type.relative) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_position_type(_flex_node, _type);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -224,7 +225,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
 			self.auto_x = false;
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -236,7 +237,7 @@ function LuiBase() constructor {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 			self.auto_y = false;
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -247,7 +248,7 @@ function LuiBase() constructor {
 		if _r != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -258,7 +259,7 @@ function LuiBase() constructor {
 		if _b != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _b, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -283,7 +284,7 @@ function LuiBase() constructor {
 		if _b != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.bottom, _b, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -294,7 +295,7 @@ function LuiBase() constructor {
 		if _width != LUI_AUTO {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		if is_method(self.onSizeUpdate) self.onSizeUpdate();
 		return self;
 	}
@@ -306,7 +307,7 @@ function LuiBase() constructor {
 		if _height != LUI_AUTO {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		if is_method(self.onSizeUpdate) self.onSizeUpdate();
 		return self;
 	}
@@ -322,7 +323,7 @@ function LuiBase() constructor {
 		if _height != LUI_AUTO {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		if is_method(self.onSizeUpdate) self.onSizeUpdate();
 		return self;
 	}
@@ -334,7 +335,7 @@ function LuiBase() constructor {
 		if _min_width != LUI_AUTO {
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -345,7 +346,7 @@ function LuiBase() constructor {
 		if _max_width != LUI_AUTO {
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -356,7 +357,7 @@ function LuiBase() constructor {
 		if _min_height != LUI_AUTO {
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -367,7 +368,7 @@ function LuiBase() constructor {
 		if _max_height != LUI_AUTO {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -390,7 +391,7 @@ function LuiBase() constructor {
 		if _max_height != LUI_AUTO {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 		}
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -399,7 +400,7 @@ function LuiBase() constructor {
 	static setFlexPadding = function(_padding) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -409,7 +410,7 @@ function LuiBase() constructor {
 	static setFlexBorder = function(_edge, _border) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_border(_flex_node, _edge, _border);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -418,7 +419,7 @@ function LuiBase() constructor {
 	static setFlexGap = function(_gap) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -428,7 +429,7 @@ function LuiBase() constructor {
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -437,7 +438,7 @@ function LuiBase() constructor {
 	static setFlexWrap = function(_wrap = flexpanel_wrap.no_wrap) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_wrap(_flex_node, _wrap);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -446,7 +447,7 @@ function LuiBase() constructor {
 	static setFlexGrow = function(_grow = 1) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_grow(_flex_node, _grow);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -455,7 +456,7 @@ function LuiBase() constructor {
 	static setFlexShrink = function(_shrink = 1) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_shrink(_flex_node, _shrink);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -464,7 +465,7 @@ function LuiBase() constructor {
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -473,7 +474,7 @@ function LuiBase() constructor {
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -482,7 +483,7 @@ function LuiBase() constructor {
 	static setFlexAlignSelf = function(_flex_align) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -491,7 +492,7 @@ function LuiBase() constructor {
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -500,7 +501,7 @@ function LuiBase() constructor {
 	static setFlexDisplay = function(_flex_display = flexpanel_display.flex) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_display(_flex_node, _flex_display);
-		if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
+		self.updateMainUiFlex();
 		return self;
 	}
 	
@@ -594,23 +595,25 @@ function LuiBase() constructor {
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
 			if self.visible != _visible {
-				//Change visible
+				// Change visible
 				self.visible = _visible;
-				if !is_undefined(self.main_ui) {
-					self._gridUpdate();
-					self.grid_previous_x1 = -1;
-					self.grid_previous_y1 = -1;
-					self.grid_previous_x2 = -1;
-					self.grid_previous_y2 = -1; //???// 
-				}
-				//Call event onShow / onHide
+				// Events onShow / onHide
 				if _visible {
 					if is_method(self.onShow) self.onShow();
 				} else {
 					if is_method(self.onHide) self.onHide();
 				}
+				// Grid and flex update
+				if !is_undefined(self.main_ui)  {
+					self._gridUpdate();
+					self.main_ui.needs_flex_update = true;
+				}
+				// Call for children
+				for (var i = 0, n = array_length(content); i < n; ++i) {
+					self.content[i].setVisible(_visible);
+				}
+				// Main surface update 
 				self.updateMainUiSurface();
-				if !is_undefined(self.main_ui)  self.main_ui.needs_flex_update = true;
 			}
 		}
 		return self;
@@ -765,7 +768,7 @@ function LuiBase() constructor {
 					// Call onPositionUpdate method of each element
 					if is_method(_element.onPositionUpdate) _element.onPositionUpdate();
 					// Update main surface
-					self.updateMainUiSurface();
+					_element.updateMainUiSurface();
 				}
 			}
 			
@@ -774,6 +777,7 @@ function LuiBase() constructor {
 			_element.previous_y = _cur_y;
 			
 			if !_element.inside_parent {
+				_element._gridDelete();
 				continue;
 			}
 			
@@ -812,29 +816,25 @@ function LuiBase() constructor {
 	///@desc This function draws all nested elements
 	static render = function() {
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
-			//Get element
+			// Get element
 			var _element = self.content[i];
-			if !_element.visible continue;
-			//Check for allowing to draw
-			var _allow_to_draw = _element.inside_parent != 0;
-			//Check if the element is in the area of its parent and draw
-			if _allow_to_draw {
-				// Draw self
-				if is_method(_element.draw) _element.draw();
-				// Draw content
-				if _element.render_content_enabled {
-					if self.draw_content_in_cutted_region {
-						var _gpu_scissor = gpu_get_scissor();
-						var _x = self.x + self.render_region_offset.left;
-						var _y = self.y + self.render_region_offset.top;
-						var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
-						var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
-						gpu_set_scissor(_x, _y, _w, _h);
-					}
-					_element.render();
-					if self.draw_content_in_cutted_region {
-						gpu_set_scissor(_gpu_scissor);
-					}
+			// Restriction
+			if !_element.visible || !_element.inside_parent continue;
+			// Draw self
+			if is_method(_element.draw) _element.draw();
+			// Draw content
+			if _element.render_content_enabled {
+				if self.draw_content_in_cutted_region {
+					var _gpu_scissor = gpu_get_scissor();
+					var _x = self.x + self.render_region_offset.left;
+					var _y = self.y + self.render_region_offset.top;
+					var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
+					var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
+					gpu_set_scissor(_x, _y, _w, _h);
+				}
+				_element.render();
+				if self.draw_content_in_cutted_region {
+					gpu_set_scissor(_gpu_scissor);
 				}
 			}
 		}
@@ -849,7 +849,7 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc Centered content in flexpanel(element). Call setFlexJustifyContent and setFlexAlignItems to center
+	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
 	static centerContent = function() {
 		self.setFlexJustifyContent(flexpanel_justify.center)
 			.setFlexAlignItems(flexpanel_align.center);
@@ -896,6 +896,9 @@ function LuiBase() constructor {
 	///@desc Update position, size and z depth for specified flex node
 	static flexUpdate = function(_node) {
 		
+		// Dont update not visible or not inside parents elements
+		if !self.visible || !self.inside_parent exit;
+		
 		// Get layout data
 		var _pos = flexpanel_node_layout_get_position(_node, false);
 		
@@ -909,17 +912,21 @@ function LuiBase() constructor {
 		_element.width = _pos.width;
 		_element.height = _pos.height;
 		if (_element.start_x == -1) {
-			_element.start_x = _element.pos_x;
+			_element.start_x = _element.x;
 		}
 		if (_element.start_y == -1) {
-			_element.start_y = _element.pos_y;
+			_element.start_y = _element.y;
 		}
 		_element.z = global.lui_z_index++;
 		
 		// Call for children (recursive)
 		var _children_count = flexpanel_node_get_num_children(_node);
 		for (var i = 0; i < _children_count; i++) {
+			// Dont update not visible or not inside parents elements
+			if !_element.visible || !_element.inside_parent continue;
+			// Get child node
 			var _child = flexpanel_node_get_child(_node, i);
+			// Update child node
 			_element.flexUpdate(_child);
 		}
 	}
@@ -962,6 +969,13 @@ function LuiBase() constructor {
 	static updateMainUiSurface = function() {
 		if is_undefined(self.main_ui) return self;
 		self.main_ui.update_ui_screen_surface = true;
+		return self;
+	}
+	
+	///@desc Update main ui flex
+	static updateMainUiFlex = function() {
+		if is_undefined(self.main_ui) return self;
+		self.main_ui.needs_flex_update = true;
 		return self;
 	}
 	
@@ -1066,7 +1080,7 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc This function destroys all nested elements
+	///@desc Destroys all nested elements
 	static destroyContent = function() {
 		if array_length(self.content) > 0 {
 			for (var i = array_length(self.content) - 1;  i >= 0; --i) {
@@ -1097,12 +1111,12 @@ function LuiBase() constructor {
 			self.auto_height = true;
 			self.height = self.min_height;
 		}
-		self._init_flex();
+		self._initFlexNode();
 	}
 	
 	///@desc Initialize flex node
 	///@ignore
-	static _init_flex = function() {
+	static _initFlexNode = function() {
 		// Flex node (default for all elements)
 		self.flex_node = flexpanel_create_node({
 			name: self.name, 
@@ -1136,7 +1150,7 @@ function LuiBase() constructor {
 		_data.element = self;
 	}
 	
-	///@desc Add delayed content
+	///@desc Adds elements from a delayed array
 	///@ignore
 	static _addDelayedContent = function() {
 		if is_array(self.delayed_content) {
@@ -1150,11 +1164,14 @@ function LuiBase() constructor {
 	///@desc Render debug info of element
 	///@ignore
 	static _renderDebug = function(_x = 0, _y = 0) {
+		// Set font
 		if !is_undefined(self.style.font_debug) {
 			draw_set_font(self.style.font_debug);
 		}
+		// Remember prev colors
 		var _prev_color = draw_get_color();
 		var _prev_alpha = draw_get_alpha();
+		// Set colors
 		if isMouseHovered() {
 			draw_set_alpha(1);
 			draw_set_color(c_red);
@@ -1162,13 +1179,13 @@ function LuiBase() constructor {
 			draw_set_alpha(0.5);
 			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
 		}
-		//Rectangles
+		// Draw rectangles
 		if isMouseHovered() {
 			draw_rectangle(_x-1, _y-1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
 		} else {
 			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
 		}
-		//Text
+		// Draw text
 		if global.lui_debug_mode == 2 {
 			_luiDrawTextDebug(_x, _y, 
 			"id: " + string(self.element_id) + "\n" +
@@ -1180,6 +1197,7 @@ function LuiBase() constructor {
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
 			"z: " + string(self.z));
 		}
+		// Reset colors
 		draw_set_color(_prev_color);
 		draw_set_alpha(_prev_alpha);
 	}
@@ -1312,35 +1330,22 @@ function LuiBase() constructor {
 		if (!self.inside_parent || !self.visible) {
 			return false;
 		}
-		
-		var _elm_x = floor(self.x / LUI_GRID_SIZE);
-		var _elm_y = floor(self.y / LUI_GRID_SIZE);
-		var _width = ceil(self.width / LUI_GRID_SIZE);
-		var _height = ceil(self.height / LUI_GRID_SIZE);
-		
-		var abs_x_end = self.x + self.width;
-		var abs_y_end = self.y + self.height;
-		
-		for (var _x = _elm_x; _x <= _elm_x + _width; ++_x) {
-			for (var _y = _elm_y; _y <= _elm_y + _height; ++_y) {
-				var grid_x_start = _x * LUI_GRID_SIZE;
-				var grid_y_start = _y * LUI_GRID_SIZE;
-				var grid_x_end = grid_x_start + LUI_GRID_SIZE;
-				var grid_y_end = grid_y_start + LUI_GRID_SIZE;
-				
-				var _inside = rectangle_in_rectangle(
-					self.x, self.y, abs_x_end, abs_y_end,
-					grid_x_start, grid_y_start, grid_x_end, grid_y_end
-				);
-				
-				if (_inside == 0) continue;
-				
+	
+		// Calculate the start and end cells that the element intersects
+		var _elm_x_start = floor(self.x / LUI_GRID_SIZE);
+		var _elm_y_start = floor(self.y / LUI_GRID_SIZE);
+		var _elm_x_end = floor((self.x + self.width) / LUI_GRID_SIZE);
+		var _elm_y_end = floor((self.y + self.height) / LUI_GRID_SIZE);
+	
+		// Restrict grid pass to only the required cells
+		for (var _x = _elm_x_start; _x <= _elm_x_end; ++_x) {
+			for (var _y = _elm_y_start; _y <= _elm_y_end; ++_y) {
 				var _key = string(_x) + "_" + string(_y);
 				
 				if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
 					var _array = self.main_ui._screen_grid[$ _key];
-					array_push(_array, self);
-					array_push(self._grid_location, _key);
+					_array[array_length(_array)] = self;
+					self._grid_location[array_length(self._grid_location)] = _key;
 				}
 			}
 		}
@@ -1349,12 +1354,6 @@ function LuiBase() constructor {
 	///@desc Delete lement from system ui grid
 	///@ignore
 	static _gridDelete = function() {
-		
-		var _elm_x = floor(self.x / LUI_GRID_SIZE);
-		var _elm_y = floor(self.y / LUI_GRID_SIZE);
-		var _width = ceil(self.width / LUI_GRID_SIZE);
-		var _height = ceil(self.height / LUI_GRID_SIZE);
-		
 		var _grid_location_length = array_length(self._grid_location);
 		for (var i = _grid_location_length - 1; i >= 0; --i) {
 			var _key = self._grid_location[i];
@@ -1416,13 +1415,15 @@ function LuiBase() constructor {
 				var _array = self.main_ui._screen_grid[$ _key];
 				draw_text(x_pos + 2, y_pos + 1, string(_key));
 				
-				for (var i = 0, n = array_length(_array); i < n; ++i) {
-					//draw_text_ext(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, -1, LUI_GRID_SIZE);
-					//_luiDrawTextCutoff(x_pos + 2, y_pos + 1 + 12 + 6 * i, _array[i].name, LUI_GRID_SIZE);
+				var _elements_in_cell = array_length(_array);
+				for (var i = 0, n = min(18, _elements_in_cell); i < n; ++i) {
 					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
 					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
 				}
 				draw_set_color(c_red);
+				if _elements_in_cell > 18 {
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * 18, $"and {array_length(_array) - 18} elements...");
+				}
 			}
 		}
 	};

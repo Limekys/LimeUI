@@ -309,10 +309,12 @@ my_panel_3.addContent([
 //numb = 0;
 //_random_element = function(_number) {
 		//return choose(
-					//new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)), 
-					//new LuiSprite(, , , irandom_range(32, 128), , sLogoDemo, , make_color_hsv(irandom(255), 255, 255), , choose(true, false)),
-					//new LuiSlider(, , , , , 0, 100, _number, 1),
-					//new LuiTextbox(, , , , , choose("", "aboba", string(_number)), choose("", "aboba", string(_number))),
+					//new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128)), 
+					//new LuiSpriteButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor),
+					//new LuiSlider(, , , , , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
+					//new LuiTextbox(, , , , , , "aboba_" + string(_number)),
+					//new LuiProgressRing(, , , , , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
+					//new LuiCheckbox(, , , , , choose(true, false))
 				//)
 //}
 //repeat (250) {

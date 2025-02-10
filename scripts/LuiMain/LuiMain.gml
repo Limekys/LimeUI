@@ -61,19 +61,18 @@ function LuiMain() : LuiBase() constructor {
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 				_previous_hovered_element.is_mouse_hovered = false;
 				if is_method(_previous_hovered_element.onMouseLeave) _previous_hovered_element.onMouseLeave();
-				_previous_hovered_element.updateMainUiSurface();
+				self.updateMainUiSurface();
 			}
 			
 			if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
 				if self.topmost_hovered_element.is_mouse_hovered == false {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					if is_method(self.topmost_hovered_element.onMouseEnter) self.topmost_hovered_element.onMouseEnter();
-					self.topmost_hovered_element.updateMainUiSurface();
+					self.updateMainUiSurface();
 				}
 				
 				if (is_method(self.topmost_hovered_element.onMouseLeft) && mouse_check_button(mb_left)) {
 					self.topmost_hovered_element.onMouseLeft();
-					//self.updateMainUiSurface();
 				}
 				if (mouse_check_button_pressed(mb_left)) {
 					if is_method(self.topmost_hovered_element.onMouseLeftPressed) self.topmost_hovered_element.onMouseLeftPressed();
@@ -86,8 +85,8 @@ function LuiMain() : LuiBase() constructor {
 						}
 						self.topmost_hovered_element.setFocus();
 						self.element_in_focus = self.topmost_hovered_element;
+						self.updateMainUiSurface();
 					}
-					self.updateMainUiSurface();
 				}
 				if (mouse_check_button_released(mb_left)) {
 					if is_method(self.topmost_hovered_element.onMouseLeftReleased) self.topmost_hovered_element.onMouseLeftReleased();
@@ -95,17 +94,16 @@ function LuiMain() : LuiBase() constructor {
 					if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus = undefined;
+						self.updateMainUiSurface();
 					}
-					self.updateMainUiSurface();
 				}
 				if is_method(self.topmost_hovered_element.onMouseWheel) && (mouse_wheel_down() || mouse_wheel_up()) {
 					self.topmost_hovered_element.onMouseWheel();
-					self.updateMainUiSurface();
 				}
 			} else {
 				// Remove focus from element
 				if !is_undefined(self.element_in_focus) {
-					if (mouse_check_button_pressed(mb_left)) {
+					if (mouse_check_button_pressed(mb_left) || mouse_check_button_released(mb_left)) {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus = undefined;
 						self.updateMainUiSurface();
@@ -118,7 +116,6 @@ function LuiMain() : LuiBase() constructor {
 		if !is_undefined(self.element_in_focus) {
 			if is_method(self.element_in_focus.onKeyboardInput) && keyboard_check(vk_anykey) {
 				self.element_in_focus.onKeyboardInput();
-				self.updateMainUiSurface();
 			}
 			if is_method(self.element_in_focus.onKeyboardRelease) && keyboard_check_released(vk_anykey) {
 				self.element_in_focus.onKeyboardRelease();
@@ -196,10 +193,11 @@ function LuiMain() : LuiBase() constructor {
 			//Draw other stuff
 			if self.display_focused_element {
 				if !is_undefined(self.element_in_focus) {
-					draw_rectangle_color(
-						self.element_in_focus.x - 1, self.element_in_focus.y - 1, 
-						self.element_in_focus.x + self.element_in_focus.width, self.element_in_focus.y + self.element_in_focus.height, c_white, c_white, c_white, c_white, true
-					);
+					var _elm_x = self.element_in_focus.x;
+					var _elm_y = self.element_in_focus.y;
+					var _elm_w = self.element_in_focus.width;
+					var _elm_h = self.element_in_focus.height;
+					draw_rectangle_color(_elm_x - 1, _elm_y - 1, _elm_x + _elm_w, _elm_y + _elm_h, c_white, c_white, c_white, c_white, true);
 				}
 			}
 		}

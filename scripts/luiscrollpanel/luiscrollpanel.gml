@@ -65,7 +65,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	///@ignore
 	static _applyScroll = function() {
-		self.scroll_container.setPosition(LUI_AUTO, self.scroll_offset_y);
+		self.scroll_container.setPosition(LUI_AUTO, clamp(self.scroll_offset_y, -(self.scroll_container.height - self.height), 0));
 	}
 	
 	self.draw = function() {
@@ -109,7 +109,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			var _wheel = _wheel_up - _wheel_down;
 			if _wheel != 0 {
 				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
-				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
+				self.scroll_target_offset_y = self.scroll_target_offset_y;
 			}
 			// Touch compatibility
 			if self.drag_start_y == -1 && mouse_check_button_pressed(mb_left) {
@@ -123,7 +123,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 				self.drag_y = device_mouse_y_to_gui(0);
 				self.scroll_target_offset_y = self.scroll_target_offset_y - self.drag_start_y + self.drag_y;
 				self.drag_start_y = SmoothApproachDelta(self.drag_start_y, self.drag_y, 1.1);
-				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
+				self.scroll_target_offset_y = self.scroll_target_offset_y;
 			}
 			if mouse_check_button_released(mb_left) {
 				self.drag_start_y = -1;
