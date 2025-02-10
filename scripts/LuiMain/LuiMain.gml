@@ -6,7 +6,7 @@ function LuiMain() : LuiBase() constructor {
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.ui_screen_surface = -1;
-	self.update_ui_screen_surface = true;
+	self.needs_redraw_surface = true;
 	self.pre_draw_list = [];
 	self.element_names = {};
 	self.main_ui = self;
@@ -14,6 +14,7 @@ function LuiMain() : LuiBase() constructor {
 	self.topmost_hovered_element = undefined;
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
+	self.needs_update_flex = true;
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -21,7 +22,6 @@ function LuiMain() : LuiBase() constructor {
 	flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
 	var _data = flexpanel_node_get_data(self.flex_node);
 	_data.element = self;
-	self.needs_flex_update = true;
 	
 	// Init Screen grid
 	self._screen_grid = {};
@@ -85,8 +85,8 @@ function LuiMain() : LuiBase() constructor {
 						}
 						self.topmost_hovered_element.setFocus();
 						self.element_in_focus = self.topmost_hovered_element;
-						self.updateMainUiSurface();
 					}
+					self.updateMainUiSurface();
 				}
 				if (mouse_check_button_released(mb_left)) {
 					if is_method(self.topmost_hovered_element.onMouseLeftReleased) self.topmost_hovered_element.onMouseLeftReleased();
@@ -94,8 +94,8 @@ function LuiMain() : LuiBase() constructor {
 					if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus = undefined;
-						self.updateMainUiSurface();
 					}
+					self.updateMainUiSurface();
 				}
 				if is_method(self.topmost_hovered_element.onMouseWheel) && (mouse_wheel_down() || mouse_wheel_up()) {
 					self.topmost_hovered_element.onMouseWheel();
@@ -128,8 +128,8 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		// Update all elements and Z depth from flexpanels data
-		if self.needs_flex_update {
-			self.needs_flex_update = false;
+		if self.needs_update_flex {
+			self.needs_update_flex = false;
 			self.flexCalculateLayout();
 			self.flexUpdateAll();
 		}
@@ -156,7 +156,7 @@ function LuiMain() : LuiBase() constructor {
 		// Create main ui surface
 		if !surface_exists(self.ui_screen_surface) {
 			self.ui_screen_surface = surface_create(self.width, self.height);
-			self.update_ui_screen_surface = true;
+			self.needs_redraw_surface = true;
 		}
 		
 		// Check surface size
@@ -165,7 +165,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		// Update main ui surface
-		if self.update_ui_screen_surface {
+		if self.needs_redraw_surface {
 			// Set alpha 1 for drawing surface
 			draw_set_alpha(1);
 			
@@ -180,7 +180,7 @@ function LuiMain() : LuiBase() constructor {
 			// Reset ui surface
 			gpu_set_blendequation(bm_eq_add);
 			surface_reset_target();
-			self.update_ui_screen_surface = false;
+			self.needs_redraw_surface = false;
 			
 			// Reset alpha
 			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);

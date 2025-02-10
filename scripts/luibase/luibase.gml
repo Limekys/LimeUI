@@ -606,7 +606,7 @@ function LuiBase() constructor {
 				// Grid and flex update
 				if !is_undefined(self.main_ui)  {
 					self._gridUpdate();
-					self.main_ui.needs_flex_update = true;
+					self.updateMainUiFlex();
 				}
 				// Call for children
 				for (var i = 0, n = array_length(content); i < n; ++i) {
@@ -968,14 +968,14 @@ function LuiBase() constructor {
 	///@desc Update main ui surface
 	static updateMainUiSurface = function() {
 		if is_undefined(self.main_ui) return self;
-		self.main_ui.update_ui_screen_surface = true;
+		self.main_ui.needs_redraw_surface = true;
 		return self;
 	}
 	
 	///@desc Update main ui flex
 	static updateMainUiFlex = function() {
 		if is_undefined(self.main_ui) return self;
-		self.main_ui.needs_flex_update = true;
+		self.main_ui.needs_update_flex = true;
 		return self;
 	}
 	
