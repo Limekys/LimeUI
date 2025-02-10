@@ -271,7 +271,7 @@ my_panel_3.addContent([
 				new LuiPanel().addContent([
 					new LuiText(, , , , , "Nested panel 1.1"),
 					new LuiFlexRow().addContent([
-						new LuiCheckbox( , , 32, , , false, function() {
+						new LuiCheckbox( , , 32, , "checkboxTest", false, function() {
 							showLuiMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 						}),
 						new LuiText(, , , , , "Check me!"),

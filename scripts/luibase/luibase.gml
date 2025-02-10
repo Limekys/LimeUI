@@ -192,7 +192,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set element unique identificator name (Used for get element from main ui container via getElement())
-	///@return {Struct.LuiBase}
 	static setName = function(_string) {
 		if is_undefined(self.main_ui) || !variable_struct_exists(self.main_ui, "element_names") {
 			self.name = _string;
@@ -512,7 +511,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc setFocus
-	///@return {Struct.LuiBase}
 	static setFocus = function() {
 		self.has_focus = true;
 		if is_method(self.onFocusSet) self.onFocusSet();
@@ -569,7 +567,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set callback function
-	///@return {Struct.LuiBase}
 	static setCallback = function(callback) {
 		if callback == undefined {
 			if LUI_DEBUG_CALLBACK {
@@ -591,7 +588,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set element visibility
-	///@return {Struct.LuiBase}
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
 			if self.visible != _visible {
@@ -608,10 +604,6 @@ function LuiBase() constructor {
 					self._gridUpdate();
 					self.updateMainUiFlex();
 				}
-				// Call for children
-				for (var i = 0, n = array_length(content); i < n; ++i) {
-					self.content[i].setVisible(_visible);
-				}
 				// Main surface update 
 				self.updateMainUiSurface();
 			}
@@ -620,7 +612,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Enable or disable visibility switching by function setVisible()
-	///@return {Struct.LuiBase}
 	static setVisibilitySwitching = function(_allow) {
 		self.visibility_switching = _allow;
 		return self;
@@ -647,7 +638,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Enables/Disables mouse ignore mode
-	///@return {Struct.LuiBase}
 	static setMouseIgnore = function(_ignore = true) {
 		self.ignore_mouse = _ignore;
 		return self;
@@ -842,7 +832,7 @@ function LuiBase() constructor {
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				//Get element
 				var _element = self.content[i];
-				if !_element.visible continue;
+				if !_element.visible || !_element.inside_parent continue;
 				_element._renderDebug(_element.x, _element.y);
 			}
 			
@@ -857,7 +847,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc removeFocus
-	///@return {Struct.LuiBase}
 	static removeFocus = function() {
 		self.has_focus = false;
 		if is_method(self.onFocusRemove) self.onFocusRemove();
@@ -865,7 +854,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc activate
-	///@return {Struct.LuiBase}
 	static activate = function() {
 		self.deactivated = false;
 		array_foreach(self.content, function(_elm) {
@@ -875,7 +863,6 @@ function LuiBase() constructor {
 	}
 	
 	///@desc deactivate
-	///@return {Struct.LuiBase}
 	static deactivate = function() {
 		self.deactivated = true;
 		array_foreach(self.content, function(_elm) {
@@ -896,8 +883,8 @@ function LuiBase() constructor {
 	///@desc Update position, size and z depth for specified flex node
 	static flexUpdate = function(_node) {
 		
-		// Dont update not visible or not inside parents elements
-		if !self.visible || !self.inside_parent exit;
+		// Dont update not inside parents elements
+		if !self.inside_parent exit;
 		
 		// Get layout data
 		var _pos = flexpanel_node_layout_get_position(_node, false);
@@ -922,8 +909,8 @@ function LuiBase() constructor {
 		// Call for children (recursive)
 		var _children_count = flexpanel_node_get_num_children(_node);
 		for (var i = 0; i < _children_count; i++) {
-			// Dont update not visible or not inside parents elements
-			if !_element.visible || !_element.inside_parent continue;
+			// Dont update not inside parents elements
+			if !_element.inside_parent continue;
 			// Get child node
 			var _child = flexpanel_node_get_child(_node, i);
 			// Update child node

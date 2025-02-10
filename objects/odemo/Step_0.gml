@@ -17,6 +17,6 @@ checkAndRescaleWindow(my_ui);
 var _scrl_pnl = my_ui.getElement("firstScrollPanel");
 if _scrl_pnl != -1 {
 	if _scrl_pnl.visible {
-		//_scrl_pnl.scroll_target_offset_y -= 100;
+		//_scrl_pnl.scroll_target_offset_y -= 1;
 	}
 }
