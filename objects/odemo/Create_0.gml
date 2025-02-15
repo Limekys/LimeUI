@@ -353,6 +353,9 @@ my_panel_3.addContent([
 					_element.setVisible(true);
 					_element.setFlexDisplay(flexpanel_display.flex);
 				}
+				// Apply scrolling to correct its position //???// should this happen automatically?
+				search_panel.scroll_target_offset_y = 0;
+				search_panel._applyScroll();
 			}
 		}
 		// Other elements

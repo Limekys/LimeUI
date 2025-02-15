@@ -1053,9 +1053,9 @@ function LuiBase() constructor {
 		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
 		self.flexCalculateLayout();
 		flexpanel_delete_node(self.flex_node, false);
-		if !is_undefined(self.parent) self.flexUpdate(self.parent.flex_node);
-		global.lui_element_count--;
+		self.updateMainUiFlex();
 		self.updateMainUiSurface();
+		global.lui_element_count--;
 		//Delete self from parent content
 		if !is_undefined(parent) {
 			if parent.content != -1 {
