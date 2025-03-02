@@ -54,6 +54,7 @@ function LuiBase() constructor {
 	self.is_adding = false;
 	self.is_custom_style_setted = false;
 	self.draw_content_in_cutted_region = false;
+	self.flex_node = undefined;
 	self.render_region_offset = {
 		left : 0,
 		right : 0,
@@ -1052,7 +1053,7 @@ function LuiBase() constructor {
 		self.content = -1;
 		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
 		self.flexCalculateLayout();
-		flexpanel_delete_node(self.flex_node, false);
+		self.flex_node = flexpanel_delete_node(self.flex_node, false);
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		global.lui_element_count--;

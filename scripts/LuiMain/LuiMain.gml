@@ -55,7 +55,7 @@ function LuiMain() : LuiBase() constructor {
 		var _mouse_y = device_mouse_y_to_gui(0);
 			
 		// Mouse events
-		if (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
+		if self.visible && !self.deactivated && (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
 			var _previous_hovered_element = self.topmost_hovered_element;
 			self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
@@ -113,7 +113,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		// Keyboard events
-		if !is_undefined(self.element_in_focus) {
+		if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) {
 			if is_method(self.element_in_focus.onKeyboardInput) && keyboard_check(vk_anykey) {
 				self.element_in_focus.onKeyboardInput();
 			}
@@ -284,12 +284,12 @@ function LuiMain() : LuiBase() constructor {
 	
 	///@desc Return true if we interacting with UI with mouse
 	static isInteractingMouse = function() {
-		return !is_undefined(self.topmost_hovered_element);
+		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
 	}
 	
 	///@desc Return true if we interacting with UI with keyboard
 	static isInteractingKeyboard = function() {
-		return self.waiting_for_keyboard_input;
+		return self.visible && !self.deactivated && self.waiting_for_keyboard_input;
 	}
 	
 	// GETTERS
