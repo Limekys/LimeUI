@@ -638,3 +638,22 @@ function drawTextureRadial(_tex, _value, _x1, _y1, _x2, _y2, _color, _alpha) {
 	draw_primitive_end();
 }
 
+// Helper function to copy a struct
+function struct_copy(_struct) {
+	var _copy = {};
+	var names = variable_struct_get_names(_struct);
+	for (var i = 0; i < array_length(names); i++) {
+		_copy[$ names[i]] = _struct[$ names[i]];
+	}
+	return _copy;
+}
+
+// Helper function to merge two structs (overwrites defaults with new values)
+function struct_merge(_default, _new) {
+	var _result = struct_copy(_default);
+	var names = variable_struct_get_names(_new);
+	for (var i = 0; i < array_length(names); i++) {
+		_result[$ names[i]] = _new[$ names[i]];
+	}
+	return _result;
+}
