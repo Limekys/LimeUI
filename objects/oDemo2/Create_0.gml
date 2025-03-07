@@ -1,3 +1,5 @@
+LIME_RESOLUTION.init();
+
 // Sprites https://wenrexa.itch.io/uilight
 
 //Light theme

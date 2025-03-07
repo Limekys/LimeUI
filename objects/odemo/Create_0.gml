@@ -1,5 +1,7 @@
 ///@desc CREATE STYLES AND UI
 
+LIME_RESOLUTION.init();
+
 // Init debug variables
 debug_overlay = false;
 debug_grid = false;

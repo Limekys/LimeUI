@@ -1,5 +1,8 @@
-/// @desc UPDATE UI
+LIME_RESOLUTION.update();
+
 my_ui.update();
+
+checkAndRescaleUI(my_ui, display_get_gui_width(), display_get_gui_height());
 
 if demo_loading_state {
 	demo_loading_value = ApproachDelta(demo_loading_value, 100, 10);
@@ -9,8 +12,6 @@ if demo_loading_state {
 if tab_group.x != tab_group_target_x || tab_group.y != tab_group_target_y {
 	tab_group.setPosition(tab_group_target_x, tab_group_target_y);
 }
-
-checkAndRescaleWindow(my_ui);
 
 // Scrolling test
 /*

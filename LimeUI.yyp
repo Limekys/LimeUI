@@ -48,6 +48,7 @@
     {"id":{"name":"rDemo3","path":"rooms/rDemo3/rDemo3.yy",},},
     {"id":{"name":"rInit","path":"rooms/rInit/rInit.yy",},},
     {"id":{"name":"Additional","path":"scripts/Additional/Additional.yy",},},
+    {"id":{"name":"LimekysResolutionManager","path":"scripts/LimekysResolutionManager/LimekysResolutionManager.yy",},},
     {"id":{"name":"LimekysUsefulFunctions","path":"scripts/LimekysUsefulFunctions/LimekysUsefulFunctions.yy",},},
     {"id":{"name":"LuiBase","path":"scripts/LuiBase/LuiBase.yy",},},
     {"id":{"name":"LuiBlockArea","path":"scripts/LuiBlockArea/LuiBlockArea.yy",},},

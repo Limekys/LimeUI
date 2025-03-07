@@ -1,3 +1,5 @@
+LIME_RESOLUTION.update();
+
 game_ui.update();
 
-checkAndRescaleWindow(game_ui);
+checkAndRescaleUI(game_ui, window_get_width(), window_get_height());

@@ -1,3 +1,5 @@
+LIME_RESOLUTION.init();
+
 my_style = new LuiStyle()
 	.setPadding(16)	// Padding for all elements is 16
 	.setFonts(fDemo, fDemo)	// Default font and font for interactive elements

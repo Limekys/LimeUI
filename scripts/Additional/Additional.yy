@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"Additional",
   "parent":{
-    "name":"DEMO",
-    "path":"folders/DEMO.yy",
+    "name":"LimeUI",
+    "path":"folders/Limekys/LimeUI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
