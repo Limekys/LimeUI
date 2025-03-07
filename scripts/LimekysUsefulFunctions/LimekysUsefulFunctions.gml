@@ -1,7 +1,7 @@
 // Feather ignore all
 
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2025.01.14"
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2025.03.07"
 
 // Debug timers (used to test prerfomance)
 // add DEBUG_INIT_TIMER before code you want to test
@@ -56,7 +56,8 @@ function SmoothApproach(value, destination, smoothness, threshold = 0.01) {
 function SmoothApproachDelta(value, destination, smoothness, threshold = 0.01) {
 	var _difference = destination - value;
 	if (abs(_difference) < threshold) return destination;
-	return lerp(value, destination, 1/smoothness*DT*60); // 1/_smoothness*DT*60 // 1 - power(1 / _smoothness, DT)
+	var _blend = power(0.5, 1/smoothness*DT);
+	return lerp(destination, value, _blend);
 }
 
 /**

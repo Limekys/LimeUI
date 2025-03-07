@@ -100,8 +100,9 @@ tab_group_target_y = 590;
 tab_group.setPosition(tab_group_target_x, tab_group_target_y);
 
 // Create some elements
-demo_loading = new LuiProgressBar( , , , , , 0, 100, true, 0, 1);
+demo_loading_value = 0;
 demo_loading_state = false;
+demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).setBinding(oDemo, "demo_loading_value");
 btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message", function() {
 	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
