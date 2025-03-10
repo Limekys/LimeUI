@@ -1,4 +1,4 @@
-///@desc Black transparent area. Use to darken an area or the whole screen, e.g. for a pop-up message.
+///@desc Colored and may be transparent rectangle area. Use to colored an area or the whole screen, e.g. for a pop-up message. Now used in showLuiMessage
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width

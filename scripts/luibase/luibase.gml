@@ -646,7 +646,7 @@ function LuiBase() constructor {
 	
 	// SYSTEM
 	
-	///@desc addContent(elements, _custom_padding)
+	///@desc Added elements into container of these element
 	///@arg {Any} elements
 	///@arg {Real} _custom_padding
 	static addContent = function(elements, _custom_padding = LUI_AUTO) {
@@ -847,14 +847,14 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc removeFocus
+	///@desc Remove focus from element
 	static removeFocus = function() {
 		self.has_focus = false;
 		if is_method(self.onFocusRemove) self.onFocusRemove();
 		return self;
 	}
 	
-	///@desc activate
+	///@desc Activate an element
 	static activate = function() {
 		self.deactivated = false;
 		array_foreach(self.content, function(_elm) {
@@ -863,7 +863,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc deactivate
+	///@desc Deactivate an element
 	static deactivate = function() {
 		self.deactivated = true;
 		array_foreach(self.content, function(_elm) {
@@ -1024,7 +1024,7 @@ function LuiBase() constructor {
 		return self.isMouseHovered() ? true : false;
 	}
 	
-	///@desc This function destroys self and all nested elements
+	///@desc Destroys self and all nested elements
 	static destroy = function() {
 		for (var i = array_length(self.content) - 1; i >= 0; --i) {
 			

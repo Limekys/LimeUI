@@ -277,17 +277,17 @@ function LuiMain() : LuiBase() constructor {
 	
 	// CHECKERS
 	
-	///@desc Return true if we interacting with UI
+	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
 	static isInteracting = function() {
 		return self.isInteractingKeyboard() || self.isInteractingMouse();
 	}
 	
-	///@desc Return true if we interacting with UI with mouse
+	///@desc Return true if we interacting with UI at the moment with mouse
 	static isInteractingMouse = function() {
 		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
 	}
 	
-	///@desc Return true if we interacting with UI with keyboard
+	///@desc Return true if we interacting with UI at the moment with keyboard
 	static isInteractingKeyboard = function() {
 		return self.visible && !self.deactivated && self.waiting_for_keyboard_input;
 	}

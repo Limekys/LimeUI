@@ -1,4 +1,4 @@
-///@desc An empty, invisible container for elements.
+///@desc An empty, invisible container for elements with padding on the sides for elements with column stacking
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
