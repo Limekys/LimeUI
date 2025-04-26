@@ -726,9 +726,9 @@ function LuiBase() constructor {
 			_element.is_adding = false;
 		}
 		// Apply alignment
-		self.flexCalculateLayout();
-		self.flexUpdateAll();
+        self.updateMainUiFlex();
 		self.setNeedToUpdateContent(true);
+        
 		return self;
 	}
 	

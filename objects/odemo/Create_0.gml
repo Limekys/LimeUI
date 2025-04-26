@@ -270,7 +270,7 @@ my_panel_3.addContent([
 		tab_panels.addContent([
 			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 			new LuiScrollPanel( , , , , "firstScrollPanel").addContent([
-				new LuiTextbox(, , , , , , "Type in me!"),
+				new LuiTextbox(, , , , "textbox_typeinme", , "Type in me!"),
 				new LuiPanel().addContent([
 					new LuiText(, , , , , "Nested panel 1.1"),
 					new LuiFlexRow().addContent([

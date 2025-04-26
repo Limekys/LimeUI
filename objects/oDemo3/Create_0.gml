@@ -16,6 +16,10 @@ game_ui.addContent([
 		hello_button
 ]);
 
+hello_button.setCallback(function() {
+    room_goto(rDemo);
+})
+
 //game_ui.addContent(hello_button);
 //game_ui.addContent(second_button);
 //game_ui.addContent(third_button);
