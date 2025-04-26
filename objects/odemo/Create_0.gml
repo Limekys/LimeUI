@@ -385,7 +385,7 @@ my_panel_3.addContent([
 			control_btn_clear
 		]);
 		tab_search.addContent([
-			new LuiFlexRow().setFlexGrow(1).addContent([
+			new LuiFlexRow(,,,,"control_panel_row").setFlexGrow(1).addContent([
 				new LuiFlexColumn().addContent([
 					textbox_search,
 					search_panel,
@@ -393,7 +393,10 @@ my_panel_3.addContent([
 				control_panel
 			])
 		]);
-	
+		//print("===");
+		//_test = my_ui.getElement("control_panel_row").addContent([control_panel]);
+		//alarm[0] = 120;
+
 	#endregion
 
 	#region Add some sprites in tab_sprites

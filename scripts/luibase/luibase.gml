@@ -911,7 +911,7 @@ function LuiBase() constructor {
 		var _children_count = flexpanel_node_get_num_children(_node);
 		for (var i = 0; i < _children_count; i++) {
 			// Dont update not inside parents elements
-			if !_element.inside_parent continue;
+			if !_element.visible || !_element.inside_parent continue; // //???// Вызывает тихий краш если убрать проверку на видимость элемента в GM 2024.13.1
 			// Get child node
 			var _child = flexpanel_node_get_child(_node, i);
 			// Update child node
