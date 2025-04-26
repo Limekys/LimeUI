@@ -1,1 +1,0 @@
-//my_ui.getElement("control_panel_row").addContent([control_panel]);

@@ -308,26 +308,6 @@ my_panel_3.addContent([
 		
 	#endregion
 
-// Stress test
-//numb = 0;
-//_random_element = function(_number) {
-		//return choose(
-					//new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128)), 
-					//new LuiSpriteButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor),
-					//new LuiSlider(, , , , , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
-					//new LuiTextbox(, , , , , , "aboba_" + string(_number)),
-					//new LuiProgressRing(, , , , , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
-					//new LuiCheckbox(, , , , , choose(true, false))
-				//)
-//}
-//repeat (250) {
-	//my_ui.getElement("firstScrollPanel").addContent([
-		//new LuiFlexRow().addContent([
-			//_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++)
-		//])
-	//])
-//}
-
 	#region Add elements in tab_search
 		
 		// Function for buttons
@@ -393,9 +373,6 @@ my_panel_3.addContent([
 				control_panel
 			])
 		]);
-		//print("===");
-		//_test = my_ui.getElement("control_panel_row").addContent([control_panel]);
-		//alarm[0] = 120;
 
 	#endregion
 
@@ -445,3 +422,24 @@ my_ui.addContent([
 		room_goto(rDemo2);
 	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);
+
+// Stress test
+/*
+numb = 0;
+_random_element = function(_number) {
+		return choose(
+					new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128)), 
+					new LuiSpriteButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor),
+					new LuiSlider(, , , , , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
+					new LuiTextbox(, , , , , , "aboba_" + string(_number)),
+					new LuiProgressRing(, , , , , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
+					new LuiCheckbox(, , , , , choose(true, false))
+				)
+}
+repeat (250) {
+	my_ui.getElement("firstScrollPanel").addContent([
+		new LuiFlexRow().addContent([
+			_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++)
+		])
+	])
+}
