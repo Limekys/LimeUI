@@ -735,7 +735,7 @@ function LuiBase() constructor {
 	///@desc This function updates all nested elements
 	static update = function() {
 		// Limit updates
-		if (!self.visible || self.deactivated || self.inside_parent == 0) {
+		if (!self.visible || self.deactivated) {
 			return false;
 		}
 		
@@ -884,9 +884,6 @@ function LuiBase() constructor {
 	///@desc Update position, size and z depth for specified flex node
 	static flexUpdate = function(_node) {
 		
-		// Dont update not inside parents elements
-		if !self.inside_parent exit;
-		
 		// Get layout data
 		var _pos = flexpanel_node_layout_get_position(_node, false);
 		
@@ -910,8 +907,6 @@ function LuiBase() constructor {
 		// Call for children (recursive)
 		var _children_count = flexpanel_node_get_num_children(_node);
 		for (var i = 0; i < _children_count; i++) {
-			// Dont update not inside parents elements
-			if !_element.visible || !_element.inside_parent continue; // //???// Вызывает тихий краш если убрать проверку на видимость элемента в GM 2024.13.1
 			// Get child node
 			var _child = flexpanel_node_get_child(_node, i);
 			// Update child node
