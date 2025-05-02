@@ -767,6 +767,7 @@ function LuiBase() constructor {
 			_element.previous_x = _cur_x;
 			_element.previous_y = _cur_y;
 			
+			// //???// Should be removed when the scroll panels are optimized
 			if !_element.inside_parent {
 				_element._gridDelete();
 				continue;
