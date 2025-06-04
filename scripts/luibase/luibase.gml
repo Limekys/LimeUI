@@ -63,6 +63,104 @@ function LuiBase() constructor {
 	};
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
 	
+	// ***
+	
+	self.has_segmented_region = false;
+	self.view_region = {
+	    x1: 0,
+	    y1: 0,
+	    x2: 5000,
+	    y2: 5000
+	};
+	self.is_visible_in_region = true;
+	self.segment_size = 128; // Размер сегмента по вертикали
+	self.segments = -1; // Массив сегментов
+	self.active_segments = []; // Активные сегменты
+	
+	static _initSegments = function() {
+	    if (!self.has_segmented_region) return;
+	    
+	    self.segments = [];
+	    var _elements = self.content;
+	    var _elements_count = array_length(_elements);
+	    
+	    for (var i = 0; i < _elements_count; i++) {
+	        var _element = _elements[i];
+	        // Пропускаем элементы с некорректными координатами
+	        if (_element.y == LUI_AUTO) { // || _element.y < 0) {
+	            continue;
+	        }
+	        var _segment_index = floor(_element.y / self.segment_size);
+	        
+	        // Безопасно добавляем элемент в массив
+	        if (array_length(self.segments) <= _segment_index) {
+	            // Расширяем массив до нужного размера
+	            while (array_length(self.segments) <= _segment_index) {
+	                array_push(self.segments, []);
+	            }
+	        }
+	        array_push(self.segments[_segment_index], _element);
+	    }
+	}
+	
+	static _updateActiveSegments = function() {
+	    if (!self.has_segmented_region) return;
+	    
+	    self.active_segments = [];
+	    
+	    // Проходим по всем существующим сегментам
+	    for (var i = 0; i < array_length(self.segments); i++) {
+	        if (is_undefined(self.segments[i])) continue;
+	        
+	        // Вычисляем границы текущего сегмента
+	        var _segment_y1 = self.y + i * self.segment_size;
+	        var _segment_y2 = _segment_y1 + self.segment_size;
+	        
+	        // Проверяем, пересекается ли сегмент с view_region
+	        var _is_visible = !(_segment_y2 < self.view_region.y1 || _segment_y1 > self.view_region.y2);
+	        
+	        if (_is_visible) {
+	            var _segment_elements = self.segments[i];
+	            var _segment_length = array_length(_segment_elements);
+	            for (var j = 0; j < _segment_length; j++) {
+	                array_push(self.active_segments, _segment_elements[j]);
+	            }
+	        }
+	    }
+	}
+	
+	static updateViewRegion = function() {
+    	// Задаём первоначальные размеры видимого региона на основе текущих координат и размеров элемента
+	    self.view_region = {
+	        x1: self.x,
+	        y1: self.y,
+	        x2: self.x + self.width,
+	        y2: self.y + self.height
+	    };
+	    
+	    // Если родителя нет или у него нет view_region, элемент считается видимым, выходим
+	    if (self.parent == undefined) {
+	        self.is_visible_in_region = true;
+	        return;
+	    }
+	    
+	    // Обрезаем view_region до границ родительского региона
+	    var _parent_region = self.parent.view_region;
+	    self.view_region.x1 = max(_parent_region.x1, self.view_region.x1);
+	    self.view_region.y1 = max(_parent_region.y1, self.view_region.y1);
+	    self.view_region.x2 = min(_parent_region.x2, self.view_region.x2);
+	    self.view_region.y2 = min(_parent_region.y2, self.view_region.y2);
+	    
+	    // Проверяем, попадает ли элемент в видимый регион родителя
+	    var _region_width = self.view_region.x2 - self.view_region.x1;
+	    var _region_height = self.view_region.y2 - self.view_region.y1;
+	    self.is_visible_in_region = (_region_width > 0 && _region_height > 0) &&
+	                                !(self.x + self.width < _parent_region.x1 || self.x > _parent_region.x2 ||
+	                                  self.y + self.height < _parent_region.y1 || self.y > _parent_region.y2);
+	}
+	
+	// ***
+	
 	// Custom methods for element
 	
 	//Called after this item has been added somewhere
@@ -650,159 +748,136 @@ function LuiBase() constructor {
 	///@arg {Any} elements
 	///@arg {Real} _custom_padding
 	static addContent = function(elements, _custom_padding = LUI_AUTO) {
-		
-		// Convert to array if one element
-		if !is_array(elements) elements = [elements];
-		
-		// Update array with delayed content for unordered adding
-		if is_undefined(self.main_ui) {
-			if !is_array(self.delayed_content) self.delayed_content = [];
-			self.delayed_content = array_concat(self.delayed_content, elements);
-			return self;
-		}
-		
-		var _elements_count = array_length(elements);
-		
-		// Take ranges from array
-		var _ranges = [];
-		if is_array(elements[_elements_count - 1]) {
-			if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
-				if LUI_LOG_ERROR_MODE == 2 {
-					print($"LIME_UI.WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
-					//???// Добавить возможность использования не подходящего количества соотношений, 
-					//		если больше чем надо, выбирать из первых доступных по порядку, 
-					//		если меньше оставшиеся подсчитывать соотношение из имеющихся
-				}
-			}
-			_ranges = elements[_elements_count - 1];
-			_elements_count--;
-		}
-		
-		// Adding
-		for (var i = 0; i < _elements_count; i++) {
+	    if !is_array(elements) elements = [elements];
+	    
+	    if is_undefined(self.main_ui) {
+	        if !is_array(self.delayed_content) self.delayed_content = [];
+	        self.delayed_content = array_concat(self.delayed_content, elements);
+	        return self;
+	    }
+	    
+	    var _elements_count = array_length(elements);
+	    var _ranges = [];
+	    if is_array(elements[_elements_count - 1]) {
+	        if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
+	            if LUI_LOG_ERROR_MODE == 2 {
+	                print($"LIME_UI.WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
+	            }
+	        }
+	        _ranges = elements[_elements_count - 1];
+	        _elements_count--;
+	    }
+	    
+	    for (var i = 0; i < _elements_count; i++) {
+	        var _element = elements[i];
+	        
+	        if _element.is_adding continue;
+	        _element.is_adding = true;
+	        
+	        _element.parent = self;
+	        _element.main_ui = self.main_ui;
+	        _element.style = self.style;
+	        
+	        var _padding = _custom_padding;
+	        if _padding == LUI_AUTO {
+	            _padding = _element.style.padding;
+	        }
+	        
+	        flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point);
+	        flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point);
+	        flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding);
+	        flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding);
+	        if array_length(_ranges) == _elements_count {
+	            flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
+	        }
+	        flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
+	        
+	        _element._registerElementName();
+	        array_push(self.content, _element);
+	        _element._addDelayedContent();
+	        
+	        if is_method(_element.onCreate) _element.onCreate();
+	        
+			_element.updateViewRegion();
 			
-			// Get element
-			var _element = elements[i];
-			
-			// Recursion prevention
-			if _element.is_adding continue;
-			_element.is_adding = true;
-			
-			// Inherit variables
-			_element.parent = self;
-			_element.main_ui = self.main_ui;
-			_element.style = self.style;
-			
-			// Set visible
-			//_element.visible = self.visible; //???//
-			
-			// Get custom padding
-			var _padding = _custom_padding;
-			if _padding == LUI_AUTO {
-				_padding = _element.style.padding;
-			}
-			
-			// Flex setting up
-			flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point); 	// min width
-			flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point); 	// min height
-			flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding); 					// gap
-			flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding); 					// padding
-			if array_length(_ranges) == _elements_count  {
-				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
-			}
-			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node)); 	// binding
-			
-			// Register element name
-			_element._registerElementName();
-			
-			// Add to content array
-			array_push(self.content, _element);
-			
-			_element._addDelayedContent();
-			
-			// Call custom method create
-			if is_method(_element.onCreate) _element.onCreate();
-			
-			_element.is_adding = false;
-		}
-		// Apply alignment
-        self.updateMainUiFlex();
-		self.setNeedToUpdateContent(true);
-        
-		return self;
+	        if (self.has_segmented_region) {
+				self._initSegments();
+				_element.has_segmented_region = true;
+				_element._initSegments();
+	        }
+	        
+	        _element.is_adding = false;
+	    }
+	    
+	    self.updateMainUiFlex();
+	    self.setNeedToUpdateContent(true);
+	    
+	    return self;
 	}
 	
 	///@desc This function updates all nested elements
 	static update = function() {
-		// Limit updates
-		if (!self.visible || self.deactivated) {
-			return false;
-		}
-		
-		// Check if the element is in the area of its parent and call its step function
-		if (self.inside_parent && is_method(self.step)) {
-			self.step();
-		}
-		
-		// Update all elements inside
-		var content_length = array_length(self.content);
-		for (var i = content_length - 1; i >= 0; --i) {
-			var _element = self.content[i];
-			
-			// On position update logic
-			var _cur_x = floor(_element.x);
-			var _cur_y = floor(_element.y);
-			if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
-				// Check if element is inside parents
-				_element.inside_parent = isInsideParents(_element.x, _element.y, _element.x + _element.width, _element.y + _element.height);
-				if _element.inside_parent {
-					// Call onPositionUpdate method of each element
-					if is_method(_element.onPositionUpdate) _element.onPositionUpdate();
-					// Update main surface
-					_element.updateMainUiSurface();
-				}
-			}
-			
-			// Save previous position
-			_element.previous_x = _cur_x;
-			_element.previous_y = _cur_y;
-			
-			// //???// Should be removed when the scroll panels are optimized
-			if !_element.inside_parent {
-				_element._gridDelete();
-				continue;
-			}
-			
-			// Update element
-			_element.update();
-			
-			// Update binding variable
-			if _element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable) {
-				_element.updateFromBinding();
-			}
-			
-			// Call onContentUpdate of each lement if need it
-			if (_element.need_to_update_content) {
-				if is_method(_element.onContentUpdate) _element.onContentUpdate();
-				_element.need_to_update_content = false;
-			}
-			
-			// Update grid position
-			var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
-			var _grid_y1 = floor(_element.y / LUI_GRID_ACCURACY);
-			var _grid_x2 = floor((_element.x + _element.width) / LUI_GRID_ACCURACY);
-			var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
-			if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1) 
-			|| (_element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
-				_element._gridUpdate();
-			}
-			
-			// Save grid previous position
-			_element.grid_previous_x1 = _grid_x1;
-			_element.grid_previous_y1 = _grid_y1;
-			_element.grid_previous_x2 = _grid_x2;
-			_element.grid_previous_y2 = _grid_y2;
-		}
+	    if (!self.is_visible_in_region || !self.visible || self.deactivated) return false;
+	    
+	    // Обновляем активные сегменты для сегментированных элементов
+	    if (self.has_segmented_region) {
+	        self._updateActiveSegments();
+	    }
+	    
+	    // Определяем список элементов для обработки
+	    var _elements = self.has_segmented_region ? self.active_segments : self.content;
+	    var _source_length = array_length(_elements);
+	    
+	    for (var i = _source_length - 1; i >= 0; --i) {
+	        var _element = _elements[i];
+	        
+	        // Пропускаем невидимые элементы
+	        if (!_element.is_visible_in_region) continue;
+	        
+	        var _cur_x = floor(_element.x);
+	        var _cur_y = floor(_element.y);
+	        
+	        // Обновляем позицию и UI Surface, если координаты изменились
+	        if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
+	            _element.previous_x = _cur_x;
+	            _element.previous_y = _cur_y;
+	            if (_element.is_visible_in_region) {
+	                if (is_method(_element.onPositionUpdate)) _element.onPositionUpdate();
+	                _element.updateMainUiSurface();
+	            } else {
+	                _element._gridDelete();
+	            }
+	        }
+	        
+	        // Обновляем привязанные переменные
+	        if (_element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
+	            _element.updateFromBinding();
+	        }
+	        
+	        // Обновляем контент, если требуется
+	        if (_element.need_to_update_content) {
+	            if (is_method(_element.onContentUpdate)) _element.onContentUpdate();
+	            _element.need_to_update_content = false;
+	        }
+	        
+	        // Обновляем сетку, если область изменилась
+	        var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
+	        var _grid_y1 = floor(_element.y / LUI_GRID_ACCURACY);
+	        var _grid_x2 = floor((_element.x + _element.width) / LUI_GRID_ACCURACY);
+	        var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
+	        if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1 || 
+	            _element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
+	            _element._gridUpdate();
+	            _element.grid_previous_x1 = _grid_x1;
+	            _element.grid_previous_y1 = _grid_y1;
+	            _element.grid_previous_x2 = _grid_x2;
+	            _element.grid_previous_y2 = _grid_y2;
+	        }
+	        
+	        // Выполняем пользовательский step и рекурсивный update
+	        if (is_method(_element.step)) _element.step();
+	        _element.update();
+	    }
 	}
 	
 	///@desc This function draws all nested elements
@@ -811,7 +886,7 @@ function LuiBase() constructor {
 			// Get element
 			var _element = self.content[i];
 			// Restriction
-			if !_element.visible || !_element.inside_parent continue;
+			if !_element.is_visible_in_region || !_element.visible continue;
 			// Draw self
 			if is_method(_element.draw) _element.draw();
 			// Draw content
@@ -834,7 +909,7 @@ function LuiBase() constructor {
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				//Get element
 				var _element = self.content[i];
-				if !_element.visible || !_element.inside_parent continue;
+				if !_element.visible || !_element.is_visible_in_region continue;
 				_element._renderDebug(_element.x, _element.y);
 			}
 			
@@ -876,43 +951,45 @@ function LuiBase() constructor {
 	///@desc Calculate all sizes and positions of elements
 	static flexCalculateLayout = function() {
 		if !is_undefined(self.main_ui) {
-			flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-			return true;
+				flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+				return true;
+			}
+			return false;
 		}
-		return false;
-	}
-	
+		
 	///@desc Update position, size and z depth for specified flex node
 	static flexUpdate = function(_node) {
-		
-		// Get layout data
-		var _pos = flexpanel_node_layout_get_position(_node, false);
-		
-		// Update element
-		var _data = flexpanel_node_get_data(_node);
-		var _element = _data.element;
-		_element.x = _pos.left;
-		_element.y = _pos.top;
-		_element.pos_x = _pos.left;
-		_element.pos_y = _pos.top;
-		_element.width = _pos.width;
-		_element.height = _pos.height;
-		if (_element.start_x == -1) {
-			_element.start_x = _element.x;
+	    var _pos = flexpanel_node_layout_get_position(_node, false);
+	    var _data = flexpanel_node_get_data(_node);
+	    var _element = _data.element;
+	    
+	    _element.x = _pos.left;
+	    _element.y = _pos.top;
+	    _element.pos_x = _pos.left;
+	    _element.pos_y = _pos.top;
+	    _element.width = _pos.width;
+	    _element.height = _pos.height;
+	    if (_element.start_x == -1) {
+	        _element.start_x = _element.x;
+	    }
+	    if (_element.start_y == -1) {
+	        _element.start_y = _element.y;
+	    }
+	    _element.z = global.lui_z_index++;
+	    
+	    _element.updateViewRegion();
+	    
+		if _element.has_segmented_region && _element.segments == -1 {
+			_element._initSegments();
 		}
-		if (_element.start_y == -1) {
-			_element.start_y = _element.y;
-		}
-		_element.z = global.lui_z_index++;
 		
-		// Call for children (recursive)
-		var _children_count = flexpanel_node_get_num_children(_node);
-		for (var i = 0; i < _children_count; i++) {
-			// Get child node
-			var _child = flexpanel_node_get_child(_node, i);
-			// Update child node
-			_element.flexUpdate(_child);
-		}
+		if _element.is_visible_in_region == false return;
+		
+	    var _children_count = flexpanel_node_get_num_children(_node);
+	    for (var i = 0; i < _children_count; i++) {
+	        var _child = flexpanel_node_get_child(_node, i);
+	        _element.flexUpdate(_child);
+	    }
 	}
 	
 	///@desc Update position, size and z depth of all elements with depth reset
@@ -990,6 +1067,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Returns true if the specified rectangle is within the parent and its parents at the same time
+	///@deprecated
 	static isInsideParents = function(_x1, _y1, _x2, _y2) {
 		if is_undefined(self.parent) return true;
 		var _parent_x = self.parent.x;
@@ -1148,6 +1226,7 @@ function LuiBase() constructor {
 	///@desc Render debug info of element
 	///@ignore
 	static _renderDebug = function(_x = 0, _y = 0) {
+		/*
 		// Set font
 		if !is_undefined(self.style.font_debug) {
 			draw_set_font(self.style.font_debug);
@@ -1184,6 +1263,20 @@ function LuiBase() constructor {
 		// Reset colors
 		draw_set_color(_prev_color);
 		draw_set_alpha(_prev_alpha);
+		*/
+		
+		//view region
+		draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		//draw_rectangle(self.view_region.x1, self.view_region.y1, self.view_region.x2, self.view_region.y2, true);
+		
+		if self.has_segmented_region {
+			for(var i = 0, n = array_length(self.segments); i < n; i++) {
+				
+				draw_rectangle(self.x, self.y + i * self.segment_size, self.x + self.width, self.y + i * self.segment_size + self.segment_size, true);
+				
+				draw_text(self.x, self.y + i * self.segment_size, $"segment {i}");
+			}
+		}
 	}
 	
 	///@desc Draw debug text with rectangle
@@ -1311,7 +1404,7 @@ function LuiBase() constructor {
 	///@desc Add element in system ui grid
 	///@ignore
 	static _gridAdd = function() {
-		if (!self.inside_parent || !self.visible) {
+		if (!self.is_visible_in_region || !self.visible) {
 			return false;
 		}
 	

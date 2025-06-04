@@ -13,13 +13,14 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.height = height;
 	_initElement();
 	
-	self.scroll_container = undefined;
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
 	self.drag_start_y = -1;
 	self.drag_y = -1;
 	self.scroll_pin_edge_offset = 4;
 	self.scroll_smoothness = 0.02;
+	
+	self.scroll_container = undefined;
 	
 	self.draw_content_in_cutted_region = true;
 	
@@ -44,6 +45,8 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if is_undefined(self.scroll_container) {
 			self.scroll_container = new LuiAbsContainer(0, 0, LUI_AUTO, LUI_AUTO, $"_scroll_container_{self.element_id}");
 			self.setContainer(self.scroll_container);
+			//self.scroll_container.has_segmented_region = true;
+			//self.scroll_container._initSegments();
 		}
 	}
 	
