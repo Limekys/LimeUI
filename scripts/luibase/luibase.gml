@@ -951,11 +951,11 @@ function LuiBase() constructor {
 	///@desc Calculate all sizes and positions of elements
 	static flexCalculateLayout = function() {
 		if !is_undefined(self.main_ui) {
-				flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-				return true;
-			}
-			return false;
-		}
+            flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+            return true;
+        }
+        return false;
+    }
 		
 	///@desc Update position, size and z depth for specified flex node
 	static flexUpdate = function(_node) {
