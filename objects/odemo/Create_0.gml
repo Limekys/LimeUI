@@ -419,7 +419,7 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
+	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->", function() {
 		room_goto(rDemo2);
 	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);

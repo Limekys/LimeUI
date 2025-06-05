@@ -657,7 +657,7 @@ function LuiBase() constructor {
 	///@desc Added elements into container of these element
 	///@arg {Any} elements
 	///@arg {Real} _custom_padding
-	static addContent = function(elements, _custom_padding = LUI_AUTO) {
+	static addContent = function(elements, _custom_padding = LUI_AUTO) { //???// remove custom_padding ?
 	    
 		// Convert to array if one element
 		if !is_array(elements) elements = [elements];
