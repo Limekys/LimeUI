@@ -38,8 +38,6 @@ function LuiMain() : LuiBase() constructor {
 	}
 	self.recalculateScreenGrid();
 	
-	//self.updateViewRegion();
-	
 	// Recalculate grid size on size change
 	self.onSizeUpdate = function() {
 		self.recalculateScreenGrid();
@@ -258,8 +256,7 @@ function LuiMain() : LuiBase() constructor {
 			"v: " + string(_element.value) + "\n" +
 			"content: " + string(array_length(_element.content)) + "/" + string(array_length(_element.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(_element.parent) ? "undefined" : _element.parent.name) + "\n" +
-			"z: " + string(_element.z) + "\n" +
-			"segmented: " + string(_element.has_segmented_region)
+			"z: " + string(_element.z)
 			);
 			draw_set_color(_prev_color);
 			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);

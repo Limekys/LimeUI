@@ -1,5 +1,5 @@
 //Info
-#macro LIMEUI_VERSION "2025.05.13_UNSTABLE_SCROLL_PANEL_OPTIMIZATION_TEST"
+#macro LIMEUI_VERSION "2025.06.05"
 
 //Globals
 global.lui_debug_mode =	0;						// Enable/Disable debug mode
