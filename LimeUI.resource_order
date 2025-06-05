@@ -52,6 +52,7 @@
     {"name":"sCarFlip","order":10,"path":"sprites/sCarFlip/sCarFlip.yy",},
     {"name":"sCheckboxDemo2","order":5,"path":"sprites/sCheckboxDemo2/sCheckboxDemo2.yy",},
     {"name":"sCrossDemo2","order":8,"path":"sprites/sCrossDemo2/sCrossDemo2.yy",},
+    {"name":"sDonate","order":6,"path":"sprites/sDonate/sDonate.yy",},
     {"name":"sHamburger","order":11,"path":"sprites/sHamburger/sHamburger.yy",},
     {"name":"sIconHome","order":7,"path":"sprites/sIconHome/sIconHome.yy",},
     {"name":"sIconInfo","order":8,"path":"sprites/sIconInfo/sIconInfo.yy",},

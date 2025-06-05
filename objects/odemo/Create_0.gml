@@ -394,20 +394,21 @@ my_panel_3.addContent([
 	
 		sprite_limekys = new LuiSprite(, , 64, 64, "sprLimekys", sLimekysAvatar);
 		text_about = new LuiText(, , , 64, "textAbout", "Hi, i am Limekys, and this is my UI system!");
-		sprite_discord = new LuiSpriteButton(, , , 64, "sprDiscord", sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")}).setTooltip("My Discord server");
-		sprite_telegram = new LuiSpriteButton(, , , 64, "sprTelegram", sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")}).setTooltip("My Telegram channel");
-		sprite_twitch = new LuiSpriteButton(, , , 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")}).setTooltip("My Twitch channel");
-		sprite_twitter = new LuiSpriteButton(, , , 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")}).setTooltip("My X (Twitter)");
-		sprite_vk = new LuiSpriteButton(, , , 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
-		sprite_youtube = new LuiSpriteButton(, , , 64, "sprYT", sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
+		sprite_discord = new LuiSpriteButton(, , 64, 64, "sprDiscord", sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")}).setTooltip("My Discord server");
+		sprite_telegram = new LuiSpriteButton(, , 64, 64, "sprTelegram", sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")}).setTooltip("My Telegram channel");
+		sprite_twitch = new LuiSpriteButton(, , 64, 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")}).setTooltip("My Twitch channel");
+		sprite_twitter = new LuiSpriteButton(, , 64, 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")}).setTooltip("My X (Twitter)");
+		sprite_vk = new LuiSpriteButton(, , 64, 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
+		sprite_youtube = new LuiSpriteButton(, , 64, 64, "sprYT", sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
+		sprite_donate = new LuiSpriteButton(, , 64, 64, "sprYT", sDonate, , , , , function() {url_open("https://www.donationalerts.com/r/limekys")}).setTooltip("Donate!");
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setFlexGrow(1).setTextValign(fa_bottom).setTextHalign(fa_right);
 		
 		tab_about.addContent([
 			new LuiFlexRow().addContent([
 				sprite_limekys, text_about
 			]),
-			new LuiFlexRow().addContent([
-				sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube
+			new LuiFlexRow().setFlexJustifyContent(flexpanel_justify.space_around).setFlexWrap(1).addContent([
+				sprite_discord, sprite_telegram, sprite_twitch, sprite_twitter, sprite_vk, sprite_youtube, sprite_donate
 			]),
 			text_version
 		]);
