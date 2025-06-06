@@ -5,8 +5,9 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {Bool} value
+///@arg {String} text
 ///@arg {Function} callback
-function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiCheckbox", value = false, callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiCheckbox", value = false, text = "", callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = value;
@@ -19,8 +20,16 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.is_pressed = false;
 	
+	self.text = text;
+	
+	//@desc Set display text of checkbox (render right of checkbox)
+	self.setText = function(_text) {
+		self.text = _text;
+		return self;
+	}
+	
 	self.draw = function() {
-		//Base
+		// Base
 		if !is_undefined(self.style.sprite_checkbox) {
 			var _blend_color = merge_color(self.style.color_checkbox, c_black, 0.1);
 			if self.deactivated {
@@ -30,7 +39,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _draw_height = min(self.width, self.height);
 			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
-		//Pin
+		// Pin
 		if !is_undefined(self.style.sprite_checkbox_pin) {
 			var _blend_color = self.value ? self.style.color_checkbox_pin : self.style.color_checkbox;
 			if !self.deactivated {
@@ -44,7 +53,27 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _draw_height = min(self.width, self.height);
 			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
-		//Border
+		// Text
+		if self.text != "" {
+			if !self.deactivated {
+				draw_set_color(self.style.color_font);
+				if self.isMouseHovered() {
+					draw_set_color(merge_colour(self.style.color_font, self.style.color_hover, 0.5));
+				}
+			} else {
+				draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+			}
+			draw_set_alpha(1);
+			draw_set_halign(fa_left);
+			draw_set_valign(fa_middle);
+			if !is_undefined(self.style.font_default) {
+				draw_set_font(self.style.font_default);
+			}
+			var _draw_width = min(self.width, self.height);
+			var _text_width = min(string_width(self.text), self.width - _draw_width - self.style.padding);
+			self._luiDrawTextCutoff(self.x + _draw_width + self.style.padding, self.y + self.height div 2, self.text, _text_width);
+		}
+		// Border
 		if !is_undefined(self.style.sprite_checkbox_border) {
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
