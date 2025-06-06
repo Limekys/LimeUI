@@ -50,10 +50,10 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_textbox) {
-			var _blend_color = merge_color(self.style.color_textbox, c_black, 0.1);
+			var _blend_color = self.style.color_secondary;
 			if !self.deactivated {
 				if !self.has_focus && self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_textbox, self.style.color_hover, 0.5);
+					_blend_color = merge_colour(self.style.color_secondary, self.style.color_hover, 0.5);
 				}
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
@@ -66,9 +66,9 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			draw_set_font(self.style.font_default);
 		}
 		if !self.deactivated {
-			draw_set_color(self.style.color_font);
+			draw_set_color(self.style.color_text);
 		} else {
-			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+			draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
 		}
 		var _prev_alpha = draw_get_alpha();
 		draw_set_alpha(1);
@@ -90,7 +90,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		if self.value == "" && !self.has_focus {
 			_display_text = self.hint;
 			draw_set_alpha(0.5);
-			draw_set_color(self.style.color_font_hint);
+			draw_set_color(self.style.color_text_hint);
 		}
 		
 		//Cut
@@ -108,9 +108,9 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		
 		//Border
 		if !is_undefined(self.style.sprite_textbox_border) {
-			var _border_color = self.style.color_textbox_border;
+			var _border_color = self.style.color_border;
 			if self.has_focus {
-				_border_color = self.style.color_value;
+				_border_color = self.style.color_accent;
 			}
 			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
 		}

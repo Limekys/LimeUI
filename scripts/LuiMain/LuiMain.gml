@@ -217,14 +217,14 @@ function LuiMain() : LuiBase() constructor {
 				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
 				// Draw tooltip sprite back
 				if !is_undefined(self.style.sprite_tooltip) {
-					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
 				// Draw tooltip sprite border
 				if !is_undefined(self.style.sprite_tooltip_border) {
-					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_tooltip_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
 				// Draw text
-				draw_set_color(self.style.color_font);
+				draw_set_color(self.style.color_text);
 				draw_set_halign(fa_left);
 				draw_set_valign(fa_top);
 				draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);

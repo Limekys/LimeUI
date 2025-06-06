@@ -93,7 +93,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_tabgroup) {
-			var _blend_color = self.style.color_main;
+			var _blend_color = self.style.color_primary;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
@@ -167,7 +167,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_tab) {
-			var _blend_color = self.style.color_main;
+			var _blend_color = self.style.color_primary;
 			if !self.is_active {
 				_blend_color = merge_colour(_blend_color, c_black, 0.25);
 				if self.isMouseHovered() {
@@ -192,9 +192,9 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 				draw_set_font(self.style.font_buttons);
 			}
 			if !self.deactivated {
-				draw_set_color(self.style.color_font);
+				draw_set_color(self.style.color_text);
 			} else {
-				draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_center);
@@ -206,7 +206,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		
 		// Border
 		if !is_undefined(self.style.sprite_tab_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_button_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
 	}
 	

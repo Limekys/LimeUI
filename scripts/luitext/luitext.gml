@@ -45,9 +45,9 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 			draw_set_font(self.style.font_default);
 		}
 		if !self.deactivated {
-			draw_set_color(self.style.color_font);
+			draw_set_color(self.style.color_text);
 		} else {
-			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+			draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
 		}
 		draw_set_alpha(1);
 		draw_set_halign(self.text_halign);

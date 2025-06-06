@@ -31,7 +31,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_checkbox) {
-			var _blend_color = merge_color(self.style.color_checkbox, c_black, 0.1);
+			var _blend_color = self.style.color_secondary;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
@@ -41,7 +41,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 		// Pin
 		if !is_undefined(self.style.sprite_checkbox_pin) {
-			var _blend_color = self.value ? self.style.color_checkbox_pin : self.style.color_checkbox;
+			var _blend_color = self.value ? self.style.color_accent : self.style.color_primary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
 					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
@@ -56,12 +56,12 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		// Text
 		if self.text != "" {
 			if !self.deactivated {
-				draw_set_color(self.style.color_font);
+				draw_set_color(self.style.color_text);
 				if self.isMouseHovered() {
-					draw_set_color(merge_colour(self.style.color_font, self.style.color_hover, 0.5));
+					draw_set_color(merge_colour(self.style.color_text, self.style.color_hover, 0.5));
 				}
 			} else {
-				draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_left);
@@ -77,7 +77,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.style.sprite_checkbox_border) {
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_checkbox_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_border, 1);
 		}
 	}
 	

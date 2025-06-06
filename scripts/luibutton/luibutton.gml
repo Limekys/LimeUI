@@ -81,7 +81,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_button) {
-			var _blend_color = self.style.color_button;
+			var _blend_color = self.style.color_primary;
 			if !is_undefined(self.button_color) _blend_color = self.button_color;
 			if !self.deactivated {
 				if self.isMouseHovered() {
@@ -105,9 +105,9 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				draw_set_font(self.style.font_buttons);
 			}
 			if !self.deactivated {
-				draw_set_color(self.style.color_font);
+				draw_set_color(self.style.color_text);
 			} else {
-				draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_center);
@@ -119,7 +119,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		
 		// Border
 		if !is_undefined(self.style.sprite_button_border) {
-			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, self.x, self.y, self.width, self.height, self.style.color_button_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
 	}
 	

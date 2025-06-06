@@ -42,37 +42,18 @@ function LuiStyle(_style = {}) constructor {
 	sprite_tooltip = _style[$ "sprite_tooltip"] ?? undefined;
 	sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
 	//Colors
-	color_font = _style[$ "color_font"] ?? c_black;
-	color_font_hint = _style[$ "color_font_hint"] ?? c_gray;
-	color_main = _style[$ "color_main"] ?? c_white;
-	color_border = _style[$ "color_border"] ?? c_gray;
-	color_button = _style[$ "color_button"] ?? c_white;
-	color_button_border = _style[$ "color_button_border"] ?? c_gray;
-	color_value = _style[$ "color_value"] ?? #45C952;
-	color_hover = _style[$ "color_hover"] ?? c_gray; //mixes the color of the main color of this element by 50%
-	color_back = _style[$ "color_back"] ?? c_gray;
-	color_accent = _style[$ "color_accent"] ?? #45C952;
-	color_checkbox = _style[$ "color_checkbox"] ?? c_white;
-	color_checkbox_pin = _style[$ "color_checkbox_pin"] ?? #45C952;
-	color_checkbox_border = _style[$ "color_checkbox_border"] ?? c_gray;
-	color_progress_bar = _style[$ "color_progress_bar"] ?? c_white;
-	color_progress_bar_value = _style[$ "color_progress_bar_value"] ?? #45C952;
-	color_progress_bar_border = _style[$ "color_progress_bar_border"] ?? c_gray;
-	color_progress_ring = _style[$ "color_progress_ring"] ?? c_white;
-	color_progress_ring_value = _style[$ "color_progress_ring_value"] ?? #45C952;
-	color_progress_ring_border = _style[$ "color_progress_ring_border"] ?? c_gray;
-	color_textbox = _style[$ "color_textbox"] ?? c_white;
-	color_textbox_border = _style[$ "color_textbox_border"] ?? c_dkgray;
-	color_scroll_pin = _style[$ "color_scroll_pin"] ?? c_white;
-	color_scroll_pin_border = _style[$ "color_scroll_pin_border"] ?? c_dkgray;
-	color_scroll_slider = _style[$ "color_scroll_slider"] ?? c_gray;
-	color_dropdown = _style[$ "color_dropdown"] ?? c_white;
-	color_dropdown_border = _style[$ "color_dropdown_border"] ?? c_gray;
-	color_dropdown_item = _style[$ "color_dropdown_item"] ?? c_white;
-	color_dropdown_item_border = _style[$ "color_dropdown_item_border"] ?? c_gray;
-	color_dropdown_arrow = _style[$ "color_dropdown_arrow"] ?? c_gray;
-	color_tooltip = _style[$ "color_tooltip"] ?? c_black;
-	color_tooltip_border = _style[$ "color_tooltip_border"] ?? c_black;
+	color_primary = _style[$ "color_primary"] ?? c_white;
+	color_secondary = _style[$ "color_secondary"] ?? c_ltgray;
+    color_accent = _style[$ "color_accent"] ?? #45C952;
+    color_border = _style[$ "color_border"] ?? c_gray;
+    color_deactivated = _style[$ "color_deactivated"] ?? c_gray;
+    color_text = _style[$ "color_text"] ?? c_black;
+	color_text_hint = _style[$ "color_text_hint"] ?? c_gray;
+    color_hover = _style[$ "color_hover"] ?? c_gray;
+    color_semantic_success = _style[$ "color_semantic_success"] ?? #4CAF50;
+    color_semantic_error = _style[$ "color_semantic_error"] ?? #F44336;
+    color_semantic_warning = _style[$ "color_semantic_warning"] ?? #FF9800;
+    color_shadow = _style[$ "color_shadow"] ?? c_black;
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
@@ -208,64 +189,103 @@ function LuiStyle(_style = {}) constructor {
 	
 	// COLORS FUNCTIONS
 	
-	static setColors = function(_panel = c_white, _element = c_white, _panel_border = c_gray, _element_border = c_gray) {
-		// Panel
-		color_main = _panel;
-		color_border = _panel_border;
-		// Element
-		color_button = _element;
-		color_checkbox = _element;
-		color_progress_bar = _element;
-		color_textbox = _element;
-		color_scroll_slider = _element;
-		color_scroll_pin = _element;
-		color_dropdown = _element;
-		color_dropdown_item = _element;
-		color_tooltip = _element;
-		// Border
-		color_button_border = _element_border;
-		color_checkbox_border = _element_border;
-		color_progress_bar_border = _element_border;
-		color_progress_ring = _element_border;
-		color_progress_ring_border = _element_border;
-		color_textbox_border = _element_border;
-		color_scroll_pin_border = _element_border;
-		color_dropdown_border = _element_border;
-		color_dropdown_item_border = _element_border;
-		color_dropdown_arrow = _element_border;
-		color_tooltip_border = _element_border;
-		
-		return self;
-	}
-	
-	static setColorValue = function(_value = c_green) {
-		color_value = _value;
-		color_checkbox_pin = _value;
-		color_progress_bar_value = _value;
-		color_progress_ring_value = _value;
-		
-		return self;
-	}
-	
-	static setColorHover = function(_hover = c_gray) {
-		color_hover = _hover;
-		
-		return self;
-	}
-	
-	static setColorFont = function(_font = c_black, _font_hint = c_gray) {
-		color_font = _font;
-		color_font_hint = _font_hint;
-		
-		return self;
-	}
-	
-	static setColorTooltip = function(_tooltip = c_white, _tooltip_border = c_black) {
-		color_tooltip = _tooltip;
-		color_tooltip_border = _tooltip_border;
-		
-		return self;
-	}
+	///@desc Sets the primary, secondary, accent, and border colors for UI elements.
+    ///@arg {Real} [_primary] The primary color for elements (default: c_white).
+    ///@arg {Real} [_secondary] The secondary color for interactive elements (default: c_ltgray).
+    ///@arg {Real} [_accent] The accent color for active states (default: c_green).
+    ///@arg {Real} [_border] The border color for elements (default: c_gray).
+    static setColors = function(_primary = c_white, _secondary = c_ltgray, _accent = c_green, _border = c_gray) {
+        // Panel
+        color_primary = _primary;
+        color_secondary = _secondary;
+        color_accent = _accent;
+        color_border = _border;
+        
+        return self;
+    }
+    
+    ///@desc [DEPRECATED] Sets the accent color (use setColorAccent instead).
+    ///@arg {Real} [_color] The accent color for active states (default: c_green).
+    ///@deprecated
+    static setColorValue = function(_color = c_green) {
+        color_accent = _color;
+        print("function setColorValue is deprecated");
+        
+        return self;
+    }
+    
+    ///@desc Sets the accent color for interactive elements.
+    ///@arg {Real} [_color] The accent color for active states (default: c_green).
+    static setColorAccent = function(_color = c_green) {
+        color_accent = _color;
+        
+        return self;
+    }
+    
+    ///@desc Sets the hover color for UI elements.
+    ///@arg {Real} [_hover] The hover color to be mixed with element colors (default: c_gray).
+    static setColorHover = function(_hover = c_gray) {
+        color_hover = _hover;
+        
+        return self;
+    }
+    
+    ///@desc [DEPRECATED] Sets the text and text hint colors (use setColorText instead).
+    ///@arg {Real} [_font] The color for text (default: c_black).
+    ///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
+    ///@deprecated
+    static setColorFont = function(_font = c_black, _font_hint = c_gray) {
+        color_text = _font;
+        color_text_hint = _font_hint;
+        print("function setColorFont is deprecated");
+        
+        return self;
+    }
+    
+    ///@desc Sets the text and text hint colors for UI elements.
+    ///@arg {Real} [_font] The color for text (default: c_black).
+    ///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
+    static setColorText = function(_font = c_black, _font_hint = c_gray) {
+        color_text = _font;
+        color_text_hint = _font_hint;
+        
+        return self;
+    }
+    
+    ///@desc [DEPRECATED] Previously set the tooltip colors (no longer used).
+    ///@arg {Real} [_tooltip] The tooltip background color (default: c_white).
+    ///@arg {Real} [_tooltip_border] The tooltip border color (default: c_black).
+    ///@deprecated
+    static setColorTooltip = function(_tooltip = c_white, _tooltip_border = c_black) {
+        print("function setColorTooltip is deprecated");
+        
+        return self;
+    }
+    
+    ///@desc Sets the color for deactivated elements, which can be mixed with active colors.
+    ///@arg {Real} [_color] The base color for deactivated elements (default: c_gray).
+    static setColorDeactivated = function(_color = c_gray) {
+        color_deactivated = _color;
+        return self;
+    }
+    
+    ///@desc Sets the semantic colors for success, error, and warning states.
+    ///@arg {Real} [_success] The color for success (default: #4CAF50).
+    ///@arg {Real} [_error] The color for error (default: #F44336).
+    ///@arg {Real} [_warning] The color for warning (default: #FF9800).
+    static setColorSemantic = function(_success = #4CAF50, _error = #F44336, _warning = #FF9800) {
+        color_semantic_success = _success;
+        color_semantic_error = _error;
+        color_semantic_warning = _warning;
+        return self;
+    }
+    
+    ///@desc Sets the optional shadow color for UI elements (default: undefined).
+    ///@arg {Real} [_color] The shadow color (default: undefined).
+    static setColorShadow = function(_color = undefined) {
+        color_shadow = _color;
+        return self;
+    }
 	
 	// SOUNDS FUNCTIONS
 	

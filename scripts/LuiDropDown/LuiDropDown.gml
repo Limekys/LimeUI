@@ -89,12 +89,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_dropdown) {
-			var _blend_color = self.style.color_dropdown;
+			var _blend_color = self.style.color_primary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_dropdown, self.style.color_hover, 0.5);
+					_blend_color = merge_colour(self.style.color_primary, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
-						_blend_color = merge_colour(self.style.color_dropdown, c_black, 0.5);
+						_blend_color = merge_colour(self.style.color_primary, c_black, 0.5);
 					}
 				}
 			} else {
@@ -106,7 +106,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		//Arrow
 		if !is_undefined(self.style.sprite_dropdown_arrow) {
 			var _x_offset = sprite_get_width(self.style.sprite_dropdown_arrow);
-			var _blend_color = self.style.color_dropdown_arrow;
+			var _blend_color = self.style.color_border;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
@@ -118,9 +118,9 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			draw_set_font(self.style.font_buttons);
 		}
 		if !self.deactivated {
-			draw_set_color(self.style.color_font);
+			draw_set_color(self.style.color_text);
 		} else {
-			draw_set_color(merge_colour(self.style.color_font, c_black, 0.5));
+			draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
 		}
 		var _text_draw_width = self.width;
 		if !is_undefined(self.style.sprite_dropdown_arrow) {
@@ -140,7 +140,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		
 		//Border
 		if !is_undefined(self.style.sprite_dropdown_border) {
-			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, self.x, self.y, self.width, self.height, self.style.color_dropdown_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
 	}
 	
@@ -186,11 +186,11 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_dropdown_item) {
-			var _blend_color = self.style.color_dropdown_item;
+			var _blend_color = self.style.color_primary;
 			if !self.deactivated && self.isMouseHovered() {
-				_blend_color = merge_colour(self.style.color_dropdown_item, self.style.color_hover, 0.5);
+				_blend_color = merge_colour(self.style.color_primary, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
-					_blend_color = merge_colour(self.style.color_dropdown_item, c_black, 0.5);
+					_blend_color = merge_colour(self.style.color_primary, c_black, 0.5);
 				}
 			}
 			draw_sprite_stretched_ext(self.style.sprite_dropdown_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
@@ -205,7 +205,7 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 				draw_set_font(self.style.font_buttons);
 			}
 			draw_set_alpha(1);
-			draw_set_color(self.style.color_font);
+			draw_set_color(self.style.color_text);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
 			var _txt_x = self.x + self.width / 2;
@@ -215,7 +215,7 @@ function LuiDropDownItem(name = "LuiDropDownItem", text = "dropdown_item", callb
 		
 		//Border
 		if !is_undefined(self.style.sprite_dropdown_item_border) {
-			draw_sprite_stretched_ext(self.style.sprite_dropdown_item_border, 0, self.x, self.y, self.width, self.height, self.style.color_dropdown_item_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_item_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
 	}
 	
@@ -246,11 +246,11 @@ function LuiDropdownPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height =
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_dropdown) {
-			draw_sprite_stretched_ext(self.style.sprite_dropdown, 0, self.x, self.y, self.width, self.height, self.style.color_dropdown, 1);
+			draw_sprite_stretched_ext(self.style.sprite_dropdown, 0, self.x, self.y, self.width, self.height, self.style.color_primary, 1);
 		}
 		//Border
 		if !is_undefined(self.style.sprite_dropdown_border) {
-			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, self.x, self.y, self.width, self.height, self.style.color_dropdown_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_dropdown_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
 	}
 }

@@ -16,7 +16,7 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_panel) {
-			var _blend_color = self.style.color_main;
+			var _blend_color = self.style.color_primary;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}

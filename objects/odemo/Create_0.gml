@@ -22,10 +22,9 @@ demo_style_light = new LuiStyle()
 	.setSpriteDropdownArrow(sUI_dropdown_arrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabGroup(sUI_tabgroup, sUI_tab, sUI_tabgroup_border, sUI_tab_border)
-	.setColors(c_white, c_white, merge_colour(c_white, c_black, 0.5), merge_colour(c_white, c_black, 0.5))
-	.setColorValue(#45C952)
+	.setColors(c_white, merge_colour(c_white, c_black, 0.1), #45C952, merge_colour(c_white, c_black, 0.5))
 	.setColorHover(c_gray)
-	.setColorFont(merge_colour(c_black, c_white, 0.2), c_gray)
+	.setColorText(merge_colour(c_black, c_white, 0.2), c_gray)
 	.setSounds(sndBasicClick);
 
 // Create Dark style theme
@@ -39,10 +38,9 @@ demo_style_dark = new LuiStyle()
 	.setSpriteDropdownArrow(sUI_dropdown_arrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabGroup(sUI_tabgroup, sUI_tab, sUI_tabgroup_border, sUI_tab_border)
-	.setColors(#393c4f, #393c4f, merge_color(#393c4f, c_black, 0.5), merge_color(#393c4f, c_black, 0.5))
-	.setColorValue(#3a7d44)
+	.setColors(#393c4f, merge_color(#393c4f, c_black, 0.1), #3a7d44, merge_color(#393c4f, c_black, 0.5))
 	.setColorHover(c_gray)
-	.setColorFont(merge_color(c_white, #393c4f, 0.2), #77726e)
+	.setColorText(merge_color(c_white, #393c4f, 0.2), #77726e)
 	.setColorTooltip(c_black, c_black)
 	.setSounds(sndBasicClick);
 
@@ -57,10 +55,9 @@ demo_style_modern = new LuiStyle()
 	.setSpriteDropdownArrow(sUI_dropdown_arrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteScrollSlider(sUI_Square_6r, sUI_Square_6r)
-	.setColors(#393a44, merge_color(#393a44, c_white, 0.1))
-	.setColorValue(#64d0b9)
+	.setColors(#393a44, merge_color(#393a44, c_white, 0.1), #64d0b9)
 	.setColorHover(c_gray)
-	.setColorFont(#ffffff, #9a9daf)
+	.setColorText(#ffffff, #9a9daf)
 	.setColorTooltip(c_black, c_black)
 	.setSounds(sndBasicClick);
 
