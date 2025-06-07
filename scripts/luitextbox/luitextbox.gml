@@ -50,10 +50,10 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_textbox) {
-			var _blend_color = self.style.color_secondary;
+			var _blend_color = self.style.color_back;
 			if !self.deactivated {
 				if !self.has_focus && self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_secondary, self.style.color_hover, 0.5);
+					_blend_color = merge_colour(self.style.color_back, self.style.color_hover, 0.5);
 				}
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);

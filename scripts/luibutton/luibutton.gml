@@ -81,7 +81,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_button) {
-			var _blend_color = self.style.color_primary;
+			var _blend_color = self.style.color_secondary;
 			if !is_undefined(self.button_color) _blend_color = self.button_color;
 			if !self.deactivated {
 				if self.isMouseHovered() {

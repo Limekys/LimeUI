@@ -73,7 +73,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.draw = function() {
 		//Panel
 		if !is_undefined(self.style.sprite_panel) {
-			var _blend_color = self.style.color_primary;
+			var _blend_color = self.style.color_primary;//self.nesting_level == 0 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
@@ -85,12 +85,12 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			var _scroll_pin_y_offset = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), self.scroll_pin_edge_offset, self.height - self.style.scroll_slider_width - self.scroll_pin_edge_offset);
 			// Slider back
 			if !is_undefined(self.style.sprite_scroll_slider) {
-				var _color_slider = self.style.color_secondary;
+				var _color_slider = self.style.color_back;
 				draw_sprite_stretched_ext(self.style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, self.style.scroll_slider_width, self.height - self.scroll_pin_edge_offset*2, _color_slider, 1);
 			}
 			// Scroll pin
 			if !is_undefined(self.style.sprite_scroll_pin) {
-				draw_sprite_stretched_ext(self.style.sprite_scroll_pin, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, self.style.scroll_slider_width, self.style.scroll_slider_width, self.style.color_primary, 1);
+				draw_sprite_stretched_ext(self.style.sprite_scroll_pin, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, self.style.scroll_slider_width, self.style.scroll_slider_width, self.style.color_secondary, 1);
 			}
 			// Scroll pin border
 			if !is_undefined(self.style.sprite_scroll_pin_border) {

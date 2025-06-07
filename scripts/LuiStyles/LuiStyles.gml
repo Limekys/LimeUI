@@ -43,9 +43,10 @@ function LuiStyle(_style = {}) constructor {
 	sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
 	//Colors
 	color_primary = _style[$ "color_primary"] ?? c_white;
-	color_secondary = _style[$ "color_secondary"] ?? c_ltgray;
+	color_secondary = _style[$ "color_secondary"] ?? c_white;
     color_accent = _style[$ "color_accent"] ?? #45C952;
     color_border = _style[$ "color_border"] ?? c_gray;
+    color_back = _style[$ "color_back"] ?? c_ltgray;
     color_deactivated = _style[$ "color_deactivated"] ?? c_gray;
     color_text = _style[$ "color_text"] ?? c_black;
 	color_text_hint = _style[$ "color_text_hint"] ?? c_gray;
@@ -80,7 +81,6 @@ function LuiStyle(_style = {}) constructor {
 		font_default = _default;
 		font_buttons = _buttons;
 		font_debug = _debug;
-		
 		return self;
 	}
 	
@@ -122,7 +122,6 @@ function LuiStyle(_style = {}) constructor {
 		sprite_dropdown_item_border = _element_border;
 		sprite_tooltip_border = _element_border;
 		sprite_progress_ring_border = _element_border;
-		
 		return self;
 	}
 	
@@ -130,7 +129,6 @@ function LuiStyle(_style = {}) constructor {
 		sprite_checkbox = _checkbox;
 		sprite_checkbox_border = _checkbox_border;
 		sprite_checkbox_pin = _checkbox_pin;
-		
 		return self;
 	}
 	
@@ -138,14 +136,12 @@ function LuiStyle(_style = {}) constructor {
 		sprite_progress_bar = _progressbar;
 		sprite_progress_bar_value = _progressbar_value;
 		sprite_progress_bar_border = _progressbar_border;
-		
 		return self;
 	}
 	
 	static setSpriteSliderKnob = function(_slider_knob = undefined, _slider_knob_border = undefined) {
 		sprite_slider_knob = _slider_knob;
 		sprite_slider_knob_border = _slider_knob_border;
-		
 		return self;
 	}
 	
@@ -154,13 +150,11 @@ function LuiStyle(_style = {}) constructor {
 		sprite_tabgroup_border = _tabgroup_border;
 		sprite_tab = _tab;
 		sprite_tab_border = _tab_border;
-		
 		return self;
 	}
 	
 	static setSpriteDropdownArrow = function(_dropdown_arrow = undefined) {
 		sprite_dropdown_arrow = _dropdown_arrow;
-		
 		return self;
 	}
 	
@@ -168,7 +162,6 @@ function LuiStyle(_style = {}) constructor {
 		sprite_progress_ring = _ring;
 		sprite_progress_ring_value = _ring_value;
 		sprite_progress_ring_border = _ring_border;
-		
 		return self;
 	}
 	
@@ -176,14 +169,12 @@ function LuiStyle(_style = {}) constructor {
 		sprite_scroll_slider = _scroll_slider;
 		sprite_scroll_pin = _scroll_pin;
 		sprite_scroll_pin_border = _scroll_pin_border;
-		
 		return self;
 	}
 	
 	static setSpriteTooltip = function(_tooltip = undefined, _tooltip_border = undefined) {
 		sprite_tooltip = _tooltip;
 		sprite_tooltip_border = _tooltip_border;
-		
 		return self;
 	}
 	
@@ -192,15 +183,16 @@ function LuiStyle(_style = {}) constructor {
 	///@desc Sets the primary, secondary, accent, and border colors for UI elements.
     ///@arg {Real} [_primary] The primary color for elements (default: c_white).
     ///@arg {Real} [_secondary] The secondary color for interactive elements (default: c_ltgray).
+    ///@arg {Real} [_back] The back color for interactive elements (default: c_ltgray).
     ///@arg {Real} [_accent] The accent color for active states (default: c_green).
     ///@arg {Real} [_border] The border color for elements (default: c_gray).
-    static setColors = function(_primary = c_white, _secondary = c_ltgray, _accent = c_green, _border = c_gray) {
+    static setColors = function(_primary = c_white, _secondary = c_ltgray, _back = c_ltgray, _accent = c_green, _border = c_gray) {
         // Panel
         color_primary = _primary;
         color_secondary = _secondary;
+		color_back = _back;
         color_accent = _accent;
         color_border = _border;
-        
         return self;
     }
     
@@ -210,7 +202,6 @@ function LuiStyle(_style = {}) constructor {
     static setColorValue = function(_color = c_green) {
         color_accent = _color;
         print("function setColorValue is deprecated");
-        
         return self;
     }
     
@@ -218,7 +209,6 @@ function LuiStyle(_style = {}) constructor {
     ///@arg {Real} [_color] The accent color for active states (default: c_green).
     static setColorAccent = function(_color = c_green) {
         color_accent = _color;
-        
         return self;
     }
     
@@ -226,7 +216,6 @@ function LuiStyle(_style = {}) constructor {
     ///@arg {Real} [_hover] The hover color to be mixed with element colors (default: c_gray).
     static setColorHover = function(_hover = c_gray) {
         color_hover = _hover;
-        
         return self;
     }
     
@@ -238,7 +227,6 @@ function LuiStyle(_style = {}) constructor {
         color_text = _font;
         color_text_hint = _font_hint;
         print("function setColorFont is deprecated");
-        
         return self;
     }
     
@@ -248,7 +236,6 @@ function LuiStyle(_style = {}) constructor {
     static setColorText = function(_font = c_black, _font_hint = c_gray) {
         color_text = _font;
         color_text_hint = _font_hint;
-        
         return self;
     }
     
@@ -258,7 +245,6 @@ function LuiStyle(_style = {}) constructor {
     ///@deprecated
     static setColorTooltip = function(_tooltip = c_white, _tooltip_border = c_black) {
         print("function setColorTooltip is deprecated");
-        
         return self;
     }
     
@@ -292,7 +278,6 @@ function LuiStyle(_style = {}) constructor {
 	static setSounds = function(_click = undefined) {
 		// Sounds
 		sound_click = _click;
-		
 		return self;
 	}
 	
@@ -301,25 +286,21 @@ function LuiStyle(_style = {}) constructor {
 	static setMinSize = function(_min_width = 32, _min_height = 32) {
 		min_width = _min_width;
 		min_height = _min_height;
-		
 		return self;
 	}
 	
 	static setPadding = function(_padding = 16) {
 		padding = _padding;
-		
 		return self;
 	}
 	
 	static setScrollStep = function(_scroll_step = 32) {
 		scroll_step = _scroll_step;
-		
 		return self;
 	}
 	
 	static setScrollSliderWidth = function(_width = 16) {
 		scroll_slider_width = _width;
-		
 		return self;
 	}
 	
@@ -336,20 +317,19 @@ function LuiStyle(_style = {}) constructor {
 				top : _region[2],
 				bottom : _region[3]
 			}
-		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
-		
+		} else if LUI_LOG_ERROR_MODE == 2 {
+			print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
+		}
 		return self;
 	}
 	
 	static setSymbolCursor = function(_symbol_cursor = "|") {
 		textbox_cursor = _symbol_cursor;
-		
 		return self;
 	}
 	
 	static setSymbolPassword = function(_symbol_password = "•") {
 		textbox_password = _symbol_password;
-		
 		return self;
 	}
 }

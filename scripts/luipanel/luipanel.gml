@@ -13,10 +13,18 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.height = height;
 	_initElement();
 	
+	//self.onCreate = function() {
+		//if self.parent.nesting_level == 0 {
+			//self.nesting_level = 1;
+		//} else {
+			//self.nesting_level = 0;
+		//}
+	//}
+	
 	self.draw = function() {
 		//Base
 		if !is_undefined(self.style.sprite_panel) {
-			var _blend_color = self.style.color_primary;
+			var _blend_color = self.style.color_primary;//self.nesting_level == 1 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}

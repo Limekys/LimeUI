@@ -51,7 +51,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
-			var _blend_color = self.style.color_secondary;
+			var _blend_color = self.style.color_back;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
@@ -93,10 +93,10 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _knob_x = clamp(self.x + self.width * _bar_value - _knob_width div 2, self.x, self.x + self.width - _knob_width);
 		var _knob_extender = 1;
 		if !is_undefined(self.style.sprite_slider_knob) {
-			var _blend_color = self.style.color_primary;
+			var _blend_color = self.style.color_secondary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_primary, self.style.color_hover, 0.5);
+					_blend_color = merge_colour(self.style.color_secondary, self.style.color_hover, 0.5);
 				}
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);

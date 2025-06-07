@@ -70,6 +70,8 @@ function LuiBase() constructor {
 	    y2: 5000
 	};
 	self.is_visible_in_region = true;
+	self.nesting_level = 0;							// Used to alternate the color of nested panels
+	self.calculate_nesting_level = true;
 	
 	// Custom methods for element
 	
@@ -604,8 +606,10 @@ function LuiBase() constructor {
 				self.visible = _visible;
 				// Events onShow / onHide
 				if _visible {
+					self.setFlexDisplay(flexpanel_display.flex);
 					if is_method(self.onShow) self.onShow();
 				} else {
+					self.setFlexDisplay(flexpanel_display.none);
 					if is_method(self.onHide) self.onHide();
 				}
 				// Grid and flex update
@@ -1175,7 +1179,8 @@ function LuiBase() constructor {
 			"v: " + string(self.value) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
-			"z: " + string(self.z));
+			"z: " + string(self.z)
+			);
 		}
 		// Reset colors
 		draw_set_color(_prev_color);

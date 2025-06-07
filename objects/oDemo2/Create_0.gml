@@ -12,10 +12,10 @@ demo2_style = new LuiStyle()
 	.setSpriteProgressBar(sBarBackDemo2, sBarValueDemo2)
 	.setSpriteSliderKnob(sBarBackDemo2)
 	.setSpriteCheckbox(sCheckboxDemo2, sCrossDemo2)
-	.setColors(#7BC0EA, #319DDD)
+	.setColors(#7BC0EA, #319DDD, #319DDD)
 	.setColorAccent(merge_color(c_fuchsia, c_white, 0.5))
 	.setColorHover(c_gray)
-	.setColorFont(c_white, c_gray)
+	.setColorText(c_white, c_gray)
 	.setSounds(sndBasicClick);
 
 
@@ -30,11 +30,13 @@ panel_options = new LuiPanel( , , 300, , "panelOptions");
 text_main_menu = new LuiText(, , , , "textMainMenu", "Main menu", true).setTextHalign(fa_center);
 btn_play = new LuiButton(, , , , "buttonPlay", "Play");
 btn_achievements = new LuiButton(, , , , "buttonAchievements", "Achievements");
-btn_options = new LuiButton(, , , , "buttonOptions", "Options");
+btn_options = new LuiButton(, , , , "buttonOptions", "Options", function() {
+	oDemo2.panel_options.setVisible(!oDemo2.panel_options.visible)
+	//oDemo2.panel_options.setFlexDisplay(flexpanel_display.none)
+});
 btn_exit = new LuiButton(, , , , "buttonExit", "Exit", function() { game_end(); });
 text_options = new LuiText(, , , , "textOptions", "Options", true).setTextHalign(fa_center);
-checkbox_fullscreen = new LuiCheckbox(, , 48, , "checkboxFullscreen", window_get_fullscreen(), "", function () {window_set_fullscreen(get())});
-text_fullscreen = new LuiText(, , , , "textFullscreen", "Fullscreen");
+checkbox_fullscreen = new LuiCheckbox(, , , , "checkboxFullscreen", window_get_fullscreen(), "Fullscreen", function () {window_set_fullscreen(get())});
 slider_music = new LuiSlider(, , , , "sliderMusic", 0, 100, 75, 1);
 slider_sounds = new LuiSlider(, , , , "sliderSounds", 0, 100, 25, 1);
 text_music = new LuiText(, , , , "textMusic", "Music: ");
@@ -53,7 +55,7 @@ game_ui.addContent([
 		panel_options.addContent([
 			text_options,
 			new LuiFlexRow().addContent([
-				checkbox_fullscreen, text_fullscreen,
+				checkbox_fullscreen,
 			]),
 			new LuiFlexRow().addContent([
 				text_music, slider_music, [0.2, 0.8]
