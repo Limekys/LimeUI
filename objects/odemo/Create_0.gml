@@ -90,7 +90,7 @@ tab_group.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
 // Adjust TabGroup position on the screen
 tab_group_min_x = 16;
 tab_group_max_x = room_width - tab_group.width;
-tab_group_min_y = 540;
+tab_group_min_y = 16;
 tab_group_max_y = room_height - tab_group.height;
 tab_group_target_x = tab_group_min_x;
 tab_group_target_y = 590;

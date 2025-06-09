@@ -1021,7 +1021,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Destroys self and all nested elements
-	static destroy = function() {
+	self.destroy = function() {
 		for (var i = array_length(self.content) - 1; i >= 0; --i) {
 			
 			//var _element = self.content[i];
