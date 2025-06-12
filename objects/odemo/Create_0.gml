@@ -417,6 +417,13 @@ my_ui.addContent([
 	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);
 
+my_ui.addContent([
+	new LuiWindow(512, 512, 300, 300, "aboba", "This is test title").addContent([
+		new LuiText(, , , , , "Test text in window"),
+		new LuiButton(, , 150, 32, , "Test button")
+	])
+])
+
 // Stress test
 /*
 numb = 0;

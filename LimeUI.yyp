@@ -71,6 +71,7 @@
     {"id":{"name":"LuiTabGroup","path":"scripts/LuiTabGroup/LuiTabGroup.yy",},},
     {"id":{"name":"LuiText","path":"scripts/LuiText/LuiText.yy",},},
     {"id":{"name":"LuiTextbox","path":"scripts/LuiTextbox/LuiTextbox.yy",},},
+    {"id":{"name":"LuiWindow","path":"scripts/LuiWindow/LuiWindow.yy",},},
     {"id":{"name":"sndBasicClick","path":"sounds/sndBasicClick/sndBasicClick.yy",},},
     {"id":{"name":"sndDeniedClick","path":"sounds/sndDeniedClick/sndDeniedClick.yy",},},
     {"id":{"name":"sBarBackDemo2","path":"sprites/sBarBackDemo2/sBarBackDemo2.yy",},},
