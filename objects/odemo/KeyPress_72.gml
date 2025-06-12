@@ -11,5 +11,6 @@ if !my_ui.isInteractingKeyboard() {
 	}
 	
 	//tab_group.setVisible(!tab_group.visible);
-	_panel.setVisible(!_panel.visible);
+	//_panel.setVisible(!_panel.visible);
+	tab_group.setDepth(-1);
 }

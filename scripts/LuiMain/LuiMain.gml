@@ -256,8 +256,8 @@ function LuiMain() : LuiBase() constructor {
 			"v: " + string(_element.value) + "\n" +
 			"content: " + string(array_length(_element.content)) + "/" + string(array_length(_element.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(_element.parent) ? "undefined" : _element.parent.name) + "\n" +
-			"z: " + string(_element.z) + "\n" +
-			"parity: " + string(_element.nesting_level)
+			"z: " + string(_element.z) + " " + string(_element.depth_array) + "\n" +
+			"nesting_level: " + string(_element.nesting_level)
 			);
 			draw_set_color(_prev_color);
 			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);

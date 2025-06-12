@@ -2,6 +2,7 @@
 function LuiBase() constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	if !variable_global_exists("lui_z_index") variable_global_set("lui_z_index", 0);
+	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 	
 	self.element_id = global.lui_element_count++;
 	self.name = "LuiBase";							//Unique element identifier
@@ -72,6 +73,96 @@ function LuiBase() constructor {
 	self.is_visible_in_region = true;
 	self.nesting_level = 0;							// Used to alternate the color of nested panels
 	self.calculate_nesting_level = true;
+	
+	// depth system //???//
+	
+	self.depth_array = [];
+	
+	static bringToFront = function() {
+	    global.lui_max_z++;
+	    self.z = global.lui_max_z;
+	    
+	    // Обновляем depth_array
+	    if (self.parent != undefined) {
+	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+	    } else {
+	        self.depth_array = [self.z];
+	    }
+	    
+	    self.updateMainUiSurface();
+	    
+	    // Обновляем depth_array для дочерних элементов
+	    for (var i = 0; i < array_length(self.content); i++) {
+	        var _element = self.content[i];
+	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
+	    }
+	    
+	    return self;
+	}
+	
+	function compare_depth_arrays(a, b) {
+	    var len_a = array_length(a);
+	    var len_b = array_length(b);
+	    var min_len = min(len_a, len_b);
+	    
+	    for (var i = 0; i < min_len; i++) {
+	        if (a[i] > b[i]) return 1;  // a больше
+	        if (a[i] < b[i]) return -1; // b меньше
+	    }
+	    
+	    // Если массивы равны до min_len, более длинный массив больше
+	    if (len_a > len_b) return 1;
+	    if (len_a < len_b) return -1;
+	    return 0; // Равны
+	}
+	
+	/// @desc Sets a new depth value for the element and recalculates depth_array for itself and its children
+	static setDepth = function(_new_z) {
+	    // Update the element's z value
+	    self.z = _new_z;
+	    
+	    // Rebuild depth_array: parent's depth_array + new z
+	    if (self.parent != undefined) {
+	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+	    } else {
+	        self.depth_array = [self.z];
+	    }
+	    
+	    // Update main UI surface
+	    self.updateMainUiSurface();
+	    
+	    // Recursively update depth_array for all children
+	    for (var i = 0; i < array_length(self.content); i++) {
+	        var _element = self.content[i];
+	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
+	        // Recursively update children's children
+	        _element.setDepth(_element.z); // Reuse setDepth to update children
+	    }
+	    
+	    return self;
+	}
+	
+	/// @desc Recalculates depth_array for the element and all its children
+	static recalculateDepthArray = function() {
+	    // Rebuild depth_array: parent's depth_array + current z
+	    if (self.parent != undefined) {
+	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+	    } else {
+	        self.depth_array = [self.z];
+	    }
+	    
+	    // Update main UI surface
+	    self.updateMainUiSurface();
+	    
+	    // Recursively update depth_array for all children
+	    for (var i = 0; i < array_length(self.content); i++) {
+	        self.content[i].recalculateDepthArray();
+	    }
+	    
+	    return self;
+	}
+	
+	//???//
 	
 	// Custom methods for element
 	
@@ -175,16 +266,30 @@ function LuiBase() constructor {
 		return self.container;
 	}
 	
-	///@desc Returns topmost element on UI
+	///@desc Returns topmost element on UI //???//
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
-		var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
-		var _array = array_filter(self.main_ui._screen_grid[$ _key], function(_elm) {
-			return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
-		});
-		array_sort(_array, function(_elm1, _elm2) {
-			return _elm1.z - _elm2.z;
-		});
-		return array_last(_array);
+	    var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
+	    var _array = self.main_ui._screen_grid[$ _key];
+		
+	    if (is_undefined(_array) || array_length(_array) == 0) {
+	        return undefined;
+	    }
+		
+	    // Фильтруем элементы под курсором
+	    var _filtered = array_filter(_array, function(_elm) {
+	        return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
+	    });
+		
+	    if (array_length(_filtered) == 0) {
+	        return undefined;
+	    }
+		
+	    // Сортировка по depth_array (по убыванию)
+	    array_sort(_filtered, function(elm1, elm2) {
+	        return compare_depth_arrays(elm2.depth_array, elm1.depth_array); // Обратный порядок
+	    });
+		
+	    return _filtered[0]; // Возвращаем верхний элемент
 	}
 	
 	// SETTERS
@@ -700,6 +805,12 @@ function LuiBase() constructor {
 	        if _element.is_adding continue;
 	        _element.is_adding = true;
 	        
+			// init depth //???//
+			_element.nesting_level = self.nesting_level + 1;
+			_element.z = global.lui_max_z++;
+			_element.depth_array = array_concat(self.depth_array, [_element.z]);
+			//???//
+			
 			// Inherit variables
 	        _element.parent = self;
 	        _element.main_ui = self.main_ui;
@@ -805,6 +916,9 @@ function LuiBase() constructor {
 	
 	///@desc This function draws all nested elements
 	static render = function() {
+		
+		array_sort(self.content, function(a, b) { return a.z - b.z; }); //???//
+		
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
 			// Get element
 			var _element = self.content[i];
@@ -898,7 +1012,7 @@ function LuiBase() constructor {
 	    if (_element.start_y == -1) {
 	        _element.start_y = _element.y;
 	    }
-	    _element.z = global.lui_z_index++;
+		//_element.z = global.lui_z_index++;
 	    
 	    _element._updateViewRegion();
 		
@@ -1179,7 +1293,8 @@ function LuiBase() constructor {
 			"v: " + string(self.value) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
-			"z: " + string(self.z)
+			"z: " + string(self.z) + " " + string(self.depth_array) + "\n" +
+			"nesting_level: " + string(self.nesting_level)
 			);
 		}
 		// Reset colors
