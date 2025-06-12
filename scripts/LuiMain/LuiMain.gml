@@ -238,29 +238,11 @@ function LuiMain() : LuiBase() constructor {
 		
 		// Draw debug info under mouse
 		if global.lui_debug_mode != 0 && !is_undefined(_element) {
-			if !is_undefined(self.style.font_debug) {
-				draw_set_font(self.style.font_debug);
-			}
-			//Text on mouse
-			var _mouse_x = device_mouse_x_to_gui(0) + 24;
-			var _mouse_y = device_mouse_y_to_gui(0) + 24;
+			//Mouse coords
+			var _mouse_x = device_mouse_x_to_gui(0) + 32;
+			var _mouse_y = device_mouse_y_to_gui(0) + 32;
 			//Text
-			var _prev_color = draw_get_color();
-			draw_set_alpha(1);
-			draw_set_color(c_white);
-			_luiDrawTextDebug(_mouse_x, _mouse_y, 
-			"id: " + string(_element.element_id) + "\n" +
-			"name: " + string(_element.name) + "\n" +
-			"x: " + string(_element.pos_x) + (_element.auto_x ? " (auto)" : "") + " y: " + string(_element.pos_y) + (_element.auto_y ? " (auto)" : "") + "\n" +
-			"w: " + string(_element.width) + (_element.auto_width ? " (auto)" : "") + " h: " + string(_element.height) + (_element.auto_height ? " (auto)" : "") + "\n" +
-			"v: " + string(_element.value) + "\n" +
-			"content: " + string(array_length(_element.content)) + "/" + string(array_length(_element.delayed_content)) + "\n" +
-			"parent: " + (is_undefined(_element.parent) ? "undefined" : _element.parent.name) + "\n" +
-			"z: " + string(_element.z) + " " + string(_element.depth_array) + "\n" +
-			"nesting_level: " + string(_element.nesting_level)
-			);
-			draw_set_color(_prev_color);
-			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+			_element._renderDebugInfo(_mouse_x, _mouse_y);
 		}
 	}
 	
@@ -274,7 +256,7 @@ function LuiMain() : LuiBase() constructor {
 		delete self._screen_grid;
 		delete self.element_names;
 		global.lui_element_count = 0;
-		global.lui_z_index = 0;
+		global.lui_max_z = 0;
 	}
 	
 	// CHECKERS

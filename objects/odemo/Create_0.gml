@@ -5,6 +5,7 @@ LIME_RESOLUTION.init();
 // Init debug variables
 debug_overlay = false;
 debug_grid = false;
+enable_alpha_test = true; // true makes UI flashes if LUI_FORCE_ALPHA_1 setted to false
 
 // Init demo variables
 demo_login = "";

@@ -12,6 +12,8 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 	self.width = width;
 	self.height = height;
 	_initElement();
+	
+	self.ignore_mouse = true;
 }
 
 ///@desc An empty, invisible container with no padding on the sides for elements with row stacking

@@ -40,7 +40,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		return clamp(_new_value, self.value_min, self.value_max);
 	}
 	
-	//???// inherit grom LuiProgressBar ?
+	//???// inherit from LuiProgressBar ?
 	static setRounding = function(rounding) {
 		self.rounding = rounding;
 		return self;

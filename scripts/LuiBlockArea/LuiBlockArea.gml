@@ -6,6 +6,7 @@
 ///@arg {String} name
 function LuiBlockArea(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiBlockArea") : LuiFlexColumn(x, y, width, height, name) constructor {
 	
+	self.ignore_mouse = false;
 	self.color = c_black;
 	self.alpha = 0.5;
 	

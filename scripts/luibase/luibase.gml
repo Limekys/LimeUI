@@ -1,7 +1,6 @@
 ///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
 function LuiBase() constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
-	if !variable_global_exists("lui_z_index") variable_global_set("lui_z_index", 0);
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 	
 	self.element_id = global.lui_element_count++;
@@ -63,106 +62,15 @@ function LuiBase() constructor {
 		bottom : 0
 	};
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
-	
 	self.view_region = {
-	    x1: 0,
-	    y1: 0,
-	    x2: 5000,
-	    y2: 5000
+		x1: 0,
+		y1: 0,
+		x2: 5000,
+		y2: 5000
 	};
 	self.is_visible_in_region = true;
-	self.nesting_level = 0;							// Used to alternate the color of nested panels
-	self.calculate_nesting_level = true;
-	
-	// depth system //???//
-	
-	self.depth_array = [];
-	
-	static bringToFront = function() {
-	    global.lui_max_z++;
-	    self.z = global.lui_max_z;
-	    
-	    // Обновляем depth_array
-	    if (self.parent != undefined) {
-	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
-	    } else {
-	        self.depth_array = [self.z];
-	    }
-	    
-	    self.updateMainUiSurface();
-	    
-	    // Обновляем depth_array для дочерних элементов
-	    for (var i = 0; i < array_length(self.content); i++) {
-	        var _element = self.content[i];
-	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
-	    }
-	    
-	    return self;
-	}
-	
-	function compare_depth_arrays(a, b) {
-	    var len_a = array_length(a);
-	    var len_b = array_length(b);
-	    var min_len = min(len_a, len_b);
-	    
-	    for (var i = 0; i < min_len; i++) {
-	        if (a[i] > b[i]) return 1;  // a больше
-	        if (a[i] < b[i]) return -1; // b меньше
-	    }
-	    
-	    // Если массивы равны до min_len, более длинный массив больше
-	    if (len_a > len_b) return 1;
-	    if (len_a < len_b) return -1;
-	    return 0; // Равны
-	}
-	
-	/// @desc Sets a new depth value for the element and recalculates depth_array for itself and its children
-	static setDepth = function(_new_z) {
-	    // Update the element's z value
-	    self.z = _new_z;
-	    
-	    // Rebuild depth_array: parent's depth_array + new z
-	    if (self.parent != undefined) {
-	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
-	    } else {
-	        self.depth_array = [self.z];
-	    }
-	    
-	    // Update main UI surface
-	    self.updateMainUiSurface();
-	    
-	    // Recursively update depth_array for all children
-	    for (var i = 0; i < array_length(self.content); i++) {
-	        var _element = self.content[i];
-	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
-	        // Recursively update children's children
-	        _element.setDepth(_element.z); // Reuse setDepth to update children
-	    }
-	    
-	    return self;
-	}
-	
-	/// @desc Recalculates depth_array for the element and all its children
-	static recalculateDepthArray = function() {
-	    // Rebuild depth_array: parent's depth_array + current z
-	    if (self.parent != undefined) {
-	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
-	    } else {
-	        self.depth_array = [self.z];
-	    }
-	    
-	    // Update main UI surface
-	    self.updateMainUiSurface();
-	    
-	    // Recursively update depth_array for all children
-	    for (var i = 0; i < array_length(self.content); i++) {
-	        self.content[i].recalculateDepthArray();
-	    }
-	    
-	    return self;
-	}
-	
-	//???//
+	self.nesting_level = 0;							//Depth system
+	self.depth_array = [];							//Depth system
 	
 	// Custom methods for element
 	
@@ -286,7 +194,7 @@ function LuiBase() constructor {
 		
 	    // Сортировка по depth_array (по убыванию)
 	    array_sort(_filtered, function(elm1, elm2) {
-	        return compare_depth_arrays(elm2.depth_array, elm1.depth_array); // Обратный порядок
+	        return compareDepthArrays(elm2.depth_array, elm1.depth_array); // Обратный порядок
 	    });
 		
 	    return _filtered[0]; // Возвращаем верхний элемент
@@ -761,6 +669,81 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	// DEPTH SYSTEM
+	
+	/// @desc Sets a new depth value for the element and recalculates depth_array for itself and its children
+	static setDepth = function(_new_z) {
+	    // Update the element's z value
+	    self.z = _new_z;
+	    
+	    // Rebuild depth_array: parent's depth_array + new z
+	    if (self.parent != undefined) {
+	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+	    } else {
+	        self.depth_array = [self.z];
+	    }
+	    
+	    // Update main UI surface
+	    self.updateMainUiSurface();
+	    
+	    // Recursively update depth_array for all children
+	    for (var i = 0; i < array_length(self.content); i++) {
+	        var _element = self.content[i];
+	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
+	        // Recursively update children's children
+	        _element.setDepth(_element.z); // Reuse setDepth to update children
+	    }
+	    
+	    return self;
+	}
+	
+	/// @desc Brings the element to the front by setting a new maximum z value
+	static bringToFront = function() {
+		// Increment global.lui_max_z to get a new maximum z
+		global.lui_max_z++;
+		
+		// Set the new depth using setDepth
+		self.setDepth(global.lui_max_z);
+		
+		return self;
+	}
+	
+	///@desc Compare two depth arrays
+	function compareDepthArrays(a, b) {
+	    var len_a = array_length(a);
+	    var len_b = array_length(b);
+	    var min_len = min(len_a, len_b);
+	    
+	    for (var i = 0; i < min_len; i++) {
+	        if (a[i] > b[i]) return 1;
+	        if (a[i] < b[i]) return -1;
+	    }
+	    
+	    if (len_a > len_b) return 1;
+	    if (len_a < len_b) return -1;
+	    return 0;
+	}
+	
+	/// @desc Recalculates depth_array for the element and all its children
+	static recalculateDepthArray = function() {
+	    // Rebuild depth_array: parent's depth_array + current z
+	    if (self.parent != undefined) {
+	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+	    } else {
+	        self.depth_array = [self.z];
+	    }
+	    
+	    // Update main UI surface
+	    self.updateMainUiSurface();
+	    
+	    // Recursively update depth_array for all children
+	    for (var i = 0; i < array_length(self.content); i++) {
+	        self.content[i].recalculateDepthArray();
+	    }
+	    
+	    return self;
+	}
+	
 	// SYSTEM
 	
 	///@desc Added elements into container of these element
@@ -805,11 +788,10 @@ function LuiBase() constructor {
 	        if _element.is_adding continue;
 	        _element.is_adding = true;
 	        
-			// init depth //???//
+			// Init depth
 			_element.nesting_level = self.nesting_level + 1;
 			_element.z = global.lui_max_z++;
 			_element.depth_array = array_concat(self.depth_array, [_element.z]);
-			//???//
 			
 			// Inherit variables
 	        _element.parent = self;
@@ -917,8 +899,10 @@ function LuiBase() constructor {
 	///@desc This function draws all nested elements
 	static render = function() {
 		
-		array_sort(self.content, function(a, b) { return a.z - b.z; }); //???//
+		// Sort by depth
+		array_sort(self.content, function(a, b) { return a.z - b.z; });
 		
+		// Draw all elements
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
 			// Get element
 			var _element = self.content[i];
@@ -1012,7 +996,6 @@ function LuiBase() constructor {
 	    if (_element.start_y == -1) {
 	        _element.start_y = _element.y;
 	    }
-		//_element.z = global.lui_z_index++;
 	    
 	    _element._updateViewRegion();
 		
@@ -1031,8 +1014,6 @@ function LuiBase() constructor {
 	///@desc Update position, size and z depth of all elements with depth reset
 	static flexUpdateAll = function() {
 		if !is_undefined(main_ui) {
-			// Reset z depth index
-			global.lui_z_index = 0;
 			// Update all elements
 			flexUpdate(self.main_ui.flex_node);
 		}
@@ -1259,33 +1240,63 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc Render debug info of element
-	///@ignore
-	static _renderDebug = function(_x = 0, _y = 0) {
-		// Set font
-		if !is_undefined(self.style.font_debug) {
-			draw_set_font(self.style.font_debug);
-		}
-		// Remember prev colors
-		var _prev_color = draw_get_color();
-		var _prev_alpha = draw_get_alpha();
-		// Set colors
-		if isMouseHovered() {
-			draw_set_alpha(1);
-			draw_set_color(c_red);
-		} else {
-			draw_set_alpha(0.5);
-			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
-		}
-		// Draw rectangles
-		if isMouseHovered() {
-			draw_rectangle(_x-1, _y-1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
-		} else {
-			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
-		}
-		// Draw text
-		if global.lui_debug_mode == 2 {
-			_luiDrawTextDebug(_x, _y, 
+	/// @desc Renders debug rectangles for element boundaries and view region
+	/// @param {real} _x X-coordinate for rendering (default 0)
+	/// @param {real} _y Y-coordinate for rendering (default 0)
+	static _renderDebugRectangles = function(_x = 0, _y = 0) {
+	    // Remember previous colors
+	    var _prev_color = draw_get_color();
+	    var _prev_alpha = draw_get_alpha();
+	    
+	    // Set colors based on mouse hover
+	    if isMouseHovered() {
+	        draw_set_alpha(1);
+	        draw_set_color(c_red);
+	    } else {
+	        draw_set_alpha(0.5);
+	        draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+	    }
+	    
+	    // Draw element boundary rectangle
+	    if isMouseHovered() {
+	        draw_rectangle(_x - 1, _y - 1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
+	    } else {
+	        draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
+	    }
+	    
+	    // Draw view region rectangle
+	    draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+	    draw_rectangle(self.view_region.x1, self.view_region.y1, self.view_region.x2, self.view_region.y2, true);
+	    
+	    // Reset colors
+	    draw_set_color(_prev_color);
+	    draw_set_alpha(_prev_alpha);
+	}
+	
+	/// @desc Renders debug text information for the element
+	/// @param {real} _x X-coordinate for rendering (default 0)
+	/// @param {real} _y Y-coordinate for rendering (default 0)
+	static _renderDebugInfo = function(_x = 0, _y = 0) {
+	    // Set font if defined
+	    if !is_undefined(self.style.font_debug) {
+	        draw_set_font(self.style.font_debug);
+	    }
+	    
+	    // Remember previous colors
+	    var _prev_color = draw_get_color();
+	    var _prev_alpha = draw_get_alpha();
+	    
+	    // Set colors based on mouse hover
+	    if isMouseHovered() {
+	        draw_set_alpha(1);
+	        draw_set_color(c_red);
+	    } else {
+	        draw_set_alpha(0.5);
+	        draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+	    }
+	    
+	    // Draw debug text
+		_luiDrawTextDebug(_x, _y, 
 			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
 			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
@@ -1295,15 +1306,23 @@ function LuiBase() constructor {
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
 			"z: " + string(self.z) + " " + string(self.depth_array) + "\n" +
 			"nesting_level: " + string(self.nesting_level)
-			);
-		}
-		// Reset colors
-		draw_set_color(_prev_color);
-		draw_set_alpha(_prev_alpha);
-		
-		// View region
-		draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
-		draw_rectangle(self.view_region.x1, self.view_region.y1, self.view_region.x2, self.view_region.y2, true);
+		);
+	    
+	    // Reset colors
+	    draw_set_color(_prev_color);
+	    draw_set_alpha(_prev_alpha);
+	}
+	
+	/// @desc Renders debug info for the element (rectangles and text)
+	/// @param {real} _x X-coordinate for rendering (default 0)
+	/// @param {real} _y Y-coordinate for rendering (default 0)
+	static _renderDebug = function(_x = 0, _y = 0) {
+	    // Draw rectangles
+	    self._renderDebugRectangles(_x, _y);
+	    
+	    // Draw debug text info
+		if global.lui_debug_mode == 2
+	    self._renderDebugInfo(_x, _y);
 	}
 	
 	///@desc Draw debug text with rectangle

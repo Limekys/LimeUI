@@ -71,7 +71,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			var _x = self.x + _offset;
 			var _y = self.y + self.height / 2 - self.icon.height / 2;
 			draw_sprite_stretched_ext(self.icon.sprite, 0, _x, _y, self.icon.width, self.icon.height, self.icon.color, self.icon.alpha);
-			//???//
+			//???// how to calculate icon size and position
 			//var _x = self.x + sprite_get_xoffset(self.icon.sprite);
 			//var _y = self.y + sprite_get_yoffset(self.icon.sprite);
 			//draw_sprite_ext(self.icon.sprite, 0, _x, _y, self.icon.scale, self.icon.scale, self.icon.angle, self.icon.color, self.icon.alpha);
