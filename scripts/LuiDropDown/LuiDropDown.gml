@@ -69,6 +69,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		self.dropdown_panel.setVisibilitySwitching(true);
 		self.dropdown_panel.setVisible(self.is_open);
 		self.dropdown_panel.setVisibilitySwitching(false);
+		self.dropdown_panel.bringToFront();
 		return self;
     }
 	

@@ -71,6 +71,14 @@ my_panel_3 = new LuiPanel();
 // Create TabGroup with absolute position on the screen
 tab_group = new LuiTabGroup( , , 550, 350, "LuiTabGroup", 48).setPositionType(flexpanel_position_type.absolute);
 
+// Create draggable panel (window)
+my_ui.addContent([
+	new LuiWindow(512, 600, 300, 300, , "Title of this window").addContent([
+		new LuiText(, , , , , "Text in window"),
+		new LuiButton(, , 150, 32, , "Button")
+	])
+])
+
 // Add panels to main ui container
 my_ui.addContent([
 	new LuiFlexRow().addContent([
@@ -416,13 +424,6 @@ my_ui.addContent([
 		room_goto(rDemo2);
 	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);
-
-my_ui.addContent([
-	new LuiWindow(512, 512, 300, 300, "aboba", "This is test title").addContent([
-		new LuiText(, , , , , "Test text in window"),
-		new LuiButton(, , 150, 32, , "Test button")
-	])
-])
 
 // Stress test
 /*

@@ -700,10 +700,10 @@ function LuiBase() constructor {
 	/// @desc Brings the element to the front by setting a new maximum z value
 	static bringToFront = function() {
 		// Increment global.lui_max_z to get a new maximum z
-		global.lui_max_z++;
+		//global.lui_max_z++;
 		
 		// Set the new depth using setDepth
-		self.setDepth(global.lui_max_z);
+		self.setDepth(global.lui_max_z+1);
 		
 		return self;
 	}
@@ -749,7 +749,7 @@ function LuiBase() constructor {
 	///@desc Added elements into container of these element
 	///@arg {Any} elements
 	///@arg {Real} _custom_padding
-	static addContent = function(elements, _custom_padding = LUI_AUTO) { //???// remove custom_padding ?
+	self.addContent = function(elements, _custom_padding = LUI_AUTO) { //???// remove custom_padding ?
 	    
 		// Convert to array if one element
 		if !is_array(elements) elements = [elements];
