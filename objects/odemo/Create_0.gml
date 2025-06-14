@@ -73,7 +73,7 @@ tab_group = new LuiTabGroup( , , 550, 350, "LuiTabGroup", 48).setPositionType(fl
 
 // Create draggable panel (window)
 my_ui.addContent([
-	new LuiWindow(512, 600, 300, 300, , "Title of this window").addContent([
+	new LuiWindow(500, 540, 300, 300, , "Title of this window").addContent([
 		new LuiText(, , , , , "Text in window"),
 		new LuiButton(, , 150, 32, , "Button")
 	])

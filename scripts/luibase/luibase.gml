@@ -619,10 +619,10 @@ function LuiBase() constructor {
 				self.visible = _visible;
 				// Events onShow / onHide
 				if _visible {
-					self.setFlexDisplay(flexpanel_display.flex);
+					//self.setFlexDisplay(flexpanel_display.flex);
 					if is_method(self.onShow) self.onShow();
 				} else {
-					self.setFlexDisplay(flexpanel_display.none);
+					//self.setFlexDisplay(flexpanel_display.none);
 					if is_method(self.onHide) self.onHide();
 				}
 				// Grid and flex update
@@ -700,10 +700,10 @@ function LuiBase() constructor {
 	/// @desc Brings the element to the front by setting a new maximum z value
 	static bringToFront = function() {
 		// Increment global.lui_max_z to get a new maximum z
-		//global.lui_max_z++;
+		global.lui_max_z++;
 		
 		// Set the new depth using setDepth
-		self.setDepth(global.lui_max_z+1);
+		self.setDepth(global.lui_max_z);
 		
 		return self;
 	}
@@ -1474,27 +1474,22 @@ function LuiBase() constructor {
 		}
 	};
 	
-	///@desc Delete lement from system ui grid
+	///@desc Delete element from system ui grid
 	///@ignore
 	static _gridDelete = function() {
-		var _grid_location_length = array_length(self._grid_location);
-		for (var i = _grid_location_length - 1; i >= 0; --i) {
-			var _key = self._grid_location[i];
-			
-			if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
-				var _array = self.main_ui._screen_grid[$ _key];
-				var _array_length = array_length(_array);
-				for (var j = _array_length-1; j >= 0; --j) {
-					if (_array[j].element_id == self.element_id) {
-						array_delete(_array, j, 1);
-						break;
-					}
-				}
-			}
-		}
-		
-		self._grid_location = [];
-	};
+	    var _grid_location_length = array_length(self._grid_location);
+	    for (var i = 0; i < _grid_location_length; i++) {
+	        var _key = self._grid_location[i];
+	        if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
+	            var _array = self.main_ui._screen_grid[$ _key];
+	            var _index = array_get_index(_array, self);
+	            if (_index != -1) {
+	                array_delete(_array, _index, 1);
+	            }
+	        }
+	    }
+	    self._grid_location = [];
+	}
 	
 	///@desc Update element in system ui grid
 	///@ignore

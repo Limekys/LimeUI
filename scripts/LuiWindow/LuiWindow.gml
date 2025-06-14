@@ -30,7 +30,7 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	    
 	    // Add buttons (e.g., close, minimize)
 	    var _button_size = self.height;
-	    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "-");
+	    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "_");
 		var _close_button = new LuiButton(, , _button_size, _button_size, , "X").setColor(merge_color(#FF7777, c_black, 0.5));
 	    self.addContent([_minimize_button, _close_button]);
 	}
@@ -86,12 +86,13 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.onCreate = function() {
 		self.setPositionType(flexpanel_position_type.absolute);
+		self.setPosition(, self.pos_y + self.header_height);
 		self._initHeader();
 	}
 	
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
-			self.window_header = new LuiWindowHeader(self.pos_x, self.pos_y - self.header_height, self.width, self.header_height, , self.title)
+			self.window_header = new LuiWindowHeader(self.pos_x, self.pos_y, self.width, self.header_height, , self.title)
 				.setMinHeight(self.header_height);
 			self.main_ui.addContent(self.window_header);
 			self.window_header.parent_window = self;
