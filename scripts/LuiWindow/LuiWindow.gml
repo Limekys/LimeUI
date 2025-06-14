@@ -30,9 +30,19 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	    
 	    // Add buttons (e.g., close, minimize)
 	    var _button_size = self.height;
-	    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "_");
 		var _close_button = new LuiButton(, , _button_size, _button_size, , "X").setColor(merge_color(#FF7777, c_black, 0.5));
-	    self.addContent([_minimize_button, _close_button]);
+	    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "_");
+	    
+		_close_button.setCallback(function() {
+			self.parent.parent_window.destroy();
+			self.parent.destroy();
+		});
+		
+		_minimize_button.setCallback(function() {
+			self.parent.parent_window.setVisible(!self.parent.parent_window.visible);
+		});
+		
+		self.addContent([_minimize_button, _close_button]);
 	}
 	
     // Draw method
