@@ -1548,7 +1548,10 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _updateViewRegion = function() {
-    	// Set the initial dimensions of the visible region based on the current coordinates and dimensions of the element
+    	// Store previous visibility state
+		var _was_visible = self.is_visible_in_region;
+		
+		// Set the initial dimensions of the visible region based on the current coordinates and dimensions of the element
 	    self.view_region = {
 	        x1: self.x,
 	        y1: self.y,
@@ -1575,5 +1578,10 @@ function LuiBase() constructor {
 	    self.is_visible_in_region = (_region_width > 0 && _region_height > 0) &&
 	                                !(self.x + self.width < _parent_region.x1 || self.x > _parent_region.x2 ||
 	                                  self.y + self.height < _parent_region.y1 || self.y > _parent_region.y2);
+		
+		// Update grid if visibility changed
+		if (_was_visible != self.is_visible_in_region) {
+			self._gridUpdate();
+		}
 	}
 }
