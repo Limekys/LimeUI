@@ -45,6 +45,7 @@
     {"name":"LuiTextbox","order":16,"path":"scripts/LuiTextbox/LuiTextbox.yy",},
     {"name":"LuiWindow","order":17,"path":"scripts/LuiWindow/LuiWindow.yy",},
     {"name":"sndDeniedClick","order":1,"path":"sounds/sndDeniedClick/sndDeniedClick.yy",},
+    {"name":"Icon_Key","order":30,"path":"sprites/Icon_Key/Icon_Key.yy",},
     {"name":"sBarBackDemo2","order":3,"path":"sprites/sBarBackDemo2/sBarBackDemo2.yy",},
     {"name":"sBarValueDemo2","order":4,"path":"sprites/sBarValueDemo2/sBarValueDemo2.yy",},
     {"name":"sBoxDemo","order":8,"path":"sprites/sBoxDemo/sBoxDemo.yy",},

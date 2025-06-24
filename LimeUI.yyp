@@ -74,6 +74,7 @@
     {"id":{"name":"LuiWindow","path":"scripts/LuiWindow/LuiWindow.yy",},},
     {"id":{"name":"sndBasicClick","path":"sounds/sndBasicClick/sndBasicClick.yy",},},
     {"id":{"name":"sndDeniedClick","path":"sounds/sndDeniedClick/sndDeniedClick.yy",},},
+    {"id":{"name":"Icon_Key","path":"sprites/Icon_Key/Icon_Key.yy",},},
     {"id":{"name":"sBarBackDemo2","path":"sprites/sBarBackDemo2/sBarBackDemo2.yy",},},
     {"id":{"name":"sBarValueDemo2","path":"sprites/sBarValueDemo2/sBarValueDemo2.yy",},},
     {"id":{"name":"sBoxDemo","path":"sprites/sBoxDemo/sBoxDemo.yy",},},

@@ -52,8 +52,8 @@ function LuiStyle(_style = {}) constructor {
 	color_text_hint = _style[$ "color_text_hint"] ?? c_gray;
     color_hover = _style[$ "color_hover"] ?? c_gray;
     color_semantic_success = _style[$ "color_semantic_success"] ?? #4CAF50;
-    color_semantic_error = _style[$ "color_semantic_error"] ?? #F44336;
     color_semantic_warning = _style[$ "color_semantic_warning"] ?? #FF9800;
+	color_semantic_error = _style[$ "color_semantic_error"] ?? #F44336;
     color_shadow = _style[$ "color_shadow"] ?? c_black;
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
@@ -257,12 +257,12 @@ function LuiStyle(_style = {}) constructor {
     
     ///@desc Sets the semantic colors for success, error, and warning states.
     ///@arg {Real} [_success] The color for success (default: #4CAF50).
+	///@arg {Real} [_warning] The color for warning (default: #FF9800).
     ///@arg {Real} [_error] The color for error (default: #F44336).
-    ///@arg {Real} [_warning] The color for warning (default: #FF9800).
-    static setColorSemantic = function(_success = #4CAF50, _error = #F44336, _warning = #FF9800) {
+    static setColorSemantic = function(_success = #4CAF50, _warning = #FF9800, _error = #F44336) {
         color_semantic_success = _success;
-        color_semantic_error = _error;
         color_semantic_warning = _warning;
+		color_semantic_error = _error;
         return self;
     }
     

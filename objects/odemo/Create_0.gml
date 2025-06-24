@@ -71,14 +71,6 @@ my_panel_3 = new LuiPanel();
 // Create TabGroup with absolute position on the screen
 tab_group = new LuiTabGroup( , , 550, 350, "LuiTabGroup", 48).setPositionType(flexpanel_position_type.absolute);
 
-// Create draggable panel (window)
-my_ui.addContent([
-	new LuiWindow(500, 540, 300, 300, , "Title of this window").addContent([
-		new LuiText(, , , , , "Text in window"),
-		new LuiButton(, , 150, 32, , "Button")
-	])
-])
-
 // Add panels to main ui container
 my_ui.addContent([
 	new LuiFlexRow().addContent([
@@ -116,6 +108,25 @@ btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
 	game_restart();
 });
 
+// Function to create a draggable windows
+createNewLoginWindow = function () {
+	// Create draggable panel (window) with some content
+	my_ui.addContent([
+		new LuiWindow(500, 540, 300, 300, , " Secret database").centerContent().addContent([
+			new LuiSprite(, , 64, 64, , Icon_Key),
+			new LuiFlexRow().addContent([
+				new LuiTextbox(, , , , , "", "login")
+			]),
+			new LuiFlexRow().addContent([
+				new LuiTextbox(, , , , , "", "password", true)
+			]),
+			new LuiButton(, , 150, 32, , "Login", function() {
+				showLuiMessage(oDemo.my_ui, , , "Wrong password!", "OK!");
+			})
+		])
+	])
+}
+
 // Add elements to first panel and init some new here
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
@@ -137,6 +148,9 @@ my_panel.addContent([
 	new LuiFlexRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
 	]),
+	new LuiButton(, , , , , "Create login window", function () {
+		oDemo.createNewLoginWindow();
+	}),
 	new LuiFlexRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
 	]),

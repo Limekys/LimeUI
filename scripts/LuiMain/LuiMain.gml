@@ -12,6 +12,7 @@ function LuiMain() : LuiBase() constructor {
 	self.main_ui = self;
 	self.element_in_focus = undefined;
 	self.topmost_hovered_element = undefined;
+	self.dragging_element = undefined;
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.needs_update_flex = true;
@@ -57,7 +58,15 @@ function LuiMain() : LuiBase() constructor {
 		// Mouse events
 		if self.visible && !self.deactivated && (_mouse_x >= 0 && _mouse_x <= self.width && _mouse_y >= 0 && _mouse_y <= self.height) {
 			var _previous_hovered_element = self.topmost_hovered_element;
-			self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
+			
+			// Prioritize dragging element if it exists and mouse is held
+			if (!is_undefined(self.dragging_element) && mouse_check_button(mb_left)) {
+				self.topmost_hovered_element = self.dragging_element;
+			} else {
+				self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
+			}
+			
+			// Update mouse hover state
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 				_previous_hovered_element.is_mouse_hovered = false;
 				if is_method(_previous_hovered_element.onMouseLeave) _previous_hovered_element.onMouseLeave();
@@ -86,10 +95,16 @@ function LuiMain() : LuiBase() constructor {
 						self.topmost_hovered_element.setFocus();
 						self.element_in_focus = self.topmost_hovered_element;
 					}
+					// Set dragging element if it supports dragging
+					if (variable_struct_exists(self.topmost_hovered_element, "is_dragging") && self.topmost_hovered_element.is_dragging) {
+						self.dragging_element = self.topmost_hovered_element;
+					}
 					self.updateMainUiSurface();
 				}
 				if (mouse_check_button_released(mb_left)) {
 					if is_method(self.topmost_hovered_element.onMouseLeftReleased) self.topmost_hovered_element.onMouseLeftReleased();
+					// Clear dragging element
+					self.dragging_element = undefined;
 					// Remove focus from element
 					if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
 						self.element_in_focus.removeFocus();
@@ -106,10 +121,14 @@ function LuiMain() : LuiBase() constructor {
 					if (mouse_check_button_pressed(mb_left) || mouse_check_button_released(mb_left)) {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus = undefined;
+						self.dragging_element = undefined; // Clear dragging element
 						self.updateMainUiSurface();
 					}
 				}
 			}
+		} else {
+			// Clear dragging element if mouse is outside UI
+			self.dragging_element = undefined;
 		}
 		
 		// Keyboard events
@@ -253,6 +272,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		self.pre_draw_list = -1;
 		self.element_in_focus = undefined;
+		self.dragging_element = undefined; // Clear dragging element
 		delete self._screen_grid;
 		delete self.element_names;
 		global.lui_element_count = 0;
