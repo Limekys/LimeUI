@@ -14,12 +14,8 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
     self.height = height;
     self.title = title;
 	self.parent_window = -1;
+	self.can_drag = true;
     _initElement();
-	
-    // Dragging state
-    self.is_dragging = false;
-    self.drag_offset_x = 0;
-    self.drag_offset_y = 0;
     
 	self.onCreate = function() { 
 		
@@ -51,29 +47,21 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			//var _color = isMouseHovered() ? merge_colour(_blend_color, self.style.color_hover, 0.5) : _blend_color;
             draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
         }
-    };
+    }
     
-    // Mouse events for dragging
+	// Mouse events for dragging
     self.onMouseLeftPressed = function() {
-		self.is_dragging = true;
-		self.drag_offset_x = device_mouse_x_to_gui(0) - self.x;
-		self.drag_offset_y = device_mouse_y_to_gui(0) - self.y;
 		self.parent_window.bringToFront();
 		self.bringToFront();
-    };
-    
-	self.onMouseLeft = function() {
-		if (self.is_dragging) {
-            var _new_pos_x = clamp(device_mouse_x_to_gui(0) - self.drag_offset_x, 0, display_get_gui_width() - self.width);
-            var _new_pos_y = clamp(device_mouse_y_to_gui(0) - self.drag_offset_y, 0, display_get_gui_height() - self.height);
-			self.setPosition(_new_pos_x, _new_pos_y );
-			self.parent_window.setPosition(_new_pos_x, _new_pos_y + self.height);
-        }
-	}
+    }
 	
-    self.onMouseLeftReleased = function() {
-        self.is_dragging = false;
-    };
+    // Dragging window
+    self.onDragging = function(_mouse_x, _mouse_y) {
+        if (!is_undefined(self.parent_window)) {
+            self.parent_window.setPosition(self.x, self.y + self.height);
+            self.parent_window.updateMainUiSurface();
+        }
+    }
 }
 
 ///@desc A draggable window with a header, similar to Windows windows
@@ -103,6 +91,8 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				.setMinHeight(self.header_height);
 			self.main_ui.addContent(self.window_header);
 			self.window_header.parent_window = self;
+			self.bringToFront();
+			self.window_header.bringToFront();
 		}
 	}
 	
@@ -128,5 +118,11 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !is_undefined(self.style.sprite_tabgroup_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
-    };
+    }
+	
+	// Mouse events for dragging
+    self.onMouseLeftPressed = function() {
+		self.bringToFront();
+		self.window_header.bringToFront();
+    }
 }

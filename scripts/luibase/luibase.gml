@@ -62,6 +62,8 @@ function LuiBase() constructor {
 		bottom : 0
 	};
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
+	
+	// View region system
 	self.view_region = {
 		x1: 0,
 		y1: 0,
@@ -69,10 +71,18 @@ function LuiBase() constructor {
 		y2: 5000
 	};
 	self.is_visible_in_region = true;
-	self.nesting_level = 0;							//Depth system
-	self.depth_array = [];							//Depth system
 	
-	// Custom methods for element
+	// Depth system
+	self.nesting_level = 0;
+	self.depth_array = [];
+	
+	// Dragging system
+	self.can_drag = false;
+    self.is_dragging = false;
+    self.drag_offset_x = 0;
+    self.drag_offset_y = 0;
+	
+	// Logic methods for element
 	
 	//Called after this item has been added somewhere
 	self.onCreate = undefined;
@@ -136,6 +146,9 @@ function LuiBase() constructor {
 	
 	///@desc Called when element change his size
 	self.onSizeUpdate = undefined;
+	
+	///@desc Called when element dragging by mouse/finger
+	self.onDragging = undefined;
 	
 	// GETTERS
 	
@@ -246,6 +259,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
+			self.x = _x;
 			self.auto_x = false;
 		}
 		self.updateMainUiFlex();
@@ -258,6 +272,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
+			self.y = _y;
 			self.auto_y = false;
 		}
 		self.updateMainUiFlex();
@@ -295,10 +310,12 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
+			self.x = _x;
 			self.auto_x = false;
 		}
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
+			self.y = _y;
 			self.auto_y = false;
 		}
 		if _r != LUI_AUTO {
