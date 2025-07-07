@@ -29,12 +29,14 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	///@ignore
-	static _calcValue = function(value) {
+	static _calcValue = function(_value) {
+		var _new_value = 0;
 		if self.rounding > 0 {
-			return round(value / (self.rounding)) * (self.rounding);
+			_new_value = round(_value / (self.rounding)) * (self.rounding);
 		} else {
-			return value;
+			_new_value = _value;
 		}
+		return clamp(_new_value, self.value_min, self.value_max);
 	}
 	
 	///@desc Sets the rounding rule for the value (0 - no rounding, 0.1 - round to tenths...).
