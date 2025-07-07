@@ -53,6 +53,7 @@ function LuiBase() constructor {
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
 	self.is_custom_style_setted = false;
+	self.is_destroyed = false;
 	self.draw_content_in_cutted_region = false;
 	self.flex_node = undefined;
 	self.render_region_offset = {
@@ -864,6 +865,12 @@ function LuiBase() constructor {
 	    for (var i = _source_length - 1; i >= 0; --i) {
 	        var _element = _elements[i];
 	        
+			// Delete destroyed elements
+			if _element.is_destroyed {
+				array_delete(_elements, i, 1);
+				continue;
+			}
+			
 	        // Skip the invisible elements
 	        if (!_element.is_visible_in_region) continue;
 	        
@@ -924,7 +931,7 @@ function LuiBase() constructor {
 			// Get element
 			var _element = self.content[i];
 			// Restriction
-			if !_element.is_visible_in_region || !_element.visible continue;
+			if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
 			// Draw self
 			if is_method(_element.draw) _element.draw();
 			// Draw content
@@ -1150,27 +1157,20 @@ function LuiBase() constructor {
 	
 	///@desc Destroys self and all nested elements
 	self.destroy = function() {
-		for (var i = array_length(self.content) - 1; i >= 0; --i) {
-			
-			//var _element = self.content[i];
-			//_element.destroy();
-			
-			var _error = false;
-			try {
-				var _element = self.content[i];
-				_element.destroy();
-			} catch(_e) {
-				_error = true;
-				print($"LIME_UI.ERROR: Failed to destroy element {self.content[i].name}. Reason: " + string(_e));
-			} finally {
-				if _error {} //???//
-			}
+		// Double-Destroy protection
+		if (self.is_destroyed) {
+			return;
 		}
+		// Destroy all content
+		self.destroyContent();
+		// Reset self
 		if self == main_ui.element_in_focus {
 			self.main_ui.element_in_focus.removeFocus();
 			self.main_ui.element_in_focus = undefined;
 		}
-		if is_method(self.onDestroy) self.onDestroy();
+		if is_method(self.onDestroy) {
+			self.onDestroy();
+		}
 		self._deleteElementName();
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
@@ -1179,26 +1179,20 @@ function LuiBase() constructor {
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		self.flex_node = flexpanel_delete_node(self.flex_node, false);
+		// Decrement global counter
 		global.lui_element_count--;
-		//Delete self from parent content
-		if !is_undefined(parent) {
-			if parent.content != -1 {
-				var _ind = array_find_index(parent.content, function(_elm) {
-					return _elm == self;
-				});
-				array_delete(parent.content, _ind, 1);
-			}
-		}
+		// Double-Destroy protection
+		self.is_destroyed = true;
 	}
 	
 	///@desc Destroys all nested elements
 	static destroyContent = function() {
-		if array_length(self.content) > 0 {
-			for (var i = array_length(self.content) - 1;  i >= 0; --i) {
-			    var _element = self.content[i];
-				_element.destroy();
-			}
-		}
+	    while (array_length(self.content) > 0) {
+	        var _element = array_pop(self.content);
+	        if (_element != undefined) {
+	            _element.destroy();
+	        }
+	    }
 	}
 	
 	// PRIVATE SYSTEM
