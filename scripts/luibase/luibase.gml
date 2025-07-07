@@ -16,14 +16,16 @@ function LuiBase() constructor {
 	self.target_y = 0;								//Target y position this element relative parent (for animation) //???//
 	self.start_x = -1;								//First x position
 	self.start_y = -1;								//First y position
-	self.previous_x = -1;							//Previous floor(x) position on the screen
-	self.previous_y = -1;							//Previous floor(y) position on the screen
+	self.prev_x = -1;								//Previous floor(x) position on the screen
+	self.prev_y = -1;								//Previous floor(y) position on the screen
 	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
 	self.grid_previous_y1 = -1;						//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
 	self.grid_previous_x2 = -1;						//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
 	self.grid_previous_y2 = -1;						//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
 	self.width = 32;								//Actual width
 	self.height = 32;								//Actual height
+	self.prev_w = -1;								//Previous width
+	self.prev_h = -1;								//Previous height
 	self.target_width = 32;							//Target width (for animation) //???//
 	self.target_height = 32;						//Target height (for animation) //???//
 	self.min_width = 32;
@@ -356,11 +358,14 @@ function LuiBase() constructor {
 	///@arg {real} [_width]
 	static setWidth = function(_width = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _width != LUI_AUTO {
+		var _update_flex = false;
+		if _width != LUI_AUTO && self.width != _width {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
-		if is_method(self.onSizeUpdate) self.onSizeUpdate();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -368,11 +373,14 @@ function LuiBase() constructor {
 	///@arg {real} [_height]
 	static setHeight = function(_height = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _height != LUI_AUTO {
+		var _update_flex = false;
+		if _height != LUI_AUTO && self.height != _height {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
-		if is_method(self.onSizeUpdate) self.onSizeUpdate();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -381,14 +389,18 @@ function LuiBase() constructor {
 	///@arg {real} [_height]
 	static setSize = function(_width = LUI_AUTO, _height = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _width != LUI_AUTO {
+		var _update_flex = false;
+		if _width != LUI_AUTO && self.width != _width {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		if _height != LUI_AUTO {
+		if _height != LUI_AUTO && self.height != _height {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
-		if is_method(self.onSizeUpdate) self.onSizeUpdate();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -396,10 +408,14 @@ function LuiBase() constructor {
 	///@arg {real} [_min_width]
 	static setMinWidth = function(_min_width = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _min_width != LUI_AUTO {
+		var _update_flex = false;
+		if _min_width != LUI_AUTO && self.min_width != _min_width {
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -407,10 +423,14 @@ function LuiBase() constructor {
 	///@arg {real} [_max_width]
 	static setMaxWidth = function(_max_width = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _max_width != LUI_AUTO {
+		var _update_flex = false;
+		if _max_width != LUI_AUTO && self.max_width != _max_width {
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -418,10 +438,14 @@ function LuiBase() constructor {
 	///@arg {real} [_min_height]
 	static setMinHeight = function(_min_height = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _min_height != LUI_AUTO {
+		var _update_flex = false;
+		if _min_height != LUI_AUTO && self.min_height != _min_height {
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -429,10 +453,14 @@ function LuiBase() constructor {
 	///@arg {real} [_max_height]
 	static setMaxHeight = function(_max_height = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _max_height != LUI_AUTO {
+		var _update_flex = false;
+		if _max_height != LUI_AUTO && self.max_height != _max_height {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -443,19 +471,26 @@ function LuiBase() constructor {
 	///@arg {real} [_max_height]
 	static setMinMaxSize = function(_min_width = LUI_AUTO, _max_width = LUI_AUTO, _min_height = LUI_AUTO, _max_height = LUI_AUTO) {
 		var _flex_node = self.flex_node;
-		if _min_width != LUI_AUTO {
+		var _update_flex = false;
+		if _min_width != LUI_AUTO && self.min_width != _min_width {
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		if _max_width != LUI_AUTO {
+		if _max_width != LUI_AUTO && self.max_width != _max_width {
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		if _min_height != LUI_AUTO {
+		if _min_height != LUI_AUTO && self.min_height != _min_height {
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		if _max_height != LUI_AUTO {
+		if _max_height != LUI_AUTO && self.max_height != _max_height {
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
+			_update_flex = true;
 		}
-		self.updateMainUiFlex();
+		if _update_flex {
+			self.updateMainUiFlex();
+		}
 		return self;
 	}
 	
@@ -896,19 +931,24 @@ function LuiBase() constructor {
 	        // Skip the invisible elements
 	        if (!_element.is_visible_in_region) continue;
 	        
-	        var _cur_x = round(_element.x);
-	        var _cur_y = round(_element.y);
+	        var _cur_x = _element.x;
+	        var _cur_y = _element.y;
 	        
-	        // Update the position and Surface UI if the coordinates have changed
-	        if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {
-	            _element.previous_x = _cur_x;
-	            _element.previous_y = _cur_y;
-	            if (_element.is_visible_in_region) {
-	                //if (is_method(_element.onPositionUpdate)) _element.onPositionUpdate();
-	                _element.updateMainUiSurface();
-	            } else {
-	                _element._gridDelete();
-	            }
+	        // Update surface UI if the coordinates have changed
+	        if (_element.prev_x != _cur_x || _element.prev_y != _cur_y) {
+	            _element.prev_x = _cur_x;
+	            _element.prev_y = _cur_y;
+	            _element.updateMainUiSurface();
+	        }
+			
+			var _cur_w = _element.width;
+	        var _cur_h = _element.height;
+			
+			// Update surface UI if the size have changed
+	        if (_element.prev_w != _cur_w || _element.prev_h != _cur_h) {
+	            _element.prev_w = _cur_w;
+	            _element.prev_h = _cur_h;
+	            _element.updateMainUiSurface();
 	        }
 	        
 	        // Updating the bound variables

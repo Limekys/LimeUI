@@ -9,13 +9,9 @@ if demo_loading_state {
 }
 
 // Smooth moving for tab_group (WIP) //???//
-if tab_group.x != tab_group_target_x || tab_group.y != tab_group_target_y {
-	tab_group.setPosition(tab_group_target_x, tab_group_target_y);
-	//tab_group.x = lerp(tab_group.x, tab_group_target_x, 0.1);
-	//tab_group.y = lerp(tab_group.y, tab_group_target_y, 0.1);
-	//tab_group.setPosX(SmoothApproachDelta(tab_group.x, tab_group_target_x, 0.1));
-	//tab_group.setPosY(SmoothApproachDelta(tab_group.y, tab_group_target_y, 0.1));
-}
+tab_group.setPosition(tab_group_target_x, tab_group_target_y);
+//tab_group.setPosX(SmoothApproachDelta(tab_group.x, tab_group_target_x, 0.1));
+//tab_group.setPosY(SmoothApproachDelta(tab_group.y, tab_group_target_y, 0.1));
 
 // Scrolling test
 

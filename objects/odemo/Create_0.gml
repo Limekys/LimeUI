@@ -434,6 +434,7 @@ my_panel_3.addContent([
 my_ui.addContent([
 	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->", function() {
 		room_goto(rDemo2);
+		//with(oDemo) instance_destroy();
 	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);
 
