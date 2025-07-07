@@ -112,7 +112,7 @@ btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
 createNewLoginWindow = function () {
 	// Create draggable panel (window) with some content
 	my_ui.addContent([
-		new LuiWindow(500, 540, 300, 300, , " Secret database").centerContent().addContent([
+		new LuiWindow(500 + irandom(100), 540 + irandom(100), 300, 300, , " Secret database").centerContent().addContent([
 			new LuiSprite(, , 64, 64, , sIconKey),
 			new LuiFlexRow().addContent([
 				new LuiTextbox(, , , , , "", "login")
