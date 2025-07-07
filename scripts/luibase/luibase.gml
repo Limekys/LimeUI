@@ -259,6 +259,7 @@ function LuiBase() constructor {
 	static setPosX = function(_x = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
+			//_x = floor(_x);
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
 			self.pos_x = _x;
 			self.auto_x = false;
@@ -272,6 +273,7 @@ function LuiBase() constructor {
 	static setPosY = function(_y = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _y != LUI_AUTO {
+			//_y = floor(_y);
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 			self.pos_y = _y;
 			self.auto_y = false;
@@ -310,11 +312,13 @@ function LuiBase() constructor {
 	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO, _r = LUI_AUTO, _b = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
+			//_x = floor(_x);
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
 			self.pos_x = _x;
 			self.auto_x = false;
 		}
 		if _y != LUI_AUTO {
+			//_y = floor(_y);
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
 			self.pos_y = _y;
 			self.auto_y = false;
@@ -874,8 +878,8 @@ function LuiBase() constructor {
 	        // Skip the invisible elements
 	        if (!_element.is_visible_in_region) continue;
 	        
-	        var _cur_x = floor(_element.x);
-	        var _cur_y = floor(_element.y);
+	        var _cur_x = round(_element.x);
+	        var _cur_y = round(_element.y);
 	        
 	        // Update the position and Surface UI if the coordinates have changed
 	        if (_element.previous_x != _cur_x || _element.previous_y != _cur_y) {

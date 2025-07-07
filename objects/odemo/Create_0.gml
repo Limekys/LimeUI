@@ -327,7 +327,7 @@ my_panel_3.addContent([
 		
 		// Function for buttons
 		deleteSelf = function() {
-			self.destroy(); oDemo.filterElements()
+			oDemo.filterElements(); self.destroy();
 		};
 		// Function for search system
 		filterElements = function() {
