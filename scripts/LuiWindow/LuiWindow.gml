@@ -65,7 +65,6 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
     self.onDragging = function(_mouse_x, _mouse_y) {
         if (!is_undefined(self.parent_window)) {
             self.parent_window.setPosition(self.pos_x, self.pos_y + self.height);
-            self.parent_window.updateMainUiSurface();
         }
     }
 }
