@@ -12,10 +12,11 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
     self.pos_y = y;
     self.width = width;
     self.height = height;
-    self.title = title;
+    _initElement();
+	
+	self.title = title;
 	self.parent_window = -1;
 	self.can_drag = true;
-    _initElement();
     
 	self.onCreate = function() { 
 		
@@ -58,7 +59,7 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
     // Dragging window
     self.onDragging = function(_mouse_x, _mouse_y) {
         if (!is_undefined(self.parent_window)) {
-            self.parent_window.setPosition(self.x, self.y + self.height);
+            self.parent_window.setPosition(self.pos_x, self.pos_y + self.height);
             self.parent_window.updateMainUiSurface();
         }
     }
@@ -73,16 +74,22 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 ///@arg {String} title
 function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiWindow", title = "Window") : LuiPanel(x, y, width, height, name) constructor {
     
+	self.name = name;
+    self.pos_x = x;
+    self.pos_y = y;
+    self.width = width;
+    self.height = height;
+    _initElement();
+	
 	self.title = title;
     self.is_minimized = false;
-    
 	self.window_header = undefined;
 	self.header_height = 32;
 	
 	self.onCreate = function() {
 		self.setPositionType(flexpanel_position_type.absolute);
-		self.setPosition(, self.pos_y + self.header_height);
 		self._initHeader();
+		self.setPosition(, self.window_header.pos_y + self.header_height);
 	}
 	
 	static _initHeader = function() {
@@ -93,6 +100,7 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			self.window_header.parent_window = self;
 			self.bringToFront();
 			self.window_header.bringToFront();
+			self.setPosition(self.pos_x, self.pos_y + self.header_height);
 		}
 	}
 	

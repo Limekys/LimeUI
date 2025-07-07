@@ -113,7 +113,7 @@ createNewLoginWindow = function () {
 	// Create draggable panel (window) with some content
 	my_ui.addContent([
 		new LuiWindow(500, 540, 300, 300, , " Secret database").centerContent().addContent([
-			new LuiSprite(, , 64, 64, , Icon_Key),
+			new LuiSprite(, , 64, 64, , sIconKey),
 			new LuiFlexRow().addContent([
 				new LuiTextbox(, , , , , "", "login")
 			]),

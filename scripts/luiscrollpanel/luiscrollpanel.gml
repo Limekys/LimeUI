@@ -67,7 +67,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	///@ignore
 	static _applyScroll = function() {
-		self.scroll_container.setPosition(LUI_AUTO, self.scroll_offset_y);
+		self.scroll_container.setPosition(, self.scroll_offset_y);
 	}
 	
 	self.draw = function() {

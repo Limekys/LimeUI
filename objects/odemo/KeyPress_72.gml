@@ -12,5 +12,10 @@ if !my_ui.isInteractingKeyboard() {
 	
 	//tab_group.setVisible(!tab_group.visible);
 	//_panel.setVisible(!_panel.visible);
-	tab_group.setDepth(-1);
+	
+	var _element = my_ui.getElement("firstScrollPanel");
+	if _element != -1 {
+		print("x: ", _element.x, " y: ", _element.y, " view_region: ", _element.view_region.toString());
+		print("cx: ", _element.content[0].x, " cy: ", _element.content[0].y);
+	}
 }

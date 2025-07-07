@@ -259,7 +259,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
-			self.x = _x;
+			self.pos_x = _x;
 			self.auto_x = false;
 		}
 		self.updateMainUiFlex();
@@ -272,7 +272,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
-			self.y = _y;
+			self.pos_y = _y;
 			self.auto_y = false;
 		}
 		self.updateMainUiFlex();
@@ -310,12 +310,12 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		if _x != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
-			self.x = _x;
+			self.pos_x = _x;
 			self.auto_x = false;
 		}
 		if _y != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
-			self.y = _y;
+			self.pos_y = _y;
 			self.auto_y = false;
 		}
 		if _r != LUI_AUTO {
@@ -875,7 +875,7 @@ function LuiBase() constructor {
 	            _element.previous_x = _cur_x;
 	            _element.previous_y = _cur_y;
 	            if (_element.is_visible_in_region) {
-	                if (is_method(_element.onPositionUpdate)) _element.onPositionUpdate();
+	                //if (is_method(_element.onPositionUpdate)) _element.onPositionUpdate();
 	                _element.updateMainUiSurface();
 	            } else {
 	                _element._gridDelete();
@@ -1001,6 +1001,11 @@ function LuiBase() constructor {
 	    var _data = flexpanel_node_get_data(_node);
 	    var _element = _data.element;
 	    
+		// Check position change
+		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
+		// Check size change
+		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
+		
 	    _element.x = _pos.left;
 	    _element.y = _pos.top;
 	    _element.pos_x = _pos.left;
@@ -1013,6 +1018,16 @@ function LuiBase() constructor {
 	    if (_element.start_y == -1) {
 	        _element.start_y = _element.y;
 	    }
+		
+		// If position was changed, call onPositionUpdate
+		if (_position_changed && is_method(_element.onPositionUpdate)) {
+			_element.onPositionUpdate();
+		}
+		
+		// If size was changed, call onSizeUpdate
+		if (_size_changed && is_method(_element.onSizeUpdate)) {
+			_element.onSizeUpdate();
+		}
 	    
 	    _element._updateViewRegion();
 		
@@ -1029,6 +1044,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Update position, size and z depth of all elements with depth reset
+	///@deprecated
 	static flexUpdateAll = function() {
 		if !is_undefined(main_ui) {
 			// Update all elements
@@ -1161,9 +1177,9 @@ function LuiBase() constructor {
 		self.content = -1;
 		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
 		self.flexCalculateLayout();
-		self.flex_node = flexpanel_delete_node(self.flex_node, false);
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
+		self.flex_node = flexpanel_delete_node(self.flex_node, false);
 		global.lui_element_count--;
 		//Delete self from parent content
 		if !is_undefined(parent) {
