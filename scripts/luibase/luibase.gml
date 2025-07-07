@@ -153,6 +153,12 @@ function LuiBase() constructor {
 	///@desc Called when element dragging by mouse/finger
 	self.onDragging = undefined;
 	
+	///@desc Called once when element started dragging by mouse/finger
+	self.onDragStart = undefined;
+	
+	///@desc Called once when element end dragging by mouse/finger
+	self.onDragEnd = undefined;
+	
 	// GETTERS
 	
 	///@desc Get value of this element

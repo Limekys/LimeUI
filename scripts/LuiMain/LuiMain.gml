@@ -108,6 +108,9 @@ function LuiMain() : LuiBase() constructor {
 						self.topmost_hovered_element.drag_offset_x = _mouse_x - self.topmost_hovered_element.x;
 						self.topmost_hovered_element.drag_offset_y = _mouse_y - self.topmost_hovered_element.y;
 						self.dragging_element = self.topmost_hovered_element;
+						if is_method(self.topmost_hovered_element.onDragStart) {
+							self.topmost_hovered_element.onDragStart();
+						}
 					}
 					self.updateMainUiSurface();
 				}
@@ -141,6 +144,9 @@ function LuiMain() : LuiBase() constructor {
 					// Clear dragging
 					if !is_undefined(self.dragging_element) {
 						self.dragging_element.is_dragging = false;
+						if is_method(self.dragging_element.onDragEnd) {
+							self.dragging_element.onDragEnd();
+						}
 						self.dragging_element = undefined;
 					}
 					// Remove focus from element if clicking outside
