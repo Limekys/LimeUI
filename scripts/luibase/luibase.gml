@@ -633,7 +633,7 @@ function LuiBase() constructor {
 		self.parent.setNeedToUpdateContent(_update_parent);
 	}
 	
-	///@desc Set element visibility
+	///@desc Set element visibility (only visibility not flex display)
 	static setVisible = function(_visible) {
 		if self.visibility_switching {
 			if self.visible != _visible {
@@ -641,16 +641,15 @@ function LuiBase() constructor {
 				self.visible = _visible;
 				// Events onShow / onHide
 				if _visible {
-					//self.setFlexDisplay(flexpanel_display.flex);
 					if is_method(self.onShow) self.onShow();
 				} else {
-					//self.setFlexDisplay(flexpanel_display.none);
 					if is_method(self.onHide) self.onHide();
 				}
-				// Grid and flex update
-				if !is_undefined(self.main_ui)  {
-					self._gridUpdate();
-					self.updateMainUiFlex();
+				// Grid update
+				self._gridUpdate();
+				// Update childs
+				for (var i = array_length(self.content) - 1; i >= 0; i--) {
+					self.content[i].setVisible(self.visible);
 				}
 				// Main surface update 
 				self.updateMainUiSurface();
@@ -965,38 +964,6 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
-	static centerContent = function() {
-		self.setFlexJustifyContent(flexpanel_justify.center)
-			.setFlexAlignItems(flexpanel_align.center);
-		return self;
-	}
-	
-	///@desc Remove focus from element
-	static removeFocus = function() {
-		self.has_focus = false;
-		if is_method(self.onFocusRemove) self.onFocusRemove();
-		return self;
-	}
-	
-	///@desc Activate an element
-	static activate = function() {
-		self.deactivated = false;
-		array_foreach(self.content, function(_elm) {
-			_elm.activate();
-		});
-		return self;
-	}
-	
-	///@desc Deactivate an element
-	static deactivate = function() {
-		self.deactivated = true;
-		array_foreach(self.content, function(_elm) {
-			_elm.deactivate();
-		});
-		return self;
-	}
-	
 	///@desc Calculate all sizes and positions of elements
 	static flexCalculateLayout = function() {
 		if !is_undefined(self.main_ui) {
@@ -1052,6 +1019,38 @@ function LuiBase() constructor {
 	        var _child = flexpanel_node_get_child(_node, i);
 	        _element.flexUpdate(_child);
 	    }
+	}
+	 
+	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
+	static centerContent = function() {
+		self.setFlexJustifyContent(flexpanel_justify.center)
+			.setFlexAlignItems(flexpanel_align.center);
+		return self;
+	}
+	
+	///@desc Remove focus from element
+	static removeFocus = function() {
+		self.has_focus = false;
+		if is_method(self.onFocusRemove) self.onFocusRemove();
+		return self;
+	}
+	
+	///@desc Activate an element
+	static activate = function() {
+		self.deactivated = false;
+		array_foreach(self.content, function(_elm) {
+			_elm.activate();
+		});
+		return self;
+	}
+	
+	///@desc Deactivate an element
+	static deactivate = function() {
+		self.deactivated = true;
+		array_foreach(self.content, function(_elm) {
+			_elm.deactivate();
+		});
+		return self;
 	}
 	
 	///@desc Update position, size and z depth of all elements with depth reset
@@ -1159,6 +1158,26 @@ function LuiBase() constructor {
 		return self.isMouseHovered() ? true : false;
 	}
 	
+	///@desc Set visible to false and flex display to none
+	static hide = function() {
+		self.setVisible(false).setFlexDisplay(flexpanel_display.none);
+	}
+	
+	///@desc Set visible to true and flex display to flex
+	static show = function() {
+		self.setVisible(true).setFlexDisplay(flexpanel_display.flex);
+	}
+	
+	///@desc Destroys all nested elements
+	static destroyContent = function() {
+	    while (array_length(self.content) > 0) {
+	        var _element = array_pop(self.content);
+	        if (_element != undefined) {
+	            _element.destroy();
+	        }
+	    }
+	}
+	
 	///@desc Destroys self and all nested elements
 	self.destroy = function() {
 		// Double-Destroy protection
@@ -1187,16 +1206,6 @@ function LuiBase() constructor {
 		global.lui_element_count--;
 		// Double-Destroy protection
 		self.is_destroyed = true;
-	}
-	
-	///@desc Destroys all nested elements
-	static destroyContent = function() {
-	    while (array_length(self.content) > 0) {
-	        var _element = array_pop(self.content);
-	        if (_element != undefined) {
-	            _element.destroy();
-	        }
-	    }
 	}
 	
 	// PRIVATE SYSTEM

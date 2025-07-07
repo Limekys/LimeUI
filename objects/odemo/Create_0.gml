@@ -334,8 +334,7 @@ my_panel_3.addContent([
 			with(oDemo) {
 				// Hide all
 				array_foreach(search_panel.getContainer().content, function(_elm) {
-					_elm.setVisible(false);
-					_elm.setFlexDisplay(flexpanel_display.none);
+					_elm.hide();
 				});
 				// Filter
 				var _filtered_elements = array_filter(search_panel.getContainer().content, function(_elm) {
@@ -348,8 +347,7 @@ my_panel_3.addContent([
 				// Show filtered elements
 				for (var i = 0, n = array_length(_filtered_elements); i < n; ++i) {
 				    var _element = _filtered_elements[i];
-					_element.setVisible(true);
-					_element.setFlexDisplay(flexpanel_display.flex);
+					_element.show();
 				}
 				// Apply scrolling to correct its position //???// should this happen automatically?
 				search_panel.scroll_target_offset_y = 0;
