@@ -196,6 +196,11 @@ function LuiBase() constructor {
 		return self.container;
 	}
 	
+	///@desc Get content array
+	self.getContent = function() {
+		return self.getContainer().content;
+	}
+	
 	///@desc Returns topmost element on UI //???//
 	static getTopmostElement = function(_mouse_x, _mouse_y) {
 	    var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
