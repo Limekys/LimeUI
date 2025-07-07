@@ -60,7 +60,9 @@ function LuiStyle(_style = {}) constructor {
 	//Settings
 	min_width = _style[$ "min_width"] ?? 32;
 	min_height = _style[$ "min_height"] ?? 32;
-	padding = _style[$ "padding"] ?? 0;
+	padding = _style[$ "padding"] ?? 16;
+	gap = _style[$ "gap"] ?? 16;
+	border = _style[$ "border"] ?? 0;
 	scroll_step = _style[$ "scroll_step"] ?? 32;
 	scroll_slider_width = _style[$ "scroll_slider_width"] ?? 16;
 	render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
@@ -68,7 +70,7 @@ function LuiStyle(_style = {}) constructor {
 	textbox_password = _style[$ "textbox_password"] ?? "•";
 	//Render functions
 	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined; //function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha)
-	//Animations (WIP)
+	//Animations (WIP) //???//
 	anim_on_create = _style[$ "anim_on_create"] ?? LUI_ANIM.none;
 	anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
 	anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;
@@ -78,9 +80,9 @@ function LuiStyle(_style = {}) constructor {
 	
 	static setFonts = function(_default = undefined, _buttons = undefined, _debug = undefined) {
 		// Fonts
-		font_default = _default;
-		font_buttons = _buttons;
-		font_debug = _debug;
+		self.font_default = _default;
+		self.font_buttons = _buttons;
+		self.font_debug = _debug;
 		return self;
 	}
 	
@@ -89,92 +91,92 @@ function LuiStyle(_style = {}) constructor {
 	///@func setSprites
 	static setSprites = function(_panel = undefined, _element = undefined, _panel_border = undefined, _element_border = undefined) {
 		// Panel
-		sprite_panel = _panel;
-		sprite_panel_border = _panel_border;
-		sprite_tab = _panel;
-		sprite_tab_border = _panel_border;
-		sprite_tabgroup = _panel;
-		sprite_tabgroup_border = _panel_border;
-		sprite_scroll_pin = _panel;
-		sprite_scroll_pin_border = _panel_border;
+		self.sprite_panel = _panel;
+		self.sprite_panel_border = _panel_border;
+		self.sprite_tab = _panel;
+		self.sprite_tab_border = _panel_border;
+		self.sprite_tabgroup = _panel;
+		self.sprite_tabgroup_border = _panel_border;
+		self.sprite_scroll_pin = _panel;
+		self.sprite_scroll_pin_border = _panel_border;
 		// Element
-		sprite_textbox = _element;
-		sprite_button = _element;
-		sprite_checkbox = _element;
-		sprite_checkbox_pin = _element;
-		sprite_progress_bar = _element;
-		sprite_progress_bar_value = _element;
-		sprite_slider_knob = _element;
-		sprite_scroll_slider = _element;
-		sprite_dropdown = _element;
-		sprite_dropdown_item = _element;
-		sprite_tooltip = _element;
-		sprite_progress_ring = _element;
-		sprite_progress_ring_value = _element;
-		sprite_dropdown_arrow = _element;
+		self.sprite_textbox = _element;
+		self.sprite_button = _element;
+		self.sprite_checkbox = _element;
+		self.sprite_checkbox_pin = _element;
+		self.sprite_progress_bar = _element;
+		self.sprite_progress_bar_value = _element;
+		self.sprite_slider_knob = _element;
+		self.sprite_scroll_slider = _element;
+		self.sprite_dropdown = _element;
+		self.sprite_dropdown_item = _element;
+		self.sprite_tooltip = _element;
+		self.sprite_progress_ring = _element;
+		self.sprite_progress_ring_value = _element;
+		self.sprite_dropdown_arrow = _element;
 		// Border
-		sprite_textbox_border = _element_border;
-		sprite_button_border = _element_border;
-		sprite_checkbox_border = _element_border;
-		sprite_progress_bar_border = _element_border;
-		sprite_slider_knob_border = _element_border;
-		sprite_dropdown_border = _element_border;
-		sprite_dropdown_item_border = _element_border;
-		sprite_tooltip_border = _element_border;
-		sprite_progress_ring_border = _element_border;
+		self.sprite_textbox_border = _element_border;
+		self.sprite_button_border = _element_border;
+		self.sprite_checkbox_border = _element_border;
+		self.sprite_progress_bar_border = _element_border;
+		self.sprite_slider_knob_border = _element_border;
+		self.sprite_dropdown_border = _element_border;
+		self.sprite_dropdown_item_border = _element_border;
+		self.sprite_tooltip_border = _element_border;
+		self.sprite_progress_ring_border = _element_border;
 		return self;
 	}
 	
 	static setSpriteCheckbox = function(_checkbox = undefined, _checkbox_pin = undefined, _checkbox_border = undefined) {
-		sprite_checkbox = _checkbox;
-		sprite_checkbox_border = _checkbox_border;
-		sprite_checkbox_pin = _checkbox_pin;
+		self.sprite_checkbox = _checkbox;
+		self.sprite_checkbox_border = _checkbox_border;
+		self.sprite_checkbox_pin = _checkbox_pin;
 		return self;
 	}
 	
 	static setSpriteProgressBar = function(_progressbar = undefined, _progressbar_value = undefined, _progressbar_border = undefined) {
-		sprite_progress_bar = _progressbar;
-		sprite_progress_bar_value = _progressbar_value;
-		sprite_progress_bar_border = _progressbar_border;
+		self.sprite_progress_bar = _progressbar;
+		self.sprite_progress_bar_value = _progressbar_value;
+		self.sprite_progress_bar_border = _progressbar_border;
 		return self;
 	}
 	
 	static setSpriteSliderKnob = function(_slider_knob = undefined, _slider_knob_border = undefined) {
-		sprite_slider_knob = _slider_knob;
-		sprite_slider_knob_border = _slider_knob_border;
+		self.sprite_slider_knob = _slider_knob;
+		self.sprite_slider_knob_border = _slider_knob_border;
 		return self;
 	}
 	
 	static setSpriteTabGroup = function(_tabgroup = undefined, _tab = undefined, _tabgroup_border = undefined, _tab_border = undefined) {
-		sprite_tabgroup = _tabgroup;
-		sprite_tabgroup_border = _tabgroup_border;
-		sprite_tab = _tab;
-		sprite_tab_border = _tab_border;
+		self.sprite_tabgroup = _tabgroup;
+		self.sprite_tabgroup_border = _tabgroup_border;
+		self.sprite_tab = _tab;
+		self.sprite_tab_border = _tab_border;
 		return self;
 	}
 	
 	static setSpriteDropdownArrow = function(_dropdown_arrow = undefined) {
-		sprite_dropdown_arrow = _dropdown_arrow;
+		self.sprite_dropdown_arrow = _dropdown_arrow;
 		return self;
 	}
 	
 	static setSpriteRing = function(_ring = undefined, _ring_value = undefined, _ring_border = undefined) {
-		sprite_progress_ring = _ring;
-		sprite_progress_ring_value = _ring_value;
-		sprite_progress_ring_border = _ring_border;
+		self.sprite_progress_ring = _ring;
+		self.sprite_progress_ring_value = _ring_value;
+		self.sprite_progress_ring_border = _ring_border;
 		return self;
 	}
 	
 	static setSpriteScrollSlider = function(_scroll_slider = undefined, _scroll_pin = undefined, _scroll_pin_border = undefined) {
-		sprite_scroll_slider = _scroll_slider;
-		sprite_scroll_pin = _scroll_pin;
-		sprite_scroll_pin_border = _scroll_pin_border;
+		self.sprite_scroll_slider = _scroll_slider;
+		self.sprite_scroll_pin = _scroll_pin;
+		self.sprite_scroll_pin_border = _scroll_pin_border;
 		return self;
 	}
 	
 	static setSpriteTooltip = function(_tooltip = undefined, _tooltip_border = undefined) {
-		sprite_tooltip = _tooltip;
-		sprite_tooltip_border = _tooltip_border;
+		self.sprite_tooltip = _tooltip;
+		self.sprite_tooltip_border = _tooltip_border;
 		return self;
 	}
 	
@@ -188,11 +190,11 @@ function LuiStyle(_style = {}) constructor {
     ///@arg {Real} [_border] The border color for elements (default: c_gray).
     static setColors = function(_primary = c_white, _secondary = c_ltgray, _back = c_ltgray, _accent = c_green, _border = c_gray) {
         // Panel
-        color_primary = _primary;
-        color_secondary = _secondary;
-		color_back = _back;
-        color_accent = _accent;
-        color_border = _border;
+        self.color_primary = _primary;
+        self.color_secondary = _secondary;
+		self.color_back = _back;
+        self.color_accent = _accent;
+        self.color_border = _border;
         return self;
     }
     
@@ -200,7 +202,7 @@ function LuiStyle(_style = {}) constructor {
     ///@arg {Real} [_color] The accent color for active states (default: c_green).
     ///@deprecated
     static setColorValue = function(_color = c_green) {
-        color_accent = _color;
+        self.color_accent = _color;
         print("function setColorValue is deprecated");
         return self;
     }
@@ -208,14 +210,14 @@ function LuiStyle(_style = {}) constructor {
     ///@desc Sets the accent color for interactive elements.
     ///@arg {Real} [_color] The accent color for active states (default: c_green).
     static setColorAccent = function(_color = c_green) {
-        color_accent = _color;
+        self.color_accent = _color;
         return self;
     }
     
     ///@desc Sets the hover color for UI elements.
     ///@arg {Real} [_hover] The hover color to be mixed with element colors (default: c_gray).
     static setColorHover = function(_hover = c_gray) {
-        color_hover = _hover;
+        self.color_hover = _hover;
         return self;
     }
     
@@ -224,8 +226,8 @@ function LuiStyle(_style = {}) constructor {
     ///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
     ///@deprecated
     static setColorFont = function(_font = c_black, _font_hint = c_gray) {
-        color_text = _font;
-        color_text_hint = _font_hint;
+        self.color_text = _font;
+        self.color_text_hint = _font_hint;
         print("function setColorFont is deprecated");
         return self;
     }
@@ -234,8 +236,8 @@ function LuiStyle(_style = {}) constructor {
     ///@arg {Real} [_font] The color for text (default: c_black).
     ///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
     static setColorText = function(_font = c_black, _font_hint = c_gray) {
-        color_text = _font;
-        color_text_hint = _font_hint;
+        self.color_text = _font;
+        self.color_text_hint = _font_hint;
         return self;
     }
     
@@ -251,7 +253,7 @@ function LuiStyle(_style = {}) constructor {
     ///@desc Sets the color for deactivated elements, which can be mixed with active colors.
     ///@arg {Real} [_color] The base color for deactivated elements (default: c_gray).
     static setColorDeactivated = function(_color = c_gray) {
-        color_deactivated = _color;
+        self.color_deactivated = _color;
         return self;
     }
     
@@ -260,16 +262,16 @@ function LuiStyle(_style = {}) constructor {
 	///@arg {Real} [_warning] The color for warning (default: #FF9800).
     ///@arg {Real} [_error] The color for error (default: #F44336).
     static setColorSemantic = function(_success = #4CAF50, _warning = #FF9800, _error = #F44336) {
-        color_semantic_success = _success;
-        color_semantic_warning = _warning;
-		color_semantic_error = _error;
+        self.color_semantic_success = _success;
+        self.color_semantic_warning = _warning;
+		self.color_semantic_error = _error;
         return self;
     }
     
     ///@desc Sets the optional shadow color for UI elements (default: undefined).
     ///@arg {Real} [_color] The shadow color (default: undefined).
     static setColorShadow = function(_color = undefined) {
-        color_shadow = _color;
+        self.color_shadow = _color;
         return self;
     }
 	
@@ -277,30 +279,40 @@ function LuiStyle(_style = {}) constructor {
 	
 	static setSounds = function(_click = undefined) {
 		// Sounds
-		sound_click = _click;
+		self.sound_click = _click;
 		return self;
 	}
 	
 	// SETTINGS FUNCTIONS
 	
 	static setMinSize = function(_min_width = 32, _min_height = 32) {
-		min_width = _min_width;
-		min_height = _min_height;
+		self.min_width = _min_width;
+		self.min_height = _min_height;
 		return self;
 	}
 	
-	static setPadding = function(_padding = 16) {
-		padding = _padding;
+	static setPadding = function(_padding) {
+		self.padding = _padding;
+		return self;
+	}
+	
+	static setGap = function(_gap) {
+		self.gap = _gap;
+		return self;
+	}
+	
+	static setBorder = function(_border) {
+		self.border = _border;
 		return self;
 	}
 	
 	static setScrollStep = function(_scroll_step = 32) {
-		scroll_step = _scroll_step;
+		self.scroll_step = _scroll_step;
 		return self;
 	}
 	
 	static setScrollSliderWidth = function(_width = 16) {
-		scroll_slider_width = _width;
+		self.scroll_slider_width = _width;
 		return self;
 	}
 	
@@ -324,12 +336,12 @@ function LuiStyle(_style = {}) constructor {
 	}
 	
 	static setSymbolCursor = function(_symbol_cursor = "|") {
-		textbox_cursor = _symbol_cursor;
+		self.textbox_cursor = _symbol_cursor;
 		return self;
 	}
 	
 	static setSymbolPassword = function(_symbol_password = "•") {
-		textbox_password = _symbol_password;
+		self.textbox_password = _symbol_password;
 		return self;
 	}
 }

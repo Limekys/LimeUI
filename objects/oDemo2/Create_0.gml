@@ -31,8 +31,11 @@ text_main_menu = new LuiText(, , , , "textMainMenu", "Main menu", true).setTextH
 btn_play = new LuiButton(, , , , "buttonPlay", "Play");
 btn_achievements = new LuiButton(, , , , "buttonAchievements", "Achievements");
 btn_options = new LuiButton(, , , , "buttonOptions", "Options", function() {
-	oDemo2.panel_options.setVisible(!oDemo2.panel_options.visible)
-	//oDemo2.panel_options.setFlexDisplay(flexpanel_display.none)
+	if oDemo2.panel_options.visible {
+		oDemo2.panel_options.hide();
+	} else {
+		oDemo2.panel_options.show();
+	}
 });
 btn_exit = new LuiButton(, , , , "buttonExit", "Exit", function() { game_end(); });
 text_options = new LuiText(, , , , "textOptions", "Options", true).setTextHalign(fa_center);

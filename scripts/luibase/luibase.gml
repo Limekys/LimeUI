@@ -7,6 +7,7 @@ function LuiBase() constructor {
 	self.name = "LuiBase";							//Unique element identifier
 	self.value = undefined;							//Value
 	self.style = undefined;							//Style struct
+	self.style_overrides = {};						//Custom style for element
 	self.x = 0;										//Actual x position on the screen
 	self.y = 0;										//Actual y position on the screen
 	self.z = 0;										//Depth
@@ -507,32 +508,39 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel padding
 	///@arg {real} _padding
-	static setFlexPadding = function(_padding) {
-		var _flex_node = self.getContainer().flex_node;
-		flexpanel_node_style_set_padding(_flex_node, flexpanel_edge.all_edges, _padding);
-		self.updateMainUiFlex();
-		return self;
-	}
-	
-	///@desc Set flexpanel border
 	///@arg {constant.flexpanel_edge} _edge
-	///@arg {real} _border
-	static setFlexBorder = function(_edge, _border) {
-		var _flex_node = self.getContainer().flex_node;
-		flexpanel_node_style_set_border(_flex_node, _edge, _border);
-		self.updateMainUiFlex();
+	static setPadding = function(_padding, _edge = flexpanel_edge.all_edges) {
+		self.style_overrides.padding = _padding;
+		if (!is_undefined(self.main_ui)) {
+	        self._applyStyles();
+	        self.updateMainUiFlex();
+	    }
 		return self;
 	}
 	
 	///@desc Set flexpanel gap
 	///@arg {real} _gap
-	static setFlexGap = function(_gap) {
-		var _flex_node = self.getContainer().flex_node;
-		flexpanel_node_style_set_gap(_flex_node, flexpanel_gutter.all_gutters, _gap);
-		self.updateMainUiFlex();
+	///@arg {constant.flexpanel_gutter} _gutter
+	static setGap = function(_gap, _gutter = flexpanel_gutter.all_gutters) {
+		self.style_overrides.gap = _gap;
+		if (!is_undefined(self.main_ui)) {
+	        self._applyStyles();
+	        self.updateMainUiFlex();
+	    }
 		return self;
 	}
 	
+	///@desc Set flexpanel border
+	///@arg {real} _border
+	///@arg {constant.flexpanel_edge} _edge
+	static setBorder = function(_border, _edge = flexpanel_edge.all_edges) {
+		self.style_overrides.border = _border;
+		if (!is_undefined(self.main_ui)) {
+	        self._applyStyles();
+	        self.updateMainUiFlex();
+	    }
+		return self;
+	}
 	
 	///@desc Set flexpanel direction (default is flexpanel_flex_direction.column)
 	///@arg {constant.flexpanel_flex_direction} [_direction]
@@ -835,7 +843,7 @@ function LuiBase() constructor {
 	///@desc Added elements into container of these element
 	///@arg {Any} elements
 	///@arg {Real} _custom_padding
-	self.addContent = function(elements, _custom_padding = LUI_AUTO) { //???// remove custom_padding ?
+	self.addContent = function(elements) {
 	    
 		// Convert to array if one element
 		if !is_array(elements) elements = [elements];
@@ -884,21 +892,16 @@ function LuiBase() constructor {
 	        _element.main_ui = self.main_ui;
 	        _element.style = self.style;
 	        
-			// Get custom padding
-	        var _padding = _custom_padding;
-	        if _padding == LUI_AUTO {
-	            _padding = _element.style.padding;
-	        }
-	        
 			// Flex setting up
 	        flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point);
 	        flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point);
-	        flexpanel_node_style_set_gap(_element.flex_node, flexpanel_gutter.all_gutters, _padding);
-	        flexpanel_node_style_set_padding(_element.flex_node, flexpanel_edge.all_edges, _padding);
 	        if array_length(_ranges) == _elements_count {
 	            flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
 	        }
 	        flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
+			
+			// Apply styles settings
+			_element._applyStyles();
 	        
 			// Register element name
 	        _element._registerElementName();
@@ -1692,5 +1695,41 @@ function LuiBase() constructor {
 		if (_was_visible != self.is_visible_in_region) {
 			self._gridUpdate();
 		}
+	}
+	
+	///@ignore Apply local and inherited styles to the flex node
+	static _applyStyles = function() {
+	    if (is_undefined(self.style)) return;
+		
+	    var _container_node = self.getContainer().flex_node;
+		
+	    // Base style
+	    flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, self.style.padding);
+	    flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, self.style.gap);
+	    flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, self.style.border);
+	    // ... 
+		
+	    // Local style
+	    var _override_keys = variable_struct_get_names(self.style_overrides);
+		
+	    // Apply local style
+	    for (var i = 0; i < array_length(_override_keys); i++) {
+	        var _key = _override_keys[i];
+	        var _value = self.style_overrides[$ _key];
+			
+	        switch (_key) {
+	            case "padding":
+	                flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, _value);
+	                break;
+	            
+	            case "gap":
+	                flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, _value);
+	                break;
+	            
+	            case "border":
+	                flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, _value);
+	                break;
+	        }
+	    }
 	}
 }

@@ -22,12 +22,12 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.onCreate = function() {
 		// Setting up padding for tabgroup
-		self.setFlexPadding(0).setFlexGap(0);
+		self.setPadding(0).setGap(0);
 		// Init header container for tabs
 		self._initHeader();
 		// Add header to tabgroup
 		self.addContent(self.tabgroup_header);
-		self.tabgroup_header.setFlexGap(0).setMinHeight(self.tab_height);
+		self.tabgroup_header.setGap(0).setMinHeight(self.tab_height);
 		// Init tabs
 		self._initTabs();
 	}

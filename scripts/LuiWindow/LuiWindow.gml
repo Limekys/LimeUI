@@ -20,7 +20,7 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
     
 	self.onCreate = function() { 
 		
-		self.setPositionType(flexpanel_position_type.absolute).setFlexGap(0).setFlexPadding(0).setFlexDirection(flexpanel_flex_direction.row);
+		self.setPositionType(flexpanel_position_type.absolute).setGap(0).setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
 		
 		// Add title text
 	    self.addContent(new LuiText(0, 0, LUI_AUTO, LUI_AUTO, , self.title).setMouseIgnore(true));

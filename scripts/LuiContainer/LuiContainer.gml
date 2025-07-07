@@ -25,7 +25,7 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 function LuiFlexRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiFlexRow") : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
-		self.setFlexPadding(0).setFlexDirection(flexpanel_flex_direction.row);
+		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
 	}
 }
 
@@ -38,7 +38,7 @@ function LuiFlexRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 function LuiFlexColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiFlexColumn") : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
-		self.setFlexPadding(0).setFlexDirection(flexpanel_flex_direction.column);
+		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
 	}
 }
 
