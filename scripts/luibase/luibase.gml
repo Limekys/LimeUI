@@ -1161,9 +1161,9 @@ function LuiBase() constructor {
 				_element.destroy();
 			} catch(_e) {
 				_error = true;
+				print($"LIME_UI.ERROR: Failed to destroy element {self.content[i].name}. Reason: " + string(_e));
 			} finally {
 				if _error {} //???//
-				//print("============ERROR===========");
 			}
 		}
 		if self == main_ui.element_in_focus {
@@ -1176,7 +1176,6 @@ function LuiBase() constructor {
 		self.setNeedToUpdateContent(true);
 		self.content = -1;
 		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
-		self.flexCalculateLayout();
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		self.flex_node = flexpanel_delete_node(self.flex_node, false);

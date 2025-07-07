@@ -17,8 +17,8 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.is_pressed = false;
 	self.tabs = undefined;
 	self.tab_height = tab_height;
-	
 	self.tabgroup_header = undefined;
+	self.active_tab = undefined;
 	
 	self.onCreate = function() {
 		// Setting up padding for tabgroup
@@ -61,6 +61,7 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			//Deactivate all and activate first
 			self.tabDeactivateAll();
 			self.tabs[0].tabActivate();
+			self.active_tab = self.tabs[0];
 		}
 	}
 	
@@ -70,6 +71,18 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.main_ui) self._initTabs();
         return self;
     }
+	
+	///@desc Switch tab to another
+	static switchTab = function(_new_tab) {
+	    if (self.active_tab == _new_tab) return;
+		
+	    if (!is_undefined(self.active_tab)) {
+	        self.active_tab.tabDeactivate();
+	    }
+		
+	    _new_tab.tabActivate();
+	    self.active_tab = _new_tab;
+	}
 	
 	///@desc Deactivate all tabs
 	static tabDeactivateAll = function() {
@@ -145,16 +158,24 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		}
 	}
 	
+	///@desc Set active state of tab
+	static setActiveState = function(_is_active) {
+	    self.is_active = _is_active;
+	    if (_is_active) {
+	        self.tab_container.setVisible(true).setFlexDisplay(flexpanel_display.flex);
+	    } else {
+	        self.tab_container.setVisible(false).setFlexDisplay(flexpanel_display.none);
+	    }
+	}
+	
 	///@desc Activate current tab
 	static tabActivate = function() {
-		self.is_active = true;
-		self.tab_container.setVisible(true).setFlexDisplay(flexpanel_display.flex);
+		self.setActiveState(true);
 	}
 	
 	///@desc Deactivate current tab
 	static tabDeactivate = function() {
-		self.is_active = false;
-		self.tab_container.setVisible(false).setFlexDisplay(flexpanel_display.none);
+		self.setActiveState(false);
 	}
 	
 	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
@@ -213,8 +234,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.onMouseLeftReleased = function() {
 		if self.is_pressed && !self.is_active {
 			self.is_pressed = false;
-			self.tabgroup.tabDeactivateAll();
-			self.tabActivate();
+			self.tabgroup.switchTab(self);
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
 	}
