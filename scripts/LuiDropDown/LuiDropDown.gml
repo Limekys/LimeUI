@@ -167,6 +167,12 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
+	self.onFocusRemove = function() {
+		if self.is_open {
+			//self.toggleDropdown();
+		}
+	}
+	
 	self.onDestroy = function() {
 		if !is_undefined(self.dropdown_panel) {
 			self.dropdown_panel.destroy();
