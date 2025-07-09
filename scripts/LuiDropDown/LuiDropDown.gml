@@ -39,7 +39,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
 		//Create dropdown panel
-		self.dropdown_panel = new LuiPanel(0, 0, _width, , "LuiDropDownPanel").setVisibilitySwitching(false).setPositionType(flexpanel_position_type.absolute);
+		self.dropdown_panel = new LuiPanel(0, 0, _width, , "LuiDropDownPanel").setVisible(false).setVisibilitySwitching(false).setPositionType(flexpanel_position_type.absolute);
 		self.main_ui.addContent([self.dropdown_panel]);
 	}
 	
