@@ -128,6 +128,13 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			}
 		}
 	}
+	
+	self.onDestroy = function() {
+		if !is_undefined(self.tabgroup_header) {
+			self.tabgroup_header.destroy();
+		}
+		self.tabs = -1;
+	}
 }
 
 ///@desc Tab, used for LuiTabGroup.
@@ -236,6 +243,12 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 			self.is_pressed = false;
 			self.tabgroup.switchTab(self);
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+		}
+	}
+	
+	self.onDestroy = function() {
+		if !is_undefined(self.tab_container) {
+			self.tab_container.destroy();
 		}
 	}
 }

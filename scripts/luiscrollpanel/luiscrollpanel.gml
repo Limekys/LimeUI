@@ -136,4 +136,10 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			self._applyScroll();
 		}
 	}
+	
+	self.onDestroy = function() {
+		if !is_undefined(self.scroll_container) {
+			self.scroll_container.destroy();
+		}
+	}
 }

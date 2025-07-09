@@ -78,13 +78,6 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 ///@arg {String} title
 function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiWindow", title = "Window") : LuiPanel(x, y, width, height, name) constructor {
     
-	self.name = name;
-    self.pos_x = x;
-    self.pos_y = y;
-    self.width = width;
-    self.height = height;
-    _initElement();
-	
 	self.title = title;
     self.is_minimized = false;
 	self.window_header = undefined;
@@ -137,4 +130,10 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		self.bringToFront();
 		self.window_header.bringToFront();
     }
+	
+	self.onDestroy = function() {
+		if !is_undefined(self.window_header) {
+			self.window_header.destroy();
+		}
+	}
 }

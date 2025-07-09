@@ -11,6 +11,8 @@ enable_alpha_test = true; // true makes UI flashes if LUI_FORCE_ALPHA_1 setted t
 demo_login = "";
 demo_password = "";
 long_text = "This is a really long text that probably won't fit in this element!";
+demo_loading_value = 0;
+demo_loading_state = false;
 
 // Create Light style theme
 demo_style_light = new LuiStyle()
@@ -98,8 +100,6 @@ tab_group_target_y = 590;
 tab_group.setPosition(tab_group_target_x, tab_group_target_y);
 
 // Create some elements
-demo_loading_value = 0;
-demo_loading_state = false;
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).setBinding(oDemo, "demo_loading_value");
 btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message", function() {
 	showLuiMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
@@ -206,6 +206,7 @@ my_panel_2.addContent([
 ]);
 
 // Create drop down menu and some items in it
+
 dropdown_menu = new LuiDropDown(, , , , , "Select theme...").set("Dark").setTooltip("Change UI theme\nWIP");
 drop_item1 = new LuiDropDownItem( , "Dark", function() {
 	with(oDemo) {
@@ -288,6 +289,7 @@ my_panel_3.addContent([
 		tab_panels.addContent([
 			new LuiText( , , , , , "Scroll panel with different elements", true).setTextHalign(fa_center),
 			new LuiScrollPanel( , , , , "firstScrollPanel").addContent([
+				
 				new LuiTextbox(, , , , "textbox_typeinme", , "Type in me!"),
 				new LuiPanel().addContent([
 					new LuiText(, , , , , "Nested panel 1.1"),
@@ -442,14 +444,15 @@ my_ui.addContent([
 /*
 numb = 0;
 _random_element = function(_number) {
-		return choose(
-					new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128)), 
-					new LuiSpriteButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor),
-					new LuiSlider(, , , , , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
-					new LuiTextbox(, , , , , , "aboba_" + string(_number)),
-					new LuiProgressRing(, , , , , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01)),
-					new LuiCheckbox(, , , , , choose(true, false))
-				)
+	var _rnd = irandom(5);
+	switch (_rnd) {
+		case 0:	return new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128));
+		case 1:	return new LuiSpriteButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor);
+		case 2:	return new LuiSlider(, , , , , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
+		case 3:	return new LuiTextbox(, , , , , , "aboba_" + string(_number));
+		case 4:	return new LuiProgressRing(, , , , , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
+		case 5:	return new LuiCheckbox(, , , , , choose(true, false));
+	}
 }
 repeat (250) {
 	my_ui.getElement("firstScrollPanel").addContent([

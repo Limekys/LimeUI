@@ -23,7 +23,11 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.value_max = max(value_min, value_max);
 	self.rounding = rounding;
 	self.show_value = show_value;
-	self.sprite_pos = -1;
+	self.sprite_pos = {
+		x : 0,
+		y : 0,
+		scale : 1
+	};
 	
 	///@desc Calculate scale to fit size and position
 	///@ignore
@@ -37,11 +41,9 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		var _scale = min(_x_scale, _y_scale);
 		var _x = self.x + floor(_width / 2) - _spr_width * _scale / 2;
 		var _y = self.y + floor(_height / 2) - _spr_height * _scale / 2;
-		return {
-			x : _x,
-			y : _y,
-			scale : _scale,
-		}
+		self.sprite_pos.x = _x;
+		self.sprite_pos.y = _y;
+		self.sprite_pos.scale = _scale;
 	}
 	
 	///@ignore
@@ -60,15 +62,15 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.onCreate = function() {
-		self.sprite_pos = self._calcSpritePos(self.style.sprite_progress_ring);
+		self._calcSpritePos(self.style.sprite_progress_ring);
 	}
 	
 	self.onPositionUpdate = function() {
-		self.sprite_pos = self._calcSpritePos(self.style.sprite_progress_ring);
+		self._calcSpritePos(self.style.sprite_progress_ring);
 	}
 	
 	self.onSizeUpdate = function() {
-		self.sprite_pos = self._calcSpritePos(self.style.sprite_progress_ring);
+		self._calcSpritePos(self.style.sprite_progress_ring);
 	}
 	
 	self.draw = function() {
@@ -110,5 +112,9 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			draw_set_valign(fa_middle);
 			draw_text(self.x + self.width / 2, self.y + self.height / 2, _calcValue(self.value));
 		}
+	}
+	
+	self.onDestroy = function() {
+		delete self.sprite_pos;
 	}
 }

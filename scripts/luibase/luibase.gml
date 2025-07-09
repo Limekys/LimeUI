@@ -2,7 +2,7 @@
 function LuiBase() constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
-	
+		
 	self.element_id = global.lui_element_count++;
 	self.name = "LuiBase";							//Unique element identifier
 	self.value = undefined;							//Value
@@ -1259,22 +1259,34 @@ function LuiBase() constructor {
 		}
 		// Destroy all content
 		self.destroyContent();
-		// Reset self
-		if self == main_ui.element_in_focus {
+		// Remove focus from main ui
+		if !is_undefined(main_ui) && self == main_ui.element_in_focus {
 			self.main_ui.element_in_focus.removeFocus();
 			self.main_ui.element_in_focus = undefined;
-		}
-		if is_method(self.onDestroy) {
-			self.onDestroy();
 		}
 		self._deleteElementName();
 		self._gridCleanUp();
 		self.setNeedToUpdateContent(true);
-		self.content = -1;
-		flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
-		self.flex_node = flexpanel_delete_node(self.flex_node, false);
+		// Delete flex_node
+		if (!is_undefined(self.flex_node)) {
+		    // For the rest of the elements to react to the disappearance of this
+			flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
+		    // Delete flex node from memory
+		    self.flex_node = flexpanel_delete_node(self.flex_node, true);
+		}
+		// Clean all arrays and structs
+		self.content = -1;
+		self.depth_array = -1;
+		delete self.style_overrides; self.style_overrides = undefined;
+		delete self.render_region_offset; self.render_region_offset = undefined;
+		delete self.view_region; self.view_region = undefined;
+		delete self.binding_variable; self.binding_variable = undefined;
+		// Call onDestroy
+		if is_method(self.onDestroy) {
+			self.onDestroy();
+		}
 		// Decrement global counter
 		global.lui_element_count--;
 		// Double-Destroy protection
@@ -1550,7 +1562,7 @@ function LuiBase() constructor {
 	}
 	///@ignore
 	static _deleteElementName = function() {
-		if self != self.main_ui {
+		if !is_undefined(self.main_ui) && self != self.main_ui {
 			if variable_struct_exists(self.main_ui.element_names, self.name) {
 				variable_struct_remove(self.main_ui.element_names, self.name);
 			} else {

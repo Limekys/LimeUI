@@ -16,6 +16,10 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.onCreate = function() {
 		self._calculateTextWidth();
+		if is_undefined(self.dropdown_panel) {
+			self._initDropdownPanel();
+			self._initItems();
+		}
 	}
 	
 	///@ignore
@@ -35,9 +39,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
 		//Create dropdown panel
-		self.dropdown_panel = new LuiPanel(0, 0, _width, , "LuiDropDownPanel").setVisibilitySwitching(false);
+		self.dropdown_panel = new LuiPanel(0, 0, _width, , "LuiDropDownPanel").setVisibilitySwitching(false).setPositionType(flexpanel_position_type.absolute);
 		self.main_ui.addContent([self.dropdown_panel]);
-		self.dropdown_panel.setPositionType(flexpanel_position_type.absolute);
 	}
 	
 	///@ignore
@@ -50,8 +53,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			_item.dropdown_parent = self;
 			_item.height = self.height;
 			_item.auto_height = false;
-			self.dropdown_panel.addContent([_item]);
 		}
+		self.dropdown_panel.addContent(self.items);
 	}
 	
 	///@desc Toggle dropdown menu open/close
@@ -168,6 +171,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.dropdown_panel) {
 			self.dropdown_panel.destroy();
 		}
+		self.items = -1;
 	}
 }
 
