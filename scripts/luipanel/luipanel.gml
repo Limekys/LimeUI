@@ -13,8 +13,10 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.height = height;
 	_initElement();
 	
+	self.allow_rescaling = false;
+	
 	self.draw = function() {
-		//Base
+		// Base
 		if !is_undefined(self.style.sprite_panel) {
 			var _blend_color = self.style.color_primary; //???// self.nesting_level == 1 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
 			if self.deactivated {
@@ -22,9 +24,16 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 			}
 			draw_sprite_stretched_ext(self.style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
-		//Border
+		// Border
 		if !is_undefined(self.style.sprite_panel_border) {
 			draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		}
+		// Debug
+		if self.allow_rescaling {
+			var _offset = 8;
+			draw_set_color(c_red);
+			draw_set_alpha(0.5);
+			draw_rectangle(self.x + self.width - _offset, self.y + self.height - _offset, self.x + self.width, self.y + self.height, false);
 		}
 	}
 }
