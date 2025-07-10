@@ -407,8 +407,8 @@ my_panel_3.addContent([
 
 	#region Add info about me in tab_about
 	
-		sprite_limekys = new LuiSprite(, , 64, 64, "sprLimekys", sLimekysAvatar);
-		text_about = new LuiText(, , , 64, "textAbout", "Hi, i am Limekys, and this is my UI system!");
+		sprite_limekys = new LuiSprite(, , 64, , "sprLimekys", sLimekysAvatar);
+		text_about = new LuiText(, , , , "textAbout", "Hi, i am Limekys, and this is my UI system!");
 		sprite_discord = new LuiSpriteButton(, , 64, 64, "sprDiscord", sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")}).setTooltip("My Discord server");
 		sprite_telegram = new LuiSpriteButton(, , 64, 64, "sprTelegram", sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")}).setTooltip("My Telegram channel");
 		sprite_twitch = new LuiSpriteButton(, , 64, 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")}).setTooltip("My Twitch channel");
@@ -419,7 +419,7 @@ my_panel_3.addContent([
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setFlexGrow(1).setTextValign(fa_bottom).setTextHalign(fa_right);
 		
 		tab_about.addContent([
-			new LuiFlexRow().addContent([
+			new LuiFlexRow( , , , 64).addContent([
 				sprite_limekys, text_about
 			]),
 			new LuiFlexRow().setFlexJustifyContent(flexpanel_justify.space_around).setFlexWrap(1).addContent([
