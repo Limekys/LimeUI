@@ -211,7 +211,7 @@ function LuiBase() constructor {
 	        return undefined;
 	    }
 		
-	    // Фильтруем элементы под курсором
+	    // Filter elements under cursor
 	    var _filtered = array_filter(_array, function(_elm) {
 	        return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
 	    });
@@ -220,12 +220,13 @@ function LuiBase() constructor {
 	        return undefined;
 	    }
 		
-	    // Сортировка по depth_array (по убыванию)
+	    // Sort by depth_array
 	    array_sort(_filtered, function(elm1, elm2) {
-	        return compareDepthArrays(elm2.depth_array, elm1.depth_array); // Обратный порядок
+	        return compareDepthArrays(elm2.depth_array, elm1.depth_array);
 	    });
 		
-	    return _filtered[0]; // Возвращаем верхний элемент
+		// Return top front element
+	    return _filtered[0];
 	}
 	
 	// SETTERS
@@ -665,10 +666,7 @@ function LuiBase() constructor {
 		array_foreach(self.content, function(_elm) {
 			_elm.setStyleChilds(self.style);
 		});
-		
-		// Flex
-		flexpanel_node_style_set_padding(self.flex_node, flexpanel_edge.all_edges, self.style.padding);
-		flexpanel_node_style_set_gap(self.flex_node, flexpanel_gutter.all_gutters, self.style.padding);
+		self._applyStyles();
 		
 		return self;
 	}
@@ -1234,11 +1232,13 @@ function LuiBase() constructor {
 	///@desc Set visible to false and flex display to none
 	static hide = function() {
 		self.setVisible(false).setFlexDisplay(flexpanel_display.none);
+		return self;
 	}
 	
 	///@desc Set visible to true and flex display to flex
 	static show = function() {
 		self.setVisible(true).setFlexDisplay(flexpanel_display.flex);
+		return self;
 	}
 	
 	///@desc Destroys all nested elements

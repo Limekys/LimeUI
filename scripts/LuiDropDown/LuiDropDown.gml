@@ -23,8 +23,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	///@ignore
-	//???// not used now
-	static _calculateTextWidth = function() {
+	static _calculateTextWidth = function() { //???// not used now
 		if !is_undefined(self.style) && !is_undefined(self.style.sprite_dropdown_arrow) {
 			self.text_width = self.width - sprite_get_width(self.style.sprite_dropdown_arrow)*4;
 		} else {
@@ -39,7 +38,7 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
 		//Create dropdown panel
-		self.dropdown_panel = new LuiPanel(0, 0, _width, , "LuiDropDownPanel").setVisible(false).setVisibilitySwitching(false).setPositionType(flexpanel_position_type.absolute);
+		self.dropdown_panel = new LuiPanel(0, 0, _width, , "LuiDropDownPanel").setVisible(false).setPositionType(flexpanel_position_type.absolute);
 		self.main_ui.addContent([self.dropdown_panel]);
 	}
 	
@@ -63,16 +62,19 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			self._initDropdownPanel();
 			self._initItems();
 		}
-		//Set position and size of dropdown panel
-		var _x = self.x;
-		var _y = self.y + self.height;
-		self.dropdown_panel.setPosition(_x, _y).setWidth(self.width);
-		//Open and change visibility
+		// Change dropdown state
 		self.is_open = !self.is_open;
-		self.dropdown_panel.setVisibilitySwitching(true);
-		self.dropdown_panel.setVisible(self.is_open);
-		self.dropdown_panel.setVisibilitySwitching(false);
-		self.dropdown_panel.bringToFront();
+		if self.is_open {
+			// Set position and size of dropdown panel
+			var _x = self.x;
+			var _y = self.y + self.height;
+			self.dropdown_panel.setPosition(_x, _y).setWidth(self.width);
+			// Show and bring to front
+			self.dropdown_panel.show().bringToFront();
+		} else {
+			// Hide
+			self.dropdown_panel.hide();
+		}
 		return self;
     }
 	
@@ -168,8 +170,8 @@ function LuiDropDown(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	self.onFocusRemove = function() {
-		if self.is_open {
-			//self.toggleDropdown();
+		if self.is_open && !self.dropdown_panel.isMouseHoveredExc() {
+			self.toggleDropdown();
 		}
 	}
 	
