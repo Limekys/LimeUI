@@ -1,6 +1,2 @@
-/// @desc Toggle debug mode
-if global.lui_debug_mode < 2 {
-	global.lui_debug_mode++;
-} else {
-	global.lui_debug_mode = 0;
-}
+/// @desc Toggle debug overlay
+show_debug_overlay(!is_debug_overlay_open());

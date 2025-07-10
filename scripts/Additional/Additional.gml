@@ -8,3 +8,17 @@ function checkAndRescaleUI(_ui, _width, _height) {
 		_ui.setSize(_width, _height);
 	}
 }
+
+///@desc Turn on next debug mode
+function nextLuiDebugMode() {
+	if global.lui_debug_mode < 2 {
+		global.lui_debug_mode++;
+	} else {
+		global.lui_debug_mode = 0;
+	}
+}
+
+///@desc Toggle debug grid
+function toggleLuiDebugGrid() {
+	global.lui_debug_render_grid = !global.lui_debug_render_grid;
+}

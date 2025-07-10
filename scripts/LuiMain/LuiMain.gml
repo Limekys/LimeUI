@@ -16,6 +16,7 @@ function LuiMain() : LuiBase() constructor {
 	self.display_focused_element = false;
 	self.waiting_for_keyboard_input = false;
 	self.needs_update_flex = true;
+	self.current_debug_mode = 0;
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -42,6 +43,36 @@ function LuiMain() : LuiBase() constructor {
 	// Recalculate grid size on size change
 	self.onSizeUpdate = function() {
 		self.recalculateScreenGrid();
+	}
+	
+	// CHECKERS
+	
+	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
+	static isInteracting = function() {
+		return self.isInteractingKeyboard() || self.isInteractingMouse();
+	}
+	
+	///@desc Return true if we interacting with UI at the moment with mouse
+	static isInteractingMouse = function() {
+		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
+	}
+	
+	///@desc Return true if we interacting with UI at the moment with keyboard
+	static isInteractingKeyboard = function() {
+		return self.visible && !self.deactivated && self.waiting_for_keyboard_input;
+	}
+	
+	// GETTERS
+	
+	///@desc Get element by name
+	///@return {Struct}
+	static getElement = function(_name) {
+		if variable_struct_exists(self.element_names, _name) {
+			return variable_struct_get(self.element_names, _name);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find element {_name}!");
+			return -1;
+		}
 	}
 	
 	// Update
@@ -190,6 +221,12 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
+		// Update debug mode states
+		if self.current_debug_mode != global.lui_debug_mode {
+			self.updateMainUiSurface();
+			self.current_debug_mode = global.lui_debug_mode;
+		}
+		
 		// Update layout and all flex data
 		if self.needs_update_flex {
 			self.needs_update_flex = false;
@@ -321,35 +358,5 @@ function LuiMain() : LuiBase() constructor {
 		delete self.element_names;
 		global.lui_element_count = 0;
 		global.lui_max_z = 0;
-	}
-	
-	// CHECKERS
-	
-	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
-	static isInteracting = function() {
-		return self.isInteractingKeyboard() || self.isInteractingMouse();
-	}
-	
-	///@desc Return true if we interacting with UI at the moment with mouse
-	static isInteractingMouse = function() {
-		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
-	}
-	
-	///@desc Return true if we interacting with UI at the moment with keyboard
-	static isInteractingKeyboard = function() {
-		return self.visible && !self.deactivated && self.waiting_for_keyboard_input;
-	}
-	
-	// GETTERS
-	
-	///@desc Get element by name
-	///@return {Struct}
-	static getElement = function(_name) {
-		if variable_struct_exists(self.element_names, _name) {
-			return variable_struct_get(self.element_names, _name);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find element {_name}!");
-			return -1;
-		}
 	}
 }
