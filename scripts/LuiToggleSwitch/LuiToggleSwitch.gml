@@ -21,7 +21,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.is_pressed = false;
 	self.text = text;
 	self.slider_size = min(self.width, self.height);
-	self.slider_x = 0;
+	self.slider_xoffset = 0;
 	self.slider_color_value = 0;
 	
 	//@desc Set display text of checkbox (render right of checkbox)
@@ -31,6 +31,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.draw = function() {
+		self.slider_size = min(self.width, self.height);
 		var _draw_width = min(self.width, self.height) * 2;
 		var _draw_height = min(self.width, self.height);
 		// Base
@@ -51,11 +52,11 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, self.slider_x, self.y, self.slider_size, self.slider_size, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, self.x + self.slider_xoffset, self.y, self.slider_size, self.slider_size, _blend_color, 1);
 		}
 		// Slider border
 		if !is_undefined(self.style.sprite_toggleswitch_slider_border) {
-			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider_border, 0, self.slider_x, self.y, self.slider_size, self.slider_size, self.style.color_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider_border, 0, self.x + self.slider_xoffset, self.y, self.slider_size, self.slider_size, self.style.color_border, 1);
 		}
 		// Border
 		if !is_undefined(self.style.sprite_toggleswitch_border) {
@@ -108,8 +109,8 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		var _anim_speed = 0.05;
 		// Slider animation
 		var _draw_width = min(self.width, self.height) * 2;
-		var _target_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
-		self.main_ui.animate(self, "slider_x", _target_x, _anim_speed);
+		var _target_slider_xoffset = self.value == false ? 0 : _draw_width - self.slider_size;
+		self.main_ui.animate(self, "slider_xoffset", _target_slider_xoffset, _anim_speed);
 		// Slider back color animation
 		var _target_color_value = self.value == true ? 1 : 0;
 		self.main_ui.animate(self, "slider_color_value", _target_color_value, _anim_speed);
