@@ -7,7 +7,7 @@
 ///@arg {bool} value
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiButton", value = false, text = "", callback = undefined) : LuiBase() constructor {
+function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiToggleButton", value = false, text = "", callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.text = text;

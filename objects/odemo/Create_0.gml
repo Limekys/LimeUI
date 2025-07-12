@@ -22,6 +22,7 @@ demo_style_light = new LuiStyle()
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
 	.setSpriteCheckbox(sUI_button, sUI_checkbox_pin, sUI_button_border)
+	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider, sToggleSwitchBorder)
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
@@ -38,6 +39,7 @@ demo_style_dark = new LuiStyle()
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
 	.setSpriteCheckbox(sUI_button, sUI_checkbox_pin, sUI_button_border)
+	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider, sToggleSwitchBorder)
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
@@ -54,6 +56,7 @@ demo_style_modern = new LuiStyle()
 	.setFonts(fModern, fModern, fDebug)
 	.setSprites(sUI_Square_21r, sUI_Square_6r)
 	.setSpriteCheckbox(sUI_button, sUI_checkbox_pin)
+	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider)
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteScrollSlider(sUI_Square_6r, sUI_Square_6r)
@@ -114,7 +117,7 @@ btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
 createNewLoginWindow = function () {
 	// Create draggable panel (window) with some content
 	my_ui.addContent([
-		new LuiWindow(500 + irandom(100), 540 + irandom(100), 300, 300, , " Secret database").centerContent().addContent([
+		new LuiWindow(500 + irandom(100), 340 + irandom(100), 300, 300, , " Secret database").centerContent().addContent([
 			new LuiImage(, , 64, 64, , sIconKey),
 			new LuiRow().addContent([
 				new LuiInput(, , , , , "", "login")
@@ -133,19 +136,16 @@ createNewLoginWindow = function () {
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Panel X"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(oDemo, "tabs_target_x"), [0.2, 0.8]
+		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(oDemo, "tabs_target_x"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Panel Y"), new LuiSlider( , , , , "sliderY", tabs_min_y, tabs_max_y, 0, 1).setBinding(oDemo, "tabs_target_y"), [0.2, 0.8]
-	]),
-	new LuiRow().addContent([
-		new LuiCheckbox( , , 32, , , false).setBinding(oDemo, "demo_loading_state").setTooltip("Start a demo progressbar"), demo_loading
+		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "qwerty12345", true).setBinding(oDemo, "demo_password"), [0.2, 0.8]
+		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true).setBinding(oDemo, "demo_password"), [0.2, 0.8]
 	]),	
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
@@ -153,7 +153,9 @@ my_panel.addContent([
 	new LuiButton(, , , , , "Create login window", function () {
 		oDemo.createNewLoginWindow();
 	}),
-	new LuiToggleButton(, , , , , , "ToggleButton"),
+	new LuiRow().addContent([
+		new LuiCheckbox( , , , , , false, "Checkbox").setBinding(oDemo, "demo_loading_state"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").setBinding(oDemo, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton").setBinding(oDemo, "demo_loading_state")
+	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
 	]),

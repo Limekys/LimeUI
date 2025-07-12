@@ -41,6 +41,9 @@ function LuiStyle(_style = {}) constructor {
 	sprite_tabs_border = _style[$ "sprite_tabs_border"] ?? undefined;
 	sprite_tooltip = _style[$ "sprite_tooltip"] ?? undefined;
 	sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
+	sprite_toggleswitch = _style[$ "sprite_toggleswitch"] ?? undefined;
+	sprite_toggleswitch_slider = _style[$ "sprite_toggleswitch_slider"] ?? undefined;
+	sprite_toggleswitch_border = _style[$ "sprite_toggleswitch_border"] ?? undefined;
 	//Colors
 	color_primary = _style[$ "color_primary"] ?? c_white;
 	color_secondary = _style[$ "color_secondary"] ?? c_white;
@@ -129,8 +132,15 @@ function LuiStyle(_style = {}) constructor {
 	
 	static setSpriteCheckbox = function(_checkbox = undefined, _checkbox_pin = undefined, _checkbox_border = undefined) {
 		self.sprite_checkbox = _checkbox;
-		self.sprite_checkbox_border = _checkbox_border;
 		self.sprite_checkbox_pin = _checkbox_pin;
+		self.sprite_checkbox_border = _checkbox_border;
+		return self;
+	}
+	
+	static setSpriteToggleSwitch = function(_toggleswitch = undefined, _toggleswitch_slider = undefined, _toggleswitch_border = undefined) {
+		self.sprite_toggleswitch = _toggleswitch;
+		self.sprite_toggleswitch_slider = _toggleswitch_slider;
+		self.sprite_toggleswitch_border = _toggleswitch_border;
 		return self;
 	}
 	

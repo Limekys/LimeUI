@@ -13,6 +13,6 @@ global.lui_debug_render_grid = false;			// Enable/Disable render of debug grid
 //Settings
 #macro LUI_GRID_SIZE					128		// UI grid size for elements
 #macro LUI_GRID_ACCURACY				64		// 64 is good, but you can use low size if you have problem with mouse hovering on elements
-#macro LUI_LOG_ERROR_MODE				2		// 0 - do not log, 1 - errors only, 2 - errors and warnings
+#macro LUI_LOG_ERROR_MODE				1		// 0 - do not log, 1 - errors only, 2 - errors and warnings
 #macro LUI_DEBUG_CALLBACK				false	// Turn on/off debug default callback for all elements
 #macro LUI_FORCE_ALPHA_1				true	// Determines whether to set alpha to 1 before rendering the UI or not

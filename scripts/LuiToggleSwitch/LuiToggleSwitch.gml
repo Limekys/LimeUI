@@ -7,7 +7,7 @@
 ///@arg {Bool} value
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiCheckbox", value = false, text = "", callback = undefined) : LuiBase() constructor {
+function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiToggleSwitch", value = false, text = "", callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = value;
@@ -18,8 +18,12 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	_initElement();
 	setCallback(callback);
 	
+	self.min_width = self.width*2;
+	
 	self.is_pressed = false;
 	self.text = text;
+	self.slider_size = min(self.width, self.height);
+	
 	
 	//@desc Set display text of checkbox (render right of checkbox)
 	self.setText = function(_text) {
@@ -28,19 +32,19 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	self.draw = function() {
+		var _draw_width = self.min_width;
+		var _draw_height = min(self.width, self.height);
 		// Base
-		if !is_undefined(self.style.sprite_checkbox) {
-			var _blend_color = self.style.color_back;
+		if !is_undefined(self.style.sprite_toggleswitch) {
+			var _blend_color = self.value == true ? self.style.color_accent : self.style.color_back;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			var _draw_width = min(self.width, self.height);
-			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
 		// Pin
-		if !is_undefined(self.style.sprite_checkbox_pin) {
-			var _blend_color = self.value ? self.style.color_accent : self.style.color_primary;
+		if !is_undefined(self.style.sprite_toggleswitch_slider) {
+			var _blend_color = self.style.color_primary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
 					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
@@ -48,9 +52,8 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			var _draw_width = min(self.width, self.height);
-			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
+			var _slider_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, _slider_x, self.y, self.slider_size, self.slider_size, _blend_color, 1);
 		}
 		// Text
 		if self.text != "" {
@@ -68,15 +71,12 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			if !is_undefined(self.style.font_default) {
 				draw_set_font(self.style.font_default);
 			}
-			var _draw_width = min(self.width, self.height);
 			var _text_width = min(string_width(self.text), self.width - _draw_width - self.style.padding);
 			self._luiDrawTextCutoff(self.x + _draw_width + self.style.padding, self.y + self.height div 2, self.text, _text_width);
 		}
 		// Border
-		if !is_undefined(self.style.sprite_checkbox_border) {
-			var _draw_width = min(self.width, self.height);
-			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_border, 1);
+		if !is_undefined(self.style.sprite_toggleswitch_border) {
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_border, 1);
 		}
 	}
 	
