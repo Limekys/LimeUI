@@ -3,7 +3,7 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {Asset.GMSprite} sprite
 ///@arg {Real} subimg
 ///@arg {Real} color

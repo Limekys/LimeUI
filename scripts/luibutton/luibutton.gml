@@ -3,7 +3,7 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {String} text
 ///@arg {Function} callback
 function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, text = "", callback = undefined) : LuiBase() constructor {

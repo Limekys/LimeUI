@@ -3,7 +3,7 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {Real} value_min
 ///@arg {Real} value_max
 ///@arg {Bool} show_value

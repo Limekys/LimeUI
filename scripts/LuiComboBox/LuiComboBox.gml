@@ -3,7 +3,7 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {String} hint
 ///@arg {Function} callback
 function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
@@ -186,7 +186,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 }
 
 ///@desc An element for a drop-down list.
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {String} text
 ///@arg {Function} callback
 function LuiComboBoxItem(name = LUI_AUTO, text = "item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {

@@ -3,9 +3,9 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {String} title
-function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiWindowHeader", title = "Title") : LuiBase() constructor {
+function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, title = "Title") : LuiBase() constructor {
     
 	self.name = name;
     self.pos_x = x;
@@ -74,9 +74,9 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
+///@arg {String,real} name
 ///@arg {String} title
-function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiWindow", title = "Window") : LuiPanel(x, y, width, height, name) constructor {
+function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, title = "Window") : LuiPanel(x, y, width, height, name) constructor {
     
 	self.title = title;
     self.is_minimized = false;
