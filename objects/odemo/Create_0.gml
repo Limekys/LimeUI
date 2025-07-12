@@ -153,6 +153,7 @@ my_panel.addContent([
 	new LuiButton(, , , , , "Create login window", function () {
 		oDemo.createNewLoginWindow();
 	}),
+	new LuiToggleButton(, , , , , , "ToggleButton"),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
 	]),

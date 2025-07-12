@@ -73,6 +73,7 @@
     {"id":{"name":"LuiStyles","path":"scripts/LuiStyles/LuiStyles.yy",},},
     {"id":{"name":"LuiTabs","path":"scripts/LuiTabs/LuiTabs.yy",},},
     {"id":{"name":"LuiText","path":"scripts/LuiText/LuiText.yy",},},
+    {"id":{"name":"LuiToggleButton","path":"scripts/LuiToggleButton/LuiToggleButton.yy",},},
     {"id":{"name":"LuiWindow","path":"scripts/LuiWindow/LuiWindow.yy",},},
     {"id":{"name":"sndBasicClick","path":"sounds/sndBasicClick/sndBasicClick.yy",},},
     {"id":{"name":"sndDeniedClick","path":"sounds/sndDeniedClick/sndDeniedClick.yy",},},
