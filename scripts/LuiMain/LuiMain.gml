@@ -48,6 +48,7 @@ function LuiMain() : LuiBase() constructor {
 	
 	// SYSTEM
 	
+	///@desc Create animation for any variables of target element
 	static animate = function(target_element, property, end_value, duration) {
 	    var _tween = new LuiTween(target_element, property, end_value, duration);
 	    array_push(self.active_animations, _tween);
