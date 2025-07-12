@@ -6,7 +6,7 @@
 ///@arg {String} name
 ///@arg {String} hint
 ///@arg {Function} callback
-function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiComboBox", hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
+function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
 	
 	self.hint = hint;
 	self.items = undefined;
@@ -189,7 +189,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiComboBoxItem(name = "LuiComboBoxItem", text = "item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
+function LuiComboBoxItem(name = LUI_AUTO, text = "item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
 	
 	self.combobox_parent = undefined;
 	

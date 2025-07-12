@@ -420,7 +420,7 @@ my_panel_3.addContent([
 		sprite_twitter = new LuiImageButton(, , 64, 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")}).setTooltip("My X (Twitter)");
 		sprite_vk = new LuiImageButton(, , 64, 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
 		sprite_youtube = new LuiImageButton(, , 64, 64, "sprYT", sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
-		sprite_donate = new LuiImageButton(, , 64, 64, "sprYT", sDonate, , , , , function() {url_open("https://www.donationalerts.com/r/limekys")}).setTooltip("Donate!");
+		sprite_donate = new LuiImageButton(, , 64, 64, "sprDonate", sDonate, , , , , function() {url_open("https://www.donationalerts.com/r/limekys")}).setTooltip("Donate!");
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setFlexGrow(1).setTextValign(fa_bottom).setTextHalign(fa_right);
 		
 		tab_about.addContent([

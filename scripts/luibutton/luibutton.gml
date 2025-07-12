@@ -6,7 +6,7 @@
 ///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiButton", text = "", callback = undefined) : LuiBase() constructor {
+function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, text = "", callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.text = text;

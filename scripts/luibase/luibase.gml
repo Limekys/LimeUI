@@ -4,17 +4,15 @@ function LuiBase() constructor {
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 		
 	self.element_id = global.lui_element_count++;
-	self.name = "LuiBase";							//Unique element identifier
+	self.name = LUI_AUTO;							//Unique element identifier
 	self.value = undefined;							//Value
 	self.style = undefined;							//Style struct
 	self.style_overrides = {};						//Custom style for element
-	self.x = 0;										//Actual x position on the screen
-	self.y = 0;										//Actual y position on the screen
+	self.x = 0;										//Actual real calculated x position on the screen
+	self.y = 0;										//Actual real calculated y position on the screen
 	self.z = 0;										//Depth
-	self.pos_x = 0;									//Offset x position this element relative parent //???//
-	self.pos_y = 0;									//Offset y position this element relative parent //???//
-	self.target_x = 0;								//Target x position this element relative parent (for animation) //???//
-	self.target_y = 0;								//Target y position this element relative parent (for animation) //???//
+	self.pos_x = 0;									//Offset x position this element relative parent
+	self.pos_y = 0;									//Offset y position this element relative parent
 	self.start_x = -1;								//First x position
 	self.start_y = -1;								//First y position
 	self.prev_x = -1;								//Previous floor(x) position on the screen
@@ -27,8 +25,6 @@ function LuiBase() constructor {
 	self.height = 32;								//Actual height
 	self.prev_w = -1;								//Previous width
 	self.prev_h = -1;								//Previous height
-	self.target_width = 32;							//Target width (for animation) //???//
-	self.target_height = 32;						//Target height (for animation) //???//
 	self.min_width = 32;
 	self.min_height = 32;
 	self.max_width = 3200;
@@ -38,7 +34,7 @@ function LuiBase() constructor {
 	self.auto_width = false;
 	self.auto_height = false;
 	self.parent = undefined;
-	self.callback = undefined;
+	self.callback = undefined;						//???//скорее всего нужно будет убрать и добавить callback на каждый ивент элемента
 	self.content = [];
 	self.delayed_content = undefined;
 	self.container = self; 							//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
@@ -1555,10 +1551,15 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _registerElementName = function() {
-		if !variable_struct_exists(self.main_ui.element_names, self.name) {
+		if !variable_struct_exists(self.main_ui.element_names, self.name) && self.name != LUI_AUTO {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
+			if LUI_LOG_ERROR_MODE == 2 && self.name != LUI_AUTO {
+				print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
+			}
+			if self.name == LUI_AUTO {
+				self.name = "";
+			}
 			var _new_name = self.name + "_" + string(self.element_id) + "_" + md5_string_utf8(self.name + string(self.element_id));
 			variable_struct_set(self.main_ui.element_names, _new_name, self);
 			self.name = _new_name;

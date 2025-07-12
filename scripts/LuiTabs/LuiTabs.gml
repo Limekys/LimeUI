@@ -5,7 +5,7 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {Real} tab_height
-function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiTabs", tab_height = 32) : LuiBase() constructor {
+function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, tab_height = 32) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -140,7 +140,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 ///@desc Tab, used for LuiTabs.
 ///@arg {String} name
 ///@arg {String} text
-function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
+function LuiTab(name = LUI_AUTO, text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
 	
 	self.is_active = false;
 	self.tabs_parent = undefined;

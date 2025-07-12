@@ -9,7 +9,7 @@
 ///@arg {Real} value
 ///@arg {Real} rounding
 ///@arg {Function} callback
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiSlider", value_min = 0, value_max = 100, value = 0, rounding = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, value_min = 0, value_max = 100, value = 0, rounding = 0, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

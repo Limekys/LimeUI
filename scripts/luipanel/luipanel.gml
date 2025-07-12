@@ -3,8 +3,8 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String} name
-function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiPanel") : LuiBase() constructor {
+///@arg {String,Real} name
+function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

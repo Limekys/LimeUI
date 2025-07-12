@@ -4,7 +4,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiBox") : LuiColumn(x, y, width, height, name) constructor {
+function LuiBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiColumn(x, y, width, height, name) constructor {
 	
 	self.ignore_mouse = false;
 	self.color = c_black;

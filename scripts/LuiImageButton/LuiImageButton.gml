@@ -10,7 +10,7 @@
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 ///@arg {Function} callback
-function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiImageButton", sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
+function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

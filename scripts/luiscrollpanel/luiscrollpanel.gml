@@ -4,7 +4,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiScrollPanel") : LuiBase() constructor {
+function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

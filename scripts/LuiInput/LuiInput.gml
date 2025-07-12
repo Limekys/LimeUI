@@ -9,7 +9,7 @@
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiInput", start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = string(start_text);

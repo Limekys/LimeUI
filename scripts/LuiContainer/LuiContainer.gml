@@ -4,7 +4,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiContainer") : LuiBase() constructor {
+function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -22,7 +22,7 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiRow") : LuiContainer(x, y, width, height, name) constructor {
+function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
@@ -35,7 +35,7 @@ function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO,
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiColumn") : LuiContainer(x, y, width, height, name) constructor {
+function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
@@ -48,7 +48,7 @@ function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiAbsoluteContainer") : LuiContainer(x, y, width, height, name) constructor {
+function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPositionType(flexpanel_position_type.absolute);
