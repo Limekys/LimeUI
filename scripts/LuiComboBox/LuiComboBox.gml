@@ -38,7 +38,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
 		// Create panel
-		self.combobox_panel = new LuiPanel(0, 0, _width, , "LuiComboBoxPanel").setVisible(false).setPositionType(flexpanel_position_type.absolute);
+		self.combobox_panel = new LuiPanel(0, 0, _width, , "LuiComboBoxPanel").hide().setVisibilitySwitching(false).setPositionType(flexpanel_position_type.absolute);
 		self.main_ui.addContent([self.combobox_panel]);
 	}
 	
@@ -64,6 +64,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 		// Change state
 		self.is_open = !self.is_open;
+		self.combobox_panel.setVisibilitySwitching(true);
 		if self.is_open {
 			// Set position and size of panel
 			var _x = self.x;
@@ -75,6 +76,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			// Hide
 			self.combobox_panel.hide();
 		}
+		self.combobox_panel.setVisibilitySwitching(false);
 		return self;
     }
 	
