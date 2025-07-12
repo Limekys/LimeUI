@@ -8,7 +8,7 @@ function LuiTween(target_element, property, end_value, duration) constructor {
     self.property = property;
     self.start_value = target_element[$ property];
     self.end_value = end_value;
-    self.duration = duration;
+    self.duration = duration; //???// now like smoothnes, not duration
     self.elapsed_time = 0;
     self.is_finished = false;
 	self.progress = 0;

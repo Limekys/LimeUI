@@ -75,6 +75,7 @@
     {"name":"sToggleSwitch","order":33,"path":"sprites/sToggleSwitch/sToggleSwitch.yy",},
     {"name":"sToggleSwitchBorder","order":31,"path":"sprites/sToggleSwitchBorder/sToggleSwitchBorder.yy",},
     {"name":"sToggleSwitchSlider","order":32,"path":"sprites/sToggleSwitchSlider/sToggleSwitchSlider.yy",},
+    {"name":"sToggleSwitchSliderBorder","order":34,"path":"sprites/sToggleSwitchSliderBorder/sToggleSwitchSliderBorder.yy",},
     {"name":"sTwitch_64px","order":2,"path":"sprites/sTwitch_64px/sTwitch_64px.yy",},
     {"name":"sTwitter_64px","order":3,"path":"sprites/sTwitter_64px/sTwitter_64px.yy",},
     {"name":"sUI_button_border","order":3,"path":"sprites/sUI_button_border/sUI_button_border.yy",},

@@ -44,6 +44,7 @@ function LuiStyle(_style = {}) constructor {
 	sprite_toggleswitch = _style[$ "sprite_toggleswitch"] ?? undefined;
 	sprite_toggleswitch_slider = _style[$ "sprite_toggleswitch_slider"] ?? undefined;
 	sprite_toggleswitch_border = _style[$ "sprite_toggleswitch_border"] ?? undefined;
+	sprite_toggleswitch_slider_border = _style[$ "sprite_toggleswitch_slider_border"] ?? undefined;
 	//Colors
 	color_primary = _style[$ "color_primary"] ?? c_white;
 	color_secondary = _style[$ "color_secondary"] ?? c_white;
@@ -117,6 +118,8 @@ function LuiStyle(_style = {}) constructor {
 		self.sprite_progress_ring = _element;
 		self.sprite_progress_ring_value = _element;
 		self.sprite_combobox_arrow = _element;
+		self.sprite_toggleswitch = _element;
+		self.sprite_toggleswitch_slider = _element;
 		// Border
 		self.sprite_input_border = _element_border;
 		self.sprite_button_border = _element_border;
@@ -127,6 +130,8 @@ function LuiStyle(_style = {}) constructor {
 		self.sprite_combobox_item_border = _element_border;
 		self.sprite_tooltip_border = _element_border;
 		self.sprite_progress_ring_border = _element_border;
+		self.sprite_toggleswitch_border = _element_border;
+		self.sprite_toggleswitch_slider_border = _element_border;
 		return self;
 	}
 	
@@ -137,10 +142,11 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	static setSpriteToggleSwitch = function(_toggleswitch = undefined, _toggleswitch_slider = undefined, _toggleswitch_border = undefined) {
+	static setSpriteToggleSwitch = function(_toggleswitch = undefined, _toggleswitch_slider = undefined, _toggleswitch_border = undefined, _toggleswitch_slider_border = undefined) {
 		self.sprite_toggleswitch = _toggleswitch;
 		self.sprite_toggleswitch_slider = _toggleswitch_slider;
 		self.sprite_toggleswitch_border = _toggleswitch_border;
+		self.sprite_toggleswitch_slider_border = _toggleswitch_slider_border;
 		return self;
 	}
 	

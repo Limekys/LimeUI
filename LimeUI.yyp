@@ -106,6 +106,7 @@
     {"id":{"name":"sToggleSwitch","path":"sprites/sToggleSwitch/sToggleSwitch.yy",},},
     {"id":{"name":"sToggleSwitchBorder","path":"sprites/sToggleSwitchBorder/sToggleSwitchBorder.yy",},},
     {"id":{"name":"sToggleSwitchSlider","path":"sprites/sToggleSwitchSlider/sToggleSwitchSlider.yy",},},
+    {"id":{"name":"sToggleSwitchSliderBorder","path":"sprites/sToggleSwitchSliderBorder/sToggleSwitchSliderBorder.yy",},},
     {"id":{"name":"sTwitch_64px","path":"sprites/sTwitch_64px/sTwitch_64px.yy",},},
     {"id":{"name":"sTwitter_64px","path":"sprites/sTwitter_64px/sTwitter_64px.yy",},},
     {"id":{"name":"sUI_button_border","path":"sprites/sUI_button_border/sUI_button_border.yy",},},

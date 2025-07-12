@@ -18,8 +18,6 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	_initElement();
 	setCallback(callback);
 	
-	self.min_width = self.width*2;
-	
 	self.is_pressed = false;
 	self.text = text;
 	self.slider_size = min(self.width, self.height);
@@ -33,7 +31,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.draw = function() {
-		var _draw_width = self.min_width;
+		var _draw_width = min(self.width, self.height) * 2;
 		var _draw_height = min(self.width, self.height);
 		// Base
 		if !is_undefined(self.style.sprite_toggleswitch) {
@@ -43,7 +41,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			}
 			draw_sprite_stretched_ext(self.style.sprite_toggleswitch, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
-		// Pin
+		// Slider
 		if !is_undefined(self.style.sprite_toggleswitch_slider) {
 			var _blend_color = self.style.color_primary;
 			if !self.deactivated {
@@ -54,6 +52,10 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, self.slider_x, self.y, self.slider_size, self.slider_size, _blend_color, 1);
+		}
+		// Slider border
+		if !is_undefined(self.style.sprite_toggleswitch_slider_border) {
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider_border, 0, self.slider_x, self.y, self.slider_size, self.slider_size, self.style.color_border, 1);
 		}
 		// Border
 		if !is_undefined(self.style.sprite_toggleswitch_border) {
@@ -98,17 +100,18 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.onPositionUpdate = function() {
-		var _draw_width = self.min_width;
+		var _draw_width = min(self.width, self.height) * 2;
 		self.slider_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
 	}
 	
 	self.onValueUpdate = function() {
+		var _anim_speed = 0.05;
 		// Slider animation
-		var _draw_width = self.min_width;
+		var _draw_width = min(self.width, self.height) * 2;
 		var _target_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
-		self.main_ui.animate(self, "slider_x", _target_x, 0.05);
+		self.main_ui.animate(self, "slider_x", _target_x, _anim_speed);
 		// Slider back color animation
 		var _target_color_value = self.value == true ? 1 : 0;
-		self.main_ui.animate(self, "slider_color_value", _target_color_value, 0.05);
+		self.main_ui.animate(self, "slider_color_value", _target_color_value, _anim_speed);
 	}
 }

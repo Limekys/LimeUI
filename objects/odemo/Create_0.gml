@@ -22,7 +22,7 @@ demo_style_light = new LuiStyle()
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
 	.setSpriteCheckbox(sUI_button, sUI_checkbox_pin, sUI_button_border)
-	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider, sToggleSwitchBorder)
+	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider, sToggleSwitchBorder, sToggleSwitchSliderBorder)
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
@@ -39,7 +39,7 @@ demo_style_dark = new LuiStyle()
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
 	.setSpriteCheckbox(sUI_button, sUI_checkbox_pin, sUI_button_border)
-	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider, sToggleSwitchBorder)
+	.setSpriteToggleSwitch(sToggleSwitch, sToggleSwitchSlider, sToggleSwitchBorder, sToggleSwitchSliderBorder)
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
@@ -139,7 +139,7 @@ my_panel.addContent([
 		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(oDemo, "tabs_target_x"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.2, 0.8]
+		new LuiText(, , 131, , , "ProgressBar"), demo_loading, new LuiToggleSwitch(, , 64).setBinding(oDemo, "demo_loading_state"),
 	]),
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
@@ -154,7 +154,7 @@ my_panel.addContent([
 		oDemo.createNewLoginWindow();
 	}),
 	new LuiRow().addContent([
-		new LuiCheckbox( , , , , , false, "Checkbox").setBinding(oDemo, "demo_loading_state"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").setBinding(oDemo, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton").setBinding(oDemo, "demo_loading_state")
+		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch"), new LuiToggleButton(, , , , , , "ToggleButton")
 	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
