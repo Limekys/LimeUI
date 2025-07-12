@@ -509,7 +509,7 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel padding
 	///@arg {real} _padding
-	///@arg {constant.flexpanel_edge} _edge
+	///@arg {constant.flexpanel_edge} [_edge]
 	static setPadding = function(_padding, _edge = flexpanel_edge.all_edges) {
 		self.style_overrides.padding = _padding;
 		if (!is_undefined(self.main_ui)) {
@@ -521,7 +521,7 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel gap
 	///@arg {real} _gap
-	///@arg {constant.flexpanel_gutter} _gutter
+	///@arg {constant.flexpanel_gutter} [_gutter]
 	static setGap = function(_gap, _gutter = flexpanel_gutter.all_gutters) {
 		self.style_overrides.gap = _gap;
 		if (!is_undefined(self.main_ui)) {
@@ -533,7 +533,7 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel border
 	///@arg {real} _border
-	///@arg {constant.flexpanel_edge} _edge
+	///@arg {constant.flexpanel_edge} [_edge]
 	static setBorder = function(_border, _edge = flexpanel_edge.all_edges) {
 		self.style_overrides.border = _border;
 		if (!is_undefined(self.main_ui)) {
@@ -543,7 +543,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel direction (default is flexpanel_flex_direction.column)
+	///@desc Set flexpanel direction (Default: flexpanel_flex_direction.column)
 	///@arg {constant.flexpanel_flex_direction} [_direction]
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
 		var _flex_node = self.getContainer().flex_node;
@@ -552,7 +552,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel wrap type (default is flexpanel_wrap.no_wrap)
+	///@desc Set flexpanel wrap type (Default: flexpanel_wrap.no_wrap)
 	///@arg {constant.flexpanel_wrap} [_wrap]
 	static setFlexWrap = function(_wrap = flexpanel_wrap.no_wrap) {
 		var _flex_node = self.getContainer().flex_node;
@@ -561,7 +561,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel grow (default is 1)
+	///@desc Set flexpanel grow (Default: 1)
 	///@arg {real} [_grow]
 	static setFlexGrow = function(_grow = 1) {
 		var _flex_node = self.flex_node;
@@ -570,7 +570,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel shrink type (default is 1)
+	///@desc Set flexpanel shrink type (Default: 1)
 	///@arg {real} [_shrink]
 	static setFlexShrink = function(_shrink = 1) {
 		var _flex_node = self.flex_node;
@@ -579,7 +579,8 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel justify content (default is flexpanel_justify.start)
+	///@desc Set flexpanel justify content (Default: flexpanel_justify.start)
+	///Aligns items along the main axis, controlling horizontal spacing
 	///@arg {constant.flexpanel_justify} [_flex_justify]
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
@@ -588,7 +589,8 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel align items (default is flexpanel_align.stretch)
+	///@desc Set flexpanel align items (Default: flexpanel_align.stretch)
+	///Aligns items along the cross axis, affecting vertical alignment
 	///@arg {constant.flexpanel_align} [_flex_align]
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
 		var _flex_node = self.getContainer().flex_node;
@@ -597,16 +599,8 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel align self
-	///@arg {constant.flexpanel_align} _flex_align
-	static setFlexAlignSelf = function(_flex_align) {
-		var _flex_node = self.flex_node;
-		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
-		self.updateMainUiFlex();
-		return self;
-	}
-	
-	///@desc Set flexpanel align content (default is flexpanel_justify.start)
+	///@desc Set flexpanel align content (Default: flexpanel_justify.start)
+	///Defines the spacing between flex lines when wrapping occurs.
 	///@arg {constant.flexpanel_justify} [_flex_justify]
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
@@ -615,7 +609,17 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set flexpanel display(flex) or not(none) (default is flexpanel_display.flex)
+	///@desc Set flexpanel align self (Default: flexpanel_align.auto)
+	///Overrides the container's alignment for this item on the cross axis
+	///@arg {constant.flexpanel_align} [_flex_align]
+	static setFlexAlignSelf = function(_flex_align = flexpanel_align.auto) {
+		var _flex_node = self.flex_node;
+		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
+		self.updateMainUiFlex();
+		return self;
+	}
+	
+	///@desc Set flexpanel display(flex) or not(none) (Default: flexpanel_display.flex)
 	///@arg {constant.flexpanel_display} [_flex_display]
 	static setFlexDisplay = function(_flex_display = flexpanel_display.flex) {
 		var _flex_node = self.flex_node;

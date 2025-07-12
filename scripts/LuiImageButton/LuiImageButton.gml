@@ -1,4 +1,4 @@
-///@desc This item displays the specified sprite with certain settings.
+///@desc This item displays the specified sprite with certain settings but works like a button.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -9,7 +9,8 @@
 ///@arg {Real} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiSprite", sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+///@arg {Function} callback
+function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiImageButton", sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -17,6 +18,7 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.width = width;
 	self.height = height;
 	_initElement();
+	setCallback(callback);
 	
 	self.value = sprite;
 	self.sprite = sprite;
@@ -27,6 +29,8 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.sprite_real_width = 0;
 	self.sprite_real_height = 0;
 	self.aspect = 1;
+	
+	self.is_pressed = false;
 	
 	self.onCreate = function() {
 		self._calcSpriteSize();
@@ -66,10 +70,17 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 		//Get blend color
 		var _blend_color = self.color_blend;
-		if self.deactivated {
+		if !self.deactivated {
+			if self.isMouseHovered() {
+				_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
+				if self.is_pressed {
+					_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				}
+			}
+		} else {
 			_blend_color = merge_colour(_blend_color, c_black, 0.5);
 		}
-		//Draw sprite
+		//Draw sprite button
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
 		if !is_undefined(self.sprite) && sprite_exists(self.sprite) {
 			_sprite_render_function(self.sprite, self.subimg, 
@@ -78,5 +89,21 @@ function LuiSprite(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 										_width, _height, 
 										_blend_color, self.alpha);
 		}
+	}
+	
+	self.onMouseLeftPressed = function() {
+		self.is_pressed = true;
+	}
+	
+	self.onMouseLeftReleased = function() {
+		if self.is_pressed {
+			self.is_pressed = false;
+			self.callback();
+			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+		}
+	}
+	
+	self.onMouseLeave = function() {
+		self.is_pressed = false;
 	}
 }

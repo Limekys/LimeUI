@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"LuiTabGroup",
+  "%Name":"LuiImageButton",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"LuiTabGroup",
+  "name":"LuiImageButton",
   "parent":{
     "name":"Components",
     "path":"folders/Limekys/LimeUI/Components.yy",

@@ -9,7 +9,7 @@
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiTextbox", start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiInput", start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = string(start_text);
@@ -27,7 +27,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.cursor_pointer = "";
 	self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function(){
 		if self.cursor_pointer == "" {
-			self.cursor_pointer = self.style.textbox_cursor;
+			self.cursor_pointer = self.style.input_cursor;
 		} else {
 			self.cursor_pointer = "";
 		}
@@ -49,7 +49,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	
 	self.draw = function() {
 		//Base
-		if !is_undefined(self.style.sprite_textbox) {
+		if !is_undefined(self.style.sprite_input) {
 			var _blend_color = self.style.color_back;
 			if !self.deactivated {
 				if !self.has_focus && self.isMouseHovered() {
@@ -58,7 +58,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 			} else {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_textbox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_input, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Set text properties
@@ -83,7 +83,7 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		
 		//Password dots
 		if self.is_password {
-			_display_text = string_repeat(self.style.textbox_password, string_length(self.value));
+			_display_text = string_repeat(self.style.input_password, string_length(self.value));
 		}
 		
 		//Hint
@@ -107,18 +107,18 @@ function LuiTextbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 		draw_set_alpha(_prev_alpha);
 		
 		//Border
-		if !is_undefined(self.style.sprite_textbox_border) {
+		if !is_undefined(self.style.sprite_input_border) {
 			var _border_color = self.style.color_border;
 			if self.has_focus {
 				_border_color = self.style.color_accent;
 			}
-			draw_sprite_stretched_ext(self.style.sprite_textbox_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
 		}
 	}
 	
 	self.onFocusSet = function() {
 		time_source_start(self.cursor_timer);
-		self.cursor_pointer = self.style.textbox_cursor;
+		self.cursor_pointer = self.style.input_cursor;
 		keyboard_string = get();
 		self.main_ui.waiting_for_keyboard_input = true;
 		//Touch compatibility

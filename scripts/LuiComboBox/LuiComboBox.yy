@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"LuiDropDown",
+  "%Name":"LuiComboBox",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"LuiDropDown",
+  "name":"LuiComboBox",
   "parent":{
     "name":"Components",
     "path":"folders/Limekys/LimeUI/Components.yy",

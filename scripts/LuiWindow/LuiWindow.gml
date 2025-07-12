@@ -112,16 +112,16 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
     self.draw = function() {
 		// Window
-		if !is_undefined(self.style.sprite_tabgroup) {
+		if !is_undefined(self.style.sprite_tabs) {
 			var _blend_color = self.style.color_primary;
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		// Border
-		if !is_undefined(self.style.sprite_tabgroup_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		if !is_undefined(self.style.sprite_tabs_border) {
+			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
     }
 	

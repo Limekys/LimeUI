@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"LuiSprite",
+  "%Name":"LuiImage",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"LuiSprite",
+  "name":"LuiImage",
   "parent":{
     "name":"Components",
     "path":"folders/Limekys/LimeUI/Components.yy",

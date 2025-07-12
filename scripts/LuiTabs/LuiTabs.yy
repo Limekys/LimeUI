@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"LuiTextbox",
+  "%Name":"LuiTabs",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"LuiTextbox",
+  "name":"LuiTabs",
   "parent":{
     "name":"Components",
     "path":"folders/Limekys/LimeUI/Components.yy",

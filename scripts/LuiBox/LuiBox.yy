@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"LuiBlockArea",
+  "%Name":"LuiBox",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"LuiBlockArea",
+  "name":"LuiBox",
   "parent":{
     "name":"Components",
     "path":"folders/Limekys/LimeUI/Components.yy",

@@ -22,7 +22,7 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiFlexRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiFlexRow") : LuiContainer(x, y, width, height, name) constructor {
+function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiRow") : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
@@ -35,7 +35,7 @@ function LuiFlexRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiFlexColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiFlexColumn") : LuiContainer(x, y, width, height, name) constructor {
+function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiColumn") : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
@@ -48,7 +48,7 @@ function LuiFlexColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LU
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiAbsContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiAbsContainer") : LuiContainer(x, y, width, height, name) constructor {
+function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiAbsoluteContainer") : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPositionType(flexpanel_position_type.absolute);

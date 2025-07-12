@@ -42,7 +42,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@desc Create scroll container
 	static _initScrollContainer = function() {
 		if is_undefined(self.scroll_container) {
-			self.scroll_container = new LuiAbsContainer(0, 0, LUI_AUTO, LUI_AUTO, $"_scroll_container_{self.element_id}");
+			self.scroll_container = new LuiAbsoluteContainer(0, 0, LUI_AUTO, LUI_AUTO, $"_scroll_container_{self.element_id}");
 			self.setContainer(self.scroll_container);
 		}
 	}

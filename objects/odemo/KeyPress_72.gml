@@ -3,14 +3,14 @@
 if !my_ui.isInteractingKeyboard() {
 	var _panel = my_panel_3;
 	_panel.setVisible(!_panel.visible);
-	//tab_group.setVisible(!tab_group.visible);
+	//tabs.setVisible(!tabs.visible);
 	//_panel.deactivate();
 	if _panel != -1 {
 		//_panel.destroy();
 		//my_panel = -1;
 	}
 	
-	//tab_group.setVisible(!tab_group.visible);
+	//tabs.setVisible(!tabs.visible);
 	//_panel.setVisible(!_panel.visible);
 	
 	var _element = my_ui.getElement("firstScrollPanel");

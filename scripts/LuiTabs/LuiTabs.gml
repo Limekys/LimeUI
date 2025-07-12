@@ -5,7 +5,7 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {Real} tab_height
-function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiTabGroup", tab_height = 32) : LuiBase() constructor {
+function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = "LuiTabs", tab_height = 32) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -17,26 +17,26 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.is_pressed = false;
 	self.tabs = undefined;
 	self.tab_height = tab_height;
-	self.tabgroup_header = undefined;
+	self.tabs_header = undefined;
 	self.active_tab = undefined;
 	
 	self.onCreate = function() {
-		// Setting up padding for tabgroup
+		// Setting up padding for tabs
 		self.setPadding(0).setGap(0);
 		// Init header container for tabs
 		self._initHeader();
-		// Add header to tabgroup
-		self.addContent(self.tabgroup_header);
-		self.tabgroup_header.setGap(0).setMinHeight(self.tab_height);
-		// Init tabs
+		// Add header
+		self.addContent(self.tabs_header);
+		self.tabs_header.setGap(0).setMinHeight(self.tab_height);
+		// Init tab's
 		self._initTabs();
 	}
 	
 	///@desc Create header container for tabs
 	///@ignore
 	static _initHeader = function() {
-		if is_undefined(self.tabgroup_header) {
-			self.tabgroup_header = new LuiFlexRow(, , , self.tab_height, "_tabgroup_header_" + string(self.element_id));
+		if is_undefined(self.tabs_header) {
+			self.tabs_header = new LuiRow(, , , self.tab_height, "_tabs_header_" + string(self.element_id));
 		}
 	}
 	
@@ -51,13 +51,13 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 				var _tab = self.tabs[i];
 				// Init tab container
 				_tab._initContainer();
-				// Set tabgroup parent for tab
-				_tab.tabgroup = self;
-				// Add tab container to tabgroup
+				// Set tabs parent for tab
+				_tab.tabs_parent = self;
+				// Add tab container to tabs_parent
 				self.addContent(_tab.tab_container);
 			}
-			//Add tab to header of tabgroup
-			self.tabgroup_header.addContent(self.tabs);
+			//Add tab to header of tabs_parent
+			self.tabs_header.addContent(self.tabs);
 			//Deactivate all and activate first
 			self.tabDeactivateAll();
 			self.tabs[0].tabActivate();
@@ -105,16 +105,16 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.draw = function() {
 		//Base
-		if !is_undefined(self.style.sprite_tabgroup) {
+		if !is_undefined(self.style.sprite_tabs) {
 			var _blend_color = self.style.color_primary;//self.nesting_level == 0 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
 			if self.deactivated {
 				_blend_color = merge_colour(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
 		}
 		//Border
-		if !is_undefined(self.style.sprite_tabgroup_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tabgroup_border, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
+		if !is_undefined(self.style.sprite_tabs_border) {
+			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
 		}
 	}
 	
@@ -130,20 +130,20 @@ function LuiTabGroup(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	self.onDestroy = function() {
-		if !is_undefined(self.tabgroup_header) {
-			self.tabgroup_header.destroy();
+		if !is_undefined(self.tabs_header) {
+			self.tabs_header.destroy();
 		}
 		self.tabs = -1;
 	}
 }
 
-///@desc Tab, used for LuiTabGroup.
+///@desc Tab, used for LuiTabs.
 ///@arg {String} name
 ///@arg {String} text
 function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
 	
 	self.is_active = false;
-	self.tabgroup = undefined;
+	self.tabs_parent = undefined;
 	self.tab_container = undefined;
 	
 	self.onCreate = function() {
@@ -241,7 +241,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 	self.onMouseLeftReleased = function() {
 		if self.is_pressed && !self.is_active {
 			self.is_pressed = false;
-			self.tabgroup.switchTab(self);
+			self.tabs_parent.switchTab(self);
 			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
 		}
 	}

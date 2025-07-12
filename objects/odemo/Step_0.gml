@@ -2,16 +2,16 @@ LIME_RESOLUTION.update();
 
 my_ui.update();
 
-checkAndRescaleUI(my_ui, display_get_gui_width(), display_get_gui_height());
+luiRescale(my_ui, display_get_gui_width(), display_get_gui_height());
 
 if demo_loading_state {
 	demo_loading_value = ApproachDelta(demo_loading_value, 100, 10);
 }
 
-// Smooth moving for tab_group (WIP) //???//
-tab_group.setPosition(tab_group_target_x, tab_group_target_y);
-//tab_group.setPosX(SmoothApproachDelta(tab_group.x, tab_group_target_x, 0.1));
-//tab_group.setPosY(SmoothApproachDelta(tab_group.y, tab_group_target_y, 0.1));
+// Smooth moving for tabs
+tabs_anim_x = SmoothApproachDelta(tabs_anim_x, tabs_target_x, 0.05, 0.1);
+tabs_anim_y = SmoothApproachDelta(tabs_anim_y, tabs_target_y, 0.05, 0.1);
+tabs.setPosition(tabs_anim_x, tabs_anim_y);
 
 // Scrolling test
 /*

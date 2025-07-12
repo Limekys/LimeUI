@@ -12,8 +12,8 @@ function LuiStyle(_style = {}) constructor {
 	//Sprites
 	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
 	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
-	sprite_textbox = _style[$ "sprite_textbox"] ?? undefined;
-	sprite_textbox_border = _style[$ "sprite_textbox_border"] ?? undefined;
+	sprite_input = _style[$ "sprite_input"] ?? undefined;
+	sprite_input_border = _style[$ "sprite_input_border"] ?? undefined;
 	sprite_button = _style[$ "sprite_button"] ?? undefined;
 	sprite_button_border = _style[$ "sprite_button_border"] ?? undefined;
 	sprite_checkbox = _style[$ "sprite_checkbox"] ?? undefined;
@@ -30,15 +30,15 @@ function LuiStyle(_style = {}) constructor {
 	sprite_scroll_pin = _style[$ "sprite_scroll_pin"] ?? undefined;
 	sprite_scroll_pin_border = _style[$ "sprite_scroll_pin_border"] ?? undefined;
 	sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
-	sprite_dropdown = _style[$ "sprite_dropdown"] ?? undefined;
-	sprite_dropdown_border = _style[$ "sprite_dropdown_border"] ?? undefined;
-	sprite_dropdown_item = _style[$ "sprite_dropdown_item"] ?? undefined;
-	sprite_dropdown_item_border = _style[$ "sprite_dropdown_item_border"] ?? undefined;
-	sprite_dropdown_arrow = _style[$ "sprite_dropdown_arrow"] ?? undefined;
+	sprite_combobox = _style[$ "sprite_combobox"] ?? undefined;
+	sprite_combobox_border = _style[$ "sprite_combobox_border"] ?? undefined;
+	sprite_combobox_item = _style[$ "sprite_combobox_item"] ?? undefined;
+	sprite_combobox_item_border = _style[$ "sprite_combobox_item_border"] ?? undefined;
+	sprite_combobox_arrow = _style[$ "sprite_combobox_arrow"] ?? undefined;
 	sprite_tab = _style[$ "sprite_tab"] ?? undefined;
 	sprite_tab_border = _style[$ "sprite_tab_border"] ?? undefined;
-	sprite_tabgroup = _style[$ "sprite_tabgroup"] ?? undefined;
-	sprite_tabgroup_border = _style[$ "sprite_tabgroup_border"] ?? undefined;
+	sprite_tabs = _style[$ "sprite_tabs"] ?? undefined;
+	sprite_tabs_border = _style[$ "sprite_tabs_border"] ?? undefined;
 	sprite_tooltip = _style[$ "sprite_tooltip"] ?? undefined;
 	sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
 	//Colors
@@ -66,8 +66,8 @@ function LuiStyle(_style = {}) constructor {
 	scroll_step = _style[$ "scroll_step"] ?? 32;
 	scroll_slider_width = _style[$ "scroll_slider_width"] ?? 16;
 	render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
-	textbox_cursor = _style[$ "textbox_cursor"] ?? "|";
-	textbox_password = _style[$ "textbox_password"] ?? "•";
+	input_cursor = _style[$ "input_cursor"] ?? "|";
+	input_password = _style[$ "input_password"] ?? "•";
 	//Render functions
 	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined; //function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha)
 	//Animations (WIP) //???//
@@ -95,12 +95,12 @@ function LuiStyle(_style = {}) constructor {
 		self.sprite_panel_border = _panel_border;
 		self.sprite_tab = _panel;
 		self.sprite_tab_border = _panel_border;
-		self.sprite_tabgroup = _panel;
-		self.sprite_tabgroup_border = _panel_border;
+		self.sprite_tabs = _panel;
+		self.sprite_tabs_border = _panel_border;
 		self.sprite_scroll_pin = _panel;
 		self.sprite_scroll_pin_border = _panel_border;
 		// Element
-		self.sprite_textbox = _element;
+		self.sprite_input = _element;
 		self.sprite_button = _element;
 		self.sprite_checkbox = _element;
 		self.sprite_checkbox_pin = _element;
@@ -108,20 +108,20 @@ function LuiStyle(_style = {}) constructor {
 		self.sprite_progress_bar_value = _element;
 		self.sprite_slider_knob = _element;
 		self.sprite_scroll_slider = _element;
-		self.sprite_dropdown = _element;
-		self.sprite_dropdown_item = _element;
+		self.sprite_combobox = _element;
+		self.sprite_combobox_item = _element;
 		self.sprite_tooltip = _element;
 		self.sprite_progress_ring = _element;
 		self.sprite_progress_ring_value = _element;
-		self.sprite_dropdown_arrow = _element;
+		self.sprite_combobox_arrow = _element;
 		// Border
-		self.sprite_textbox_border = _element_border;
+		self.sprite_input_border = _element_border;
 		self.sprite_button_border = _element_border;
 		self.sprite_checkbox_border = _element_border;
 		self.sprite_progress_bar_border = _element_border;
 		self.sprite_slider_knob_border = _element_border;
-		self.sprite_dropdown_border = _element_border;
-		self.sprite_dropdown_item_border = _element_border;
+		self.sprite_combobox_border = _element_border;
+		self.sprite_combobox_item_border = _element_border;
 		self.sprite_tooltip_border = _element_border;
 		self.sprite_progress_ring_border = _element_border;
 		return self;
@@ -147,16 +147,16 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	static setSpriteTabGroup = function(_tabgroup = undefined, _tab = undefined, _tabgroup_border = undefined, _tab_border = undefined) {
-		self.sprite_tabgroup = _tabgroup;
-		self.sprite_tabgroup_border = _tabgroup_border;
+	static setSpriteTabs = function(_tabs = undefined, _tab = undefined, _tabs_border = undefined, _tab_border = undefined) {
+		self.sprite_tabs = _tabs;
+		self.sprite_tabs_border = _tabs_border;
 		self.sprite_tab = _tab;
 		self.sprite_tab_border = _tab_border;
 		return self;
 	}
 	
-	static setSpriteDropdownArrow = function(_dropdown_arrow = undefined) {
-		self.sprite_dropdown_arrow = _dropdown_arrow;
+	static setSpriteComboBoxArrow = function(_combobox_arrow = undefined) {
+		self.sprite_combobox_arrow = _combobox_arrow;
 		return self;
 	}
 	
@@ -336,12 +336,12 @@ function LuiStyle(_style = {}) constructor {
 	}
 	
 	static setSymbolCursor = function(_symbol_cursor = "|") {
-		self.textbox_cursor = _symbol_cursor;
+		self.input_cursor = _symbol_cursor;
 		return self;
 	}
 	
 	static setSymbolPassword = function(_symbol_password = "•") {
-		self.textbox_password = _symbol_password;
+		self.input_password = _symbol_password;
 		return self;
 	}
 }

@@ -47,7 +47,7 @@ text_sounds = new LuiText(, , , , "textSounds", "Sounds: ");
 
 // Add all content to main ui
 game_ui.addContent([
-	new LuiFlexRow().centerContent().addContent([
+	new LuiRow().centerContent().addContent([
 		panel_menu.addContent([
 			text_main_menu,
 			btn_play,
@@ -57,13 +57,13 @@ game_ui.addContent([
 		]),
 		panel_options.addContent([
 			text_options,
-			new LuiFlexRow().addContent([
+			new LuiRow().addContent([
 				checkbox_fullscreen,
 			]),
-			new LuiFlexRow().addContent([
+			new LuiRow().addContent([
 				text_music, slider_music, [0.2, 0.8]
 			]),
-			new LuiFlexRow().addContent([
+			new LuiRow().addContent([
 				text_sounds, slider_sounds, [0.2, 0.8]
 			]),
 		])
@@ -79,7 +79,7 @@ button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", f
 });
 
 game_ui.addContent([
-	new LuiFlexRow().centerContent().addContent([
+	new LuiRow().centerContent().addContent([
 		button_prev_demo, button_next_demo
 	])
 ]);
