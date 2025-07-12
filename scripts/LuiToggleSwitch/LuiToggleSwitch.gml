@@ -30,6 +30,18 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		return self;
 	}
 	
+	self._updateSlider = function() {
+		self.slider_size = min(self.width, self.height);
+		if self.value == false {
+			self.slider_color_value = 0;
+			self.slider_xoffset = 0;
+		} else {
+			self.slider_color_value = 1;
+			var _draw_width = min(self.width, self.height) * 2;
+			self.slider_xoffset = _draw_width - self.slider_size;
+		}
+	}
+	
 	self.draw = function() {
 		self.slider_size = min(self.width, self.height);
 		var _draw_width = min(self.width, self.height) * 2;
@@ -101,8 +113,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.onPositionUpdate = function() {
-		var _draw_width = min(self.width, self.height) * 2;
-		self.slider_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
+		self._updateSlider();
 	}
 	
 	self.onValueUpdate = function() {
