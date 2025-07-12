@@ -1,4 +1,4 @@
-///@desc A button with a boolean value, either marked or unmarked.
+///@desc A switch in the form of a small slider that can be in the on and off position
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
@@ -24,7 +24,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.slider_xoffset = 0;
 	self.slider_color_value = 0;
 	
-	//@desc Set display text of checkbox (render right of checkbox)
+	//@desc Set display text (render right of element)
 	self.setText = function(_text) {
 		self.text = _text;
 		return self;

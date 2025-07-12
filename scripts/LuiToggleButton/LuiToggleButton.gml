@@ -1,4 +1,4 @@
-///@desc Works like checkbox, lights with accent color when value true
+///@desc Works like checkbox or switch, lights with accent color when value true
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
