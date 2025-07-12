@@ -23,7 +23,8 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.is_pressed = false;
 	self.text = text;
 	self.slider_size = min(self.width, self.height);
-	
+	self.slider_x = 0;
+	self.slider_color_value = 0;
 	
 	//@desc Set display text of checkbox (render right of checkbox)
 	self.setText = function(_text) {
@@ -36,9 +37,9 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		var _draw_height = min(self.width, self.height);
 		// Base
 		if !is_undefined(self.style.sprite_toggleswitch) {
-			var _blend_color = self.value == true ? self.style.color_accent : self.style.color_back;
+			var _blend_color = merge_color(self.style.color_back, self.style.color_accent, self.slider_color_value);
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_toggleswitch, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
@@ -47,23 +48,26 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			var _blend_color = self.style.color_primary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
+					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
 				}
 			} else {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			var _slider_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
-			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, _slider_x, self.y, self.slider_size, self.slider_size, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, self.slider_x, self.y, self.slider_size, self.slider_size, _blend_color, 1);
+		}
+		// Border
+		if !is_undefined(self.style.sprite_toggleswitch_border) {
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_border, 1);
 		}
 		// Text
 		if self.text != "" {
 			if !self.deactivated {
 				draw_set_color(self.style.color_text);
 				//if self.isMouseHovered() {
-					//draw_set_color(merge_colour(self.style.color_text, self.style.color_hover, 0.5));
+					//draw_set_color(merge_color(self.style.color_text, self.style.color_hover, 0.5));
 				//}
 			} else {
-				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_left);
@@ -73,10 +77,6 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			}
 			var _text_width = min(string_width(self.text), self.width - _draw_width - self.style.padding);
 			self._luiDrawTextCutoff(self.x + _draw_width + self.style.padding, self.y + self.height div 2, self.text, _text_width);
-		}
-		// Border
-		if !is_undefined(self.style.sprite_toggleswitch_border) {
-			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_border, 1);
 		}
 	}
 	
@@ -95,5 +95,20 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	
 	self.onMouseLeave = function() {
 		self.is_pressed = false;
+	}
+	
+	self.onPositionUpdate = function() {
+		var _draw_width = self.min_width;
+		self.slider_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
+	}
+	
+	self.onValueUpdate = function() {
+		// Slider animation
+		var _draw_width = self.min_width;
+		var _target_x = self.value == false ? self.x : self.x + _draw_width - self.slider_size;
+		self.main_ui.animate(self, "slider_x", _target_x, 0.05);
+		// Slider back color animation
+		var _target_color_value = self.value == true ? 1 : 0;
+		self.main_ui.animate(self, "slider_color_value", _target_color_value, 0.05);
 	}
 }

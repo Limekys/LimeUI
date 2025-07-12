@@ -100,13 +100,13 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _blend_color = self.style.color_secondary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_secondary, self.style.color_hover, 0.5);
+					_blend_color = merge_color(self.style.color_secondary, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
-						_blend_color = merge_colour(self.style.color_secondary, c_black, 0.5);
+						_blend_color = merge_color(self.style.color_secondary, c_black, 0.5);
 					}
 				}
 			} else {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_combobox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
@@ -116,7 +116,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _x_offset = sprite_get_width(self.style.sprite_combobox_arrow);
 			var _blend_color = self.style.color_border;
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_ext(self.style.sprite_combobox_arrow, 0, self.x + self.width - _x_offset, self.y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
 		}
@@ -128,7 +128,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !self.deactivated {
 			draw_set_color(self.style.color_text);
 		} else {
-			draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+			draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 		}
 		var _text_draw_width = self.width;
 		if !is_undefined(self.style.sprite_combobox_arrow) {
@@ -203,9 +203,9 @@ function LuiComboBoxItem(name = "LuiComboBoxItem", text = "item", callback = und
 		if !is_undefined(self.style.sprite_combobox_item) {
 			var _blend_color = self.style.color_secondary;
 			if !self.deactivated && self.isMouseHovered() {
-				_blend_color = merge_colour(self.style.color_secondary, self.style.color_hover, 0.5);
+				_blend_color = merge_color(self.style.color_secondary, self.style.color_hover, 0.5);
 				if self.is_pressed == true {
-					_blend_color = merge_colour(self.style.color_secondary, c_black, 0.5);
+					_blend_color = merge_color(self.style.color_secondary, c_black, 0.5);
 				}
 			}
 			draw_sprite_stretched_ext(self.style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);

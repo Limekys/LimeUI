@@ -17,6 +17,7 @@ function LuiMain() : LuiBase() constructor {
 	self.waiting_for_keyboard_input = false;
 	self.needs_update_flex = true;
 	self.current_debug_mode = 0;
+	self.active_animations = [];
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -43,6 +44,13 @@ function LuiMain() : LuiBase() constructor {
 	// Recalculate grid size on size change
 	self.onSizeUpdate = function() {
 		self.recalculateScreenGrid();
+	}
+	
+	// SYSTEM
+	
+	static animate = function(target_element, property, end_value, duration) {
+	    var _tween = new LuiTween(target_element, property, end_value, duration);
+	    array_push(self.active_animations, _tween);
 	}
 	
 	// CHECKERS
@@ -221,6 +229,22 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
+		// Update animations
+	    if (array_length(self.active_animations) > 0) {
+	        for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
+	            var _tween = self.active_animations[i];
+	            // If update return false, animate end
+	            if (!_tween.update(DT)) {
+	                array_delete(self.active_animations, i, 1);
+					self.updateMainUiSurface();
+	            }
+	        }
+	        // Redraw surface on active animations
+	        if (array_length(self.active_animations) > 0) {
+	            self.updateMainUiSurface();
+	        }
+	    }
+		
 		// Update debug mode states
 		if self.current_debug_mode != global.lui_debug_mode {
 			self.updateMainUiSurface();
@@ -353,7 +377,8 @@ function LuiMain() : LuiBase() constructor {
 		}
 		self.pre_draw_list = -1;
 		self.element_in_focus = undefined;
-		self.dragging_element = undefined; // Clear dragging element
+		self.dragging_element = undefined;
+		self.active_animations = -1;
 		delete self._screen_grid;
 		delete self.element_names;
 		global.lui_element_count = 0;

@@ -108,7 +108,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		if !is_undefined(self.style.sprite_tabs) {
 			var _blend_color = self.style.color_primary;//self.nesting_level == 0 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
 		}
@@ -197,16 +197,16 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 		if !is_undefined(self.style.sprite_tab) {
 			var _blend_color = self.style.color_primary;
 			if !self.is_active {
-				_blend_color = merge_colour(_blend_color, c_black, 0.25);
+				_blend_color = merge_color(_blend_color, c_black, 0.25);
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
+					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
-						_blend_color = merge_colour(_blend_color, c_black, 0.5);
+						_blend_color = merge_color(_blend_color, c_black, 0.5);
 					}
 				}
 			}
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
@@ -222,7 +222,7 @@ function LuiTab(name = "LuiTab", text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 			if !self.deactivated {
 				draw_set_color(self.style.color_text);
 			} else {
-				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_center);

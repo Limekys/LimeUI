@@ -26,9 +26,9 @@ demo_style_light = new LuiStyle()
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
-	.setColors(c_white, c_white, merge_colour(c_white, c_black, 0.05), #45C952, merge_colour(c_white, c_black, 0.5)) //_primary, _secondary, _back, _accent, _border
+	.setColors(c_white, c_white, merge_color(c_white, c_black, 0.05), #45C952, merge_color(c_white, c_black, 0.5)) //_primary, _secondary, _back, _accent, _border
 	.setColorHover(c_gray)
-	.setColorText(merge_colour(c_black, c_white, 0.2), c_gray)
+	.setColorText(merge_color(c_black, c_white, 0.2), c_gray)
 	.setSounds(sndBasicClick);
 
 // Create Dark style theme
@@ -60,7 +60,7 @@ demo_style_modern = new LuiStyle()
 	.setSpriteComboBoxArrow(sUI_ComboBoxArrow)
 	.setSpriteRing(sRing, sRing)
 	.setSpriteScrollSlider(sUI_Square_6r, sUI_Square_6r)
-	.setColors(#393a44, merge_color(#393a44, c_white, 0.1), merge_color(#393a44, c_black, 0.1), #64d0b9) //_primary, _secondary, _back, _accent, _border
+	.setColors(#393a44, merge_color(#393a44, c_white, 0.1), merge_color(#393a44, c_black, 0.2), #64d0b9) //_primary, _secondary, _back, _accent, _border
 	.setColorHover(c_gray)
 	.setColorText(#ffffff, #9a9daf)
 	.setSounds(sndBasicClick);

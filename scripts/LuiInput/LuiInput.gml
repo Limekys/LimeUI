@@ -53,10 +53,10 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 			var _blend_color = self.style.color_back;
 			if !self.deactivated {
 				if !self.has_focus && self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_back, self.style.color_hover, 0.5);
+					_blend_color = merge_color(self.style.color_back, self.style.color_hover, 0.5);
 				}
 			} else {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_input, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
@@ -68,7 +68,7 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		if !self.deactivated {
 			draw_set_color(self.style.color_text);
 		} else {
-			draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+			draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 		}
 		var _prev_alpha = draw_get_alpha();
 		draw_set_alpha(1);

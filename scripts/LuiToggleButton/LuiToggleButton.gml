@@ -86,13 +86,13 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			if !is_undefined(self.button_color) _blend_color = self.button_color;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
+					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
 					if self.is_pressed == true {
-						_blend_color = merge_colour(_blend_color, c_black, 0.5);
+						_blend_color = merge_color(_blend_color, c_black, 0.5);
 					}
 				}
 			} else {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
@@ -108,7 +108,7 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			if !self.deactivated {
 				draw_set_color(self.style.color_text);
 			} else {
-				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_center);

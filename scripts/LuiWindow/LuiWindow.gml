@@ -45,8 +45,8 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
     self.draw = function() {
         // Header
 		if !is_undefined(self.style.sprite_tab) {
-            var _blend_color = merge_colour(self.style.color_primary, c_black, 0.25);
-			//var _color = isMouseHovered() ? merge_colour(_blend_color, self.style.color_hover, 0.5) : _blend_color;
+            var _blend_color = merge_color(self.style.color_primary, c_black, 0.25);
+			//var _color = isMouseHovered() ? merge_color(_blend_color, self.style.color_hover, 0.5) : _blend_color;
             draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
         }
 		// Border
@@ -115,7 +115,7 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !is_undefined(self.style.sprite_tabs) {
 			var _blend_color = self.style.color_primary;
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}

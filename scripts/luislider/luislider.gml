@@ -53,7 +53,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !is_undefined(self.style.sprite_progress_bar) {
 			var _blend_color = self.style.color_back;
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, self.x, self.y, width, height, _blend_color, 1);
 		}
@@ -61,7 +61,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !is_undefined(self.style.sprite_progress_bar_value) {
 			var _blend_color = self.style.color_accent;
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, self.x, self.y, width * _bar_value, height, _blend_color, 1);
 		}
@@ -76,7 +76,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if !self.deactivated {
 			draw_set_color(self.style.color_text);
 		} else {
-			draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+			draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 		}
 		if !self.dragging {
 			draw_set_halign(fa_center);
@@ -96,10 +96,10 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			var _blend_color = self.style.color_secondary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(self.style.color_secondary, self.style.color_hover, 0.5);
+					_blend_color = merge_color(self.style.color_secondary, self.style.color_hover, 0.5);
 				}
 			} else {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, self.y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_color, 1);
 		}

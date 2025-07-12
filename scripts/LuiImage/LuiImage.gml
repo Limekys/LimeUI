@@ -67,7 +67,7 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		//Get blend color
 		var _blend_color = self.color_blend;
 		if self.deactivated {
-			_blend_color = merge_colour(_blend_color, c_black, 0.5);
+			_blend_color = merge_color(_blend_color, c_black, 0.5);
 		}
 		//Draw sprite
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;

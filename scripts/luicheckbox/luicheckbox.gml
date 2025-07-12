@@ -32,7 +32,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if !is_undefined(self.style.sprite_checkbox) {
 			var _blend_color = self.style.color_back;
 			if self.deactivated {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
@@ -43,10 +43,10 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			var _blend_color = self.value ? self.style.color_accent : self.style.color_primary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_colour(_blend_color, self.style.color_hover, 0.5);
+					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
 				}
 			} else {
-				_blend_color = merge_colour(_blend_color, c_black, 0.5);
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
@@ -57,10 +57,10 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 			if !self.deactivated {
 				draw_set_color(self.style.color_text);
 				//if self.isMouseHovered() {
-					//draw_set_color(merge_colour(self.style.color_text, self.style.color_hover, 0.5));
+					//draw_set_color(merge_color(self.style.color_text, self.style.color_hover, 0.5));
 				//}
 			} else {
-				draw_set_color(merge_colour(self.style.color_text, c_black, 0.5));
+				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_left);
