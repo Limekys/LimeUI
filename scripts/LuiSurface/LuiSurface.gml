@@ -25,10 +25,6 @@ function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.surface_real_height = 0;
 	self.aspect = 1;
 	
-	self.onCreate = function() {
-		self._calcSurfaceSize();
-	}
-	
 	///@desc Set blend color
 	static setColor = function(color_blend) {
 		self.color_blend = color_blend;
@@ -38,6 +34,13 @@ function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	static setAlpha = function(_alpha) {
 		self.alpha = _alpha;
 		return self
+	}
+	
+	///@desc Update surface if visible (should be called from main object where you draw surface)
+	static updateSurface = function() {
+		if self.is_visible_in_region && self.visible && !self.deactivated {
+			self.updateMainUiSurface();
+		}
 	}
 	
 	///@ignore
@@ -73,12 +76,6 @@ function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 									floor(self.y + self.height/2 - _height/2), 
 									_width, _height, 
 									_blend_color, self.alpha);
-	}
-	
-	self.step = function() {
-		if self.is_visible_in_region {
-			self.updateMainUiSurface();
-		}
 	}
 	
 	self.onValueUpdate = function() {

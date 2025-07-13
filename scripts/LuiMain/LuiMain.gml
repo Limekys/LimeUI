@@ -384,6 +384,49 @@ function LuiMain() : LuiBase() constructor {
 		}
 	}
 	
+	// PRIVATE
+	
+	///@desc Draw debug grid info
+	///@ignore
+	static _drawScreenGrid = function() {
+		draw_set_alpha(1);
+		draw_set_color(c_red);
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_top);
+		draw_set_font(fDebug);
+		
+		var gui_width = display_get_gui_width();
+		var gui_height = display_get_gui_height();
+		
+		var _width = ceil(gui_width / LUI_GRID_SIZE);
+		var _height = ceil(gui_height / LUI_GRID_SIZE);
+		
+		for (var _x = 0; _x <= _width; ++_x) {
+			var x_pos = _x * LUI_GRID_SIZE;
+			draw_line(x_pos, 0, x_pos, gui_height);
+			
+			for (var _y = 0; _y <= _height; ++_y) {
+				var y_pos = _y * LUI_GRID_SIZE;
+				
+				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
+				
+				var _key = string(_x) + "_" + string(_y);
+				var _array = self._screen_grid[$ _key];
+				draw_text(x_pos + 2, y_pos + 1, string(_key));
+				
+				var _elements_in_cell = array_length(_array);
+				for (var i = 0, n = min(18, _elements_in_cell); i < n; ++i) {
+					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
+				}
+				draw_set_color(c_red);
+				if _elements_in_cell > 18 {
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * 18, $"and {array_length(_array) - 18} elements...");
+				}
+			}
+		}
+	};
+	
 	// Cleanup
 	self.onDestroy = function() {
 		if surface_exists(self.ui_screen_surface) {
