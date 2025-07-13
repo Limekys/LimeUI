@@ -43,6 +43,7 @@
     {"name":"LuiScrollPanel","order":10,"path":"scripts/LuiScrollPanel/LuiScrollPanel.yy",},
     {"name":"LuiSlider","order":11,"path":"scripts/LuiSlider/LuiSlider.yy",},
     {"name":"LuiStyles","order":1,"path":"scripts/LuiStyles/LuiStyles.yy",},
+    {"name":"LuiSurface","order":20,"path":"scripts/LuiSurface/LuiSurface.yy",},
     {"name":"LuiTabs","order":14,"path":"scripts/LuiTabs/LuiTabs.yy",},
     {"name":"LuiText","order":15,"path":"scripts/LuiText/LuiText.yy",},
     {"name":"LuiToggleButton","order":18,"path":"scripts/LuiToggleButton/LuiToggleButton.yy",},

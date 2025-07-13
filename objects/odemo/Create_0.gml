@@ -13,6 +13,7 @@ demo_password = "";
 long_text = "This is a really long text that probably won't fit in this element!";
 demo_loading_value = 0;
 demo_loading_state = false;
+demo_surface = -1;
 
 // Create Light style theme
 demo_style_light = new LuiStyle()
@@ -321,6 +322,9 @@ my_panel_3.addContent([
 							new LuiRow().addContent([
 								new LuiImageButton( , , 56, 56, , sLogoDemo, 0, c_white, 1, true, changeButtonColor),
 								new LuiText(, , , , , "Press me!"),
+							]),
+							new LuiSurface(, , , 100, "LuiSurface", , , 0.5, false).addContent([
+								new LuiText().set("LuiSurface example")
 							])
 						])
 					])

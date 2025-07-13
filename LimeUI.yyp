@@ -71,6 +71,7 @@
     {"id":{"name":"LuiSettings","path":"scripts/LuiSettings/LuiSettings.yy",},},
     {"id":{"name":"LuiSlider","path":"scripts/LuiSlider/LuiSlider.yy",},},
     {"id":{"name":"LuiStyles","path":"scripts/LuiStyles/LuiStyles.yy",},},
+    {"id":{"name":"LuiSurface","path":"scripts/LuiSurface/LuiSurface.yy",},},
     {"id":{"name":"LuiTabs","path":"scripts/LuiTabs/LuiTabs.yy",},},
     {"id":{"name":"LuiText","path":"scripts/LuiText/LuiText.yy",},},
     {"id":{"name":"LuiToggleButton","path":"scripts/LuiToggleButton/LuiToggleButton.yy",},},
