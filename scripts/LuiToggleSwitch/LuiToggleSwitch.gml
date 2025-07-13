@@ -117,13 +117,13 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.onValueUpdate = function() {
-		var _anim_speed = 0.05;
+		var _anim_time = 0.2;
 		// Slider animation
 		var _draw_width = min(self.width, self.height) * 2;
 		var _target_slider_xoffset = self.value == false ? 0 : _draw_width - self.slider_size;
-		self.main_ui.animate(self, "slider_xoffset", _target_slider_xoffset, _anim_speed);
+		self.main_ui.animate(self, "slider_xoffset", _target_slider_xoffset, _anim_time);
 		// Slider back color animation
 		var _target_color_value = self.value == true ? 1 : 0;
-		self.main_ui.animate(self, "slider_color_value", _target_color_value, _anim_speed);
+		self.main_ui.animate(self, "slider_color_value", _target_color_value, _anim_time);
 	}
 }

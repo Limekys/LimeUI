@@ -49,9 +49,22 @@ function LuiMain() : LuiBase() constructor {
 	// SYSTEM
 	
 	///@desc Create animation for any variables of target element
-	static animate = function(target_element, property, end_value, duration) {
-	    var _tween = new LuiTween(target_element, property, end_value, duration);
+	static animate = function(target_element, property, end_value, duration, easing_func = global.Ease.OutQuad) {
+	    
+		// Delete previous if found to exlude animation conflicts
+		for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
+	        var _existing_tween = self.active_animations[i];
+	        if (_existing_tween.target == target_element && _existing_tween.property == property) {
+	            array_delete(self.active_animations, i, 1);
+	            break;
+	        }
+	    }
+		
+		// Create new tween
+		var _tween = new LuiTween(target_element, property, end_value, duration, easing_func);
 	    array_push(self.active_animations, _tween);
+		
+		return _tween;
 	}
 	
 	// CHECKERS
@@ -237,7 +250,7 @@ function LuiMain() : LuiBase() constructor {
 	            // If update return false, animate end
 	            if (!_tween.update(DT)) {
 	                array_delete(self.active_animations, i, 1);
-					self.updateMainUiSurface();
+					//self.updateMainUiSurface();
 	            }
 	        }
 	        // Redraw surface on active animations
