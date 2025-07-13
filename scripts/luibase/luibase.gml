@@ -17,10 +17,6 @@ function LuiBase() constructor {
 	self.start_y = -1;								//First y position
 	self.prev_x = -1;								//Previous floor(x) position on the screen
 	self.prev_y = -1;								//Previous floor(y) position on the screen
-	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
-	self.grid_previous_y1 = -1;						//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
-	self.grid_previous_x2 = -1;						//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
-	self.grid_previous_y2 = -1;						//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
 	self.width = 32;								//Actual width
 	self.height = 32;								//Actual height
 	self.prev_w = -1;								//Previous width
@@ -35,7 +31,7 @@ function LuiBase() constructor {
 	self.auto_height = false;
 	self.parent = undefined;
 	self.callback = undefined;						//???//скорее всего нужно будет убрать и добавить callback на каждый ивент элемента
-	self.content = [];
+	self.content = undefined;
 	self.delayed_content = undefined;
 	self.container = self; 							//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	self.deactivated = false;
@@ -61,8 +57,12 @@ function LuiBase() constructor {
 		top : 0,
 		bottom : 0
 	};
+	// Screen grid system
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
-	
+	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
+	self.grid_previous_y1 = -1;						//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
+	self.grid_previous_x2 = -1;						//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
+	self.grid_previous_y2 = -1;						//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
 	// View region system
 	self.view_region = {
 		x1: 0,
@@ -71,11 +71,9 @@ function LuiBase() constructor {
 		y2: 5000
 	};
 	self.is_visible_in_region = false;
-	
 	// Depth system
 	self.nesting_level = 0;
 	self.depth_array = [];
-	
 	// Dragging system
 	self.can_drag = false;
     self.is_dragging = false;
@@ -166,16 +164,6 @@ function LuiBase() constructor {
 	///@desc Get style
 	static getStyle = function() {
 		return self.style;
-		//if (!is_undefined(self.style)) {
-			//return self.style;
-		//}
-		//if (!is_undefined(self.parent)) {
-			//var _style = self.parent.getStyle();
-			//if (!is_undefined(_style)) {
-				//return _style;
-			//}
-		//}
-		//return undefined;
 	}
 	
 	///@desc Get first element in content array
@@ -663,6 +651,7 @@ function LuiBase() constructor {
 	static setStyle = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.is_custom_style_setted = true;
+		if is_array(self.content)
 		array_foreach(self.content, function(_elm) {
 			_elm.setStyleChilds(self.style);
 		});
@@ -779,7 +768,7 @@ function LuiBase() constructor {
 	    self.updateMainUiSurface();
 	    
 	    // Recursively update depth_array for all children
-	    for (var i = 0; i < array_length(self.content); i++) {
+	    for (var i = 0, n = array_length(self.content); i < n; i++) {
 	        var _element = self.content[i];
 	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
 	        // Recursively update children's children
@@ -829,466 +818,11 @@ function LuiBase() constructor {
 	    self.updateMainUiSurface();
 	    
 	    // Recursively update depth_array for all children
-	    for (var i = 0; i < array_length(self.content); i++) {
+	    for (var i = 0, n = array_length(self.content); i < n; i++) {
 	        self.content[i].recalculateDepthArray();
 	    }
 	    
 	    return self;
-	}
-	
-	// SYSTEM
-	
-	///@desc Added elements into container of these element
-	///@arg {Any} elements
-	///@arg {Real} _custom_padding
-	self.addContent = function(elements) {
-	    
-		// Convert to array if one element
-		if !is_array(elements) elements = [elements];
-	    
-		var _elements_count = array_length(elements);
-		
-		// Update array with delayed content for unordered adding
-	    if is_undefined(self.main_ui) {
-	        if !is_array(self.delayed_content) self.delayed_content = [];
-	        self.delayed_content = array_concat(self.delayed_content, elements);
-	        return self;
-	    }
-	    
-		// Take ranges from array
-		var _ranges = [];
-	    if is_array(elements[_elements_count - 1]) {
-	        if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
-	            if LUI_LOG_ERROR_MODE == 2 {
-	                print($"LIME_UI.WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
-	            }
-				//???// Добавить возможность использования не подходящего количества соотношений, 
-					//		если больше чем надо, выбирать из первых доступных по порядку, 
-					//		если меньше оставшиеся подсчитывать соотношение из имеющихся
-	        }
-	        _ranges = elements[_elements_count - 1];
-	        _elements_count--;
-	    }
-	    
-		// Adding
-	    for (var i = 0; i < _elements_count; i++) {
-	        
-			// Get element
-			var _element = elements[i];
-	        
-			// Recursion prevention
-	        if _element.is_adding continue;
-	        _element.is_adding = true;
-	        
-			// Init depth
-			_element.nesting_level = self.nesting_level + 1;
-			_element.z = global.lui_max_z++;
-			_element.depth_array = array_concat(self.depth_array, [_element.z]);
-			
-			// Inherit variables
-	        _element.parent = self;
-	        _element.main_ui = self.main_ui;
-	        _element.style = self.style;
-	        
-			// Flex setting up
-	        flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point);
-	        flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point);
-	        if array_length(_ranges) == _elements_count {
-	            flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
-	        }
-	        flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
-			
-			// Apply styles settings
-			_element._applyStyles();
-	        
-			// Register element name
-	        _element._registerElementName();
-	        
-			// Add to content array
-			array_push(self.content, _element);
-	        _element._addDelayedContent();
-	        
-			// Call custom method create
-	        if is_method(_element.onCreate) _element.onCreate();
-	        
-	        _element.is_adding = false;
-	    }
-	    
-		// Apply all positions and update content
-	    self.updateMainUiFlex();
-	    self.setNeedToUpdateContent(true);
-	    
-	    return self;
-	}
-	
-	///@desc This function updates all nested elements
-	static update = function() {
-	    if (!self.is_visible_in_region || !self.visible || self.deactivated) return false;
-	    
-	    // Define the list of items to be processed
-	    var _elements = self.content;
-	    var _source_length = array_length(_elements);
-	    
-	    for (var i = _source_length - 1; i >= 0; --i) {
-	        var _element = _elements[i];
-	        
-			// Delete destroyed elements
-			if _element.is_destroyed {
-				array_delete(_elements, i, 1);
-				continue;
-			}
-			
-	        // Skip the invisible elements
-	        if (!_element.is_visible_in_region || !_element.visible || self.deactivated) continue;
-	        
-	        var _cur_x = _element.x;
-	        var _cur_y = _element.y;
-	        
-	        // Update surface UI if the coordinates have changed
-	        if (_element.prev_x != _cur_x || _element.prev_y != _cur_y) {
-	            _element.prev_x = _cur_x;
-	            _element.prev_y = _cur_y;
-	            _element.updateMainUiSurface();
-	        }
-			
-			var _cur_w = _element.width;
-	        var _cur_h = _element.height;
-			
-			// Update surface UI if the size have changed
-	        if (_element.prev_w != _cur_w || _element.prev_h != _cur_h) {
-	            _element.prev_w = _cur_w;
-	            _element.prev_h = _cur_h;
-	            _element.updateMainUiSurface();
-	        }
-	        
-	        // Updating the bound variables
-	        if (_element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
-	            _element.updateFromBinding();
-	        }
-	        
-	        // Update content if required
-	        if (_element.need_to_update_content) {
-	            if (is_method(_element.onContentUpdate)) _element.onContentUpdate();
-	            _element.need_to_update_content = false;
-	        }
-	        
-	        // Update the grid if the area has changed
-	        var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
-	        var _grid_y1 = floor(_element.y / LUI_GRID_ACCURACY);
-	        var _grid_x2 = floor((_element.x + _element.width) / LUI_GRID_ACCURACY);
-	        var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
-	        if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1 || 
-	            _element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
-	            _element._gridUpdate();
-	            _element.grid_previous_x1 = _grid_x1;
-	            _element.grid_previous_y1 = _grid_y1;
-	            _element.grid_previous_x2 = _grid_x2;
-	            _element.grid_previous_y2 = _grid_y2;
-	        }
-	        
-	        // Execute custom step and recursive update
-	        if (is_method(_element.step)) _element.step();
-	        _element.update();
-	    }
-	}
-	
-	///@desc This function draws all nested elements
-	static render = function() {
-		
-		// Sort by depth
-		array_sort(self.content, function(a, b) { return a.z - b.z; });
-		
-		// Draw all elements
-		for (var i = 0, n = array_length(self.content); i < n; i++) {
-			// Get element
-			var _element = self.content[i];
-			// Restriction
-			if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
-			// Draw self
-			if is_method(_element.draw) _element.draw();
-			// Draw content
-			if _element.render_content_enabled {
-				if self.draw_content_in_cutted_region {
-					var _gpu_scissor = gpu_get_scissor();
-					var _x = self.x + self.render_region_offset.left;
-					var _y = self.y + self.render_region_offset.top;
-					var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
-					var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
-					gpu_set_scissor(_x, _y, _w, _h);
-				}
-				_element.render();
-				if self.draw_content_in_cutted_region {
-					gpu_set_scissor(_gpu_scissor);
-				}
-			}
-		}
-		if global.lui_debug_mode != 0 {
-			for (var i = 0, n = array_length(self.content); i < n; i++) {
-				//Get element
-				var _element = self.content[i];
-				if !_element.visible || !_element.is_visible_in_region continue;
-				_element._renderDebug(_element.x, _element.y);
-			}
-			
-		}
-	}
-	
-	///@desc Calculate all sizes and positions of elements
-	static flexCalculateLayout = function() {
-		if !is_undefined(self.main_ui) {
-            flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-            return true;
-        }
-        return false;
-    }
-		
-	///@desc Update position, size and z depth for specified flex node
-	static flexUpdate = function(_node) {
-	    var _pos = flexpanel_node_layout_get_position(_node, false);
-	    var _data = flexpanel_node_get_data(_node);
-	    var _element = _data.element;
-	    
-		// Check position change
-		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
-		// Check size change
-		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
-		
-	    _element.x = _pos.left;
-	    _element.y = _pos.top;
-	    _element.pos_x = _pos.left;
-	    _element.pos_y = _pos.top;
-	    _element.width = _pos.width;
-	    _element.height = _pos.height;
-	    if (_element.start_x == -1) {
-	        _element.start_x = _element.x;
-	    }
-	    if (_element.start_y == -1) {
-	        _element.start_y = _element.y;
-	    }
-		
-		// If position was changed, call onPositionUpdate
-		if (_position_changed && is_method(_element.onPositionUpdate)) {
-			_element.onPositionUpdate();
-		}
-		
-		// If size was changed, call onSizeUpdate
-		if (_size_changed && is_method(_element.onSizeUpdate)) {
-			_element.onSizeUpdate();
-		}
-	    
-	    _element._updateViewRegion();
-		
-		if _element.is_visible_in_region == false {
-			_element._gridDelete();
-			return;
-		}
-		
-	    var _children_count = flexpanel_node_get_num_children(_node);
-	    for (var i = 0; i < _children_count; i++) {
-	        var _child = flexpanel_node_get_child(_node, i);
-	        _element.flexUpdate(_child);
-	    }
-	}
-	 
-	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
-	static centerContent = function() {
-		self.setFlexJustifyContent(flexpanel_justify.center)
-			.setFlexAlignItems(flexpanel_align.center);
-		return self;
-	}
-	
-	///@desc Remove focus from element
-	static removeFocus = function() {
-		self.has_focus = false;
-		if is_method(self.onFocusRemove) self.onFocusRemove();
-		return self;
-	}
-	
-	///@desc Activate an element
-	static activate = function() {
-		self.deactivated = false;
-		array_foreach(self.content, function(_elm) {
-			_elm.activate();
-		});
-		return self;
-	}
-	
-	///@desc Deactivate an element
-	static deactivate = function() {
-		self.deactivated = true;
-		array_foreach(self.content, function(_elm) {
-			_elm.deactivate();
-		});
-		return self;
-	}
-	
-	///@desc Update position, size and z depth of all elements with depth reset
-	///@deprecated
-	static flexUpdateAll = function() {
-		if !is_undefined(main_ui) {
-			// Update all elements
-			flexUpdate(self.main_ui.flex_node);
-		}
-	}
-	
-	///@desc Update element value from binding variable
-	static updateFromBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _source_value = variable_instance_get(_source, _variable);
-			set(_source_value);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
-		}
-	}
-	
-	///@desc Update binding variable from element value
-	static updateToBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _element_value = get();
-			variable_instance_set(_source, _variable, _element_value);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
-		}
-	}
-	
-	///@desc Update main ui surface
-	static updateMainUiSurface = function() {
-		if is_undefined(self.main_ui) return self;
-		self.main_ui.needs_redraw_surface = true;
-		return self;
-	}
-	
-	///@desc Update main ui flex
-	static updateMainUiFlex = function() {
-		if is_undefined(self.main_ui) return self;
-		self.main_ui.needs_update_flex = true;
-		return self;
-	}
-	
-	///@desc Returns true if the mouse is hovered over this element
-	static isMouseHovered = function() {
-		return self.is_mouse_hovered;
-	}
-	
-	///@desc Returns true if the mouse is hovered over this element, excluding all elements above it
-	static isMouseHoveredExc = function() {
-		if !self.visible return false;
-		var _mouse_x = device_mouse_x_to_gui(0);
-		var _mouse_y = device_mouse_y_to_gui(0);
-		var _element_x = self.x;
-		var _element_y = self.y;
-		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
-		return _on_this;
-	}
-	
-	///@desc Returns true if the mouse is hovered over this element and its parent
-	static isMouseHoveredParents = function() {
-		if is_undefined(self.parent) return true;
-		if self.isMouseHoveredExc() {
-			return self.parent.isMouseHoveredParents();
-		} else {
-			return false;
-		}
-	}
-	
-	///@desc Returns true if the specified rectangle is within the parent and its parents at the same time
-	///@deprecated
-	static isInsideParents = function(_x1, _y1, _x2, _y2) {
-		if is_undefined(self.parent) return true;
-		var _parent_x = self.parent.x;
-		var _parent_y = self.parent.y;
-		var _inside_parent = rectangle_in_rectangle(
-			_x1, _y1, _x2, _y2,
-			_parent_x, _parent_y, _parent_x + self.parent.width, _parent_y + self.parent.height
-		);
-		if _inside_parent {
-			return self.parent.isInsideParents(_x1, _y1, _x2, _y2);
-		} else {
-			return false;
-		}
-	}
-	
-	///@desc Returns true if the mouse is hovered over the descendants of this element
-	static isMouseHoveredChilds = function() {
-		if !self.visible return false;
-		var _mouse_x = device_mouse_x_to_gui(0);
-		var _mouse_y = device_mouse_y_to_gui(0);
-		var _on_element = false;
-		for (var i = 0, _n = array_length(self.content); i < _n; ++i) {
-		    var _element = self.content[i];
-			if _element.isMouseHoveredChilds() {
-				return true;
-			}
-		}
-		return self.isMouseHovered() ? true : false;
-	}
-	
-	///@desc Set visible to false and flex display to none
-	static hide = function() {
-		self.setVisible(false).setFlexDisplay(flexpanel_display.none);
-		return self;
-	}
-	
-	///@desc Set visible to true and flex display to flex
-	static show = function() {
-		self.setVisible(true).setFlexDisplay(flexpanel_display.flex);
-		return self;
-	}
-	
-	///@desc Destroys all nested elements
-	static destroyContent = function() {
-	    while (array_length(self.content) > 0) {
-	        var _element = array_pop(self.content);
-	        if (_element != undefined) {
-	            _element.destroy();
-	        }
-	    }
-	}
-	
-	///@desc Destroys self and all nested elements
-	self.destroy = function() {
-		// Double-Destroy protection
-		if (self.is_destroyed) {
-			return;
-		}
-		// Destroy all content
-		self.destroyContent();
-		// Remove focus from main ui
-		if !is_undefined(main_ui) && self == main_ui.element_in_focus {
-			self.main_ui.element_in_focus.removeFocus();
-			self.main_ui.element_in_focus = undefined;
-		}
-		self._deleteElementName();
-		self._gridCleanUp();
-		self.setNeedToUpdateContent(true);
-		self.updateMainUiFlex();
-		self.updateMainUiSurface();
-		// Delete flex_node
-		if (!is_undefined(self.flex_node)) {
-		    // For the rest of the elements to react to the disappearance of this
-			flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
-		    // Delete flex node from memory
-		    self.flex_node = flexpanel_delete_node(self.flex_node, true);
-		}
-		// Clean all arrays and structs
-		self.content = -1;
-		self.depth_array = -1;
-		delete self.style_overrides; self.style_overrides = undefined;
-		delete self.render_region_offset; self.render_region_offset = undefined;
-		delete self.view_region; self.view_region = undefined;
-		delete self.binding_variable; self.binding_variable = undefined;
-		// Call onDestroy
-		if is_method(self.onDestroy) {
-			self.onDestroy();
-		}
-		// Decrement global counter
-		global.lui_element_count--;
-		// Double-Destroy protection
-		self.is_destroyed = true;
 	}
 	
 	// PRIVATE SYSTEM
@@ -1354,11 +888,9 @@ function LuiBase() constructor {
 	///@desc Adds elements from a delayed array
 	///@ignore
 	static _addDelayedContent = function() {
-		if is_array(self.delayed_content) {
-			if !is_undefined(self.delayed_content) && array_length(self.delayed_content) > 0 {
-				self.addContent(self.delayed_content);
-				self.delayed_content = -1;
-			}
+		if is_array(self.delayed_content) && array_length(self.delayed_content) > 0 {
+			self.addContent(self.delayed_content);
+			self.delayed_content = -1;
 		}
 	}
 	
@@ -1709,5 +1241,465 @@ function LuiBase() constructor {
 	                break;
 	        }
 	    }
+	}
+	
+	// SYSTEM
+	
+	///@desc Added elements into container of these element
+	///@arg {Any} elements
+	///@arg {Real} _custom_padding
+	self.addContent = function(elements) {
+	    
+		// Convert to array if one element
+		if !is_array(elements) elements = [elements];
+	    
+		var _elements_count = array_length(elements);
+		
+		// Update array with delayed content for unordered adding
+	    if is_undefined(self.main_ui) {
+	        if !is_array(self.delayed_content) self.delayed_content = [];
+	        self.delayed_content = array_concat(self.delayed_content, elements);
+	        return self;
+	    }
+	    
+		// Take ranges from array
+		var _ranges = [];
+	    if is_array(elements[_elements_count - 1]) {
+	        if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
+	            if LUI_LOG_ERROR_MODE == 2 {
+	                print($"LIME_UI.WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
+	            }
+				//???// Добавить возможность использования не подходящего количества соотношений, 
+					//		если больше чем надо, выбирать из первых доступных по порядку, 
+					//		если меньше оставшиеся подсчитывать соотношение из имеющихся
+	        }
+	        _ranges = elements[_elements_count - 1];
+	        _elements_count--;
+	    }
+	    
+		// Adding
+	    for (var i = 0; i < _elements_count; i++) {
+	        
+			// Get element
+			var _element = elements[i];
+	        
+			// Recursion prevention
+	        if _element.is_adding continue;
+	        _element.is_adding = true;
+	        
+			// Init depth
+			_element.nesting_level = self.nesting_level + 1;
+			_element.z = global.lui_max_z++;
+			_element.depth_array = array_concat(self.depth_array, [_element.z]);
+			
+			// Inherit variables
+	        _element.parent = self;
+	        _element.main_ui = self.main_ui;
+	        _element.style = self.style;
+	        
+			// Flex setting up
+	        flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point);
+	        flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point);
+	        if array_length(_ranges) == _elements_count {
+	            flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
+	        }
+	        flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
+			
+			// Apply styles settings
+			_element._applyStyles();
+	        
+			// Register element name
+	        _element._registerElementName();
+	        
+			// Add to content array
+			if !is_array(self.content) self.content = [];
+			array_push(self.content, _element);
+	        _element._addDelayedContent();
+	        
+			// Call custom method create
+	        if is_method(_element.onCreate) _element.onCreate();
+	        
+	        _element.is_adding = false;
+	    }
+	    
+		// Apply all positions and update content
+	    self.updateMainUiFlex();
+	    self.setNeedToUpdateContent(true);
+	    
+	    return self;
+	}
+	
+	///@desc This function updates all nested elements
+	static update = function() {
+	    if (!self.is_visible_in_region || !self.visible || self.deactivated) return false;
+	    
+	    // Define the list of items to be processed
+	    var _elements = self.content;
+	    var _source_length = array_length(_elements);
+	    
+	    for (var i = _source_length - 1; i >= 0; --i) {
+	        var _element = _elements[i];
+	        
+			// Delete destroyed elements
+			if _element.is_destroyed {
+				array_delete(_elements, i, 1);
+				continue;
+			}
+			
+	        // Skip the invisible elements
+	        if (!_element.is_visible_in_region || !_element.visible || self.deactivated) continue;
+	        
+	        var _cur_x = _element.x;
+	        var _cur_y = _element.y;
+	        
+	        // Update surface UI if the coordinates have changed
+	        if (_element.prev_x != _cur_x || _element.prev_y != _cur_y) {
+	            _element.prev_x = _cur_x;
+	            _element.prev_y = _cur_y;
+	            _element.updateMainUiSurface();
+	        }
+			
+			var _cur_w = _element.width;
+	        var _cur_h = _element.height;
+			
+			// Update surface UI if the size have changed
+	        if (_element.prev_w != _cur_w || _element.prev_h != _cur_h) {
+	            _element.prev_w = _cur_w;
+	            _element.prev_h = _cur_h;
+	            _element.updateMainUiSurface();
+	        }
+	        
+	        // Updating the bound variables
+	        if (_element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
+	            _element.updateFromBinding();
+	        }
+	        
+	        // Update content if required
+	        if (_element.need_to_update_content) {
+	            if (is_method(_element.onContentUpdate)) _element.onContentUpdate();
+	            _element.need_to_update_content = false;
+	        }
+	        
+	        // Update the grid if the area has changed
+	        var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
+	        var _grid_y1 = floor(_element.y / LUI_GRID_ACCURACY);
+	        var _grid_x2 = floor((_element.x + _element.width) / LUI_GRID_ACCURACY);
+	        var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
+	        if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1 || 
+	            _element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
+	            _element._gridUpdate();
+	            _element.grid_previous_x1 = _grid_x1;
+	            _element.grid_previous_y1 = _grid_y1;
+	            _element.grid_previous_x2 = _grid_x2;
+	            _element.grid_previous_y2 = _grid_y2;
+	        }
+	        
+	        // Execute custom step and recursive update
+	        if (is_method(_element.step)) _element.step();
+	        _element.update();
+	    }
+	}
+	
+	///@desc This function draws all nested elements
+	static render = function() {
+		
+		if !is_array(self.content) return;
+		
+		// Sort by depth
+		array_sort(self.content, function(a, b) { return a.z - b.z; });
+		
+		// Draw all elements
+		for (var i = 0, n = array_length(self.content); i < n; i++) {
+			// Get element
+			var _element = self.content[i];
+			// Restriction
+			if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
+			// Draw self
+			if is_method(_element.draw) _element.draw();
+			// Draw content
+			if _element.render_content_enabled {
+				if self.draw_content_in_cutted_region {
+					var _gpu_scissor = gpu_get_scissor();
+					var _x = self.x + self.render_region_offset.left;
+					var _y = self.y + self.render_region_offset.top;
+					var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
+					var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
+					gpu_set_scissor(_x, _y, _w, _h);
+				}
+				_element.render();
+				if self.draw_content_in_cutted_region {
+					gpu_set_scissor(_gpu_scissor);
+				}
+			}
+		}
+		if global.lui_debug_mode != 0 {
+			for (var i = 0, n = array_length(self.content); i < n; i++) {
+				//Get element
+				var _element = self.content[i];
+				if !_element.visible || !_element.is_visible_in_region continue;
+				_element._renderDebug(_element.x, _element.y);
+			}
+			
+		}
+	}
+	
+	///@desc Calculate all sizes and positions of elements
+	static flexCalculateLayout = function() {
+		if !is_undefined(self.main_ui) {
+            flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+            return true;
+        }
+        return false;
+    }
+		
+	///@desc Update position, size and z depth for specified flex node
+	static flexUpdate = function(_node) {
+	    var _pos = flexpanel_node_layout_get_position(_node, false);
+	    var _data = flexpanel_node_get_data(_node);
+	    var _element = _data.element;
+	    
+		// Check position change
+		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
+		// Check size change
+		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
+		
+	    _element.x = _pos.left;
+	    _element.y = _pos.top;
+	    _element.pos_x = _pos.left;
+	    _element.pos_y = _pos.top;
+	    _element.width = _pos.width;
+	    _element.height = _pos.height;
+	    if (_element.start_x == -1) {
+	        _element.start_x = _element.x;
+	    }
+	    if (_element.start_y == -1) {
+	        _element.start_y = _element.y;
+	    }
+		
+		// If position was changed, call onPositionUpdate
+		if (_position_changed && is_method(_element.onPositionUpdate)) {
+			_element.onPositionUpdate();
+		}
+		
+		// If size was changed, call onSizeUpdate
+		if (_size_changed && is_method(_element.onSizeUpdate)) {
+			_element.onSizeUpdate();
+		}
+	    
+	    _element._updateViewRegion();
+		
+		if _element.is_visible_in_region == false {
+			_element._gridDelete();
+			return;
+		}
+		
+	    var _children_count = flexpanel_node_get_num_children(_node);
+	    for (var i = 0; i < _children_count; i++) {
+	        var _child = flexpanel_node_get_child(_node, i);
+	        _element.flexUpdate(_child);
+	    }
+	}
+	 
+	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
+	static centerContent = function() {
+		self.setFlexJustifyContent(flexpanel_justify.center)
+			.setFlexAlignItems(flexpanel_align.center);
+		return self;
+	}
+	
+	///@desc Remove focus from element
+	static removeFocus = function() {
+		self.has_focus = false;
+		if is_method(self.onFocusRemove) self.onFocusRemove();
+		return self;
+	}
+	
+	///@desc Activate an element
+	static activate = function() {
+		self.deactivated = false;
+		if is_array(self.content)
+		array_foreach(self.content, function(_elm) {
+			_elm.activate();
+		});
+		return self;
+	}
+	
+	///@desc Deactivate an element
+	static deactivate = function() {
+		self.deactivated = true;
+		if is_array(self.content)
+		array_foreach(self.content, function(_elm) {
+			_elm.deactivate();
+		});
+		return self;
+	}
+	
+	///@desc Update position, size and z depth of all elements with depth reset
+	///@deprecated
+	static flexUpdateAll = function() {
+		if !is_undefined(main_ui) {
+			// Update all elements
+			flexUpdate(self.main_ui.flex_node);
+		}
+	}
+	
+	///@desc Update element value from binding variable
+	static updateFromBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _source_value = variable_instance_get(_source, _variable);
+			set(_source_value);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
+		}
+	}
+	
+	///@desc Update binding variable from element value
+	static updateToBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _element_value = get();
+			variable_instance_set(_source, _variable, _element_value);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
+		}
+	}
+	
+	///@desc Update main ui surface
+	static updateMainUiSurface = function() {
+		if is_undefined(self.main_ui) return self;
+		self.main_ui.needs_redraw_surface = true;
+		return self;
+	}
+	
+	///@desc Update main ui flex
+	static updateMainUiFlex = function() {
+		if is_undefined(self.main_ui) return self;
+		self.main_ui.needs_update_flex = true;
+		return self;
+	}
+	
+	///@desc Returns true if the mouse is hovered over this element
+	static isMouseHovered = function() {
+		return self.is_mouse_hovered;
+	}
+	
+	///@desc Returns true if the mouse is hovered over this element, excluding all elements above it
+	static isMouseHoveredExc = function() {
+		if !self.visible return false;
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+		var _element_x = self.x;
+		var _element_y = self.y;
+		var _on_this = point_in_rectangle(_mouse_x, _mouse_y, _element_x, _element_y, _element_x + self.width - 1, _element_y + self.height - 1);
+		return _on_this;
+	}
+	
+	///@desc Returns true if the mouse is hovered over this element and its parent
+	static isMouseHoveredParents = function() {
+		if is_undefined(self.parent) return true;
+		if self.isMouseHoveredExc() {
+			return self.parent.isMouseHoveredParents();
+		} else {
+			return false;
+		}
+	}
+	
+	///@desc Returns true if the specified rectangle is within the parent and its parents at the same time
+	///@deprecated
+	static isInsideParents = function(_x1, _y1, _x2, _y2) {
+		if is_undefined(self.parent) return true;
+		var _parent_x = self.parent.x;
+		var _parent_y = self.parent.y;
+		var _inside_parent = rectangle_in_rectangle(
+			_x1, _y1, _x2, _y2,
+			_parent_x, _parent_y, _parent_x + self.parent.width, _parent_y + self.parent.height
+		);
+		if _inside_parent {
+			return self.parent.isInsideParents(_x1, _y1, _x2, _y2);
+		} else {
+			return false;
+		}
+	}
+	
+	///@desc Returns true if the mouse is hovered over the descendants of this element
+	static isMouseHoveredChilds = function() {
+		if !self.visible return false;
+		var _mouse_x = device_mouse_x_to_gui(0);
+		var _mouse_y = device_mouse_y_to_gui(0);
+		var _on_element = false;
+		for (var i = 0, n = array_length(self.content); i < n; ++i) {
+		    var _element = self.content[i];
+			if _element.isMouseHoveredChilds() {
+				return true;
+			}
+		}
+		return self.isMouseHovered() ? true : false;
+	}
+	
+	///@desc Set visible to false and flex display to none
+	static hide = function() {
+		self.setVisible(false).setFlexDisplay(flexpanel_display.none);
+		return self;
+	}
+	
+	///@desc Set visible to true and flex display to flex
+	static show = function() {
+		self.setVisible(true).setFlexDisplay(flexpanel_display.flex);
+		return self;
+	}
+	
+	///@desc Destroys all nested elements
+	static destroyContent = function() {
+	    while (array_length(self.content) > 0) {
+	        var _element = array_pop(self.content);
+	        if (_element != undefined) {
+	            _element.destroy();
+	        }
+	    }
+	}
+	
+	///@desc Destroys self and all nested elements
+	self.destroy = function() {
+		// Double-Destroy protection
+		if (self.is_destroyed) {
+			return;
+		}
+		// Destroy all content
+		self.destroyContent();
+		// Remove focus from main ui
+		if !is_undefined(main_ui) && self == main_ui.element_in_focus {
+			self.main_ui.element_in_focus.removeFocus();
+			self.main_ui.element_in_focus = undefined;
+		}
+		self._deleteElementName();
+		self._gridCleanUp();
+		self.setNeedToUpdateContent(true);
+		self.updateMainUiFlex();
+		self.updateMainUiSurface();
+		// Delete flex_node
+		if (!is_undefined(self.flex_node)) {
+		    // For the rest of the elements to react to the disappearance of this
+			flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
+		    // Delete flex node from memory
+		    self.flex_node = flexpanel_delete_node(self.flex_node, true);
+		}
+		// Clean all arrays and structs
+		self.content = -1;
+		self.depth_array = -1;
+		delete self.style_overrides; self.style_overrides = undefined;
+		delete self.render_region_offset; self.render_region_offset = undefined;
+		delete self.view_region; self.view_region = undefined;
+		delete self.binding_variable; self.binding_variable = undefined;
+		// Call onDestroy
+		if is_method(self.onDestroy) {
+			self.onDestroy();
+		}
+		// Decrement global counter
+		global.lui_element_count--;
+		// Double-Destroy protection
+		self.is_destroyed = true;
 	}
 }
