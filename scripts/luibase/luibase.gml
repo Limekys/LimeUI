@@ -6,6 +6,7 @@ function LuiBase() constructor {
 	self.element_id = global.lui_element_count++;
 	self.name = LUI_AUTO;							//Unique element identifier
 	self.value = undefined;							//Value
+	self.data = undefined;							//Different user data for personal use
 	self.style = undefined;							//Style struct
 	self.style_overrides = {};						//Custom style for element
 	self.x = 0;										//Actual real calculated x position on the screen
@@ -44,7 +45,7 @@ function LuiBase() constructor {
 	self.need_to_update_content = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
-	self.binding_variable = -1;
+	self.binding_variable = undefined;
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
 	self.is_custom_style_setted = false;
@@ -161,6 +162,16 @@ function LuiBase() constructor {
 		return self.value;
 	}
 	
+	///@desc Get all data struct or specified value from it
+	///@param {string} _key variable name
+	static getData = function(_key = undefined) {
+		if is_undefined(_key) {
+			return self.data;
+		} else {
+			return self.data[$ _key];
+		}
+	}
+	
 	///@desc Get style
 	static getStyle = function() {
 		return self.style;
@@ -219,12 +230,21 @@ function LuiBase() constructor {
 	static set = function(_value) {
 		if self.value != _value {
 			self.value = _value;
-			if self.binding_variable != -1 {
+			if !is_undefined(self.binding_variable) {
 				self.updateToBinding();
 			}
 			if is_method(self.onValueUpdate) self.onValueUpdate();
 			self.updateMainUiSurface();
 		}
+		return self;
+	}
+	
+	///@desc Set data
+	///@param {string} _key variable name
+	///@param {any} _value value
+	static setData = function(_key, _value) {
+		if is_undefined(self.data) self.data = {};
+		self.data[$ _key] = _value;
 		return self;
 	}
 	
@@ -1370,7 +1390,7 @@ function LuiBase() constructor {
 	        }
 	        
 	        // Updating the bound variables
-	        if (_element.binding_variable != -1 && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
+	        if (!is_undefined(_element.binding_variable) && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
 	            _element.updateFromBinding();
 	        }
 	        
@@ -1693,6 +1713,7 @@ function LuiBase() constructor {
 		delete self.render_region_offset; self.render_region_offset = undefined;
 		delete self.view_region; self.view_region = undefined;
 		delete self.binding_variable; self.binding_variable = undefined;
+		delete self.data; self.data = undefined;
 		// Call onDestroy
 		if is_method(self.onDestroy) {
 			self.onDestroy();
