@@ -1283,17 +1283,30 @@ function LuiBase() constructor {
 	    }
 	    
 		// Take ranges from array
-		var _ranges = [];
-	    if is_array(elements[_elements_count - 1]) {
-	        if array_length(elements[_elements_count - 1]) != _elements_count - 1 {
+		var _ranges = elements[_elements_count - 1];
+	    if is_array(_ranges) {
+	        if array_length(_ranges) != _elements_count - 1 {
 	            if LUI_LOG_ERROR_MODE == 2 {
-	                print($"LIME_UI.WARNING: Incorrect number of set ratios for elements. Elements {_elements_count - 1}, and relations {array_length(elements[_elements_count - 1])}");
+					print($"LIME_UI.WARNING: Incorrect number of ratios for {self.name} ({instanceof(self)}). Elements {_elements_count - 1}, but ratios {array_length(_ranges)}.\nThe others will be filled in automatically and the extra ones will be cut off.");
 	            }
-				//???// Добавить возможность использования не подходящего количества соотношений, 
-					//		если больше чем надо, выбирать из первых доступных по порядку, 
-					//		если меньше оставшиеся подсчитывать соотношение из имеющихся
+				
+				var _current_length = array_length(_ranges);
+		        var _target_length = _elements_count - 1;
+		        
+		        if _current_length < _target_length {
+		            var _sum = 0;
+		            for (var i = 0; i < _current_length; i++) {
+		                _sum += _ranges[i];
+		            }
+		            var _remaining = 1 - _sum;
+		            var _num = _remaining / (_target_length - _current_length);
+		            
+		            while (array_length(_ranges) < _target_length) {
+		                array_push(_ranges, _num);
+		            }
+		        }
 	        }
-	        _ranges = elements[_elements_count - 1];
+			
 	        _elements_count--;
 	    }
 	    
@@ -1320,8 +1333,9 @@ function LuiBase() constructor {
 			// Flex setting up
 	        flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point);
 	        flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point);
-	        if array_length(_ranges) == _elements_count {
-	            flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
+	        if array_length(_ranges) > 0 && i+1 <= array_length(_ranges) {
+				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
+				flexpanel_node_style_set_flex_shrink(_element.flex_node, _ranges[i]);
 	        }
 	        flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
 			

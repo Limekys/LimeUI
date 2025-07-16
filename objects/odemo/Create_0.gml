@@ -140,7 +140,7 @@ my_panel.addContent([
 		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(oDemo, "tabs_target_x"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText(, , 131, , , "ProgressBar"), demo_loading, new LuiToggleSwitch(, , 64).setBinding(oDemo, "demo_loading_state"),
+		new LuiText(, , , , , "ProgressBar"), demo_loading, new LuiToggleSwitch(, , 64).setBinding(oDemo, "demo_loading_state"), [0.2, 0.8, 0]
 	]),
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
