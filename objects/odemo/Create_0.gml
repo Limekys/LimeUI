@@ -402,7 +402,7 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		sprite_car_1 = new LuiImage( , , , , , sCar);
+		sprite_car_1 = new LuiImage( , , , , , sCar).addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function() {print("press on image!")});
 		sprite_car_2 = new LuiImage( , , , , , sCar, , , , false);
 		sprite_car_3 = new LuiImage( , , , , , sHamburger);
 		sprite_car_4 = new LuiImage( , , , , , sHamburger, , , , false);

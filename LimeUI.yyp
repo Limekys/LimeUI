@@ -59,6 +59,7 @@
     {"id":{"name":"LuiCheckbox","path":"scripts/LuiCheckbox/LuiCheckbox.yy",},},
     {"id":{"name":"LuiComboBox","path":"scripts/LuiComboBox/LuiComboBox.yy",},},
     {"id":{"name":"LuiContainer","path":"scripts/LuiContainer/LuiContainer.yy",},},
+    {"id":{"name":"LuiEvents","path":"scripts/LuiEvents/LuiEvents.yy",},},
     {"id":{"name":"LuiImage","path":"scripts/LuiImage/LuiImage.yy",},},
     {"id":{"name":"LuiImageButton","path":"scripts/LuiImageButton/LuiImageButton.yy",},},
     {"id":{"name":"LuiInput","path":"scripts/LuiInput/LuiInput.yy",},},

@@ -155,6 +155,48 @@ function LuiBase() constructor {
 	///@desc Called once when element end dragging by mouse/finger
 	self.onDragEnd = undefined;
 	
+	// EVENT LISTENER SYSTEM
+	self.event_listeners = {};
+	
+	///@desc Add a callback for a specific event
+	///@param {string} _eventType The event type (e.g., "mouse_left_pressed", "value_changed")
+	///@param {function} _callback The callback function to execute
+	///@return {struct} The element itself for chaining
+	static addEventListener = function(_eventType, _callback) {
+		if (is_undefined(self.event_listeners[$ _eventType])) {
+			self.event_listeners[$ _eventType] = [];
+		}
+		array_push(self.event_listeners[$ _eventType], _callback);
+		return self;
+	}
+	
+	///@desc Remove a callback for a specific event //???// возможно удаление подписки на событие с колбэком не очень правильное (поиск по точному колбэку странное решение)
+	///@param {string} _eventType The event type
+	///@param {function} _callback The callback function to remove
+	///@return {struct} The element itself for chaining
+	static removeEventListener = function(_eventType, _callback) {
+		if (!is_undefined(self.event_listeners[$ _eventType])) {
+			var _listeners = self.event_listeners[$ _eventType];
+			for (var i = array_length(_listeners) - 1; i >= 0; i--) {
+				if (_listeners[i] == _callback) {
+					array_delete(_listeners, i, 1);
+				}
+			}
+		}
+		return self;
+	}
+
+	///@desc Call events from event listener
+	///@ignore
+	static _dispatchEvent = function(_eventType, _data = undefined) {
+		if (!is_undefined(self.event_listeners[$ _eventType])) {
+			var _listeners = self.event_listeners[$ _eventType];
+			for (var i = 0; i < array_length(_listeners); i++) {
+				_listeners[i](self, _data);
+			}
+		}
+	}
+	
 	// GETTERS
 	
 	///@desc Get value of this element
@@ -611,7 +653,10 @@ function LuiBase() constructor {
 	///@desc setFocus
 	static setFocus = function() {
 		self.has_focus = true;
-		if is_method(self.onFocusSet) self.onFocusSet();
+		if is_method(self.onFocusSet) {
+			self.onFocusSet();
+		}
+		self._dispatchEvent(LUI_EV_FOCUS_SET);
 		return self;
 	}
 	
@@ -1559,7 +1604,10 @@ function LuiBase() constructor {
 	///@desc Remove focus from element
 	static removeFocus = function() {
 		self.has_focus = false;
-		if is_method(self.onFocusRemove) self.onFocusRemove();
+		if is_method(self.onFocusRemove) {
+			self.onFocusRemove();
+		}
+		self._dispatchEvent(LUI_EV_FOCUS_REMOVE);
 		return self;
 	}
 	

@@ -32,6 +32,7 @@
     {"name":"LuiCheckbox","order":3,"path":"scripts/LuiCheckbox/LuiCheckbox.yy",},
     {"name":"LuiComboBox","order":5,"path":"scripts/LuiComboBox/LuiComboBox.yy",},
     {"name":"LuiContainer","order":4,"path":"scripts/LuiContainer/LuiContainer.yy",},
+    {"name":"LuiEvents","order":6,"path":"scripts/LuiEvents/LuiEvents.yy",},
     {"name":"LuiImage","order":12,"path":"scripts/LuiImage/LuiImage.yy",},
     {"name":"LuiImageButton","order":13,"path":"scripts/LuiImageButton/LuiImageButton.yy",},
     {"name":"LuiInput","order":16,"path":"scripts/LuiInput/LuiInput.yy",},

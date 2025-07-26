@@ -127,6 +127,7 @@ function LuiMain() : LuiBase() constructor {
 				if is_method(_previous_hovered_element.onMouseLeave) {
 					_previous_hovered_element.onMouseLeave();
 				}
+				_previous_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEAVE);
 				self.updateMainUiSurface();
 			}
 			
@@ -137,6 +138,7 @@ function LuiMain() : LuiBase() constructor {
 					if is_method(self.topmost_hovered_element.onMouseEnter) {
 						self.topmost_hovered_element.onMouseEnter();
 					}
+					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_ENTER);
 					self.updateMainUiSurface();
 				}
 				
@@ -146,6 +148,7 @@ function LuiMain() : LuiBase() constructor {
 					if is_method(self.topmost_hovered_element.onMouseLeftPressed) {
 						self.topmost_hovered_element.onMouseLeftPressed();
 					}
+					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT_PRESSED);
 					// Set focus on element
 					if self.element_in_focus != self.topmost_hovered_element {
 						// Remove focus from previous element
@@ -165,6 +168,7 @@ function LuiMain() : LuiBase() constructor {
 						if is_method(self.topmost_hovered_element.onDragStart) {
 							self.topmost_hovered_element.onDragStart();
 						}
+						self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAG_START);
 					}
 					self.updateMainUiSurface();
 				}
@@ -175,6 +179,7 @@ function LuiMain() : LuiBase() constructor {
 					if is_method(self.topmost_hovered_element.onMouseLeft) {
 						self.topmost_hovered_element.onMouseLeft();
 					}
+					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT);
 					// Handle dragging
 					if (self.topmost_hovered_element.can_drag && !is_undefined(self.dragging_element)) {
 						var _new_pos_x = clamp(_mouse_x - self.topmost_hovered_element.drag_offset_x, 0, self.width - self.topmost_hovered_element.width);
@@ -184,6 +189,7 @@ function LuiMain() : LuiBase() constructor {
 							if is_method(self.topmost_hovered_element.onDragging) {
 								self.topmost_hovered_element.onDragging();
 							}
+							self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAGGING);
 							self.updateMainUiSurface();
 						}
 					}
@@ -195,12 +201,14 @@ function LuiMain() : LuiBase() constructor {
 					if is_method(self.topmost_hovered_element.onMouseLeftReleased) {
 						self.topmost_hovered_element.onMouseLeftReleased();
 					}
+					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT_RELEASED);
 					// Clear dragging
 					if !is_undefined(self.dragging_element) {
 						self.dragging_element.is_dragging = false;
 						if is_method(self.dragging_element.onDragEnd) {
 							self.dragging_element.onDragEnd();
 						}
+						self.dragging_element._dispatchEvent(LUI_EV_DRAG_END);
 						self.dragging_element = undefined;
 					}
 					// Remove focus from element if clicking outside
@@ -210,8 +218,11 @@ function LuiMain() : LuiBase() constructor {
 					}
 					self.updateMainUiSurface();
 				}
-				if is_method(self.topmost_hovered_element.onMouseWheel) && (mouse_wheel_down() || mouse_wheel_up()) {
-					self.topmost_hovered_element.onMouseWheel();
+				if (mouse_wheel_down() || mouse_wheel_up()) {
+					if is_method(self.topmost_hovered_element.onMouseWheel) {
+						self.topmost_hovered_element.onMouseWheel();
+					}
+					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_WHEEL);
 				}
 			} else {
 				// Remove focus from element
@@ -231,11 +242,17 @@ function LuiMain() : LuiBase() constructor {
 		
 		// Keyboard events
 		if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) {
-			if is_method(self.element_in_focus.onKeyboardInput) && keyboard_check(vk_anykey) {
-				self.element_in_focus.onKeyboardInput();
+			if keyboard_check(vk_anykey) {
+				if is_method(self.element_in_focus.onKeyboardInput) {
+					self.element_in_focus.onKeyboardInput();
+				}
+				self.element_in_focus._dispatchEvent(LUI_EV_KEYBOARD_INPUT);
 			}
-			if is_method(self.element_in_focus.onKeyboardRelease) && keyboard_check_released(vk_anykey) {
-				self.element_in_focus.onKeyboardRelease();
+			if keyboard_check_released(vk_anykey) {
+				if is_method(self.element_in_focus.onKeyboardRelease) {
+					self.element_in_focus.onKeyboardRelease();
+				}
+				self.element_in_focus._dispatchEvent(LUI_EV_KEYBOARD_RELEASE);
 			}
 			if keyboard_check_pressed(vk_escape) { //???//
 				self.element_in_focus.removeFocus();
