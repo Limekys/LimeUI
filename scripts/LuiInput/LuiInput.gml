@@ -5,11 +5,11 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {String} start_text
-///@arg {String} hint
+///@arg {String} placeholder
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, start_text = "", hint = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, start_text = "", placeholder = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = string(start_text);
@@ -20,7 +20,7 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	_initElement();
 	setCallback(callback);
 	
-	self.hint = hint;
+	self.placeholder = placeholder;
 	self.is_password = is_password;
 	self.max_length = max_length;
 	self.is_pressed = false;
@@ -86,9 +86,9 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 			_display_text = string_repeat(self.style.input_password, string_length(self.value));
 		}
 		
-		//Hint
+		//Placeholder
 		if self.value == "" && !self.has_focus {
-			_display_text = self.hint;
+			_display_text = self.placeholder;
 			draw_set_alpha(0.5);
 			draw_set_color(self.style.color_text_hint);
 		}

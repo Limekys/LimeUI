@@ -4,11 +4,11 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-///@arg {String} hint
+///@arg {String} placeholder
 ///@arg {Function} callback
-function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
+function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "", callback = undefined) : LuiButton(x, y, width, height, name, placeholder, callback) constructor {
 	
-	self.hint = hint;
+	self.placeholder = placeholder;
 	self.items = undefined;
 	self.is_open = false;
 	self.combobox_panel = undefined;
@@ -141,7 +141,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		draw_set_valign(fa_middle);
 		if self.value == "" {
 			draw_set_alpha(0.5);
-			_drawTruncatedText(_txt_x, _txt_y, self.hint, _text_draw_width);
+			_drawTruncatedText(_txt_x, _txt_y, self.placeholder, _text_draw_width);
 		} else {
 			_drawTruncatedText(_txt_x, _txt_y, string(self.value), _text_draw_width);
 		}
