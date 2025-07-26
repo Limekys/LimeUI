@@ -3,10 +3,10 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {String} hint
 ///@arg {Function} callback
-function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
+function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, hint = "", callback = undefined) : LuiButton(x, y, width, height, name, hint, callback) constructor {
 	
 	self.hint = hint;
 	self.items = undefined;
@@ -141,9 +141,9 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		draw_set_valign(fa_middle);
 		if self.value == "" {
 			draw_set_alpha(0.5);
-			_luiDrawTextCutoff(_txt_x, _txt_y, self.hint, _text_draw_width);
+			_drawTruncatedText(_txt_x, _txt_y, self.hint, _text_draw_width);
 		} else {
-			_luiDrawTextCutoff(_txt_x, _txt_y, string(self.value), _text_draw_width);
+			_drawTruncatedText(_txt_x, _txt_y, string(self.value), _text_draw_width);
 		}
 		
 		//Border
@@ -186,10 +186,10 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 }
 
 ///@desc An element for a drop-down list.
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiComboBoxItem(name = LUI_AUTO, text = "item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
+function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
 	
 	self.combobox_parent = undefined;
 	
@@ -225,7 +225,7 @@ function LuiComboBoxItem(name = LUI_AUTO, text = "item", callback = undefined) :
 			draw_set_valign(fa_middle);
 			var _txt_x = self.x + self.width / 2;
 			var _txt_y = self.y + self.height / 2;
-			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
+			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		//Border

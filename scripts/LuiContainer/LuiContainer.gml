@@ -3,8 +3,8 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
-function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiBase() constructor {
+///@arg {String} name
+function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -21,8 +21,8 @@ function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
-function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiContainer(x, y, width, height, name) constructor {
+///@arg {String} name
+function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
@@ -34,8 +34,8 @@ function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO,
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
-function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiContainer(x, y, width, height, name) constructor {
+///@arg {String} name
+function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
@@ -47,8 +47,8 @@ function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
-function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO) : LuiContainer(x, y, width, height, name) constructor {
+///@arg {String} name
+function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.onCreate = function() {
 		self.setPositionType(flexpanel_position_type.absolute);

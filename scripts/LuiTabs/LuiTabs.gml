@@ -3,9 +3,9 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {Real} tab_height
-function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, tab_height = 32) : LuiBase() constructor {
+function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, tab_height = 32) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;
@@ -138,9 +138,9 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 }
 
 ///@desc Tab, used for LuiTabs.
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {String} text
-function LuiTab(name = LUI_AUTO, text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
+function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
 	
 	self.is_active = false;
 	self.tabs_parent = undefined;
@@ -229,7 +229,7 @@ function LuiTab(name = LUI_AUTO, text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, L
 			draw_set_valign(fa_middle);
 			var _txt_x = self.x + self.width / 2;
 			var _txt_y = self.y + self.height / 2;
-			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
+			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		// Border

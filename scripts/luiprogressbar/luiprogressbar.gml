@@ -3,13 +3,13 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {Real} value_min
 ///@arg {Real} value_max
 ///@arg {Bool} show_value
 ///@arg {Real} value
 ///@arg {Real} rounding
-function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, value_min = 0, value_max = 100, show_value = true, value = 0, rounding = 0) : LuiBase() constructor {
+function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value_min = 0, value_max = 100, show_value = true, value = 0, rounding = 0) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

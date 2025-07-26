@@ -4,7 +4,7 @@ function LuiBase() constructor {
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 		
 	self.element_id = global.lui_element_count++;
-	self.name = LUI_AUTO;							//Unique element identifier
+	self.name = LUI_AUTO_NAME;						//Unique element identifier
 	self.value = undefined;							//Value
 	self.data = undefined;							//Different user data for personal use
 	self.style = undefined;							//Style struct
@@ -162,7 +162,7 @@ function LuiBase() constructor {
 		return self.value;
 	}
 	
-	///@desc Get all data struct or specified value from it
+	///@desc Get data struct or specified value from it
 	///@param {string} _key variable name
 	static getData = function(_key = undefined) {
 		if is_undefined(_key) {
@@ -197,33 +197,6 @@ function LuiBase() constructor {
 		return self.getContainer().content;
 	}
 	
-	///@desc Returns topmost element on UI //???//
-	static getTopmostElement = function(_mouse_x, _mouse_y) {
-	    var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
-	    var _array = self.main_ui._screen_grid[$ _key];
-		
-	    if (is_undefined(_array) || array_length(_array) == 0) {
-	        return undefined;
-	    }
-		
-	    // Filter elements under cursor
-	    var _filtered = array_filter(_array, function(_elm) {
-	        return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
-	    });
-		
-	    if (array_length(_filtered) == 0) {
-	        return undefined;
-	    }
-		
-	    // Sort by depth_array
-	    array_sort(_filtered, function(elm1, elm2) {
-	        return compareDepthArrays(elm2.depth_array, elm1.depth_array);
-	    });
-		
-		// Return top front element
-	    return _filtered[0];
-	}
-	
 	// SETTERS
 	
 	///@desc Set value
@@ -231,7 +204,7 @@ function LuiBase() constructor {
 		if self.value != _value {
 			self.value = _value;
 			if !is_undefined(self.binding_variable) {
-				self.updateToBinding();
+				self._updateToBinding();
 			}
 			if is_method(self.onValueUpdate) self.onValueUpdate();
 			self.updateMainUiSurface();
@@ -513,8 +486,7 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel padding
 	///@arg {real} _padding
-	///@arg {constant.flexpanel_edge} [_edge]
-	static setPadding = function(_padding, _edge = flexpanel_edge.all_edges) {
+	static setPadding = function(_padding) {
 		self.style_overrides.padding = _padding;
 		if (!is_undefined(self.main_ui)) {
 	        self._applyStyles();
@@ -525,8 +497,7 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel gap
 	///@arg {real} _gap
-	///@arg {constant.flexpanel_gutter} [_gutter]
-	static setGap = function(_gap, _gutter = flexpanel_gutter.all_gutters) {
+	static setGap = function(_gap) {
 		self.style_overrides.gap = _gap;
 		if (!is_undefined(self.main_ui)) {
 	        self._applyStyles();
@@ -537,8 +508,7 @@ function LuiBase() constructor {
 	
 	///@desc Set flexpanel border
 	///@arg {real} _border
-	///@arg {constant.flexpanel_edge} [_edge]
-	static setBorder = function(_border, _edge = flexpanel_edge.all_edges) {
+	static setBorder = function(_border) {
 		self.style_overrides.border = _border;
 		if (!is_undefined(self.main_ui)) {
 	        self._applyStyles();
@@ -692,7 +662,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Set callback function
+	///@desc Set callback function //???// возможно будет упразднена из-за будущей событийной системы
 	static setCallback = function(callback) {
 		if callback == undefined {
 			if LUI_DEBUG_CALLBACK {
@@ -708,9 +678,10 @@ function LuiBase() constructor {
 	
 	///@desc Set flag to update content
 	static setNeedToUpdateContent = function(_update_parent) {
-		if is_undefined(self.parent) return true;
+		if is_undefined(self.parent) return self;
 		self.need_to_update_content = true;
 		self.parent.setNeedToUpdateContent(_update_parent);
+		return self;
 	}
 	
 	///@desc Set element visibility (only visibility not flex display)
@@ -726,7 +697,7 @@ function LuiBase() constructor {
 					if is_method(self.onHide) self.onHide();
 				}
 				// Grid update
-				self._gridUpdate();
+				self._updateScreenGrid();
 				// Update childs
 				for (var i = array_length(self.content) - 1; i >= 0; i--) {
 					self.content[i].setVisible(self.visible);
@@ -745,7 +716,7 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Set offset region for render content
-	///@arg {struct} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
+	///@arg {struct, array} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
 	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
 		if is_struct(_region) {
 			render_region_offset = _region;
@@ -809,43 +780,7 @@ function LuiBase() constructor {
 		return self;
 	}
 	
-	///@desc Compare two depth arrays
-	function compareDepthArrays(a, b) {
-	    var len_a = array_length(a);
-	    var len_b = array_length(b);
-	    var min_len = min(len_a, len_b);
-	    
-	    for (var i = 0; i < min_len; i++) {
-	        if (a[i] > b[i]) return 1;
-	        if (a[i] < b[i]) return -1;
-	    }
-	    
-	    if (len_a > len_b) return 1;
-	    if (len_a < len_b) return -1;
-	    return 0;
-	}
-	
-	/// @desc Recalculates depth_array for the element and all its children
-	static recalculateDepthArray = function() {
-	    // Rebuild depth_array: parent's depth_array + current z
-	    if (self.parent != undefined) {
-	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
-	    } else {
-	        self.depth_array = [self.z];
-	    }
-	    
-	    // Update main UI surface
-	    self.updateMainUiSurface();
-	    
-	    // Recursively update depth_array for all children
-	    for (var i = 0, n = array_length(self.content); i < n; i++) {
-	        self.content[i].recalculateDepthArray();
-	    }
-	    
-	    return self;
-	}
-	
-	// PRIVATE SYSTEM
+	// PRIVATE SYSTEM - Internal methods, not for public use
 	
 	///@desc Init element variables
 	///@ignore
@@ -917,6 +852,7 @@ function LuiBase() constructor {
 	/// @desc Renders debug rectangles for element boundaries and view region
 	/// @param {real} _x X-coordinate for rendering (default 0)
 	/// @param {real} _y Y-coordinate for rendering (default 0)
+	/// @ignore
 	static _renderDebugRectangles = function(_x = 0, _y = 0) {
 	    // Remember previous colors
 	    var _prev_color = draw_get_color();
@@ -950,6 +886,7 @@ function LuiBase() constructor {
 	/// @desc Renders debug text information for the element
 	/// @param {real} _x X-coordinate for rendering (default 0)
 	/// @param {real} _y Y-coordinate for rendering (default 0)
+	/// @ignore
 	static _renderDebugInfo = function(_x = 0, _y = 0) {
 	    // Set font if defined
 	    if !is_undefined(self.style.font_debug) {
@@ -970,7 +907,7 @@ function LuiBase() constructor {
 	    }
 	    
 	    // Draw debug text
-		_luiDrawTextDebug(_x, _y, 
+		_drawDebugText(_x, _y, 
 			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
 			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
@@ -990,6 +927,7 @@ function LuiBase() constructor {
 	/// @desc Renders debug info for the element (rectangles and text)
 	/// @param {real} _x X-coordinate for rendering (default 0)
 	/// @param {real} _y Y-coordinate for rendering (default 0)
+	/// @ignore
 	static _renderDebug = function(_x = 0, _y = 0) {
 	    // Draw rectangles
 	    self._renderDebugRectangles(_x, _y);
@@ -1001,7 +939,7 @@ function LuiBase() constructor {
 	
 	///@desc Draw debug text with rectangle
 	///@ignore
-	static _luiDrawTextDebug = function(_x, _y, text) {
+	static _drawDebugText = function(_x, _y, text) {
 		var _text_width = string_width(text);
 		var _text_height = string_height(text);
 		_x = clamp(_x, 0, display_get_gui_width() - _text_width);
@@ -1017,7 +955,7 @@ function LuiBase() constructor {
 	///@desc Returns text fit to width
 	///@return {string}
 	///@ignore
-	static _luiGetTextCutoff = function(_string, _width = infinity) {
+	static _truncateTextToFitWidth = function(_string, _width = infinity) {
 		// Calculate initial text width
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
@@ -1059,7 +997,7 @@ function LuiBase() constructor {
 	
 	///@desc Draw text fit to width
 	///@ignore
-	static _luiDrawTextCutoff = function(_x, _y, _string, _width = infinity) {
+	static _drawTruncatedText = function(_x, _y, _string, _width = infinity) {
 		// Calculate initial text width
 		var _str_to_draw = _string;
 		var _str_width = string_width(_str_to_draw);
@@ -1101,13 +1039,13 @@ function LuiBase() constructor {
 	
 	///@ignore
 	static _registerElementName = function() {
-		if !variable_struct_exists(self.main_ui.element_names, self.name) && self.name != LUI_AUTO {
+		if !variable_struct_exists(self.main_ui.element_names, self.name) && self.name != LUI_AUTO_NAME {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 && self.name != LUI_AUTO {
+			if LUI_LOG_ERROR_MODE == 2 && self.name != LUI_AUTO_NAME {
 				print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
 			}
-			if self.name == LUI_AUTO {
+			if self.name == LUI_AUTO_NAME {
 				self.name = "";
 			}
 			var _new_name = self.name + "_" + string(self.element_id) + "_" + md5_string_utf8(self.name + string(self.element_id));
@@ -1115,6 +1053,7 @@ function LuiBase() constructor {
 			self.name = _new_name;
 		}
 	}
+	
 	///@ignore
 	static _deleteElementName = function() {
 		if !is_undefined(self.main_ui) && self != self.main_ui {
@@ -1128,7 +1067,7 @@ function LuiBase() constructor {
 	
 	///@desc Add element in system ui grid
 	///@ignore
-	static _gridAdd = function() {
+	static _addToScreenGrid = function() {
 		if (!self.is_visible_in_region || !self.visible) {
 			return false;
 		}
@@ -1155,7 +1094,7 @@ function LuiBase() constructor {
 	
 	///@desc Delete element from system ui grid
 	///@ignore
-	static _gridDelete = function() {
+	static _deleteFromScreenGrid = function() {
 	    var _grid_location_length = array_length(self._grid_location);
 	    for (var i = 0; i < _grid_location_length; i++) {
 	        var _key = self._grid_location[i];
@@ -1172,15 +1111,15 @@ function LuiBase() constructor {
 	
 	///@desc Update element in system ui grid
 	///@ignore
-	static _gridUpdate = function() {
-		self._gridDelete();
-		self._gridAdd();
+	static _updateScreenGrid = function() {
+		self._deleteFromScreenGrid();
+		self._addToScreenGrid();
 	}
 	
 	///@desc Delete element from grid and clean up array
 	///@ignore
-	static _gridCleanUp = function() {
-		self._gridDelete();
+	static _cleanupScreenGrid = function() {
+		self._deleteFromScreenGrid();
 		self._grid_location = -1;
 	}
 	
@@ -1223,11 +1162,12 @@ function LuiBase() constructor {
 		
 		// Update grid if visibility changed
 		if (_was_visible != self.is_visible_in_region) {
-			self._gridUpdate();
+			self._updateScreenGrid();
 		}
 	}
 	
-	///@ignore Apply local and inherited styles to the flex node
+	///@desc Apply local and inherited styles to the flex node
+	///@ignore
 	static _applyStyles = function() {
 	    if (is_undefined(self.style)) return;
 		
@@ -1261,6 +1201,138 @@ function LuiBase() constructor {
 	                break;
 	        }
 	    }
+	}
+	
+	///@desc Calculate all sizes and positions of elements
+	///@ignore
+	static _calculateLayout = function() {
+		if !is_undefined(self.main_ui) {
+            flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+            return true;
+        }
+        return false;
+    }
+		
+	///@desc Update position, size and z depth for specified flex node
+	///@ignore
+	static _updateFlex = function(_node) {
+	    var _pos = flexpanel_node_layout_get_position(_node, false);
+	    var _data = flexpanel_node_get_data(_node);
+	    var _element = _data.element;
+	    
+		// Check position change
+		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
+		// Check size change
+		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
+		
+	    _element.x = _pos.left;
+	    _element.y = _pos.top;
+	    _element.pos_x = _pos.left;
+	    _element.pos_y = _pos.top;
+	    _element.width = _pos.width;
+	    _element.height = _pos.height;
+	    if (_element.start_x == -1) {
+	        _element.start_x = _element.x;
+	    }
+	    if (_element.start_y == -1) {
+	        _element.start_y = _element.y;
+	    }
+		
+		// If position was changed, call onPositionUpdate
+		if (_position_changed && is_method(_element.onPositionUpdate)) {
+			_element.onPositionUpdate();
+		}
+		
+		// If size was changed, call onSizeUpdate
+		if (_size_changed && is_method(_element.onSizeUpdate)) {
+			_element.onSizeUpdate();
+		}
+	    
+	    _element._updateViewRegion();
+		
+		if _element.is_visible_in_region == false {
+			_element._deleteFromScreenGrid();
+			return;
+		}
+		
+	    var _children_count = flexpanel_node_get_num_children(_node);
+	    for (var i = 0; i < _children_count; i++) {
+	        var _child = flexpanel_node_get_child(_node, i);
+	        _element._updateFlex(_child);
+	    }
+	}
+	
+	///@desc Update position, size and z depth of all elements with depth reset
+	///@deprecated
+	static flexUpdateAll = function() {
+		if !is_undefined(main_ui) {
+			// Update all elements
+			_updateFlex(self.main_ui.flex_node);
+		}
+	}
+	
+	///@desc Update element value from binding variable
+	///@ignore
+	static _updateFromBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _source_value = variable_instance_get(_source, _variable);
+			set(_source_value);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
+		}
+	}
+	
+	///@desc Update binding variable from element value
+	///@ignore
+	static _updateToBinding = function() {
+		var _source = binding_variable.source;
+		var _variable = binding_variable.variable;
+		if (_source != noone && variable_instance_exists(_source, _variable)) {
+			var _element_value = get();
+			variable_instance_set(_source, _variable, _element_value);
+		} else {
+			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
+		}
+	}
+	
+	///@desc Compare two depth arrays
+	///@ignore
+	function _compareDepthArrays(a, b) {
+	    var len_a = array_length(a);
+	    var len_b = array_length(b);
+	    var min_len = min(len_a, len_b);
+	    
+	    for (var i = 0; i < min_len; i++) {
+	        if (a[i] > b[i]) return 1;
+	        if (a[i] < b[i]) return -1;
+	    }
+	    
+	    if (len_a > len_b) return 1;
+	    if (len_a < len_b) return -1;
+	    return 0;
+	}
+	
+	/// @desc Recalculates depth_array for the element and all its children
+	///@ignore
+	static _recalculateDepthArray = function() {
+	    // Rebuild depth_array: parent's depth_array + current z
+	    if (self.parent != undefined) {
+	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+	    } else {
+	        self.depth_array = [self.z];
+	    }
+	    
+	    // Update main UI surface
+	    self.updateMainUiSurface();
+	    
+	    // Recursively update depth_array for all children
+	    for (var i = 0, n = array_length(self.content); i < n; i++) {
+	        self.content[i]._recalculateDepthArray();
+	    }
+	    
+	    return self;
 	}
 	
 	// SYSTEM
@@ -1405,7 +1477,7 @@ function LuiBase() constructor {
 	        
 	        // Updating the bound variables
 	        if (!is_undefined(_element.binding_variable) && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
-	            _element.updateFromBinding();
+	            _element._updateFromBinding();
 	        }
 	        
 	        // Update content if required
@@ -1421,7 +1493,7 @@ function LuiBase() constructor {
 	        var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
 	        if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1 || 
 	            _element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
-	            _element._gridUpdate();
+	            _element._updateScreenGrid();
 	            _element.grid_previous_x1 = _grid_x1;
 	            _element.grid_previous_y1 = _grid_y1;
 	            _element.grid_previous_x2 = _grid_x2;
@@ -1476,63 +1548,6 @@ function LuiBase() constructor {
 			
 		}
 	}
-	
-	///@desc Calculate all sizes and positions of elements
-	static flexCalculateLayout = function() {
-		if !is_undefined(self.main_ui) {
-            flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-            return true;
-        }
-        return false;
-    }
-		
-	///@desc Update position, size and z depth for specified flex node
-	static flexUpdate = function(_node) {
-	    var _pos = flexpanel_node_layout_get_position(_node, false);
-	    var _data = flexpanel_node_get_data(_node);
-	    var _element = _data.element;
-	    
-		// Check position change
-		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
-		// Check size change
-		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
-		
-	    _element.x = _pos.left;
-	    _element.y = _pos.top;
-	    _element.pos_x = _pos.left;
-	    _element.pos_y = _pos.top;
-	    _element.width = _pos.width;
-	    _element.height = _pos.height;
-	    if (_element.start_x == -1) {
-	        _element.start_x = _element.x;
-	    }
-	    if (_element.start_y == -1) {
-	        _element.start_y = _element.y;
-	    }
-		
-		// If position was changed, call onPositionUpdate
-		if (_position_changed && is_method(_element.onPositionUpdate)) {
-			_element.onPositionUpdate();
-		}
-		
-		// If size was changed, call onSizeUpdate
-		if (_size_changed && is_method(_element.onSizeUpdate)) {
-			_element.onSizeUpdate();
-		}
-	    
-	    _element._updateViewRegion();
-		
-		if _element.is_visible_in_region == false {
-			_element._gridDelete();
-			return;
-		}
-		
-	    var _children_count = flexpanel_node_get_num_children(_node);
-	    for (var i = 0; i < _children_count; i++) {
-	        var _child = flexpanel_node_get_child(_node, i);
-	        _element.flexUpdate(_child);
-	    }
-	}
 	 
 	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
 	static centerContent = function() {
@@ -1566,39 +1581,6 @@ function LuiBase() constructor {
 			_elm.deactivate();
 		});
 		return self;
-	}
-	
-	///@desc Update position, size and z depth of all elements with depth reset
-	///@deprecated
-	static flexUpdateAll = function() {
-		if !is_undefined(main_ui) {
-			// Update all elements
-			flexUpdate(self.main_ui.flex_node);
-		}
-	}
-	
-	///@desc Update element value from binding variable
-	static updateFromBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _source_value = variable_instance_get(_source, _variable);
-			set(_source_value);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
-		}
-	}
-	
-	///@desc Update binding variable from element value
-	static updateToBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _element_value = get();
-			variable_instance_set(_source, _variable, _element_value);
-		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
-		}
 	}
 	
 	///@desc Update main ui surface
@@ -1709,7 +1691,7 @@ function LuiBase() constructor {
 			self.main_ui.element_in_focus = undefined;
 		}
 		self._deleteElementName();
-		self._gridCleanUp();
+		self._cleanupScreenGrid();
 		self.setNeedToUpdateContent(true);
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();

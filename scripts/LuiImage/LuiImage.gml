@@ -3,13 +3,13 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {Asset.GMSprite} sprite
 ///@arg {Real} subimg
 ///@arg {Real} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

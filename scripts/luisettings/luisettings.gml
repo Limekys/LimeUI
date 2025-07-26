@@ -1,11 +1,12 @@
 //Info
-#macro LIMEUI_VERSION "2025.07.16"
+#macro LIMEUI_VERSION "2025.07.26"
 
 //Globals
 global.lui_debug_mode =	0;						// Enable/Disable debug mode
 global.lui_debug_render_grid = false;			// Enable/Disable render of debug grid
 
 //System (do not change!)
+#macro LUI_AUTO_NAME					""		// Auto element name
 #macro LUI_AUTO							-1		// Auto position/size of an element
 #macro LUI_AUTO_NO_PADDING				-2		// (WIP)//???//
 #macro LUI_STRETCH						-3		// (WIP)//???//

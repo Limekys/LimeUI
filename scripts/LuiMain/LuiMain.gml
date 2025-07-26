@@ -18,6 +18,7 @@ function LuiMain() : LuiBase() constructor {
 	self.needs_update_flex = true;
 	self.current_debug_mode = 0;
 	self.active_animations = [];
+	self._screen_grid = {};
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -27,8 +28,8 @@ function LuiMain() : LuiBase() constructor {
 	_data.element = self;
 	
 	// Init Screen grid
-	self._screen_grid = {};
-	static recalculateScreenGrid = function() {
+	///@ignore
+	static _recalculateScreenGrid = function() {
 		for (var _x = 0, _width = ceil(display_get_gui_width() / LUI_GRID_SIZE); _x < _width; ++_x) {
 			for (var _y = 0, _height = ceil(display_get_gui_height() / LUI_GRID_SIZE); _y < _height; ++_y) {
 				var _key = string(_x) + "_" + string(_y);
@@ -39,11 +40,11 @@ function LuiMain() : LuiBase() constructor {
 		}
 		return self;
 	}
-	self.recalculateScreenGrid();
+	self._recalculateScreenGrid();
 	
 	// Recalculate grid size on size change
 	self.onSizeUpdate = function() {
-		self.recalculateScreenGrid();
+		self._recalculateScreenGrid();
 	}
 	
 	// SYSTEM
@@ -116,7 +117,7 @@ function LuiMain() : LuiBase() constructor {
 			if (!is_undefined(self.dragging_element) && mouse_check_button(mb_left)) {
 				self.topmost_hovered_element = self.dragging_element;
 			} else {
-				self.topmost_hovered_element = self.getTopmostElement(_mouse_x, _mouse_y);
+				self.topmost_hovered_element = self._getTopmostElement(_mouse_x, _mouse_y);
 			}
 			
 			// Update mouse hover state
@@ -268,8 +269,8 @@ function LuiMain() : LuiBase() constructor {
 		// Update layout and all flex data
 		if self.needs_update_flex {
 			self.needs_update_flex = false;
-			self.flexCalculateLayout();
-			self.flexUpdate(self.flex_node);
+			self._calculateLayout();
+			self._updateFlex(self.flex_node);
 		}
 	}
 	
@@ -385,6 +386,34 @@ function LuiMain() : LuiBase() constructor {
 	}
 	
 	// PRIVATE
+	
+	///@desc Returns topmost element on UI
+	///@ignore
+	static _getTopmostElement = function(_mouse_x, _mouse_y) {
+	    var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
+	    var _array = self.main_ui._screen_grid[$ _key];
+		
+	    if (is_undefined(_array) || array_length(_array) == 0) {
+	        return undefined;
+	    }
+		
+	    // Filter elements under cursor
+	    var _filtered = array_filter(_array, function(_elm) {
+	        return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
+	    });
+		
+	    if (array_length(_filtered) == 0) {
+	        return undefined;
+	    }
+		
+	    // Sort by depth_array
+	    array_sort(_filtered, function(elm1, elm2) {
+	        return _compareDepthArrays(elm2.depth_array, elm1.depth_array);
+	    });
+		
+		// Return top front element
+	    return _filtered[0];
+	}
 	
 	///@desc Draw debug grid info
 	///@ignore

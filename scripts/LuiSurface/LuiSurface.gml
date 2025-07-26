@@ -3,12 +3,12 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {id.surface} surface
 ///@arg {Real} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, surface = undefined, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
+function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, surface = undefined, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
 	
 	self.name = name;
 	self.pos_x = x;

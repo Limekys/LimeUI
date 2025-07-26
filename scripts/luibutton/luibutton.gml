@@ -3,10 +3,10 @@
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
-///@arg {String,real} name
+///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO, text = "", callback = undefined) : LuiBase() constructor {
+function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
 	self.text = text;
@@ -114,7 +114,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_set_valign(fa_middle);
 			var _txt_x = self.x + self.width / 2;
 			var _txt_y = self.y + self.height / 2;
-			_luiDrawTextCutoff(_txt_x, _txt_y, self.text, self.width);
+			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
 		}
 		
 		// Border
