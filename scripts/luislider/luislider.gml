@@ -9,38 +9,12 @@
 ///@arg {Real} value
 ///@arg {Real} rounding
 ///@arg {Function} callback
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value_min = 0, value_max = 100, value = 0, rounding = 0, callback = undefined) : LuiBase() constructor {
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value_min = 0, value_max = 100, value = 0, rounding = 0, callback = undefined)
+ : LuiProgressBar(x, y, width, height, name, value_min, value_max, true, value, rounding) constructor {
 	
-	self.name = name;
-	self.pos_x = x;
-	self.pos_y = y;
-	self.width = width;
-	self.height = height;
-	_initElement();
 	setCallback(callback);
 	
-	self.value = value;
-	self.value_min = min(value_min, value_max);
-	self.value_max = max(value_min, value_max);
-	self.rounding = rounding;
 	self.dragging = false;
-	
-	///@ignore
-	static _calcValue = function(_value) {
-		var _new_value = 0;
-		if self.rounding > 0 {
-			_new_value = round(_value / (self.rounding)) * (self.rounding);
-		} else {
-			_new_value = _value;
-		}
-		return clamp(_new_value, self.value_min, self.value_max);
-	}
-	
-	//???// inherit from LuiProgressBar ?
-	static setRounding = function(rounding) {
-		self.rounding = rounding;
-		return self;
-	}
 	
 	self.draw = function() {
 		// Value
@@ -127,10 +101,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			}
 		}
 	}
-	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
-		_element.value = _calcValue(_element.value);
-	});
 	
 	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
 		_element.dragging = true;
