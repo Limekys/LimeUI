@@ -82,12 +82,4 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 			}
 		}
 	}
-	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
-		if !is_undefined(_element.style.font_default) {
-			draw_set_font(_element.style.font_default);
-		}
-		_element.min_width = _element.auto_width == true ? string_width(_element.value) : _element.width; //???// is it working ?
-		_element.height = _element.auto_height == true ? max(_element.min_height, string_height(_element.value)) : _element.height;
-	});
 }

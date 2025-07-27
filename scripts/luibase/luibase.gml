@@ -975,6 +975,7 @@ function LuiBase() constructor {
 			"name: " + string(self.name) + "\n" +
 			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
 			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
+			"minw: " + string(self.min_width) + " minh: " + string(self.min_height) + "maxw: " + string(self.max_width) + " maxh: " + string(self.max_height) + "\n" +
 			"v: " + string(self.value) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
@@ -1000,7 +1001,7 @@ function LuiBase() constructor {
 	    self._renderDebugInfo(_x, _y);
 	}
 	
-	///@desc Draw debug text with rectangle
+	///@desc Draw debug text
 	///@ignore
 	static _drawDebugText = function(_x, _y, text) {
 		var _text_width = string_width(text);
