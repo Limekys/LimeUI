@@ -27,16 +27,34 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.sprite_real_height = 0;
 	self.aspect = 1;
 	
+	///@desc Set sprite
+	static setSprite = function(_sprite) {
+		self.set(_sprite);
+		return self;
+	}
+	
+	///@desc Set subimg of sprite
+	static setSubimg = function(_subimg) {
+		self.subimg = _subimg;
+		return self;
+	}
+	
 	///@desc Set blend color for sprite
 	static setColor = function(color_blend) {
 		self.color_blend = color_blend;
+		return self;
 	}
 	
-	///@desc Set sprite
-	static setSprite = function(_sprite) {
-		self.value = _sprite;
-		self._calcSpriteSize();
-		return self
+	///@desc Set alpha for sprite
+	static setAlpha = function(_alpha) {
+		self.alpha = _alpha;
+		return self;
+	}
+	
+	///@desc Set maintain aspect of sprite
+	static setMaintainAspect = function(_maintain_aspect) {
+		self.maintain_aspect = _maintain_aspect;
+		return self;
 	}
 	
 	///@ignore
@@ -76,6 +94,10 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	}
 	
 	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element._calcSpriteSize();
+	});
+	
+	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element._calcSpriteSize();
 	});
 }

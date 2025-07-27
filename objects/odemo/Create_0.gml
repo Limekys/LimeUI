@@ -402,13 +402,13 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		sprite_car_1 = new LuiImage( , , , , , sCar).addEventListener(LUI_EV_CLICK, function() {print("click on image!")});
-		sprite_car_2 = new LuiImage( , , , , , sCar, , , , false);
-		sprite_car_3 = new LuiImage( , , , , , sHamburger);
-		sprite_car_4 = new LuiImage( , , , , , sHamburger, , , , false);
+		spr_car_1 = new LuiImage( , , , , , sCar).addEventListener(LUI_EV_CLICK, function(_element) {print("Clicked on image!")});
+		spr_car_2 = new LuiImage( , , , , , sCar, , , , false);
+		spr_car_3 = new LuiImage( , , , , , sHamburger);
+		spr_car_4 = new LuiImage( , , , , , sHamburger, , , , false);
 		tab_sprites.addContent([
 			new LuiRow( , , , 500).addContent([
-				sprite_car_1, sprite_car_2, sprite_car_3, sprite_car_4
+				spr_car_1, spr_car_2, spr_car_3, spr_car_4
 			])
 		]);
 	
