@@ -201,6 +201,7 @@ function LuiBase() constructor {
 	// GETTERS
 	
 	///@desc Get value of this element
+	///@return {any} Value depends on element
 	static get = function() {
 		return self.value;
 	}

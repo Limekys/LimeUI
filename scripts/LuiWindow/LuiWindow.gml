@@ -32,16 +32,15 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
     }
     
-	self.onCreate = function() { 
-		
-		self.setPositionType(flexpanel_position_type.absolute).setGap(0).setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element.setPositionType(flexpanel_position_type.absolute).setGap(0).setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
 		
 		// Add title text
-	    self.addContent(new LuiText(0, 0, LUI_AUTO, LUI_AUTO, , self.title).setMouseIgnore(true));
+	    _element.addContent(new LuiText(0, 0, LUI_AUTO, LUI_AUTO, , _element.title).setMouseIgnore(true));
 	    
 	    // Add buttons (e.g., close, minimize)
-	    var _button_size = self.height;
-		var _close_button = new LuiButton(, , _button_size, _button_size, , "X").setColor(self.style.color_semantic_error);
+	    var _button_size = _element.height;
+		var _close_button = new LuiButton(, , _button_size, _button_size, , "X").setColor(_element.style.color_semantic_error);
 	    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "_");
 	    
 		_close_button.setCallback(function() {
@@ -52,21 +51,19 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			self.parent.parent_window.toggleWindow();
 		});
 		
-		self.addContent([_minimize_button, _close_button]);
-	}
+		_element.addContent([_minimize_button, _close_button]);
+	});
 	
-	// Mouse events for dragging
-    self.onMouseLeftPressed = function() {
-		self.parent_window.bringToFront();
-		self.bringToFront();
-    }
+	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+		_element.parent_window.bringToFront();
+		_element.bringToFront();
+	});
 	
-    // Dragging window
-    self.onDragging = function(_mouse_x, _mouse_y) {
-        if (!is_undefined(self.parent_window)) {
-            self.parent_window.setPosition(self.pos_x, self.pos_y + self.height);
+	self.addEventListener(LUI_EV_DRAGGING, function(_element) {
+		if (!is_undefined(_element.parent_window)) {
+            _element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
         }
-    }
+	});
 }
 
 ///@desc A draggable window with a header, similar to Windows windows
@@ -119,21 +116,20 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
     }
 	
-	self.onCreate = function() {
-		self.setPositionType(flexpanel_position_type.absolute);
-		self._initHeader();
-		self.setPosition(, self.window_header.pos_y + self.header_height);
-	}
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element.setPositionType(flexpanel_position_type.absolute);
+		_element._initHeader();
+		_element.setPosition(, _element.window_header.pos_y + _element.header_height);
+	});
 	
-	// Mouse events for dragging
-    self.onMouseLeftPressed = function() {
-		self.bringToFront();
-		self.window_header.bringToFront();
-    }
+	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+		_element.bringToFront();
+		_element.window_header.bringToFront();
+	});
 	
-	self.onDestroy = function() {
-		if !is_undefined(self.window_header) {
-			self.window_header.destroy();
+	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+		if !is_undefined(_element.window_header) {
+			_element.window_header.destroy();
 		}
-	}
+	});
 }

@@ -73,6 +73,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
     }
 	
 	///@desc Add items //???//
+	///@arg {struct,array} _items Element or array of elements
 	static addItems = function(_items) {
         self.items = _items;
         return self;

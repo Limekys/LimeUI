@@ -128,25 +128,25 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.onCreate = function() {
-		self.value = _calcValue(self.value);
-	}
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element.value = _calcValue(_element.value);
+	});
 	
-	self.onMouseLeftPressed = function() {
-		self.dragging = true;
-	}
+	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+		_element.dragging = true;
+	});
 	
-	self.onMouseWheel = function() {
-		var _wheel_step = max(self.rounding, (self.value_max - self.value_min) * 0.02);
+	self.addEventListener(LUI_EV_MOUSE_WHEEL, function(_element) {
+		var _wheel_step = max(_element.rounding, (_element.value_max - _element.value_min) * 0.02);
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;
-		var _new_value = clamp(self.value + _wheel * _wheel_step, self.value_min, self.value_max);
+		var _new_value = clamp(_element.value + _wheel * _wheel_step, _element.value_min, _element.value_max);
 		_new_value = _calcValue(_new_value);
-		self.set(_new_value);
-	}
+		_element.set(_new_value);
+	});
 	
-	self.onValueUpdate = function() {
-		self.callback();
-	}
+	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+		self.callback(); //???//обратная совместимость
+	});
 }

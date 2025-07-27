@@ -12,6 +12,8 @@
 ///@arg {Function} callback
 function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined) : LuiBase() constructor {
 	
+	//???// возможно нужно наследование от LuiImage ?
+	
 	self.name = name;
 	self.pos_x = x;
 	self.pos_y = y;
@@ -85,9 +87,9 @@ function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.onCreate = function() {
-		self._calcSpriteSize();
-	}
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element._calcSpriteSize();
+	});
 	
 	self.addEventListener(LUI_EV_CLICK, function(_element) {
 		_element.callback(); //???// обратная совместимость

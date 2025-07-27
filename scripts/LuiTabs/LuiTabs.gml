@@ -106,35 +106,35 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 	}
 	
-	self.onCreate = function() {
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
 		// Setting up padding for tabs
-		self.setPadding(0).setGap(0);
+		_element.setPadding(0).setGap(0);
 		// Init header container for tabs
-		self._initHeader();
+		_element._initHeader();
 		// Add header
-		self.addContent(self.tabs_header);
-		self.tabs_header.setGap(0).setMinHeight(self.tab_height);
+		_element.addContent(_element.tabs_header);
+		_element.tabs_header.setGap(0).setMinHeight(_element.tab_height);
 		// Init tab's
-		self._initTabs();
-	}
+		_element._initTabs();
+	});
 	
-	self.onShow = function() {
+	self.addEventListener(LUI_EV_SHOW, function(_element) {
 		//Turn of visible of deactivated tab_container's
-		var _tab_count = array_length(self.tabs);
+		var _tab_count = array_length(_element.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
-			var _tab = self.tabs[i];
+			var _tab = _element.tabs[i];
 			if !_tab.is_active {
 				_tab.tab_container.setVisible(false);
 			}
 		}
-	}
+	});
 	
-	self.onDestroy = function() {
-		if !is_undefined(self.tabs_header) {
-			self.tabs_header.destroy();
+	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+		if !is_undefined(_element.tabs_header) {
+			_element.tabs_header.destroy();
 		}
-		self.tabs = -1;
-	}
+		_element.tabs = -1;
+	});
 }
 
 ///@desc Tab, used for LuiTabs.
@@ -233,21 +233,19 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 		}
 	}
 	
-	self.onCreate = function() {
-		self._initContainer();
-	}
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element._initContainer();
+	});
 	
-	self.onMouseLeftReleased = function() {
-		if self.is_pressed && !self.is_active {
-			self.is_pressed = false;
-			self.tabs_parent.switchTab(self);
-			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+	self.addEventListener(LUI_EV_CLICK, function(_element) {
+		if !_element.is_active {
+			_element.tabs_parent.switchTab(_element);
 		}
-	}
+	});
 	
-	self.onDestroy = function() {
-		if !is_undefined(self.tab_container) {
-			self.tab_container.destroy();
+	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+		if !is_undefined(_element.tab_container) {
+			_element.tab_container.destroy();
 		}
-	}
+	});
 }

@@ -19,7 +19,6 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	_initElement();
 	
 	self.value = sprite;
-	self.sprite = sprite;
 	self.subimg = subimg;
 	self.color_blend = color;
 	self.alpha = alpha;
@@ -35,16 +34,16 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	
 	///@desc Set sprite
 	static setSprite = function(_sprite) {
-		self.sprite = _sprite;
+		self.value = _sprite;
 		self._calcSpriteSize();
 		return self
 	}
 	
 	///@ignore
 	static _calcSpriteSize = function() {
-		if !is_undefined(self.sprite) && sprite_exists(self.sprite) {
-			self.sprite_real_width = sprite_get_width(self.sprite);
-			self.sprite_real_height = sprite_get_height(self.sprite);
+		if !is_undefined(self.value) && sprite_exists(self.value) {
+			self.sprite_real_width = sprite_get_width(self.value);
+			self.sprite_real_height = sprite_get_height(self.value);
 			self.aspect = self.sprite_real_width / self.sprite_real_height;
 		}
 	}
@@ -67,8 +66,8 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 		//Draw sprite
 		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
-		if !is_undefined(self.sprite) && sprite_exists(self.sprite) {
-			_sprite_render_function(self.sprite, self.subimg, 
+		if !is_undefined(self.value) && sprite_exists(self.value) {
+			_sprite_render_function(self.value, self.subimg, 
 										floor(self.x + self.width/2 - _width/2), 
 										floor(self.y + self.height/2 - _height/2), 
 										_width, _height, 
@@ -76,7 +75,7 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	}
 	
-	self.onCreate = function() {
-		self._calcSpriteSize();
-	}
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element._calcSpriteSize();
+	});
 }

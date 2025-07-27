@@ -95,35 +95,24 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
-	}
+	self.addEventListener(LUI_EV_CLICK, function(_element) {
+		_element.set(!_element.value);
+		_element.callback(); //???// обратная совместимость
+		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
+	});
 	
-	self.onMouseLeftReleased = function() {
-		if self.is_pressed {
-			self.is_pressed = false;
-			self.set(!self.value);
-			self.callback();
-			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-		}
-	}
+	self.addEventListener(LUI_EV_POSITION_UPDATE, function(_element) {
+		_element._updateSlider();
+	});
 	
-	self.onMouseLeave = function() {
-		self.is_pressed = false;
-	}
-	
-	self.onPositionUpdate = function() {
-		self._updateSlider();
-	}
-	
-	self.onValueUpdate = function() {
+	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
 		var _anim_time = 0.2;
 		// Slider animation
-		var _draw_width = min(self.width, self.height) * 2;
-		var _target_slider_xoffset = self.value == false ? 0 : _draw_width - self.slider_size;
-		self.main_ui.animate(self, "slider_xoffset", _target_slider_xoffset, _anim_time);
+		var _draw_width = min(_element.width, _element.height) * 2;
+		var _target_slider_xoffset = _element.value == false ? 0 : _draw_width - _element.slider_size;
+		_element.main_ui.animate(_element, "slider_xoffset", _target_slider_xoffset, _anim_time);
 		// Slider back color animation
-		var _target_color_value = self.value == true ? 1 : 0;
-		self.main_ui.animate(self, "slider_color_value", _target_color_value, _anim_time);
-	}
+		var _target_color_value = _element.value == true ? 1 : 0;
+		_element.main_ui.animate(_element, "slider_color_value", _target_color_value, _anim_time);
+	});
 }

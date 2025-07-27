@@ -332,6 +332,8 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
+	///@desc Default render region offset for elements
+	///@arg {struct, array} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
 	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
 		if is_struct(_region) {
 			render_region_offset = _region;

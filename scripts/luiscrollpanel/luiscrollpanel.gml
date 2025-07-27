@@ -125,19 +125,19 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.onCreate = function() {
-		self._initScrollContainer();
-		self.addContentOriginal(self.scroll_container);
-		if self.auto_height {
-			flexpanel_node_style_set_flex(self.flex_node, 1);
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element._initScrollContainer();
+		_element.addContentOriginal(_element.scroll_container);
+		if _element.auto_height {
+			flexpanel_node_style_set_flex(_element.flex_node, 1); //???//
 		}
-		self.setRenderRegionOffset(self.style.render_region_offset);
-		flexpanel_node_style_set_border(self.flex_node, flexpanel_edge.right, self.style.scroll_slider_width + self.scroll_pin_edge_offset);
-	}
+		_element.setRenderRegionOffset(_element.style.render_region_offset);
+		flexpanel_node_style_set_border(_element.flex_node, flexpanel_edge.right, _element.style.scroll_slider_width + _element.scroll_pin_edge_offset); //???//
+	});
 	
-	self.onDestroy = function() {
-		if !is_undefined(self.scroll_container) {
-			self.scroll_container.destroy();
+	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+		if !is_undefined(_element.scroll_container) {
+			_element.scroll_container.destroy();
 		}
-	}
+	});
 }

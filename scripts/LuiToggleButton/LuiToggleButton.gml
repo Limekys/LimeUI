@@ -120,26 +120,15 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.onCreate = function() {
-		if sprite_exists(self.icon.sprite) {
-			self._calcIconSize();
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		if sprite_exists(_element.icon.sprite) {
+			_element._calcIconSize();
 		}
-	}
+	});
 	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
-	}
-	
-	self.onMouseLeftReleased = function() {
-		if self.is_pressed {
-			self.is_pressed = false;
-			self.set(!self.get());
-			self.callback();
-			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-		}
-	}
-	
-	self.onMouseLeave = function() {
-		self.is_pressed = false;
-	}
+	self.addEventListener(LUI_EV_CLICK, function(_element) {
+		_element.set(!_element.get());
+		_element.callback(); //???// обратная совместимость
+		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
+	});
 }

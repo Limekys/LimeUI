@@ -5,7 +5,7 @@ LIME_RESOLUTION.init();
 // Init debug variables
 debug_overlay = false;
 debug_grid = false;
-enable_alpha_test = true; // true makes UI flashes if LUI_FORCE_ALPHA_1 setted to false
+enable_alpha_test = true; // true makes UI blinking if LUI_FORCE_ALPHA_1 setted to false
 
 // Init demo variables
 demo_login = "";
@@ -106,7 +106,7 @@ tabs_anim_y = tabs_target_y;
 tabs.setPosition(tabs_target_x, tabs_target_y);
 
 // Create some elements
-demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).setBinding(oDemo, "demo_loading_value");
+demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).setBinding(self, "demo_loading_value");
 btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message", function() {
 	luiShowMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
@@ -137,16 +137,16 @@ createNewLoginWindow = function () {
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(oDemo, "tabs_target_x"), [0.2, 0.8]
+		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(self, "tabs_target_x"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
 		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
+		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(self, "demo_login"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true).setBinding(oDemo, "demo_password"), [0.2, 0.8]
+		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true).setBinding(self, "demo_password"), [0.2, 0.8]
 	]),	
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
@@ -155,7 +155,7 @@ my_panel.addContent([
 		oDemo.createNewLoginWindow();
 	}),
 	new LuiRow().addContent([
-		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").setBinding(oDemo, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton")
+		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").setBinding(self, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton")
 	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
@@ -311,7 +311,7 @@ my_panel_3.addContent([
 						new LuiPanel().addContent([
 							new LuiText(, , , , , "Nested panel 3.1"),
 							new LuiText(, , , , , "Updateble text with binding variable below").setTooltip("Try to change login in first panel"),
-							new LuiText(, , , , , ).setBinding(oDemo, "demo_login")
+							new LuiText(, , , , , ).setBinding(self, "demo_login")
 						])
 					]),
 					new LuiPanel().addContent([

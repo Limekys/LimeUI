@@ -107,51 +107,43 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	}
 	
-	self.onCreate = function() {
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
-		}
-		self.min_width = string_width(self.value);
-		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
-	}
-	
-	self.onFocusSet = function() {
-		time_source_start(self.cursor_timer);
-		self.cursor_pointer = self.style.input_cursor;
+	self.addEventListener(LUI_EV_FOCUS_SET, function(_element) {
+		time_source_start(_element.cursor_timer);
+		_element.cursor_pointer = _element.style.input_cursor;
 		keyboard_string = get();
-		self.main_ui.waiting_for_keyboard_input = true;
+		_element.main_ui.waiting_for_keyboard_input = true;
 		//Touch compatibility
 		if os_type == os_android || os_type == os_ios {
 			keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, false);
 		}
-	}
+	});
 	
-	self.onFocusRemove = function() {
-		time_source_stop(self.cursor_timer);
-		self.cursor_pointer = "";
-		self.main_ui.waiting_for_keyboard_input = false;
+	self.addEventListener(LUI_EV_FOCUS_REMOVE, function(_element) {
+		time_source_stop(_element.cursor_timer);
+		_element.cursor_pointer = "";
+		_element.main_ui.waiting_for_keyboard_input = false;
 		//Touch compatibility
 		if os_type == os_android || os_type == os_ios {
 			keyboard_virtual_hide();
 		}
-	}
+	});
 	
-	self.onKeyboardInput = function() {
-		self.set(self._limit_value(keyboard_string));
-		keyboard_string = self.get();
+	self.addEventListener(LUI_EV_KEYBOARD_INPUT, function(_element) {
+		_element.set(_element._limit_value(keyboard_string));
+		keyboard_string = _element.get();
 		if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
-			self.set(self._limit_value(self.get() + clipboard_get_text()));
-			keyboard_string = self.get();
+			_element.set(_element._limit_value(_element.get() + clipboard_get_text()));
+			keyboard_string = _element.get();
 		}
-	}
+	});
 	
-	self.onValueUpdate = function() {
-		self.callback();
-	}
+	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+		self.callback(); //???//обратная совместимость
+	});
 	
-	self.onDestroy = function() {
-		if time_source_exists(self.cursor_timer) {
-			time_source_destroy(self.cursor_timer);
+	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+		if time_source_exists(_element.cursor_timer) {
+			time_source_destroy(_element.cursor_timer);
 		}
-	}
+	});
 }
