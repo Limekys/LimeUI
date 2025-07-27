@@ -20,18 +20,6 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.tabs_header = undefined;
 	self.active_tab = undefined;
 	
-	self.onCreate = function() {
-		// Setting up padding for tabs
-		self.setPadding(0).setGap(0);
-		// Init header container for tabs
-		self._initHeader();
-		// Add header
-		self.addContent(self.tabs_header);
-		self.tabs_header.setGap(0).setMinHeight(self.tab_height);
-		// Init tab's
-		self._initTabs();
-	}
-	
 	///@desc Create header container for tabs
 	///@ignore
 	static _initHeader = function() {
@@ -118,6 +106,18 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 	}
 	
+	self.onCreate = function() {
+		// Setting up padding for tabs
+		self.setPadding(0).setGap(0);
+		// Init header container for tabs
+		self._initHeader();
+		// Add header
+		self.addContent(self.tabs_header);
+		self.tabs_header.setGap(0).setMinHeight(self.tab_height);
+		// Init tab's
+		self._initTabs();
+	}
+	
 	self.onShow = function() {
 		//Turn of visible of deactivated tab_container's
 		var _tab_count = array_length(self.tabs);
@@ -145,11 +145,6 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 	self.is_active = false;
 	self.tabs_parent = undefined;
 	self.tab_container = undefined;
-	
-	self.onCreate = function() {
-		self._initContainer();
-		if sprite_exists(self.icon.sprite) self._calcIconSize();
-	}
 	
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {
@@ -236,6 +231,10 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 		if !is_undefined(self.style.sprite_tab_border) {
 			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
+	}
+	
+	self.onCreate = function() {
+		self._initContainer();
 	}
 	
 	self.onMouseLeftReleased = function() {

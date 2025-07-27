@@ -61,18 +61,6 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		return self;
 	}
 	
-	self.onCreate = function() {
-		self._calcSpritePos(self.style.sprite_progress_ring);
-	}
-	
-	self.onPositionUpdate = function() {
-		self._calcSpritePos(self.style.sprite_progress_ring);
-	}
-	
-	self.onSizeUpdate = function() {
-		self._calcSpritePos(self.style.sprite_progress_ring);
-	}
-	
 	self.draw = function() {
 		var _pos = self.sprite_pos;
 		// Base
@@ -112,6 +100,18 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			draw_set_valign(fa_middle);
 			draw_text(self.x + self.width / 2, self.y + self.height / 2, _calcValue(self.value));
 		}
+	}
+	
+	self.onCreate = function() {
+		self._calcSpritePos(self.style.sprite_progress_ring);
+	}
+	
+	self.onPositionUpdate = function() {
+		self._calcSpritePos(self.style.sprite_progress_ring);
+	}
+	
+	self.onSizeUpdate = function() {
+		self._calcSpritePos(self.style.sprite_progress_ring);
 	}
 	
 	self.onDestroy = function() {

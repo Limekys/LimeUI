@@ -23,7 +23,6 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.placeholder = placeholder;
 	self.is_password = is_password;
 	self.max_length = max_length;
-	self.is_pressed = false;
 	self.cursor_pointer = "";
 	self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function(){
 		if self.cursor_pointer == "" {
@@ -33,14 +32,6 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 		self.updateMainUiSurface();
 	}, [], -1);
-	
-	self.onCreate = function() {
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
-		}
-		self.min_width = string_width(self.value);
-		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
-	}
 	
 	///@ignore
 	static _limit_value = function(_string) {
@@ -116,6 +107,14 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	}
 	
+	self.onCreate = function() {
+		if !is_undefined(self.style.font_default) {
+			draw_set_font(self.style.font_default);
+		}
+		self.min_width = string_width(self.value);
+		self.height = self.auto_height == true ? max(self.min_height, string_height(self.value)) : self.height;
+	}
+	
 	self.onFocusSet = function() {
 		time_source_start(self.cursor_timer);
 		self.cursor_pointer = self.style.input_cursor;
@@ -130,16 +129,11 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.onFocusRemove = function() {
 		time_source_stop(self.cursor_timer);
 		self.cursor_pointer = "";
-		self.is_pressed = false;
 		self.main_ui.waiting_for_keyboard_input = false;
 		//Touch compatibility
 		if os_type == os_android || os_type == os_ios {
 			keyboard_virtual_hide();
 		}
-	}
-	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
 	}
 	
 	self.onKeyboardInput = function() {

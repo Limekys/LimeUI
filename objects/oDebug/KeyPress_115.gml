@@ -1,0 +1,1 @@
+oDemo.my_ui.displayFocusedElement(!oDemo.my_ui.display_focused_element);

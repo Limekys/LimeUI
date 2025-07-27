@@ -68,6 +68,12 @@ function LuiMain() : LuiBase() constructor {
 		return _tween;
 	}
 	
+	///@desc Set flag to display or not display white rectangle on focused element
+	///@arg {bool} _display
+	static displayFocusedElement = function(_display) {
+		self.display_focused_element = _display;
+	}
+	
 	// CHECKERS
 	
 	///@desc Return true if we interacting with UI at the moment with mouse or keyboard

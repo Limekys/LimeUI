@@ -25,10 +25,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.rounding = rounding;
 	self.dragging = false;
 	
-	self.onCreate = function() {
-		self.value = _calcValue(self.value);
-	}
-	
 	///@ignore
 	static _calcValue = function(_value) {
 		var _new_value = 0;
@@ -130,6 +126,10 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				self.dragging = false;
 			}
 		}
+	}
+	
+	self.onCreate = function() {
+		self.value = _calcValue(self.value);
 	}
 	
 	self.onMouseLeftPressed = function() {

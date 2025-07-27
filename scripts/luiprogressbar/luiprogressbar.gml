@@ -24,10 +24,6 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.rounding = rounding;
 	self.show_value = show_value;
 	
-	self.onCreate = function() {
-		self.value = _calcValue(self.value);
-	}
-	
 	///@ignore
 	static _calcValue = function(_value) {
 		var _new_value = 0;
@@ -80,5 +76,9 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			draw_set_valign(fa_middle);
 			draw_text(self.x + self.width div 2, self.y + self.height div 2, _calcValue(self.value));
 		}
+	}
+	
+	self.onCreate = function() {
+		self.value = _calcValue(self.value);
 	}
 }

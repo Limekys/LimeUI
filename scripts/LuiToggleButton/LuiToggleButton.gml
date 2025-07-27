@@ -31,10 +31,6 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		alpha : 1,
 	}
 	
-	self.onCreate = function() {
-		if sprite_exists(self.icon.sprite) self._calcIconSize();
-	}
-	
 	///@func setColor(_button_color)
 	///@arg _button_color
 	static setColor = function(_button_color) {
@@ -121,6 +117,12 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		// Border
 		if !is_undefined(self.style.sprite_button_border) {
 			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		}
+	}
+	
+	self.onCreate = function() {
+		if sprite_exists(self.icon.sprite) {
+			self._calcIconSize();
 		}
 	}
 	

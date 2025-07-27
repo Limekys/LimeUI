@@ -29,10 +29,6 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		alpha : 1,
 	}
 	
-	self.onCreate = function() {
-		if sprite_exists(self.icon.sprite) self._calcIconSize();
-	}
-	
 	///@func setColor(_button_color)
 	///@arg _button_color
 	static setColor = function(_button_color) {
@@ -121,6 +117,12 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
 	}
+	
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		if sprite_exists(_element.icon.sprite) {
+			_element._calcIconSize();
+		}
+	});
 	
 	self.addEventListener(LUI_EV_CLICK, function(_element) {
 		_element.callback(); //???// обратная совместимость

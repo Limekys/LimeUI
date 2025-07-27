@@ -1616,6 +1616,9 @@ function LuiBase() constructor {
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				//Get element
 				var _element = self.content[i];
+				// Restriction
+				if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
+				// Draw debug
 				if !_element.visible || !_element.is_visible_in_region continue;
 				_element._renderDebug(_element.x, _element.y);
 			}
@@ -1764,7 +1767,7 @@ function LuiBase() constructor {
 		self.destroyContent();
 		// Remove focus from main ui
 		if !is_undefined(main_ui) && self == main_ui.element_in_focus {
-			self.main_ui.element_in_focus.removeFocus();
+			//self.main_ui.element_in_focus.removeFocus(); //???//
 			self.main_ui.element_in_focus = undefined;
 		}
 		self._deleteElementName();

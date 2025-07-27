@@ -14,14 +14,6 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.combobox_panel = undefined;
 	self.text_width = self.width;
 	
-	self.onCreate = function() {
-		self._calculateTextWidth();
-		if is_undefined(self.combobox_panel) {
-			self._initComboBoxPanel();
-			self._initItems();
-		}
-	}
-	
 	///@ignore
 	static _calculateTextWidth = function() { //???// not used now
 		if !is_undefined(self.style) && !is_undefined(self.style.sprite_combobox_arrow) {
@@ -152,37 +144,40 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.onValueUpdate = function() {
-		self._calculateTextWidth();
-	}
-	
-	self.onMouseLeftReleased = function() {
-		if self.is_pressed {
-			self.is_pressed = false;
-			self.callback();
-			self.toggle();
-			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element._calculateTextWidth();
+		if is_undefined(_element.combobox_panel) {
+			_element._initComboBoxPanel();
+			_element._initItems();
 		}
-	}
+	});
 	
-	self.onHide = function() {
-		if self.is_open {
-			self.toggle();
-		}
-	}
+	self.addEventListener(LUI_EV_CLICK, function(_element) {
+		_element.toggle();
+	});
 	
-	self.onFocusRemove = function() {
-		if self.is_open && !self.combobox_panel.isMouseHoveredExc() {
-			self.toggle();
-		}
-	}
+	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+		_element._calculateTextWidth();
+	});
 	
-	self.onDestroy = function() {
-		if !is_undefined(self.combobox_panel) {
-			self.combobox_panel.destroy();
+	self.addEventListener(LUI_EV_HIDE, function(_element) {
+		if _element.is_open {
+			_element.toggle();
 		}
-		self.items = -1;
-	}
+	});
+	
+	self.addEventListener(LUI_EV_FOCUS_REMOVE, function(_element) {
+		if _element.is_open && !_element.combobox_panel.isMouseHoveredExc() {
+			_element.toggle();
+		}
+	});
+	
+	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+		if !is_undefined(_element.combobox_panel) {
+			_element.combobox_panel.destroy();
+		}
+		_element.items = -1;
+	});
 }
 
 ///@desc An element for a drop-down list.
@@ -193,7 +188,7 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 	
 	self.combobox_parent = undefined;
 	
-	static comboboxCallback = function() {
+	static toggleCombobox = function() {
 		self.combobox_parent.set(self.text);
 		self.combobox_parent.toggle();
 	}
@@ -234,12 +229,7 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 		}
 	}
 	
-	self.onMouseLeftReleased = function() {
-		if self.is_pressed {
-			self.is_pressed = false;
-			self.callback();
-			self.comboboxCallback();
-			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
-		}
-	}
+	self.addEventListener(LUI_EV_CLICK, function(_element) {
+		_element.toggleCombobox();
+	});
 }

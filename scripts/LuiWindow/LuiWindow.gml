@@ -17,6 +17,20 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.title = title;
 	self.parent_window = -1;
 	self.can_drag = true;
+	
+    // Draw method
+    self.draw = function() {
+        // Header
+		if !is_undefined(self.style.sprite_tab) {
+            var _blend_color = merge_color(self.style.color_primary, c_black, 0.25);
+			//var _color = isMouseHovered() ? merge_color(_blend_color, self.style.color_hover, 0.5) : _blend_color;
+            draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+        }
+		// Border
+		if !is_undefined(self.style.sprite_tab_border) {
+			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		}
+    }
     
 	self.onCreate = function() { 
 		
@@ -41,20 +55,6 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		self.addContent([_minimize_button, _close_button]);
 	}
 	
-    // Draw method
-    self.draw = function() {
-        // Header
-		if !is_undefined(self.style.sprite_tab) {
-            var _blend_color = merge_color(self.style.color_primary, c_black, 0.25);
-			//var _color = isMouseHovered() ? merge_color(_blend_color, self.style.color_hover, 0.5) : _blend_color;
-            draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
-        }
-		// Border
-		if !is_undefined(self.style.sprite_tab_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
-		}
-    }
-    
 	// Mouse events for dragging
     self.onMouseLeftPressed = function() {
 		self.parent_window.bringToFront();
@@ -82,12 +82,6 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
     self.is_minimized = false;
 	self.window_header = undefined;
 	self.header_height = 32;
-	
-	self.onCreate = function() {
-		self.setPositionType(flexpanel_position_type.absolute);
-		self._initHeader();
-		self.setPosition(, self.window_header.pos_y + self.header_height);
-	}
 	
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
@@ -124,6 +118,12 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
     }
+	
+	self.onCreate = function() {
+		self.setPositionType(flexpanel_position_type.absolute);
+		self._initHeader();
+		self.setPosition(, self.window_header.pos_y + self.header_height);
+	}
 	
 	// Mouse events for dragging
     self.onMouseLeftPressed = function() {

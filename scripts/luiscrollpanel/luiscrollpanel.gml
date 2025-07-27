@@ -23,16 +23,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.draw_content_in_cutted_region = true;
 	
-	self.onCreate = function() {
-		self._initScrollContainer();
-		self.addContentOriginal(self.scroll_container);
-		if self.auto_height {
-			flexpanel_node_style_set_flex(self.flex_node, 1);
-		}
-		self.setRenderRegionOffset(self.style.render_region_offset);
-		flexpanel_node_style_set_border(self.flex_node, flexpanel_edge.right, self.style.scroll_slider_width + self.scroll_pin_edge_offset);
-	}
-	
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {
 		self._initScrollContainer();
@@ -133,6 +123,16 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, self.scroll_smoothness, 0.1);
 			self._applyScroll();
 		}
+	}
+	
+	self.onCreate = function() {
+		self._initScrollContainer();
+		self.addContentOriginal(self.scroll_container);
+		if self.auto_height {
+			flexpanel_node_style_set_flex(self.flex_node, 1);
+		}
+		self.setRenderRegionOffset(self.style.render_region_offset);
+		flexpanel_node_style_set_border(self.flex_node, flexpanel_edge.right, self.style.scroll_slider_width + self.scroll_pin_edge_offset);
 	}
 	
 	self.onDestroy = function() {

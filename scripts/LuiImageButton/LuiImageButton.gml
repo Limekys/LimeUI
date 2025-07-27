@@ -30,12 +30,6 @@ function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.sprite_real_height = 0;
 	self.aspect = 1;
 	
-	self.is_pressed = false;
-	
-	self.onCreate = function() {
-		self._calcSpriteSize();
-	}
-	
 	///@desc Set blend color for sprite
 	static setColor = function(color_blend) {
 		self.color_blend = color_blend;
@@ -89,6 +83,10 @@ function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 										_width, _height, 
 										_blend_color, self.alpha);
 		}
+	}
+	
+	self.onCreate = function() {
+		self._calcSpriteSize();
 	}
 	
 	self.addEventListener(LUI_EV_CLICK, function(_element) {
