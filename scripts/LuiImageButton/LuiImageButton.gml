@@ -91,19 +91,10 @@ function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.onMouseLeftPressed = function() {
-		self.is_pressed = true;
-	}
-	
-	self.onMouseLeftReleased = function() {
-		if self.is_pressed {
-			self.is_pressed = false;
-			self.callback();
-			if self.style.sound_click != undefined audio_play_sound(self.style.sound_click, 1, false);
+	self.addEventListener(LUI_EV_CLICK, function(_element) {
+		_element.callback(); //???// обратная совместимость
+		if !is_undefined(_element.style.sound_click) {
+			audio_play_sound(_element.style.sound_click, 1, false);
 		}
-	}
-	
-	self.onMouseLeave = function() {
-		self.is_pressed = false;
-	}
+	});
 }

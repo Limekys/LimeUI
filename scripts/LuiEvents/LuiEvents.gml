@@ -1,6 +1,6 @@
 #macro LUI_EV_CREATE "create" // Triggered after the element is added to a parent
-#macro LUI_EV_CONTENT_UPDATE "content_update" // Triggered when elements are added or removed inside
 #macro LUI_EV_DESTROY "destroy" // Called when the element is deleted, e.g., to clean up resources
+#macro LUI_EV_CONTENT_UPDATE "content_update" // Triggered when elements are added or removed inside
 #macro LUI_EV_MOUSE_LEFT "mouse_left" // Triggered while the left mouse button is held on the element
 #macro LUI_EV_MOUSE_LEFT_PRESSED "mouse_left_pressed" // Triggered once when the left mouse button is pressed
 #macro LUI_EV_MOUSE_LEFT_RELEASED "mouse_left_released" // Triggered once when the left mouse button is released
@@ -19,4 +19,4 @@
 #macro LUI_EV_DRAGGING "dragging" // Triggered while the element is being dragged
 #macro LUI_EV_DRAG_START "drag_start" // Triggered once when dragging starts
 #macro LUI_EV_DRAG_END "drag_end" // Triggered once when dragging ends
-#macro LUI_EV_ON_CLICK "on_click" // Triggered when the element is clicked (full press-release cycle)
+#macro LUI_EV_CLICK "click" // Triggered when the element is clicked (full press-release cycle)

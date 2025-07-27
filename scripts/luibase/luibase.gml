@@ -31,7 +31,7 @@ function LuiBase() constructor {
 	self.auto_width = false;
 	self.auto_height = false;
 	self.parent = undefined;
-	self.callback = undefined;						//???//скорее всего нужно будет убрать и добавить callback на каждый ивент элемента
+	self.callback = undefined;						//???//будет упразднена из-за новой системы Event Listener
 	self.content = undefined;
 	self.delayed_content = undefined;
 	self.container = self; 							//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
@@ -46,6 +46,7 @@ function LuiBase() constructor {
 	self.main_ui = undefined;
 	self.tooltip = "";
 	self.binding_variable = undefined;
+	self.is_pressed = false;
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
 	self.is_custom_style_setted = false;
@@ -248,7 +249,10 @@ function LuiBase() constructor {
 			if !is_undefined(self.binding_variable) {
 				self._updateToBinding();
 			}
-			if is_method(self.onValueUpdate) self.onValueUpdate();
+			if is_method(self.onValueUpdate) {
+				self.onValueUpdate();
+			}
+			self._dispatchEvent(LUI_EV_VALUE_UPDATE);
 			self.updateMainUiSurface();
 		}
 		return self;
@@ -433,6 +437,13 @@ function LuiBase() constructor {
 		if _update_flex {
 			self.updateMainUiFlex();
 		}
+		return self;
+	}
+	
+	//@desc Stretch element on all width and height of parent
+	static setFullSize = function() {
+		flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
+		flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
 		return self;
 	}
 	
@@ -737,9 +748,15 @@ function LuiBase() constructor {
 				self.visible = _visible;
 				// Events onShow / onHide
 				if _visible {
-					if is_method(self.onShow) self.onShow();
+					if is_method(self.onShow) {
+						self.onShow();
+					}
+					self._dispatchEvent(LUI_EV_SHOW);
 				} else {
-					if is_method(self.onHide) self.onHide();
+					if is_method(self.onHide) {
+						self.onHide();
+					}
+					self._dispatchEvent(LUI_EV_HIDE);
 				}
 				// Grid update
 				self._updateScreenGrid();
@@ -1284,13 +1301,19 @@ function LuiBase() constructor {
 	    }
 		
 		// If position was changed, call onPositionUpdate
-		if (_position_changed && is_method(_element.onPositionUpdate)) {
-			_element.onPositionUpdate();
+		if (_position_changed) {
+			if is_method(_element.onPositionUpdate) {
+				_element.onPositionUpdate();
+			}
+			_element._dispatchEvent(LUI_EV_POSITION_UPDATE);
 		}
 		
 		// If size was changed, call onSizeUpdate
-		if (_size_changed && is_method(_element.onSizeUpdate)) {
-			_element.onSizeUpdate();
+		if (_size_changed) {
+			if is_method(_element.onSizeUpdate) {
+				_element.onSizeUpdate();
+			}
+			_element._dispatchEvent(LUI_EV_SIZE_UPDATE);
 		}
 	    
 	    _element._updateViewRegion();
@@ -1468,7 +1491,10 @@ function LuiBase() constructor {
 	        _element._addDelayedContent();
 	        
 			// Call custom method create
-	        if is_method(_element.onCreate) _element.onCreate();
+	        if is_method(_element.onCreate) {
+				_element.onCreate();
+			}
+			_element._dispatchEvent(LUI_EV_CREATE);
 	        
 	        _element.is_adding = false;
 	    }
@@ -1527,7 +1553,10 @@ function LuiBase() constructor {
 	        
 	        // Update content if required
 	        if (_element.need_to_update_content) {
-	            if (is_method(_element.onContentUpdate)) _element.onContentUpdate();
+	            if (is_method(_element.onContentUpdate)) {
+					_element.onContentUpdate();
+				}
+				_element._dispatchEvent(LUI_EV_CONTENT_UPDATE);
 	            _element.need_to_update_content = false;
 	        }
 	        
@@ -1750,6 +1779,11 @@ function LuiBase() constructor {
 		    // Delete flex node from memory
 		    self.flex_node = flexpanel_delete_node(self.flex_node, true);
 		}
+		// Call onDestroy
+		if is_method(self.onDestroy) {
+			self.onDestroy();
+		}
+		self._dispatchEvent(LUI_EV_DESTROY);
 		// Clean all arrays and structs
 		self.content = -1;
 		self.depth_array = -1;
@@ -1758,10 +1792,7 @@ function LuiBase() constructor {
 		delete self.view_region; self.view_region = undefined;
 		delete self.binding_variable; self.binding_variable = undefined;
 		delete self.data; self.data = undefined;
-		// Call onDestroy
-		if is_method(self.onDestroy) {
-			self.onDestroy();
-		}
+		self.event_listeners = {}
 		// Decrement global counter
 		global.lui_element_count--;
 		// Double-Destroy protection

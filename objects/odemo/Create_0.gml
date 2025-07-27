@@ -140,7 +140,7 @@ my_panel.addContent([
 		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(oDemo, "tabs_target_x"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText(, , , , , "ProgressBar"), demo_loading, new LuiToggleSwitch(, , 64).setBinding(oDemo, "demo_loading_state"), [0.2, 0.8, 0]
+		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(oDemo, "demo_login"), [0.2, 0.8]
@@ -155,7 +155,7 @@ my_panel.addContent([
 		oDemo.createNewLoginWindow();
 	}),
 	new LuiRow().addContent([
-		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch"), new LuiToggleButton(, , , , , , "ToggleButton")
+		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").setBinding(oDemo, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton")
 	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
@@ -402,7 +402,7 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		sprite_car_1 = new LuiImage( , , , , , sCar).addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function() {print("press on image!")});
+		sprite_car_1 = new LuiImage( , , , , , sCar).addEventListener(LUI_EV_CLICK, function() {print("click on image!")});
 		sprite_car_2 = new LuiImage( , , , , , sCar, , , , false);
 		sprite_car_3 = new LuiImage( , , , , , sHamburger);
 		sprite_car_4 = new LuiImage( , , , , , sHamburger, , , , false);

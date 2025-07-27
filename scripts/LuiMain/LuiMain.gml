@@ -123,6 +123,7 @@ function LuiMain() : LuiBase() constructor {
 			// Update mouse hover state
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 				_previous_hovered_element.is_mouse_hovered = false;
+				_previous_hovered_element.is_pressed = false;
 				// Call onMouseLeave method
 				if is_method(_previous_hovered_element.onMouseLeave) {
 					_previous_hovered_element.onMouseLeave();
@@ -144,6 +145,7 @@ function LuiMain() : LuiBase() constructor {
 				
 				// Handle on mouse pressed
 				if (mouse_check_button_pressed(mb_left)) {
+					self.topmost_hovered_element.is_pressed = true;
 					// Call onMouseLeftPressed method
 					if is_method(self.topmost_hovered_element.onMouseLeftPressed) {
 						self.topmost_hovered_element.onMouseLeftPressed();
@@ -202,6 +204,10 @@ function LuiMain() : LuiBase() constructor {
 						self.topmost_hovered_element.onMouseLeftReleased();
 					}
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT_RELEASED);
+					if (self.topmost_hovered_element.is_pressed) {
+                        self.topmost_hovered_element._dispatchEvent(LUI_EV_CLICK);
+                    }
+					self.topmost_hovered_element.is_pressed = false;
 					// Clear dragging
 					if !is_undefined(self.dragging_element) {
 						self.dragging_element.is_dragging = false;
@@ -229,6 +235,7 @@ function LuiMain() : LuiBase() constructor {
 				if !is_undefined(self.element_in_focus) {
 					if (mouse_check_button_pressed(mb_left) || mouse_check_button_released(mb_left)) {
 						self.element_in_focus.removeFocus();
+						self.element_in_focus.is_pressed = false;
 						self.element_in_focus = undefined;
 						self.dragging_element = undefined;
 						self.updateMainUiSurface();
@@ -238,6 +245,10 @@ function LuiMain() : LuiBase() constructor {
 		} else {
 			// Clear dragging element if mouse is outside UI
 			self.dragging_element = undefined;
+			// Reset is_pressed state
+			if !is_undefined(self.topmost_hovered_element) {
+                self.topmost_hovered_element.is_pressed = false;
+            }
 		}
 		
 		// Keyboard events
