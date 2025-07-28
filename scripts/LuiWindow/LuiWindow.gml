@@ -79,7 +79,7 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		    // Add buttons to header (e.g., close, minimize)
 		    var _button_size = self.window_header.height;
 			var _close_button = new LuiButton(, , _button_size, _button_size, , "X").setColor(self.style.color_semantic_error);
-		    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "_");
+		    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "-");
 			_close_button.setCallback(function() {
 				self.parent.parent_window.closeWindow();
 			});
