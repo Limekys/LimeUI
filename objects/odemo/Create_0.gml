@@ -172,9 +172,10 @@ deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
 }).deactivate();
 
 activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
-	if is_struct(oDemo.deactivated_button) {
-		oDemo.deactivated_button.activate(); oDemo.deactivated_button.text = "DELETE";
-	} 
+	if oDemo.deactivated_button != -1 {
+		oDemo.deactivated_button.activate();
+		oDemo.deactivated_button.setText("DELETE");
+	}
 });
 
 // Create sprite buttons and function to change its color
