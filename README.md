@@ -38,6 +38,7 @@ _*Right now the system is in a very early stage of development and with each upd
 - Animations support
 - Separated logic and render
 - Chain functions
+- Events listener
 
 ### In development:
 - LuiRadioButton
