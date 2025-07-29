@@ -20,6 +20,13 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.tabs_header = undefined;
 	self.active_tab = undefined;
 	
+	///@desc Set tabs height
+	///@arg {real} _tab_height
+	static setTabHeight = function(_tab_height) {
+		self.tab_height = _tab_height;
+		return self;
+	}
+	
 	///@desc Create header container for tabs
 	///@ignore
 	static _initHeader = function() {

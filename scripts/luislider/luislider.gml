@@ -4,21 +4,21 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-///@arg {Real} value_min
-///@arg {Real} value_max
+///@arg {Real} min_value
+///@arg {Real} max_value
 ///@arg {Real} value
 ///@arg {Real} rounding
 ///@arg {Function} callback
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value_min = 0, value_max = 100, value = 0, rounding = 0, callback = undefined)
- : LuiProgressBar(x, y, width, height, name, value_min, value_max, true, value, rounding) constructor {
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, value = 0, rounding = 0, callback = undefined)
+ : LuiProgressBar(x, y, width, height, name, min_value, max_value, true, value, rounding) constructor {
 	
 	setCallback(callback);
 	
-	self.dragging = false;
+	self.dragging = false; //???// сделать зависимость от drag элементов в LuiMain
 	
 	self.draw = function() {
 		// Value
-		var _bar_value = Range(self.value, self.value_min, self.value_max, 0, 1);
+		var _bar_value = Range(self.value, self.min_value, self.max_value, 0, 1);
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
 			var _blend_color = self.style.color_back;
@@ -92,7 +92,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 				var x1 = self.x;
 				var y1 = self.y;
 				var x2 = x1 + self.width;
-				var _new_value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.value_max - self.value_min) + self.value_min, self.value_min, self.value_max);
+				var _new_value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.max_value - self.min_value) + self.min_value, self.min_value, self.max_value);
 				// Rounding
 				_new_value = _calcValue(_new_value);
 				self.set(_new_value);
@@ -107,11 +107,11 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	});
 	
 	self.addEventListener(LUI_EV_MOUSE_WHEEL, function(_element) {
-		var _wheel_step = max(_element.rounding, (_element.value_max - _element.value_min) * 0.02);
+		var _wheel_step = max(_element.rounding, (_element.max_value - _element.min_value) * 0.02);
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;
-		var _new_value = clamp(_element.value + _wheel * _wheel_step, _element.value_min, _element.value_max);
+		var _new_value = clamp(_element.value + _wheel * _wheel_step, _element.min_value, _element.max_value);
 		_new_value = _calcValue(_new_value);
 		_element.set(_new_value);
 	});

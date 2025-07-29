@@ -34,15 +34,15 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.height_offset = 0;
 	*/
 	
-	///@func setText(_button_text)
+	///@desc Set button text
 	///@arg {string} _button_text
 	static setText = function(_button_text) {
 		self.text = _button_text;
 		return self;
 	}
 	
-	///@func setColor(_button_color)
-	///@arg _button_color
+	///@desc Set custom button color
+	///@arg {any} _button_color
 	static setColor = function(_button_color) {
 		self.button_color = _button_color;
 		return self;

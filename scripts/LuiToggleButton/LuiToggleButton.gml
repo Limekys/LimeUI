@@ -31,6 +31,13 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		alpha : 1,
 	}
 	
+	///@desc Set button text
+	///@arg {string} _button_text
+	static setText = function(_button_text) {
+		self.text = _button_text;
+		return self;
+	}
+	
 	///@func setColor(_button_color)
 	///@arg _button_color
 	static setColor = function(_button_color) {

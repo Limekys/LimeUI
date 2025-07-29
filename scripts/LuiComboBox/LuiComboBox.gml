@@ -14,6 +14,13 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.combobox_panel = undefined;
 	self.text_width = self.width;
 	
+	///@desc Set placeholder text
+	///@arg {string} _placeholder
+	static setPlaceholder = function(_placeholder) {
+		self.placeholder = _placeholder;
+		return self;
+	}
+	
 	///@ignore
 	static _calculateTextWidth = function() { //???// not used now
 		if !is_undefined(self.style) && !is_undefined(self.style.sprite_combobox_arrow) {

@@ -118,7 +118,7 @@ btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
 createNewLoginWindow = function () {
 	// Create draggable panel (window) with some content
 	my_ui.addContent([
-		new LuiWindow(500 + irandom(100), 340 + irandom(100), 300, 300, , "Secret database").centerContent().addContent([
+		new LuiWindow(500 + irandom(100), 340 + irandom(100), 300, 300, "window_database", "Secret database").centerContent().addContent([
 			new LuiImage(, , 64, 64, , sIconKey),
 			new LuiRow().addContent([
 				new LuiInput(, , , , , "", "login")
@@ -128,6 +128,7 @@ createNewLoginWindow = function () {
 			]),
 			new LuiButton(, , 150, 32, , "Login", function() {
 				luiShowMessage(oDemo.my_ui, , , "Wrong password!", "OK!");
+				oDemo.my_ui.getElement("window_database").setTitle(">_<");
 			})
 		])
 	])
@@ -143,10 +144,10 @@ my_panel.addContent([
 		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false).setBinding(self, "demo_login"), [0.2, 0.8]
+		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false, 32).setBinding(self, "demo_login"), [0.2, 0.8]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true).setBinding(self, "demo_password"), [0.2, 0.8]
+		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true, 32).setBinding(self, "demo_password"), [0.2, 0.8]
 	]),	
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)

@@ -20,8 +20,9 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.text = text;
 	
-	//@desc Set display text of checkbox (render right of checkbox)
-	self.setText = function(_text) {
+	///@desc Set display text of checkbox (render right of checkbox)
+	///@arg {string} _text
+	static setText = function(_text) {
 		self.text = _text;
 		return self;
 	}

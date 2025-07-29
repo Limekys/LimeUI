@@ -19,6 +19,13 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.text_valign = fa_middle;
 	self.scale_to_fit = scale_to_fit;
 	
+	///@desc Set text
+	///@arg {string} _text
+	static setText = function(_text) {
+		self.set(_text);
+		return self;
+	}
+	
 	///@desc Set horizontal aligment of text.
 	static setTextHalign = function(halign) {
 		self.text_halign = halign;
@@ -28,6 +35,13 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	///@desc Set vertical aligment of text.
 	static setTextValign = function(valign) {
 		self.text_valign = valign;
+		return self;
+	}
+	
+	///@desc Set scale to fit text
+	///@arg {bool} _scale_to_fit True is scale text to fit element size
+	static setScaleToFit = function(_scale_to_fit) {
+		self.scale_to_fit = _scale_to_fit;
 		return self;
 	}
 	

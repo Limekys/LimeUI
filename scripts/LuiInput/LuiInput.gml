@@ -1,18 +1,23 @@
+enum LUI_INPUT_TEXT_TYPE {
+	text,
+	password
+}
+
 ///@desc A field for entering text.
 ///@arg {Real} x
 ///@arg {Real} y
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-///@arg {String} start_text
+///@arg {String} text
 ///@arg {String} placeholder
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, start_text = "", placeholder = "", is_password = false, max_length = 32, callback = undefined) : LuiBase() constructor {
+function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", placeholder = "", is_password = false, max_length = 255, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
-	self.value = string(start_text);
+	self.value = text;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
@@ -32,6 +37,38 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 		self.updateMainUiSurface();
 	}, [], -1);
+	
+	///@desc Set text
+	///@arg {string} _text
+	static setText = function(_text) {
+		self.set(_text);
+		return self;
+	}
+	
+	///@desc Set placeholder text
+	///@arg {string} _placeholder
+	static setPlaceholder = function(_placeholder) {
+		self.placeholder = _placeholder;
+		return self;
+	}
+	
+	///@desc Set text type (text, password)
+	///@arg {real} _text_type LUI_INPUT_TEXT_TYPE
+	static setTextType = function(_text_type) {
+		if _text_type == LUI_INPUT_TEXT_TYPE.password {
+			self.is_password = true;
+		} else {
+			self.is_password = false;
+		}
+		return self;
+	}
+	
+	///@desc Set text max length
+	///@arg {real} _max_length
+	static setMaxLength = function(_max_length) {
+		self.max_length = _max_length;
+		return self;
+	}
 	
 	///@ignore
 	static _limit_value = function(_string) {
@@ -106,6 +143,10 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 			draw_sprite_stretched_ext(self.style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
 		}
 	}
+	
+	self.addEventListener(LUI_EV_CREATE, function(_element) {
+		_element.set(_element._limit_value(_element.get()));
+	});
 	
 	self.addEventListener(LUI_EV_FOCUS_SET, function(_element) {
 		time_source_start(_element.cursor_timer);

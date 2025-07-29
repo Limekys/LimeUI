@@ -4,7 +4,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-///@arg {id.surface} surface
+///@arg {id.Surface} surface
 ///@arg {Real} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
@@ -25,15 +25,31 @@ function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	self.surface_real_height = 0;
 	self.aspect = 1;
 	
+	///@desc Set surface id
+	///@arg {id.Surface} _surface
+	static setSurface = function(_surface) {
+		self.set(_surface);
+		return self;
+	}
+	
 	///@desc Set blend color
 	static setColor = function(color_blend) {
 		self.color_blend = color_blend;
+		return self;
 	}
 	
 	///@desc Set alpha
+	///@arg {real} _alpha
 	static setAlpha = function(_alpha) {
 		self.alpha = _alpha;
 		return self
+	}
+	
+	///@desc Set maintain aspect of surface
+	///@arg {bool} _maintain_aspect
+	static setMaintainAspect = function(_maintain_aspect) {
+		self.maintain_aspect = _maintain_aspect;
+		return self;
 	}
 	
 	///@desc Update surface if visible (should be called from main object where you draw surface)
