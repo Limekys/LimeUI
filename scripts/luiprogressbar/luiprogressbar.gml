@@ -28,6 +28,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@arg {real} _min_value
 	static setMinValue = function(_min_value) {
 		self.min_value = _min_value;
+		self.set(self._calcValue(self.get()));
 		return self;
 	}
 	
@@ -35,6 +36,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@arg {real} _max_value
 	static setMaxValue = function(_max_value) {
 		self.max_value = _max_value;
+		self.set(self._calcValue(self.get()));
 		return self;
 	}
 	

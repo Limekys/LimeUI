@@ -244,6 +244,7 @@ function LuiBase() constructor {
 	// SETTERS
 	
 	///@desc Set value
+	///@arg {any} _value
 	static set = function(_value) {
 		if self.value != _value {
 			self.value = _value;
@@ -454,6 +455,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _min_width != LUI_AUTO && self.min_width != _min_width {
+			self.min_width = _min_width;
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
 			_update_flex = true;
 		}
@@ -469,6 +471,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _max_width != LUI_AUTO && self.max_width != _max_width {
+			self.max_width = _max_width;
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
 			_update_flex = true;
 		}
@@ -484,6 +487,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _min_height != LUI_AUTO && self.min_height != _min_height {
+			self.min_height = _min_height;
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
 			_update_flex = true;
 		}
@@ -499,6 +503,7 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _max_height != LUI_AUTO && self.max_height != _max_height {
+			self.max_height = _max_height;
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 			_update_flex = true;
 		}
@@ -517,18 +522,22 @@ function LuiBase() constructor {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _min_width != LUI_AUTO && self.min_width != _min_width {
+			self.min_width = _min_width;
 			flexpanel_node_style_set_min_width(_flex_node, _min_width, flexpanel_unit.point);
 			_update_flex = true;
 		}
 		if _max_width != LUI_AUTO && self.max_width != _max_width {
+			self.max_width = _max_width;
 			flexpanel_node_style_set_max_width(_flex_node, _max_width, flexpanel_unit.point);
 			_update_flex = true;
 		}
 		if _min_height != LUI_AUTO && self.min_height != _min_height {
+			self.min_height = _min_height;
 			flexpanel_node_style_set_min_height(_flex_node, _min_height, flexpanel_unit.point);
 			_update_flex = true;
 		}
 		if _max_height != LUI_AUTO && self.max_height != _max_height {
+			self.max_height = _max_height;
 			flexpanel_node_style_set_max_height(_flex_node, _max_height, flexpanel_unit.point);
 			_update_flex = true;
 		}

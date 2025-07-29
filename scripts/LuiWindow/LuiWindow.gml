@@ -22,6 +22,7 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		return self;
 	}
 	
+	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
 			self.window_header = new LuiWindowHeader(self.pos_x, self.pos_y, self.width, self.header_height, , self.title)
@@ -50,10 +51,12 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
+	///@desc Toggle window show or hide
 	static toggleWindow = function() {
 		self.setVisible(!self.visible);
 	}
 	
+	///@desc Destroy window
 	static closeWindow = function() {
 		self.window_header.destroy();
 		self.destroy();

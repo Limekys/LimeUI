@@ -24,12 +24,14 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.slider_xoffset = 0;
 	self.slider_color_value = 0;
 	
-	//@desc Set display text (render right of element)
+	///@desc Set display text (render right of element)
+	///@arg {string} _text
 	static setText = function(_text) {
 		self.text = _text;
 		return self;
 	}
 	
+	///@ignore
 	static _updateSlider = function() {
 		self.slider_size = min(self.width, self.height);
 		if self.value == false {

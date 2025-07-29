@@ -17,12 +17,14 @@ function LuiBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO,
 	}
 	
 	///@desc Set color for block area (default is c_black)
+	///@arg {any} _color
 	static setColor = function(_color) {
 		self.color = _color;
 		return self;
 	}
 	
 	///@desc Set alpha for block area (default is 0.5)
+	///@arg {real} _alpha
 	static setAlpha = function(_alpha) {
 		self.alpha = _alpha;
 		return self;

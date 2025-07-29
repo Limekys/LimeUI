@@ -27,14 +27,16 @@ function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	}
 	
 	///@desc Set horizontal aligment of text.
-	static setTextHalign = function(halign) {
-		self.text_halign = halign;
+	///@arg {constant.HAlign} _halign
+	static setTextHalign = function(_halign) {
+		self.text_halign = _halign;
 		return self;
 	}
 	
 	///@desc Set vertical aligment of text.
-	static setTextValign = function(valign) {
-		self.text_valign = valign;
+	///@arg {constant.VAlign} _valign
+	static setTextValign = function(_valign) {
+		self.text_valign = _valign;
 		return self;
 	}
 	

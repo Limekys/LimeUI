@@ -24,6 +24,9 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	///@arg {real} _tab_height
 	static setTabHeight = function(_tab_height) {
 		self.tab_height = _tab_height;
+		if !is_undefined(self.tabs_header) {
+			self.tabs_header.setMinHeight(self.tab_height).setHeight(self.tab_height);
+		}
 		return self;
 	}
 	
@@ -31,7 +34,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.tabs_header) {
-			self.tabs_header = new LuiRow(, , , self.tab_height, "_tabs_header_" + string(self.element_id));
+			self.tabs_header = new LuiRow(, , , self.tab_height).setGap(0).setMinHeight(self.tab_height);
 		}
 	}
 	
@@ -61,6 +64,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	}
 	
 	///@desc Add LuiTab's
+	///@arg {struct,array} _tabs
 	static addTabs = function(_tabs) {
         self.tabs = _tabs;
 		if !is_undefined(self.main_ui) self._initTabs();
@@ -120,7 +124,6 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		_element._initHeader();
 		// Add header
 		_element.addContent(_element.tabs_header);
-		_element.tabs_header.setGap(0).setMinHeight(_element.tab_height);
 		// Init tab's
 		_element._initTabs();
 	});
@@ -162,12 +165,13 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 	///@ignore
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
-			self.tab_container = new LuiContainer(0, 0, , , $"_tab_container_{self.element_id}").setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
+			self.tab_container = new LuiContainer(0, 0).setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
 			self.setContainer(self.tab_container);
 		}
 	}
 	
 	///@desc Set active state of tab
+	///@arg {bool} _is_active
 	static setActiveState = function(_is_active) {
 	    self.is_active = _is_active;
 	    if (_is_active) {

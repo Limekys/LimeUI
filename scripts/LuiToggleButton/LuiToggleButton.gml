@@ -38,8 +38,8 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		return self;
 	}
 	
-	///@func setColor(_button_color)
-	///@arg _button_color
+	///@desc Set button color
+	///@arg {any} _button_color
 	static setColor = function(_button_color) {
 		self.button_color = _button_color;
 		return self;
@@ -48,7 +48,7 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	///@arg {Asset.GMSprite} _sprite
 	///@arg {real} _scale
 	///@arg {real} _angle
-	///@arg {constant.color} _color
+	///@arg {any} _color
 	///@arg {real} _alpha
 	static setIcon = function(_sprite, _scale = 1, _angle = 0, _color = c_white, _alpha = 1) {
 		self.icon.sprite = _sprite;
@@ -85,8 +85,7 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_button) {
-			var _blend_color = self.value == true ? self.style.color_accent : self.style.color_secondary;
-			if !is_undefined(self.button_color) _blend_color = self.button_color;
+			var _blend_color = self.value == true ? self.style.color_accent : (!is_undefined(self.button_color) ? self.button_color : self.style.color_secondary);
 			if !self.deactivated {
 				if self.isMouseHovered() {
 					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);

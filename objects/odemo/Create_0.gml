@@ -75,7 +75,7 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create Tabs with absolute position on the screen
-tabs = new LuiTabs( , , 550, 350, "LuiTabs", 48).setPositionType(flexpanel_position_type.absolute);
+tabs = new LuiTabs( , , 550, 350, "LuiTabs", 32).setPositionType(flexpanel_position_type.absolute);
 
 // Add panels to main ui container
 my_ui.addContent([
@@ -227,6 +227,8 @@ combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
 		//Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
+		//Tabs height
+		oDemo.my_ui.getElement("LuiTabs").setTabHeight(32);
 	}
 });
 combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
@@ -240,6 +242,8 @@ combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
 		//Set colors to buttons
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.1));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.1));
+		//Tabs height
+		oDemo.my_ui.getElement("LuiTabs").setTabHeight(32);
 	}
 });
 combobox_item_3 = new LuiComboBoxItem( , "Modern", function() { 
@@ -252,6 +256,8 @@ combobox_item_3 = new LuiComboBoxItem( , "Modern", function() {
 		//Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#fa9a31, c_white, 0.25));
 		btn_restart.setColor(merge_color(#e5538d, c_white, 0.25));
+		//Tabs height
+		oDemo.my_ui.getElement("LuiTabs").setTabHeight(48);
 	}
 });
 combobox_theme.addItems([combobox_item_1, combobox_item_2, combobox_item_3]);

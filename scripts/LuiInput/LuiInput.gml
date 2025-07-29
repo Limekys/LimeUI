@@ -179,7 +179,7 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	});
 	
 	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
-		self.callback(); //???//обратная совместимость
+		_element.callback(); //???//обратная совместимость
 	});
 	
 	self.addEventListener(LUI_EV_DESTROY, function(_element) {

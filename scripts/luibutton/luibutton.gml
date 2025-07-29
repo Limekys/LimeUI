@@ -10,7 +10,6 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.name = name;
 	self.text = text;
-	self.value = text;
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
@@ -51,7 +50,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	///@arg {Asset.GMSprite} _sprite
 	///@arg {real} _scale
 	///@arg {real} _angle
-	///@arg {constant.color} _color
+	///@arg {any} _color
 	///@arg {real} _alpha
 	static setIcon = function(_sprite, _scale = 1, _angle = 0, _color = c_white, _alpha = 1) {
 		self.icon.sprite = _sprite;
@@ -88,8 +87,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.draw = function() {
 		// Base
 		if !is_undefined(self.style.sprite_button) {
-			var _blend_color = self.style.color_secondary;
-			if !is_undefined(self.button_color) _blend_color = self.button_color;
+			var _blend_color = !is_undefined(self.button_color) ? self.button_color : self.style.color_secondary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
 					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);

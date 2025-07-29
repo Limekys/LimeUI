@@ -6,7 +6,7 @@
 ///@arg {String} name
 ///@arg {Asset.GMSprite} sprite
 ///@arg {Real} subimg
-///@arg {Real} color
+///@arg {any} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
@@ -28,30 +28,35 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.aspect = 1;
 	
 	///@desc Set sprite
+	///@arg {asset.GMSprite} _sprite
 	static setSprite = function(_sprite) {
 		self.set(_sprite);
 		return self;
 	}
 	
 	///@desc Set subimg of sprite
+	///@arg {real} _subimg
 	static setSubimg = function(_subimg) {
 		self.subimg = _subimg;
 		return self;
 	}
 	
 	///@desc Set blend color for sprite
+	///@arg {any} _color_blend
 	static setColor = function(color_blend) {
 		self.color_blend = color_blend;
 		return self;
 	}
 	
 	///@desc Set alpha for sprite
+	///@arg {real} _alpha
 	static setAlpha = function(_alpha) {
 		self.alpha = _alpha;
 		return self;
 	}
 	
 	///@desc Set maintain aspect of sprite
+	///@arg {bool} _maintain_aspect
 	static setMaintainAspect = function(_maintain_aspect) {
 		self.maintain_aspect = _maintain_aspect;
 		return self;

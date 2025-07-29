@@ -5,7 +5,7 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {id.Surface} surface
-///@arg {Real} color
+///@arg {any} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, surface = undefined, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
@@ -33,8 +33,9 @@ function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 	}
 	
 	///@desc Set blend color
-	static setColor = function(color_blend) {
-		self.color_blend = color_blend;
+	///@arg {any} _color_blend
+	static setColor = function(_color_blend) {
+		self.color_blend = _color_blend;
 		return self;
 	}
 	

@@ -196,7 +196,8 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 	
 	self.combobox_parent = undefined;
 	
-	static toggleCombobox = function() {
+	///@desc Set new combobox text and close combobox
+	static chooseItem = function() {
 		self.combobox_parent.set(self.text);
 		self.combobox_parent.toggle();
 	}
@@ -238,6 +239,6 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 	}
 	
 	self.addEventListener(LUI_EV_CLICK, function(_element) {
-		_element.toggleCombobox();
+		_element.chooseItem();
 	});
 }

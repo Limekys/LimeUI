@@ -117,6 +117,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	});
 	
 	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
-		self.callback(); //???//обратная совместимость
+		_element.callback(); //???//обратная совместимость
 	});
 }

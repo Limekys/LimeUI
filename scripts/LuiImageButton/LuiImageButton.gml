@@ -6,7 +6,7 @@
 ///@arg {String} name
 ///@arg {Asset.GMSprite} sprite
 ///@arg {Real} subimg
-///@arg {Real} color
+///@arg {any} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 ///@arg {Function} callback
