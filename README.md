@@ -1,5 +1,5 @@
 # LimeUI
-Free UI system for Game Maker games with flexpanels implementation
+Free UI Framework for Game Maker games with flexpanels implementation
 
 For documentaion check [wiki page](https://github.com/Limekys/LimeUI/wiki)
 
