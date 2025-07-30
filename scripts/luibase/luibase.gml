@@ -1608,13 +1608,13 @@ function LuiBase() constructor {
 			// Draw self
 			if is_method(_element.draw) _element.draw();
 			// Draw content
-			if _element.render_content_enabled {
+			if _element.render_content_enabled { //???// is it right place for gpu_set_scissor ?
 				if self.draw_content_in_cutted_region {
 					var _gpu_scissor = gpu_get_scissor();
-					var _x = self.x + self.render_region_offset.left;
-					var _y = self.y + self.render_region_offset.top;
-					var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
-					var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
+					var _x = self.x + self.style.render_region_offset.left;
+					var _y = self.y + self.style.render_region_offset.top;
+					var _w = self.width - self.style.render_region_offset.left - self.style.render_region_offset.right;
+					var _h = self.height - self.style.render_region_offset.top - self.style.render_region_offset.bottom;
 					gpu_set_scissor(_x, _y, _w, _h);
 				}
 				_element.render();

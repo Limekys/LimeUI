@@ -132,7 +132,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		if _element.auto_height {
 			flexpanel_node_style_set_flex(_element.flex_node, 1); //???//
 		}
-		_element.setRenderRegionOffset(_element.style.render_region_offset);
 		flexpanel_node_style_set_border(_element.flex_node, flexpanel_edge.right, _element.style.scroll_slider_width + _element.scroll_pin_edge_offset); //???//
 	});
 	
