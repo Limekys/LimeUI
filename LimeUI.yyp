@@ -123,6 +123,7 @@
     {"id":{"name":"sUI_scroll_slider","path":"sprites/sUI_scroll_slider/sUI_scroll_slider.yy",},},
     {"id":{"name":"sUI_slider_knob_border","path":"sprites/sUI_slider_knob_border/sUI_slider_knob_border.yy",},},
     {"id":{"name":"sUI_slider_knob","path":"sprites/sUI_slider_knob/sUI_slider_knob.yy",},},
+    {"id":{"name":"sUI_Square_21r_shadow","path":"sprites/sUI_Square_21r_shadow/sUI_Square_21r_shadow.yy",},},
     {"id":{"name":"sUI_Square_21r","path":"sprites/sUI_Square_21r/sUI_Square_21r.yy",},},
     {"id":{"name":"sUI_Square_6r_dropdown_item_border","path":"sprites/sUI_Square_6r_dropdown_item_border/sUI_Square_6r_dropdown_item_border.yy",},},
     {"id":{"name":"sUI_Square_6r","path":"sprites/sUI_Square_6r/sUI_Square_6r.yy",},},

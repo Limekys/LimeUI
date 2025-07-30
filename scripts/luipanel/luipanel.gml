@@ -16,6 +16,8 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.allow_rescaling = false;
 	
 	self.draw = function() {
+		//Shadow
+		//draw_sprite_stretched_ext(sUI_Square_21r_shadow, 0, self.x - 21, self.y - 21, self.width + 42, self.height + 42, c_white, 1);
 		// Base
 		if !is_undefined(self.style.sprite_panel) {
 			var _blend_color = self.style.color_primary; //???// self.nesting_level == 1 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
