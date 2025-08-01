@@ -410,10 +410,10 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		spr_car_1 = new LuiImage( , , , , , sCar).addEvent(LUI_EV_CLICK, function(_element) {print("Clicked on image!")});
-		spr_car_2 = new LuiImage( , , , , , sCar, , , , false);
-		spr_car_3 = new LuiImage( , , , , , sHamburger);
-		spr_car_4 = new LuiImage( , , , , , sHamburger, , , , false);
+		spr_car_1 = new LuiImage( , , , , "sCar", sCar).addEvent(LUI_EV_CLICK, function(_element) {print($"Clicked on image {_element.name}!")});
+		spr_car_2 = new LuiImage( , , , , "sCar_stretched", sCar, , , , false);
+		spr_car_3 = new LuiImage( , , , , "sHamburger", sHamburger);
+		spr_car_4 = new LuiImage( , , , , "sHamburger_stretched", sHamburger, , , , false);
 		tab_sprites.addContent([
 			new LuiRow( , , , 500).addContent([
 				spr_car_1, spr_car_2, spr_car_3, spr_car_4
