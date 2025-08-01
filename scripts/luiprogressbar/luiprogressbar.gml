@@ -28,7 +28,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@arg {real} _min_value
 	static setMinValue = function(_min_value) {
 		self.min_value = _min_value;
-		self.set(self._calcValue(self.get()));
+		self.set(self._calculateValue(self.get()));
 		return self;
 	}
 	
@@ -36,7 +36,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@arg {real} _max_value
 	static setMaxValue = function(_max_value) {
 		self.max_value = _max_value;
-		self.set(self._calcValue(self.get()));
+		self.set(self._calculateValue(self.get()));
 		return self;
 	}
 	
@@ -54,8 +54,9 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		return self;
 	}
 	
+	///@desc Calculate final value with rounding and clamping
 	///@ignore
-	static _calcValue = function(_value) {
+	static _calculateValue = function(_value) {
 		var _new_value = 0;
 		if self.rounding > 0 {
 			_new_value = round(_value / (self.rounding)) * (self.rounding);
@@ -98,11 +99,11 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			}
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
-			draw_text(self.x + self.width div 2, self.y + self.height div 2, _calcValue(self.value));
+			draw_text(self.x + self.width div 2, self.y + self.height div 2, _calculateValue(self.value));
 		}
 	}
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.value = _calcValue(_element.value);
+		_element.value = _calculateValue(_element.value);
 	});
 }

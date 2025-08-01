@@ -72,7 +72,7 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			}
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
-			draw_text(self.x + self.width / 2, self.y + self.height / 2, _calcValue(self.value));
+			draw_text(self.x + self.width / 2, self.y + self.height / 2, _calculateValue(self.value));
 		}
 	}
 	

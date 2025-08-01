@@ -91,7 +91,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;
 		var _new_value = clamp(_element.value + _wheel * _wheel_step, _element.min_value, _element.max_value);
-		_new_value = _calcValue(_new_value);
+		_new_value = _calculateValue(_new_value);
 		_element.set(_new_value);
 	});
 	
@@ -102,7 +102,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
 		var x1 = _element.x;
 		var x2 = x1 + _element.width;
-		var _new_value = _calcValue((_data.mouse_x - x1) / (x2 - x1) * (_element.max_value - _element.min_value) + _element.min_value);
+		var _new_value = _calculateValue((_data.mouse_x - x1) / (x2 - x1) * (_element.max_value - _element.min_value) + _element.min_value);
 		_element.set(_new_value);
 	});
 }
