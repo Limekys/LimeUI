@@ -14,7 +14,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	setCallback(callback);
 	
-	self.dragging = false; //???// сделать зависимость от drag элементов в LuiMain
+	self.can_drag = true;
 	
 	self.draw = function() {
 		// Value
@@ -48,7 +48,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		} else {
 			draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 		}
-		if !self.dragging {
+		if !self.is_dragging {
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
 			draw_text(self.x + self.width div 2, self.y + self.height div 2, self.value);
@@ -78,33 +78,12 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _knob_x - _knob_extender, self.y - _knob_extender, _knob_width + _knob_extender*2, self.height + _knob_extender*2, self.style.color_border, 1);
 		}
 		// Popup text value when dragging
-		if self.dragging {
+		if self.is_dragging {
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_bottom);
 			draw_text(_knob_x + _knob_width div 2, self.y - 4, self.value);
 		}
 	}
-	
-	self.step = function() {
-		if (self.dragging) {
-			if mouse_check_button(mb_left) {
-				// Calculate new value
-				var x1 = self.x;
-				var y1 = self.y;
-				var x2 = x1 + self.width;
-				var _new_value = clamp(((device_mouse_x_to_gui(0) - view_get_xport(view_current)) - x1) / (x2 - x1) * (self.max_value - self.min_value) + self.min_value, self.min_value, self.max_value);
-				// Rounding
-				_new_value = _calcValue(_new_value);
-				self.set(_new_value);
-			} else {
-				self.dragging = false;
-			}
-		}
-	}
-	
-	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
-		_element.dragging = true;
-	});
 	
 	self.addEvent(LUI_EV_MOUSE_WHEEL, function(_element) {
 		var _wheel_step = max(_element.rounding, (_element.max_value - _element.min_value) * 0.02);
@@ -118,5 +97,12 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element.callback(); //???//обратная совместимость
+	});
+	
+	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
+		var x1 = _element.x;
+		var x2 = x1 + _element.width;
+		var _new_value = _calcValue((_data.mouse_x - x1) / (x2 - x1) * (_element.max_value - _element.min_value) + _element.min_value);
+		_element.set(_new_value);
 	});
 }

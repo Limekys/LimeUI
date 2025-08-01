@@ -155,7 +155,9 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	
 	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
 		if (!is_undefined(_element.parent_window)) {
-            _element.parent_window.setPosition(_data.new_pos_x, _data.new_pos_y);
+            var _new_pos_x = clamp(_data.new_x, 0, self.main_ui.width - self.width);
+			var _new_pos_y = clamp(_data.new_y, 0, self.main_ui.height - self.height);
+			_element.parent_window.setPosition(_new_pos_x, _new_pos_y);
         }
 	});
 }

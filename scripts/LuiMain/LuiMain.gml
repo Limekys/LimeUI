@@ -19,6 +19,8 @@ function LuiMain() : LuiBase() constructor {
 	self.current_debug_mode = 0;
 	self.active_animations = [];
 	self._screen_grid = {};
+	self.prev_mouse_x = -1;
+	self.prev_mouse_y = -1;
 	
 	// Init Flex
 	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
@@ -175,12 +177,13 @@ function LuiMain() : LuiBase() constructor {
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT);
 					// Call LUI_EV_DRAGGING event
 					if (self.topmost_hovered_element.can_drag && !is_undefined(self.dragging_element)) {
-						var _new_pos_x = clamp(_mouse_x - self.topmost_hovered_element.drag_offset_x, 0, self.width - self.topmost_hovered_element.width);
-						var _new_pos_y = clamp(_mouse_y - self.topmost_hovered_element.drag_offset_y, 0, self.height - self.topmost_hovered_element.height);
-						if self.topmost_hovered_element.x != _new_pos_x || self.topmost_hovered_element.y != _new_pos_y {
-							self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAGGING, { new_pos_x : _new_pos_x, new_pos_y : _new_pos_y });
-							self.updateMainUiSurface();
+						var _new_x = _mouse_x - self.topmost_hovered_element.drag_offset_x;
+						var _new_y = _mouse_y - self.topmost_hovered_element.drag_offset_y;
+						if self.prev_mouse_x != _mouse_x || self.prev_mouse_y != _mouse_y {
+							self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAGGING, { new_x : _new_x, new_y : _new_y, mouse_x : _mouse_x, mouse_y : _mouse_y });
 						}
+						self.prev_mouse_x = _mouse_x;
+						self.prev_mouse_y = _mouse_y;
 					}
 				}
 				
