@@ -196,11 +196,11 @@ function LuiMain() : LuiBase() constructor {
 						var _new_pos_x = clamp(_mouse_x - self.topmost_hovered_element.drag_offset_x, 0, self.width - self.topmost_hovered_element.width);
 						var _new_pos_y = clamp(_mouse_y - self.topmost_hovered_element.drag_offset_y, 0, self.height - self.topmost_hovered_element.height);
 						if self.topmost_hovered_element.x != _new_pos_x || self.topmost_hovered_element.y != _new_pos_y {
-							self.topmost_hovered_element.setPosition(_new_pos_x, _new_pos_y);
+							//self.topmost_hovered_element.setPosition(_new_pos_x, _new_pos_y);
 							if is_method(self.topmost_hovered_element.onDragging) {
 								self.topmost_hovered_element.onDragging();
 							}
-							self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAGGING);
+							self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAGGING, { new_pos_x : _new_pos_x, new_pos_y : _new_pos_y });
 							self.updateMainUiSurface();
 						}
 					}

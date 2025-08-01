@@ -21,4 +21,6 @@ if !my_ui.isInteractingKeyboard() {
 	
 	//var _element = my_ui.getElement("tabPanels");
 	//print(_element.getData("test"));
+	
+	my_ui.setVisible(!my_ui.visible)
 }

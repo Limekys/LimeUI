@@ -29,11 +29,11 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		return self.container;
 	}
 	
-	///@desc Create scroll container
+	///@desc Create container
 	///@ignore
 	static _initScrollContainer = function() {
 		if is_undefined(self.scroll_container) {
-			self.scroll_container = new LuiAbsoluteContainer(0, 0, LUI_AUTO, LUI_AUTO, $"_scroll_container_{self.element_id}");
+			self.scroll_container = new LuiAbsoluteContainer(0, 0, LUI_AUTO, LUI_AUTO);
 			self.setContainer(self.scroll_container);
 		}
 	}
@@ -41,7 +41,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@desc Original addContent for compatibility
 	self.addContentOriginal = method(self, addContent);
 	
-	///@desc Redirect addContent to scroll_container
+	///@desc Redirect addContent
 	self.addContent = function(elements) {
 		self._initScrollContainer();
 		self.scroll_container.addContent(elements);

@@ -916,7 +916,7 @@ function LuiBase() constructor {
 	///@ignore
 	static _addDelayedContent = function() {
 		if is_array(self.delayed_content) && array_length(self.delayed_content) > 0 {
-			self.addContent(self.delayed_content);
+			self.getContainer().addContent(self.delayed_content);
 			self.delayed_content = -1;
 		}
 	}
@@ -1639,7 +1639,7 @@ function LuiBase() constructor {
 	 
 	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
 	static centerContent = function() {
-		self.setFlexJustifyContent(flexpanel_justify.center)
+		self.getContainer().setFlexJustifyContent(flexpanel_justify.center)
 			.setFlexAlignItems(flexpanel_align.center);
 		return self;
 	}

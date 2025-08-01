@@ -11,6 +11,7 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
     self.is_minimized = false;
 	self.window_header = undefined;
 	self.header_height = LUI_AUTO;
+	self.window_container = undefined;
 	
 	///@desc Set window title
 	///@arg {string} _title
@@ -25,8 +26,8 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
-			self.window_header = new LuiWindowHeader(self.pos_x, self.pos_y, self.width, self.header_height, , self.title)
-				.setPositionType(flexpanel_position_type.absolute).setGap(0).setPadding(8).setFlexDirection(flexpanel_flex_direction.row);
+			self.window_header = new LuiWindowHeader(, , self.width, self.header_height, , self.title)
+				.setGap(0).setPadding(8).setFlexDirection(flexpanel_flex_direction.row);
 			
 			// Add title text to header
 			self.window_header.text_title = new LuiText(0, 0, LUI_AUTO, LUI_AUTO, , self.title).setMouseIgnore(true);
@@ -44,53 +45,72 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			});
 			self.window_header.addContent([_minimize_button, _close_button]);
 			
-			self.main_ui.addContent(self.window_header);
 			self.window_header.parent_window = self;
-			self.bringToFront();
-			self.window_header.bringToFront();
 		}
+	}
+	
+	///@desc Change getContainer function for compatibility with setFlex... functions
+	self.getContainer = function() {
+		self._initWindowContainer();
+		return self.container;
+	}
+	
+	///@desc Create container
+	///@ignore
+	static _initWindowContainer = function() {
+		if is_undefined(self.window_container) {
+			self.window_container = new LuiContainer().setFullSize();
+			self.setContainer(self.window_container);
+		}
+	}
+	
+	///@desc Original addContent for compatibility
+	self.addContentOriginal = method(self, addContent);
+	
+	///@desc Redirect addContent
+	self.addContent = function(elements) {
+		self._initWindowContainer();
+		self.window_container.addContent(elements);
+		return self;
 	}
 	
 	///@desc Toggle window show or hide
 	static toggleWindow = function() {
-		self.setVisible(!self.visible);
+		self.window_container.setVisible(!self.window_container.visible);
+		self.ignore_mouse = !self.window_container.visible;
 	}
 	
 	///@desc Destroy window
 	static closeWindow = function() {
-		self.window_header.destroy();
 		self.destroy();
 	}
 	
     self.draw = function() {
-		// Window
-		if !is_undefined(self.style.sprite_tabs) {
-			var _blend_color = self.style.color_primary;
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
+		if self.window_container.visible {
+			// Window
+			if !is_undefined(self.style.sprite_tabs) {
+				var _blend_color = self.style.color_primary;
+				if self.deactivated {
+					_blend_color = merge_color(_blend_color, c_black, 0.5);
+				}
+				draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, _blend_color, 1);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
-		}
-		// Border
-		if !is_undefined(self.style.sprite_tabs_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+			// Border
+			if !is_undefined(self.style.sprite_tabs_border) {
+				draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, self.style.color_border, 1);
+			}
 		}
     }
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.setPositionType(flexpanel_position_type.absolute);
 		_element._initHeader();
-	});
-	
-	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+		_element._initWindowContainer();
+		_element.addContentOriginal([
+			_element.window_header,
+			_element.window_container
+		]);
 		_element.bringToFront();
-		_element.window_header.bringToFront();
-	});
-	
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		if !is_undefined(_element.window_header) {
-			_element.window_header.destroy();
-		}
 	});
 }
 
@@ -112,7 +132,7 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	
 	self.title = title;
 	self.text_title = undefined;
-	self.parent_window = -1;
+	self.parent_window = undefined;
 	self.can_drag = true;
 	
     // Draw method
@@ -128,25 +148,14 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
     }
-    
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
-	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
 		_element.parent_window.bringToFront();
-		_element.bringToFront();
 	});
 	
-	self.addEvent(LUI_EV_DRAGGING, function(_element) {
+	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
 		if (!is_undefined(_element.parent_window)) {
-            _element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
-        }
-	});
-	
-	self.addEvent(LUI_EV_POSITION_UPDATE, function(_element) {
-		if (!is_undefined(_element.parent_window)) {
-            _element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
+            _element.parent_window.setPosition(_data.new_pos_x, _data.new_pos_y);
         }
 	});
 }
