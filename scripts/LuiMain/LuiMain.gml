@@ -47,6 +47,9 @@ function LuiMain() : LuiBase() constructor {
 		self._recalculateScreenGrid();
 	}
 	
+	// Init easing functions
+	_luiInitEaseFunctions();
+	
 	// SYSTEM
 	
 	///@desc Create animation for any variables of target element
