@@ -139,7 +139,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		draw_set_alpha(1);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		if self.value == "" {
+		if is_undefined(self.value) {
 			draw_set_alpha(0.5);
 			_drawTruncatedText(_txt_x, _txt_y, self.placeholder, _text_draw_width);
 		} else {
