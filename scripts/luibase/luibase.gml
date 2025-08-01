@@ -1133,7 +1133,7 @@ function LuiBase() constructor {
 			if variable_struct_exists(self.main_ui.element_names, self.name) {
 				variable_struct_remove(self.main_ui.element_names, self.name);
 			} else {
-				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find name \"{self.name}\"!");
+				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find element {instanceof(self)} with name \"{self.name}\"!");
 			}
 		}
 	}
@@ -1762,7 +1762,7 @@ function LuiBase() constructor {
 	static destroyContent = function() {
 	    while (array_length(self.content) > 0) {
 	        var _element = array_pop(self.content);
-	        if (_element != undefined) {
+	        if (!is_undefined(_element)) {
 	            _element.destroy();
 	        }
 	    }
@@ -1774,6 +1774,8 @@ function LuiBase() constructor {
 		if (self.is_destroyed) {
 			return;
 		}
+		// Double-Destroy protection
+		self.is_destroyed = true;
 		// Destroy all content
 		self.destroyContent();
 		// Remove focus from main ui
@@ -1809,7 +1811,5 @@ function LuiBase() constructor {
 		self.event_listeners = {}
 		// Decrement global counter
 		global.lui_element_count--;
-		// Double-Destroy protection
-		self.is_destroyed = true;
 	}
 }
