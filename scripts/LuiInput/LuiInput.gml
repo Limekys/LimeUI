@@ -17,7 +17,7 @@ enum LUI_INPUT_TEXT_TYPE {
 function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", placeholder = "", is_password = false, max_length = 255, callback = undefined) : LuiBase() constructor {
 	
 	self.name = name;
-	self.value = text;
+	self.value = string(text);
 	self.pos_x = x;
 	self.pos_y = y;
 	self.width = width;
