@@ -152,7 +152,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element._calculateTextWidth();
 		if is_undefined(_element.combobox_panel) {
 			_element._initComboBoxPanel();
@@ -160,27 +160,27 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	});
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.toggle();
 	});
 	
-	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element._calculateTextWidth();
 	});
 	
-	self.addEventListener(LUI_EV_HIDE, function(_element) {
+	self.addEvent(LUI_EV_HIDE, function(_element) {
 		if _element.is_open {
 			_element.toggle();
 		}
 	});
 	
-	self.addEventListener(LUI_EV_FOCUS_REMOVE, function(_element) {
+	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_element) {
 		if _element.is_open && !_element.combobox_panel.isMouseHoveredExc() {
 			_element.toggle();
 		}
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		if !is_undefined(_element.combobox_panel) {
 			_element.combobox_panel.destroy();
 		}
@@ -238,7 +238,7 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.chooseItem();
 	});
 }

@@ -82,7 +82,7 @@ function LuiBase() constructor {
     self.drag_offset_x = 0;
     self.drag_offset_y = 0;
 	
-	// Logic methods for element
+	// Logic methods for element //???// delete uneccesery methods
 	
 	//Called after this item has been added somewhere
 	self.onCreate = undefined;
@@ -163,7 +163,7 @@ function LuiBase() constructor {
 	///@param {string} _eventType The event type (e.g., "mouse_left_pressed", "value_changed")
 	///@param {function} _callback The callback function to execute
 	///@return {struct} The element itself for chaining
-	static addEventListener = function(_eventType, _callback) {
+	static addEvent = function(_eventType, _callback) {
 		if (is_undefined(self.event_listeners[$ _eventType])) {
 			self.event_listeners[$ _eventType] = [];
 		}
@@ -175,7 +175,7 @@ function LuiBase() constructor {
 	///@param {string} _eventType The event type
 	///@param {function} _callback The callback function to remove
 	///@return {struct} The element itself for chaining
-	static removeEventListener = function(_eventType, _callback) {
+	static removeEvent = function(_eventType, _callback) {
 		if (!is_undefined(self.event_listeners[$ _eventType])) {
 			var _listeners = self.event_listeners[$ _eventType];
 			for (var i = array_length(_listeners) - 1; i >= 0; i--) {

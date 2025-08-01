@@ -80,7 +80,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.value);
 		_element.callback(); //???// обратная совместимость
 		if !is_undefined(_element.style.sound_click) {

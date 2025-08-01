@@ -76,19 +76,19 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element._calcSpritePos(_element.style.sprite_progress_ring);
 	});
 	
-	self.addEventListener(LUI_EV_POSITION_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_POSITION_UPDATE, function(_element) {
 		_element._calcSpritePos(_element.style.sprite_progress_ring);
 	});
 	
-	self.addEventListener(LUI_EV_SIZE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
 		_element._calcSpritePos(_element.style.sprite_progress_ring);
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		delete _element.sprite_pos;
 	});
 }

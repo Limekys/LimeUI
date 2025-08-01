@@ -126,13 +126,13 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		if sprite_exists(_element.icon.sprite) {
 			_element._calcIconSize();
 		}
 	});
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.get());
 		_element.callback(); //???// обратная совместимость
 		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);

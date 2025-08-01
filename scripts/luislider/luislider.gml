@@ -102,11 +102,11 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
 		_element.dragging = true;
 	});
 	
-	self.addEventListener(LUI_EV_MOUSE_WHEEL, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_WHEEL, function(_element) {
 		var _wheel_step = max(_element.rounding, (_element.max_value - _element.min_value) * 0.02);
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
@@ -116,7 +116,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		_element.set(_new_value);
 	});
 	
-	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element.callback(); //???//обратная совместимость
 	});
 }

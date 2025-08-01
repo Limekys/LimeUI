@@ -132,13 +132,13 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		if sprite_exists(_element.icon.sprite) {
 			_element._calcIconSize();
 		}
 	});
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.callback(); //???// обратная совместимость
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);
@@ -146,7 +146,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	});
 	
 	/* //???// Button animation test
-	self.addEventListener(LUI_EV_MOUSE_ENTER, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_element) {
 		var _anim_time = 0.2;
 		// 
 		_element.main_ui.animate(_element, "width_offset", 4, _anim_time);
@@ -154,7 +154,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		_element.main_ui.animate(_element, "height_offset", 4, _anim_time);
 	});
 	
-	self.addEventListener(LUI_EV_MOUSE_LEAVE, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_element) {
 		var _anim_time = 0.2;
 		// 
 		_element.main_ui.animate(_element, "width_offset", 0, _anim_time);

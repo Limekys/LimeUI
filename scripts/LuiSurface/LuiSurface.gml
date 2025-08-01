@@ -95,7 +95,7 @@ function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_A
 									_blend_color, self.alpha);
 	}
 	
-	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element._calcSurfaceSize();
 	});
 }

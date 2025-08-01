@@ -97,17 +97,17 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.value);
 		_element.callback(); //???// обратная совместимость
 		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
 	});
 	
-	self.addEventListener(LUI_EV_POSITION_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_POSITION_UPDATE, function(_element) {
 		_element._updateSlider();
 	});
 	
-	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		var _anim_time = 0.2;
 		// Slider animation
 		var _draw_width = min(_element.width, _element.height) * 2;

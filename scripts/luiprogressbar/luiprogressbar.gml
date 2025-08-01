@@ -102,7 +102,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.value = _calcValue(_element.value);
 	});
 }

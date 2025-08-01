@@ -49,7 +49,7 @@ function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.callback(); //???// обратная совместимость
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);

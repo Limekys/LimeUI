@@ -98,11 +98,11 @@ function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element._calcSpriteSize();
 	});
 	
-	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element._calcSpriteSize();
 	});
 }

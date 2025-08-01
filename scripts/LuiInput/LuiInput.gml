@@ -144,11 +144,11 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.set(_element._limit_value(_element.get()));
 	});
 	
-	self.addEventListener(LUI_EV_FOCUS_SET, function(_element) {
+	self.addEvent(LUI_EV_FOCUS_SET, function(_element) {
 		time_source_start(_element.cursor_timer);
 		_element.cursor_pointer = _element.style.input_cursor;
 		keyboard_string = get();
@@ -159,7 +159,7 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	});
 	
-	self.addEventListener(LUI_EV_FOCUS_REMOVE, function(_element) {
+	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_element) {
 		time_source_stop(_element.cursor_timer);
 		_element.cursor_pointer = "";
 		_element.main_ui.waiting_for_keyboard_input = false;
@@ -169,7 +169,7 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	});
 	
-	self.addEventListener(LUI_EV_KEYBOARD_INPUT, function(_element) {
+	self.addEvent(LUI_EV_KEYBOARD_INPUT, function(_element) {
 		_element.set(_element._limit_value(keyboard_string));
 		keyboard_string = _element.get();
 		if keyboard_check(vk_lcontrol) && keyboard_check_pressed(ord("V")) && clipboard_has_text() {
@@ -178,11 +178,11 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 		}
 	});
 	
-	self.addEventListener(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element.callback(); //???//обратная совместимость
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		if time_source_exists(_element.cursor_timer) {
 			time_source_destroy(_element.cursor_timer);
 		}

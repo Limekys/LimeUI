@@ -126,7 +126,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element._initScrollContainer();
 		_element.addContentOriginal(_element.scroll_container);
 		if _element.auto_height {
@@ -135,7 +135,7 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		flexpanel_node_style_set_border(_element.flex_node, flexpanel_edge.right, _element.style.scroll_slider_width + _element.scroll_pin_edge_offset); //???//
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		if !is_undefined(_element.scroll_container) {
 			_element.scroll_container.destroy();
 		}

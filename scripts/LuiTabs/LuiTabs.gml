@@ -117,7 +117,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		// Setting up padding for tabs
 		_element.setPadding(0).setGap(0);
 		// Init header container for tabs
@@ -128,7 +128,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		_element._initTabs();
 	});
 	
-	self.addEventListener(LUI_EV_SHOW, function(_element) {
+	self.addEvent(LUI_EV_SHOW, function(_element) {
 		//Turn of visible of deactivated tab_container's
 		var _tab_count = array_length(_element.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
@@ -139,7 +139,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		}
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		if !is_undefined(_element.tabs_header) {
 			_element.tabs_header.destroy();
 		}
@@ -244,17 +244,17 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 		}
 	}
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element._initContainer();
 	});
 	
-	self.addEventListener(LUI_EV_CLICK, function(_element) {
+	self.addEvent(LUI_EV_CLICK, function(_element) {
 		if !_element.is_active {
 			_element.tabs_parent.switchTab(_element);
 		}
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		if !is_undefined(_element.tab_container) {
 			_element.tab_container.destroy();
 		}

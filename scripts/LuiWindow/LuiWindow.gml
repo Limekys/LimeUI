@@ -77,17 +77,17 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
     }
 	
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.setPositionType(flexpanel_position_type.absolute);
 		_element._initHeader();
 	});
 	
-	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
 		_element.bringToFront();
 		_element.window_header.bringToFront();
 	});
 	
-	self.addEventListener(LUI_EV_DESTROY, function(_element) {
+	self.addEvent(LUI_EV_DESTROY, function(_element) {
 		if !is_undefined(_element.window_header) {
 			_element.window_header.destroy();
 		}
@@ -129,22 +129,22 @@ function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
     }
     
-	self.addEventListener(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
 	});
 	
-	self.addEventListener(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
 		_element.parent_window.bringToFront();
 		_element.bringToFront();
 	});
 	
-	self.addEventListener(LUI_EV_DRAGGING, function(_element) {
+	self.addEvent(LUI_EV_DRAGGING, function(_element) {
 		if (!is_undefined(_element.parent_window)) {
             _element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
         }
 	});
 	
-	self.addEventListener(LUI_EV_POSITION_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_POSITION_UPDATE, function(_element) {
 		if (!is_undefined(_element.parent_window)) {
             _element.parent_window.setPosition(_element.pos_x, _element.pos_y + _element.height);
         }

@@ -24,7 +24,7 @@ function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = 
 	var _txt_message = new LuiText(, , , , , message_text).setTextHalign(fa_center);
 	// Button
 	var _btn_close = new LuiButton(, , , , , button_text).setData("message_screen", _box_message_screen);
-	_btn_close.addEventListener(LUI_EV_CLICK, function(_element) {
+	_btn_close.addEvent(LUI_EV_CLICK, function(_element) {
 		var _message_screen = _element.getData("message_screen");
 		_message_screen.destroy();
 	});
