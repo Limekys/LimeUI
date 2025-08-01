@@ -49,12 +49,6 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 	}
 	
-	///@desc Change getContainer function for compatibility with setFlex... functions
-	self.getContainer = function() {
-		self._initWindowContainer();
-		return self.container;
-	}
-	
 	///@desc Create container
 	///@ignore
 	static _initWindowContainer = function() {
@@ -62,6 +56,12 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			self.window_container = new LuiContainer().setFullSize();
 			self.setContainer(self.window_container);
 		}
+	}
+	
+	///@desc Change getContainer function for compatibility with setFlex... functions
+	self.getContainer = function() {
+		self._initWindowContainer();
+		return self.container;
 	}
 	
 	///@desc Original addContent for compatibility

@@ -118,7 +118,7 @@ btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
 createNewLoginWindow = function () {
 	// Create draggable panel (window) with some content
 	my_ui.addContent([
-		new LuiWindow(500 + irandom(100), 340 + irandom(100), 300, 300, "window_database", "Secret database").centerContent().addContent([
+		new LuiWindow(500 + irandom(100), 340 + irandom(100), 300, 300, , "Secret database").centerContent().addContent([
 			new LuiImage(, , 64, 64, , sIconKey),
 			new LuiRow().addContent([
 				new LuiInput(, , , , , "", "login")
@@ -128,7 +128,6 @@ createNewLoginWindow = function () {
 			]),
 			new LuiButton(, , 150, 32, , "Login", function() {
 				luiShowMessage(oDemo.my_ui, , , "Wrong password!", "OK!");
-				oDemo.my_ui.getElement("window_database").setTitle(">_<");
 			})
 		])
 	])
@@ -357,7 +356,7 @@ my_panel_3.addContent([
 				});
 				// Filter
 				var _filtered_elements = array_filter(search_panel.getContainer().content, function(_elm) {
-					var _elm_name = _elm.get();
+					var _elm_name = _elm.text;
 					var _search_string = input_search.get();
 					var _founded = string_pos(string_lower(_search_string), string_lower(_elm_name));
 					if _founded != 0 return true;

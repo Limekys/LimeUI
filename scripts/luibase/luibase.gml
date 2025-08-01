@@ -84,77 +84,14 @@ function LuiBase() constructor {
 	
 	// Logic methods for element //???// delete uneccesery methods
 	
-	//Called after this item has been added somewhere
-	self.onCreate = undefined;
-	
-	///@desc step()
+	///@desc Calls every step
 	self.step = undefined;
-	
-	///@desc Called when adding or deleting elements inside
-	self.onContentUpdate = undefined;
 	
 	///@desc Pre draw method call before draw method (for surfaces for example)
 	self.preDraw = undefined;
 	
 	///@desc Draw method for element
 	self.draw = undefined;
-	
-	///@desc Called when this element is deleted (for example to clear surfaces)
-	self.onDestroy = undefined;
-	
-	///@desc Called when you click on an element with the left mouse button
-	self.onMouseLeft = undefined;
-	
-	///@desc Called once when you click on an element with the left mouse button
-	self.onMouseLeftPressed = undefined;
-	
-	///@desc Called once when the mouse left button is released
-	self.onMouseLeftReleased = undefined;
-	
-	///@desc Called when the mouse wheel moves up or down
-	self.onMouseWheel = undefined;
-	
-	///@desc Called once when mouse enter on an element
-	self.onMouseEnter = undefined;
-	
-	///@desc Called once when mouse leave from an element
-	self.onMouseLeave = undefined;
-	
-	///@desc Called during keyboard input if the item is in focus
-	self.onKeyboardInput = undefined;
-	
-	///@desc Called during keyboard release if the item is in focus
-	self.onKeyboardRelease = undefined;
-	
-	///@desc Called when element change his position
-	self.onPositionUpdate = undefined;
-	
-	///@desc Called once when an element gets the focus
-	self.onFocusSet = undefined;
-	
-	///@desc Called once when an element has lost focus
-	self.onFocusRemove = undefined;
-	
-	///@desc Called when an element has change value
-	self.onValueUpdate = undefined;
-	
-	///@desc Called when an element has change visible to true
-	self.onShow = undefined;
-	
-	///@desc Called when an element has change visible to false
-	self.onHide = undefined;
-	
-	///@desc Called when element change his size
-	self.onSizeUpdate = undefined;
-	
-	///@desc Called when element dragging by mouse/finger
-	self.onDragging = undefined;
-	
-	///@desc Called once when element started dragging by mouse/finger
-	self.onDragStart = undefined;
-	
-	///@desc Called once when element end dragging by mouse/finger
-	self.onDragEnd = undefined;
 	
 	// EVENT LISTENER SYSTEM
 	self.event_listeners = {};
@@ -250,9 +187,6 @@ function LuiBase() constructor {
 			self.value = _value;
 			if !is_undefined(self.binding_variable) {
 				self._updateToBinding();
-			}
-			if is_method(self.onValueUpdate) {
-				self.onValueUpdate();
 			}
 			self._dispatchEvent(LUI_EV_VALUE_UPDATE);
 			self.updateMainUiSurface();
@@ -674,9 +608,6 @@ function LuiBase() constructor {
 	///@desc setFocus
 	static setFocus = function() {
 		self.has_focus = true;
-		if is_method(self.onFocusSet) {
-			self.onFocusSet();
-		}
 		self._dispatchEvent(LUI_EV_FOCUS_SET);
 		return self;
 	}
@@ -756,16 +687,10 @@ function LuiBase() constructor {
 			if self.visible != _visible {
 				// Change visible
 				self.visible = _visible;
-				// Events onShow / onHide
+				// Events show/hide
 				if _visible {
-					if is_method(self.onShow) {
-						self.onShow();
-					}
 					self._dispatchEvent(LUI_EV_SHOW);
 				} else {
-					if is_method(self.onHide) {
-						self.onHide();
-					}
 					self._dispatchEvent(LUI_EV_HIDE);
 				}
 				// Grid update
@@ -1311,19 +1236,13 @@ function LuiBase() constructor {
 	        _element.start_y = _element.y;
 	    }
 		
-		// If position was changed, call onPositionUpdate
+		// If position was changed, call position update event
 		if (_position_changed) {
-			if is_method(_element.onPositionUpdate) {
-				_element.onPositionUpdate();
-			}
 			_element._dispatchEvent(LUI_EV_POSITION_UPDATE);
 		}
 		
-		// If size was changed, call onSizeUpdate
+		// If size was changed, call size update event
 		if (_size_changed) {
-			if is_method(_element.onSizeUpdate) {
-				_element.onSizeUpdate();
-			}
 			_element._dispatchEvent(LUI_EV_SIZE_UPDATE);
 		}
 	    
@@ -1501,10 +1420,7 @@ function LuiBase() constructor {
 			array_push(self.content, _element);
 	        _element._addDelayedContent();
 	        
-			// Call custom method create
-	        if is_method(_element.onCreate) {
-				_element.onCreate();
-			}
+			// Call create event
 			_element._dispatchEvent(LUI_EV_CREATE);
 	        
 	        _element.is_adding = false;
@@ -1564,9 +1480,6 @@ function LuiBase() constructor {
 	        
 	        // Update content if required
 	        if (_element.need_to_update_content) {
-	            if (is_method(_element.onContentUpdate)) {
-					_element.onContentUpdate();
-				}
 				_element._dispatchEvent(LUI_EV_CONTENT_UPDATE);
 	            _element.need_to_update_content = false;
 	        }
@@ -1639,7 +1552,7 @@ function LuiBase() constructor {
 	 
 	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
 	static centerContent = function() {
-		self.getContainer().setFlexJustifyContent(flexpanel_justify.center)
+		self.setFlexJustifyContent(flexpanel_justify.center)
 			.setFlexAlignItems(flexpanel_align.center);
 		return self;
 	}
@@ -1647,9 +1560,6 @@ function LuiBase() constructor {
 	///@desc Remove focus from element
 	static removeFocus = function() {
 		self.has_focus = false;
-		if is_method(self.onFocusRemove) {
-			self.onFocusRemove();
-		}
 		self._dispatchEvent(LUI_EV_FOCUS_REMOVE);
 		return self;
 	}
@@ -1795,10 +1705,7 @@ function LuiBase() constructor {
 		    // Delete flex node from memory
 		    self.flex_node = flexpanel_delete_node(self.flex_node, true);
 		}
-		// Call onDestroy
-		if is_method(self.onDestroy) {
-			self.onDestroy();
-		}
+		// Call destroy event
 		self._dispatchEvent(LUI_EV_DESTROY);
 		// Clean all arrays and structs
 		self.content = -1;
