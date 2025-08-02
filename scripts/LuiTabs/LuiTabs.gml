@@ -199,43 +199,58 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 	}
 	
 	self.draw = function() {
-		// Base
-		if !is_undefined(self.style.sprite_tab) {
-			var _blend_color = self.style.color_primary;
-			if !self.is_active {
-				_blend_color = merge_color(_blend_color, c_black, 0.25);
-				if self.isMouseHovered() {
-					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
-					if self.is_pressed == true {
-						_blend_color = merge_color(_blend_color, c_black, 0.5);
-					}
+		// Calculate colors
+		var _blend_color = !is_undefined(self.button_color) ? self.button_color : self.style.color_primary;
+		var _blend_text = self.style.color_text;
+		if self.deactivated {
+			_blend_color = merge_color(_blend_color, c_black, 0.5);
+			_blend_text = merge_color(_blend_text, c_black, 0.5);
+		} else if !self.is_active {
+			_blend_color = merge_color(_blend_color, c_black, 0.25);
+			if self.isMouseHovered() {
+				_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+				if self.is_pressed {
+					_blend_color = merge_color(_blend_color, c_black, 0.5);
 				}
 			}
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
-			}
+		}
+		
+		// Calculate positions
+		var _center_x = self.x + self.width / 2;
+		var _center_y = self.y + self.height / 2;
+		var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
+		if _draw_icon {
+			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+			var _space_width = string_width(" ");
+			var _text_width = string_width(self.text);
+			_draw_icon = self.icon.width + _space_width + _text_width <= self.width;
+		}
+		
+		// Base
+		if !is_undefined(self.style.sprite_tab) {
 			draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
-		// Icon
-		self._drawIcon();
-		
-		// Text
+		// Icon and text
 		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) {
-				draw_set_font(self.style.font_buttons);
-			}
-			if !self.deactivated {
-				draw_set_color(self.style.color_text);
-			} else {
-				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
-			}
+			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+			draw_set_color(_blend_text);
 			draw_set_alpha(1);
-			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
-			var _txt_x = self.x + self.width / 2;
-			var _txt_y = self.y + self.height / 2;
-			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
+			if _draw_icon {
+				draw_set_halign(fa_left);
+				var _space_width = string_width(" ");
+				var _text_width = string_width(self.text);
+				var _total_width = self.icon.width + _space_width + _text_width;
+				var _icon_x = _center_x - _total_width / 2;
+				var _icon_y = _center_y - self.icon.height / 2;
+				var _text_x = _icon_x + self.icon.width + _space_width;
+				_drawIcon(_icon_x, _icon_y);
+				_drawTruncatedText(_text_x, _center_y, self.text, self.width - self.icon.width - _space_width);
+			} else {
+				draw_set_halign(fa_center);
+				_drawTruncatedText(_center_x, _center_y, self.text, self.width);
+			}
 		}
 		
 		// Border

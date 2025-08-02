@@ -19,13 +19,13 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.button_color = undefined;
 	self.icon = {
-		sprite : -1,
-		width : -1,
-		height : -1,
-		scale : 1,
-		angle : 0,
-		color : c_white,
-		alpha : 1,
+		sprite: -1,
+		width: -1,
+		height: -1,
+		scale: 1,
+		angle: 0,
+		color: c_white,
+		alpha: 1,
 	}
 	
 	/* //???// Button animation test
@@ -58,70 +58,84 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		self.icon.angle = _angle;
 		self.icon.color = _color;
 		self.icon.alpha = _alpha;
-		self._calcIconSize();
+		if sprite_exists(_sprite) {
+			_calcIconSize();
+		}
 		return self;
 	}
 	
 	///@ignore
 	static _calcIconSize = function() {
-		var _size = floor(min(self.width, self.height, sprite_get_width(self.icon.sprite), sprite_get_height(self.icon.sprite)) * self.icon.scale);
-		self.icon.width = _size;
-		self.icon.height = _size;
+		if sprite_exists(self.icon.sprite) {
+			var _spr_width = sprite_get_width(self.icon.sprite);
+			var _spr_height = sprite_get_height(self.icon.sprite);
+			// Apply scale, but ensure icon fits within button height and width (with text and space)
+			var _max_height = self.height;
+			var _scale = min(self.icon.scale, _max_height / _spr_height);
+			self.icon.width = floor(_spr_width * _scale);
+			self.icon.height = floor(_spr_height * _scale);
+		}
 	}
 	
 	///@ignore
-	static _drawIcon = function() {
+	static _drawIcon = function(_x, _y) {
 		if sprite_exists(self.icon.sprite) {
-			// Draw icon
-			var _offset = 8;
-			var _x = self.x + _offset;
-			var _y = self.y + self.height / 2 - self.icon.height / 2;
 			draw_sprite_stretched_ext(self.icon.sprite, 0, _x, _y, self.icon.width, self.icon.height, self.icon.color, self.icon.alpha);
-			//???// how to calculate icon size and position
-			//var _x = self.x + sprite_get_xoffset(self.icon.sprite);
-			//var _y = self.y + sprite_get_yoffset(self.icon.sprite);
-			//draw_sprite_ext(self.icon.sprite, 0, _x, _y, self.icon.scale, self.icon.scale, self.icon.angle, self.icon.color, self.icon.alpha);
 		}
 	}
 	
 	self.draw = function() {
-		// Base
-		if !is_undefined(self.style.sprite_button) {
-			var _blend_color = !is_undefined(self.button_color) ? self.button_color : self.style.color_secondary;
-			if !self.deactivated {
-				if self.isMouseHovered() {
-					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
-					if self.is_pressed == true {
-						_blend_color = merge_color(_blend_color, c_black, 0.5);
-					}
-				}
-			} else {
+		// Calculate colors
+		var _blend_color = !is_undefined(self.button_color) ? self.button_color : self.style.color_secondary;
+		var _blend_text = self.style.color_text;
+		if self.deactivated {
+			_blend_color = merge_color(_blend_color, c_black, 0.5);
+			_blend_text = merge_color(_blend_text, c_black, 0.5);
+		} else if self.isMouseHovered() {
+			_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+			if self.is_pressed {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
+		}
+		
+		// Calculate positions
+		var _center_x = self.x + self.width / 2;
+		var _center_y = self.y + self.height / 2;
+		var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
+		if _draw_icon {
+			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+			var _space_width = string_width(" ");
+			var _text_width = string_width(self.text);
+			_draw_icon = self.icon.width + _space_width + _text_width <= self.width;
+		}
+		
+		// Base
+		if !is_undefined(self.style.sprite_button) {
 			draw_sprite_stretched_ext(self.style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 			//???// Button animation test
 			//draw_sprite_stretched_ext(self.style.sprite_button, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, _blend_color, 1);
 		}
 		
-		// Icon
-		self._drawIcon();
-		
-		// Text
+		// Icon and text
 		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) {
-				draw_set_font(self.style.font_buttons);
-			}
-			if !self.deactivated {
-				draw_set_color(self.style.color_text);
-			} else {
-				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
-			}
+			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+			draw_set_color(_blend_text);
 			draw_set_alpha(1);
-			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
-			var _txt_x = self.x + self.width / 2;
-			var _txt_y = self.y + self.height / 2;
-			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
+			if _draw_icon {
+				draw_set_halign(fa_left);
+				var _space_width = string_width(" ");
+				var _text_width = string_width(self.text);
+				var _total_width = self.icon.width + _space_width + _text_width;
+				var _icon_x = _center_x - _total_width / 2;
+				var _icon_y = _center_y - self.icon.height / 2;
+				var _text_x = _icon_x + self.icon.width + _space_width;
+				_drawIcon(_icon_x, _icon_y);
+				_drawTruncatedText(_text_x, _center_y, self.text, self.width - self.icon.width - _space_width);
+			} else {
+				draw_set_halign(fa_center);
+				_drawTruncatedText(_center_x, _center_y, self.text, self.width);
+			}
 		}
 		
 		// Border
