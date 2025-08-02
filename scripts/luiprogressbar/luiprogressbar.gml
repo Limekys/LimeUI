@@ -23,6 +23,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.max_value = max(min_value, max_value);
 	self.rounding = rounding;
 	self.display_value = display_value;
+	self.bar_height = self.height;
 	
 	///@desc Set min value
 	///@arg {real} _min_value
@@ -54,6 +55,13 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		return self;
 	}
 	
+	///@desc Sets bar height
+	///@arg {real} _height
+	static setBarHeight = function(_height) {
+		self.bar_height = _height;
+		return self;
+	}
+	
 	///@desc Calculate final value with rounding and clamping
 	///@ignore
 	static _calculateValue = function(_value) {
@@ -67,26 +75,34 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.draw = function() {
-		//Base
+		// Calculate bar size
+		var _bar_x = self.x;
+		var _bar_y = self.y + (self.height - self.bar_height) div 2;
+		var _bar_w = self.width;
+		var _bar_h = self.bar_height;
+		
+		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
 			var _blend_color = self.style.color_back;
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, self.x, self.y, width, height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_color, 1);
 		}
-		//Bar value
+		
+		// Bar value
 		if !is_undefined(self.style.sprite_progress_bar_value) {
 			var _bar_value = Range(self.value, self.min_value, self.max_value, 0, 1);
 			var _blend_color = self.style.color_accent;
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, self.x, self.y, width * _bar_value, height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * _bar_value, _bar_h, _blend_color, 1);
 		}
-		//Border
+		
+		// Border
 		if !is_undefined(self.style.sprite_progress_bar_border) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, self.x, self.y, width, height, self.style.color_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, self.style.color_border, 1);
 		}
 		
 		//Text value

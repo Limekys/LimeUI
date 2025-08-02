@@ -16,6 +16,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.can_drag = true;
 	self.knob_width = height;
+	self.knob_extender = 1;
 	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
 	// Calculate knob width in constructor
@@ -43,19 +44,25 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			_blend_secondary = merge_color(_blend_secondary, self.style.color_hover, 0.5);
 		}
 		
+		// Calculate bar size
+		var _bar_x = self.x;
+		var _bar_y = self.y + (self.height - self.bar_height) div 2;
+		var _bar_w = self.width;
+		var _bar_h = self.bar_height;
+		
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, self.x, self.y, self.width, self.height, _blend_back, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_back, 1);
 		}
 		
 		// Bar value
 		if !is_undefined(self.style.sprite_progress_bar_value) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, self.x, self.y, self.width * self.bar_value, self.height, _blend_accent, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * self.bar_value, _bar_h, _blend_accent, 1);
 		}
 		
 		// Border
 		if !is_undefined(self.style.sprite_progress_bar_border) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, self.x, self.y, self.width, self.height, _blend_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_border, 1);
 		}
 		
 		// Text
@@ -71,14 +78,17 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		
 		// Slider knob
 		var _knob_x = clamp(self.x + self.width * self.bar_value - self.knob_width div 2, self.x, self.x + self.width - self.knob_width);
-		var _knob_extender = 1;
+		var _spr_x1 = _knob_x - self.knob_extender;
+		var _spr_y1 = self.y - self.knob_extender;
+		var _spr_w = self.knob_width + self.knob_extender*2;
+		var _spr_h = self.height + self.knob_extender*2;
 		if !is_undefined(self.style.sprite_slider_knob) {
-			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _knob_x - _knob_extender, self.y - _knob_extender, self.knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_secondary, 1);
+			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_secondary, 1);
 		}
 		
 		// Knob border
 		if !is_undefined(self.style.sprite_slider_knob_border) {
-			draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _knob_x - _knob_extender, self.y - _knob_extender, self.knob_width + _knob_extender*2, self.height + _knob_extender*2, _blend_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_border, 1);
 		}
 	}
 	

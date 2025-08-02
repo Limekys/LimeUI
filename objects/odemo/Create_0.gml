@@ -137,19 +137,19 @@ createNewLoginWindow = function () {
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(self, "tabs_target_x"), [0.2, 0.8]
+		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(self, "tabs_target_x"), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.2, 0.8]
+		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false, 32).setBinding(self, "demo_login"), [0.2, 0.8]
+		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false, 32).setBinding(self, "demo_login"), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true, 32).setBinding(self, "demo_password"), [0.2, 0.8]
+		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true, 32).setBinding(self, "demo_password"), [0.3, 0.7]
 	]),	
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10)
+		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10).setBarHeight(16), [0.3, 0.7]
 	]),
 	new LuiButton(, , , , , "Create login window", function () {
 		oDemo.createNewLoginWindow();
