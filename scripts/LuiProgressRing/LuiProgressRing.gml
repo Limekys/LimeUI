@@ -21,54 +21,51 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	///@desc Calculate scale to fit size and position
 	///@ignore
 	static _calcSpritePos = function(_sprite) {
-		var _width = self.width;
-		var _height = self.height;
+		if is_undefined(_sprite) return;
 		var _spr_width = sprite_get_width(_sprite);
 		var _spr_height = sprite_get_height(_sprite);
-		var _y_scale = _height / _spr_height;
-		var _x_scale = _width / _spr_width;
-		var _scale = min(_x_scale, _y_scale);
-		var _x = self.x + floor(_width / 2) - _spr_width * _scale / 2;
-		var _y = self.y + floor(_height / 2) - _spr_height * _scale / 2;
-		self.sprite_pos.x = _x;
-		self.sprite_pos.y = _y;
+		var _scale = min(self.width / _spr_width, self.height / _spr_height);
+		self.sprite_pos.x = self.x + floor(self.width / 2) - _spr_width * _scale / 2;
+		self.sprite_pos.y = self.y + floor(self.height / 2) - _spr_height * _scale / 2;
 		self.sprite_pos.scale = _scale;
 	}
 	
 	self.draw = function() {
-		var _pos = self.sprite_pos;
+		// Calculate colors
+		var _blend_back = self.style.color_back;
+		var _blend_accent = self.style.color_accent;
+		var _blend_text = self.style.color_text;
+		var _blend_border = self.style.color_border;
+		if self.deactivated {
+			_blend_back = merge_color(_blend_back, c_black, 0.5);
+			_blend_accent = merge_color(_blend_accent, c_black, 0.5);
+			_blend_text = merge_color(_blend_text, c_black, 0.5);
+		}
+		
+		// Calculate position
+		var _x = self.sprite_pos.x;
+		var _y = self.sprite_pos.y;
+		var _scale = self.sprite_pos.scale;
+		
 		// Base
 		if !is_undefined(self.style.sprite_progress_ring) {
-			var _blend_color = self.style.color_back;
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
-			}
-			// Draw
-			draw_sprite_ext(self.style.sprite_progress_ring, 0, _pos.x, _pos.y, _pos.scale, _pos.scale, 0, _blend_color, 1);
+			draw_sprite_ext(self.style.sprite_progress_ring, 0, _x, _y, _scale, _scale, 0, _blend_back, 1);
 		}
+		
 		// Bar value
 		if !is_undefined(self.style.sprite_progress_ring_value) {
-			// Get blend color
-			var _blend_color = self.style.color_accent;
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
-			}
-			// Draw
-			drawSpriteRadial(self.style.sprite_progress_ring_value, 0, self.bar_value, _pos.x, _pos.y, _pos.scale, _pos.scale, _blend_color, 1);
+			drawSpriteRadial(self.style.sprite_progress_ring_value, 0, self.bar_value, _x, _y, _scale, _scale, _blend_accent, 1);
 		}
+		
 		// Border
 		if !is_undefined(self.style.sprite_progress_ring_border) {
-			// Draw
-			draw_sprite_ext(self.style.sprite_progress_ring_border, 0, _pos.x, _pos.y, _pos.scale, _pos.scale, 0, self.style.color_border, 1);
+			draw_sprite_ext(self.style.sprite_progress_ring_border, 0, _x, _y, _scale, _scale, 0, _blend_border, 1);
 		}
+		
 		// Text value
 		if self.display_value {
 			if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
-			if !self.deactivated {
-				draw_set_color(self.style.color_text);
-			} else {
-				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
-			}
+			draw_set_color(_blend_text);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
 			draw_text(self.x + self.width / 2, self.y + self.height / 2, _calculateValue(self.value));
