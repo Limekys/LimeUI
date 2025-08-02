@@ -17,7 +17,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.can_drag = true;
 	self.knob_width = height;
 	self.knob_extender = 1;
-	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
 	// Calculate knob width in constructor
 	static _initKnobWidth = function() {
@@ -108,9 +107,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
 		_element.callback(); //???//обратная совместимость
-		// Animate knob slider
-		var _target_bar_value = Range(_element.value, _element.min_value, _element.max_value, 0, 1);
-		_element.main_ui.animate(_element, "bar_value", _target_bar_value, 0.1);
 	});
 	
 	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {

@@ -1276,7 +1276,7 @@ function LuiBase() constructor {
 		var _variable = binding_variable.variable;
 		if (_source != noone && variable_instance_exists(_source, _variable)) {
 			var _source_value = variable_instance_get(_source, _variable);
-			set(_source_value);
+			self.set(_source_value);
 		} else {
 			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
 		}
@@ -1288,7 +1288,7 @@ function LuiBase() constructor {
 		var _source = binding_variable.source;
 		var _variable = binding_variable.variable;
 		if (_source != noone && variable_instance_exists(_source, _variable)) {
-			var _element_value = get();
+			var _element_value = self.get();
 			variable_instance_set(_source, _variable, _element_value);
 		} else {
 			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");

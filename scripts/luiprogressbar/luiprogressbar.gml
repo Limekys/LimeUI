@@ -24,6 +24,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.rounding = rounding;
 	self.display_value = display_value;
 	self.bar_height = self.height;
+	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
 	///@desc Set min value
 	///@arg {real} _min_value
@@ -65,17 +66,23 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	///@desc Calculate final value with rounding and clamping
 	///@ignore
 	static _calculateValue = function(_value) {
-		var _new_value = 0;
-		if self.rounding > 0 {
-			_new_value = round(_value / (self.rounding)) * (self.rounding);
-		} else {
-			_new_value = _value;
-		}
+		var _new_value = self.rounding > 0 ? round(_value / self.rounding) * self.rounding : _value;
 		return clamp(_new_value, self.min_value, self.max_value);
 	}
 	
 	self.draw = function() {
-		// Calculate bar size
+		// Calculate colors
+		var _blend_back = self.style.color_back;
+		var _blend_accent = self.style.color_accent;
+		var _blend_text = self.style.color_text;
+		var _blend_border = self.style.color_border;
+		if self.deactivated {
+			_blend_back = merge_color(_blend_back, c_black, 0.5);
+			_blend_accent = merge_color(_blend_accent, c_black, 0.5);
+			_blend_text = merge_color(_blend_text, c_black, 0.5);
+		}
+		
+		// Calculate bar position
 		var _bar_x = self.x;
 		var _bar_y = self.y + (self.height - self.bar_height) div 2;
 		var _bar_w = self.width;
@@ -83,36 +90,23 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
-			var _blend_color = self.style.color_back;
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
-			}
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_back, 1);
 		}
 		
 		// Bar value
 		if !is_undefined(self.style.sprite_progress_bar_value) {
-			var _bar_value = Range(self.value, self.min_value, self.max_value, 0, 1);
-			var _blend_color = self.style.color_accent;
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
-			}
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * _bar_value, _bar_h, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * self.bar_value, _bar_h, _blend_accent, 1);
 		}
 		
 		// Border
 		if !is_undefined(self.style.sprite_progress_bar_border) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, self.style.color_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_border, 1);
 		}
 		
-		//Text value
+		// Text value
 		if self.display_value {
 			if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
-			if !self.deactivated {
-				draw_set_color(self.style.color_text);
-			} else {
-				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
-			}
+			draw_set_color(_blend_text);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
 			draw_text(self.x + self.width div 2, self.y + self.height div 2, _calculateValue(self.value));
@@ -121,5 +115,10 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.value = _calculateValue(_element.value);
+	});
+	
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
+		var _target_bar_value = Range(_element.value, _element.min_value, _element.max_value, 0, 1);
+		_element.main_ui.animate(_element, "bar_value", _target_bar_value, 0.1);
 	});
 }

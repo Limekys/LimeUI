@@ -49,13 +49,12 @@ function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		// Bar value
 		if !is_undefined(self.style.sprite_progress_ring_value) {
 			// Get blend color
-			var _bar_value = Range(self.value, self.min_value, self.max_value, 0, 1);
 			var _blend_color = self.style.color_accent;
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			// Draw
-			drawSpriteRadial(self.style.sprite_progress_ring_value, 0, _bar_value, _pos.x, _pos.y, _pos.scale, _pos.scale, _blend_color, 1);
+			drawSpriteRadial(self.style.sprite_progress_ring_value, 0, self.bar_value, _pos.x, _pos.y, _pos.scale, _pos.scale, _blend_color, 1);
 		}
 		// Border
 		if !is_undefined(self.style.sprite_progress_ring_border) {
