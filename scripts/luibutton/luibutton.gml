@@ -69,11 +69,11 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		if sprite_exists(self.icon.sprite) {
 			var _spr_width = sprite_get_width(self.icon.sprite);
 			var _spr_height = sprite_get_height(self.icon.sprite);
-			// Apply scale, but ensure icon fits within button height and width (with text and space)
-			var _max_height = self.height;
-			var _scale = min(self.icon.scale, _max_height / _spr_height);
-			self.icon.width = floor(_spr_width * _scale);
-			self.icon.height = floor(_spr_height * _scale);
+			var _scale = min(1, self.height / _spr_height);
+			var _base_width = floor(_spr_width * _scale);
+			var _base_height = floor(_spr_height * _scale);
+			self.icon.width = floor(_base_width * self.icon.scale);
+			self.icon.height = floor(_base_height * self.icon.scale);
 		}
 	}
 	
@@ -81,6 +81,37 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	static _drawIcon = function(_x, _y) {
 		if sprite_exists(self.icon.sprite) {
 			draw_sprite_stretched_ext(self.icon.sprite, 0, _x, _y, self.icon.width, self.icon.height, self.icon.color, self.icon.alpha);
+		}
+	}
+	
+	///@ignore
+	static _drawIconAndText = function(_center_x, _center_y, _available_width, _text_color) {
+		if self.text != "" {
+			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+			draw_set_color(_text_color);
+			draw_set_alpha(1);
+			draw_set_valign(fa_middle);
+			var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
+			if _draw_icon {
+				if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+				var _space_width = string_width(" ");
+				var _text_width = string_width(self.text);
+				_draw_icon = self.icon.width + _space_width + _text_width <= _available_width;
+			}
+			if _draw_icon {
+				draw_set_halign(fa_left);
+				var _space_width = string_width(" ");
+				var _text_width = string_width(self.text);
+				var _total_width = self.icon.width + _space_width + _text_width;
+				var _icon_x = floor(_center_x - _total_width / 2);
+				var _icon_y = floor(_center_y - self.icon.height / 2);
+				var _text_x = _icon_x + self.icon.width + _space_width;
+				_drawIcon(_icon_x, _icon_y);
+				_drawTruncatedText(_text_x, _center_y, self.text, _available_width - self.icon.width - _space_width);
+			} else {
+				draw_set_halign(fa_center);
+				_drawTruncatedText(_center_x, _center_y, self.text, _available_width);
+			}
 		}
 	}
 	
@@ -101,13 +132,6 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		// Calculate positions
 		var _center_x = self.x + self.width / 2;
 		var _center_y = self.y + self.height / 2;
-		var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
-		if _draw_icon {
-			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
-			var _space_width = string_width(" ");
-			var _text_width = string_width(self.text);
-			_draw_icon = self.icon.width + _space_width + _text_width <= self.width;
-		}
 		
 		// Base
 		if !is_undefined(self.style.sprite_button) {
@@ -117,26 +141,7 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		}
 		
 		// Icon and text
-		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
-			draw_set_color(_blend_text);
-			draw_set_alpha(1);
-			draw_set_valign(fa_middle);
-			if _draw_icon {
-				draw_set_halign(fa_left);
-				var _space_width = string_width(" ");
-				var _text_width = string_width(self.text);
-				var _total_width = self.icon.width + _space_width + _text_width;
-				var _icon_x = _center_x - _total_width / 2;
-				var _icon_y = _center_y - self.icon.height / 2;
-				var _text_x = _icon_x + self.icon.width + _space_width;
-				_drawIcon(_icon_x, _icon_y);
-				_drawTruncatedText(_text_x, _center_y, self.text, self.width - self.icon.width - _space_width);
-			} else {
-				draw_set_halign(fa_center);
-				_drawTruncatedText(_center_x, _center_y, self.text, self.width);
-			}
-		}
+		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
 		if !is_undefined(self.style.sprite_button_border) {

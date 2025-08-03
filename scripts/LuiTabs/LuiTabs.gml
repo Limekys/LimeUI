@@ -218,13 +218,6 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 		// Calculate positions
 		var _center_x = self.x + self.width / 2;
 		var _center_y = self.y + self.height / 2;
-		var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
-		if _draw_icon {
-			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
-			var _space_width = string_width(" ");
-			var _text_width = string_width(self.text);
-			_draw_icon = self.icon.width + _space_width + _text_width <= self.width;
-		}
 		
 		// Base
 		if !is_undefined(self.style.sprite_tab) {
@@ -232,26 +225,7 @@ function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AU
 		}
 		
 		// Icon and text
-		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
-			draw_set_color(_blend_text);
-			draw_set_alpha(1);
-			draw_set_valign(fa_middle);
-			if _draw_icon {
-				draw_set_halign(fa_left);
-				var _space_width = string_width(" ");
-				var _text_width = string_width(self.text);
-				var _total_width = self.icon.width + _space_width + _text_width;
-				var _icon_x = _center_x - _total_width / 2;
-				var _icon_y = _center_y - self.icon.height / 2;
-				var _text_x = _icon_x + self.icon.width + _space_width;
-				_drawIcon(_icon_x, _icon_y);
-				_drawTruncatedText(_text_x, _center_y, self.text, self.width - self.icon.width - _space_width);
-			} else {
-				draw_set_halign(fa_center);
-				_drawTruncatedText(_center_x, _center_y, self.text, self.width);
-			}
-		}
+		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
 		if !is_undefined(self.style.sprite_tab_border) {

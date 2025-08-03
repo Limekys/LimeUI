@@ -203,6 +203,11 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 	}
 	
 	self.draw = function() {
+		
+		// Calculate positions
+		var _center_x = self.x + self.width / 2;
+		var _center_y = self.y + self.height / 2;
+		
 		//Base
 		if !is_undefined(self.style.sprite_combobox_item) {
 			var _blend_color = self.style.color_secondary;
@@ -215,22 +220,8 @@ function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefin
 			draw_sprite_stretched_ext(self.style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
-		// Icon
-		self._drawIcon();
-		
-		//Text
-		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) {
-				draw_set_font(self.style.font_buttons);
-			}
-			draw_set_alpha(1);
-			draw_set_color(self.style.color_text);
-			draw_set_halign(fa_center);
-			draw_set_valign(fa_middle);
-			var _txt_x = self.x + self.width / 2;
-			var _txt_y = self.y + self.height / 2;
-			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
-		}
+		// Icon and text
+		_drawIconAndText(_center_x, _center_y, self.width, self.style.color_text);
 		
 		//Border
 		if !is_undefined(self.style.sprite_combobox_item_border) {
