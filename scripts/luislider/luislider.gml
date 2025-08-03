@@ -15,7 +15,7 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	setCallback(callback);
 	
 	self.can_drag = true;
-	self.knob_width = height;
+	self.knob_width = self.height;
 	self.knob_extender = 1;
 	
 	// Calculate knob width in constructor
@@ -43,11 +43,12 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 			_blend_secondary = merge_color(_blend_secondary, self.style.color_hover, 0.5);
 		}
 		
-		// Calculate bar size
+		// Calculate bar position and size
+		var _bar_height = self.bar_height == -1 ? self.height : self.bar_height;
 		var _bar_x = self.x;
-		var _bar_y = self.y + (self.height - self.bar_height) div 2;
+		var _bar_y = self.y + (self.height - _bar_height) div 2;
 		var _bar_w = self.width;
-		var _bar_h = self.bar_height;
+		var _bar_h = _bar_height;
 		
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {

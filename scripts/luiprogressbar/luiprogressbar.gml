@@ -23,7 +23,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.max_value = max(min_value, max_value);
 	self.rounding = rounding;
 	self.display_value = display_value;
-	self.bar_height = self.height;
+	self.bar_height = -1;
 	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
 	///@desc Set min value
@@ -82,11 +82,12 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 			_blend_text = merge_color(_blend_text, c_black, 0.5);
 		}
 		
-		// Calculate bar position
+		// Calculate bar position and size
+		var _bar_height = self.bar_height == -1 ? self.height : self.bar_height;
 		var _bar_x = self.x;
-		var _bar_y = self.y + (self.height - self.bar_height) div 2;
+		var _bar_y = self.y + (self.height - _bar_height) div 2;
 		var _bar_w = self.width;
-		var _bar_h = self.bar_height;
+		var _bar_h = _bar_height;
 		
 		// Base
 		if !is_undefined(self.style.sprite_progress_bar) {
