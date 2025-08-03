@@ -460,20 +460,22 @@ my_ui.addContent([
 /*
 numb = 0;
 _random_element = function(_number) {
-	var _rnd = irandom(5);
+	var _rnd = irandom(7);
 	switch (_rnd) {
 		case 0:	return new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128));
 		case 1:	return new LuiImageButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor);
-		case 2:	return new LuiSlider(, , , , , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
-		case 3:	return new LuiInput(, , , , , , "aboba_" + string(_number));
-		case 4:	return new LuiProgressRing(, , , , , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
-		case 5:	return new LuiCheckbox(, , , , , choose(true, false));
+		case 2:	return new LuiSlider(, , , irandom_range(32, 128), , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
+		case 3:	return new LuiInput(, , , irandom_range(32, 128), , , "input_" + string(_number));
+		case 4:	return new LuiProgressRing(, , , irandom_range(32, 128), , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
+		case 5:	return new LuiCheckbox(, , , irandom_range(32, 128), , choose(true, false), choose("checkbox_" + string(_number), ""));
+		case 6:	return new LuiToggleSwitch(, , , irandom_range(32, 128), , choose(true, false), choose("switch_" + string(_number), ""));
+		case 7:	return new LuiToggleButton(, , , irandom_range(32, 128), , choose(true, false), "toggleButton_" + string(_number));
 	}
 }
 repeat (250) {
 	my_ui.getElement("firstScrollPanel").addContent([
 		new LuiRow().addContent([
-			_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++), [random_range(0.1, 0.4), random_range(0.1, 0.4), random_range(0.1, 0.4), random_range(0.1, 0.4)]
+			_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++), [random_range(0.1, 0.3), random_range(0.1, 0.3), random_range(0.1, 0.3)]
 		])
 	])
 }
