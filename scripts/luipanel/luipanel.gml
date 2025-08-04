@@ -17,7 +17,11 @@ function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	
 	self.draw = function() {
 		//Shadow
-		//draw_sprite_stretched_ext(sUI_Square_21r_shadow, 0, self.x - 21, self.y - 21, self.width + 42, self.height + 42, c_white, 1);
+		//var _left = (sprite_get_width(sUI_Square_21r_shadow) - sprite_get_width(self.style.sprite_panel)) div 2;
+		//var _right = (sprite_get_width(sUI_Square_21r_shadow) - sprite_get_width(self.style.sprite_panel)) div 2;
+		//var _top = (sprite_get_height(sUI_Square_21r_shadow) - sprite_get_height(self.style.sprite_panel)) div 2 - 2;
+		//var _bottom = (sprite_get_height(sUI_Square_21r_shadow) - sprite_get_height(self.style.sprite_panel)) div 2 + 1;
+		//draw_sprite_stretched_ext(sUI_Square_21r_shadow, 0, self.x - _left, self.y - _top, self.width + _right*2, self.height + _bottom*2, c_white, 1);
 		// Base
 		if !is_undefined(self.style.sprite_panel) {
 			var _blend_color = self.style.color_primary; //???// self.nesting_level == 1 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);

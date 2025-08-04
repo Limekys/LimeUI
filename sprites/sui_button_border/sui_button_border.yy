@@ -44,8 +44,8 @@
   },
   "origin":0,
   "parent":{
-    "name":"Sprites",
-    "path":"folders/DEMO/Sprites.yy",
+    "name":"UI elements",
+    "path":"folders/DEMO/Sprites/UI elements.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
