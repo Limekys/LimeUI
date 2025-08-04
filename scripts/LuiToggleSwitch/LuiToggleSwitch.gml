@@ -80,9 +80,6 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		if self.text != "" {
 			if !self.deactivated {
 				draw_set_color(self.style.color_text);
-				//if self.isMouseHovered() {
-					//draw_set_color(merge_color(self.style.color_text, self.style.color_hover, 0.5));
-				//}
 			} else {
 				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 			}
