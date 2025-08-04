@@ -1,6 +1,8 @@
 # LimeUI
 Free UI Framework for Game Maker games with flexpanels implementation
 
+For download last release [go here](https://github.com/Limekys/LimeUI/releases)
+
 For documentaion check [wiki page](https://github.com/Limekys/LimeUI/wiki)
 
 _*Right now the system is in a very early stage of development and with each update I may change things drastically_
