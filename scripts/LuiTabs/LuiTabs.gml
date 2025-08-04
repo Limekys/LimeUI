@@ -17,6 +17,7 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.is_pressed = false;
 	self.tabs = undefined;
 	self.tab_height = tab_height;
+	self.tab_indent = 0;
 	self.tabs_header = undefined;
 	self.active_tab = undefined;
 	
@@ -30,11 +31,22 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 		return self;
 	}
 	
+	///@desc Set tabs indent
+	///@arg {real} _tab_indent
+	static setTabIndent = function(_tab_indent) {
+		self.tab_indent = _tab_indent;
+		self.setGap(self.tab_indent);
+		if !is_undefined(self.tabs_header) {
+			self.tabs_header.setGap(self.tab_indent);
+		}
+		return self;
+	}
+	
 	///@desc Create header container for tabs
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.tabs_header) {
-			self.tabs_header = new LuiRow(, , , self.tab_height).setGap(0).setMinHeight(self.tab_height);
+			self.tabs_header = new LuiRow(, , , self.tab_height).setGap(self.tab_indent).setMinHeight(self.tab_height);
 		}
 	}
 	
@@ -109,17 +121,17 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _blend_color, 1);
 		}
 		//Border
 		if !is_undefined(self.style.sprite_tabs_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y + self.tab_height, self.width, self.height - self.tab_height, self.style.color_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, self.style.color_border, 1);
 		}
 	}
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
 		// Setting up padding for tabs
-		_element.setPadding(0).setGap(0);
+		_element.setPadding(0).setGap(_element.tab_indent);
 		// Init header container for tabs
 		_element._initHeader();
 		// Add header

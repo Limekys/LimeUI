@@ -16,7 +16,7 @@
 #macro LUI_EV_SHOW "show" // Triggered when the element becomes visible
 #macro LUI_EV_HIDE "hide" // Triggered when the element becomes invisible
 #macro LUI_EV_SIZE_UPDATE "size_update" // Triggered when the element changes its size
-#macro LUI_EV_DRAGGING "dragging" // Triggered while the element is being dragged
+#macro LUI_EV_DRAGGING "dragging" // Triggered while the element is being dragged (returns the structure with the new coordinates of the element or mouse)
 #macro LUI_EV_DRAG_START "drag_start" // Triggered once when dragging starts
 #macro LUI_EV_DRAG_END "drag_end" // Triggered once when dragging ends
 #macro LUI_EV_CLICK "click" // Triggered when the element is clicked (full press-release cycle)

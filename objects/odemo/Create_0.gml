@@ -86,10 +86,10 @@ my_ui.addContent([
 ]);
 
 // Create tab's
-tab_panels = new LuiTab("tabPanels", "Home").setIcon(sIconHome, 1);
-tab_search = new LuiTab("tabSearch", "Search").setIcon(sIconSearch, 1);
-tab_sprites = new LuiTab("tabSprites", "Sprites").setIcon(sIconPalette, 1);
-tab_about = new LuiTab("tabAbout", "About").setIcon(sIconInfo, 1);
+tab_panels = new LuiTab("tabPanels", "Home");
+tab_search = new LuiTab("tabSearch", "Search");
+tab_sprites = new LuiTab("tabSprites", "Sprites");
+tab_about = new LuiTab("tabAbout", "About");
 
 // Add tab's to Tabs
 tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
@@ -223,11 +223,15 @@ combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
 		_b = layer_background_get_id("bgSprites");
 		layer_background_blend(_b, #333333);
 		layer_background_visible(_b, true);
-		//Set colors to buttons 
+		// Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
-		//Tabs height
-		oDemo.my_ui.getElement("LuiTabs").setTabHeight(32);
+		// Tabs settings
+		tabs.setTabHeight(32).setTabIndent(0);
+		tab_panels.setIcon(-1);
+		tab_search.setIcon(-1);
+		tab_sprites.setIcon(-1);
+		tab_about.setIcon(-1);
 	}
 });
 combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
@@ -238,11 +242,15 @@ combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
 		_b = layer_background_get_id("bgSprites");
 		layer_background_blend(_b, c_white);
 		layer_background_visible(_b, true);
-		//Set colors to buttons
+		// Set colors to buttons
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.1));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.1));
-		//Tabs height
-		oDemo.my_ui.getElement("LuiTabs").setTabHeight(32);
+		// Tabs settings
+		tabs.setTabHeight(32).setTabIndent(0);
+		tab_panels.setIcon(-1);
+		tab_search.setIcon(-1);
+		tab_sprites.setIcon(-1);
+		tab_about.setIcon(-1);
 	}
 });
 combobox_item_3 = new LuiComboBoxItem( , "Modern", function() { 
@@ -252,11 +260,15 @@ combobox_item_3 = new LuiComboBoxItem( , "Modern", function() {
 		layer_background_blend(_b, #32333d);
 		_b = layer_background_get_id("bgSprites");
 		layer_background_visible(_b, false);
-		//Set colors to buttons 
+		// Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#fa9a31, c_white, 0.25));
 		btn_restart.setColor(merge_color(#e5538d, c_white, 0.25));
-		//Tabs height
-		oDemo.my_ui.getElement("LuiTabs").setTabHeight(48);
+		// Tabs settings
+		tabs.setTabHeight(48).setTabIndent(16);
+		tab_panels.setIcon(sIconHome, 1);
+		tab_search.setIcon(sIconSearch, 1);
+		tab_sprites.setIcon(sIconPalette, 1);
+		tab_about.setIcon(sIconInfo, 1);
 	}
 });
 combobox_theme.addItems([combobox_item_1, combobox_item_2, combobox_item_3]);
@@ -452,7 +464,6 @@ my_panel_3.addContent([
 my_ui.addContent([
 	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->", function() {
 		room_goto(rDemo2);
-		//with(oDemo) instance_destroy();
 	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
 ]);
 
