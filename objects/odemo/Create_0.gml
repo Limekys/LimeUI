@@ -213,8 +213,7 @@ my_panel_2.addContent([
 ]);
 
 // Create drop down menu and some items in it
-
-combobox_theme = new LuiComboBox(, , , , , "Select theme...").set("Dark").setTooltip("Change UI theme\nWIP");
+combobox_theme = new LuiComboBox(, , , , , "Select theme...").setTooltip("Change UI theme\nWIP");
 combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
 	with(oDemo) {
 		my_ui.setStyle(demo_style_dark);

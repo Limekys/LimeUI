@@ -162,7 +162,8 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 ///@desc Tab, used for LuiTabs.
 ///@arg {String} name
 ///@arg {String} text
-function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
+function LuiTab(name = LUI_AUTO_NAME, text = "Tab")
+ : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
 	
 	self.is_active = false;
 	self.tabs_parent = undefined;

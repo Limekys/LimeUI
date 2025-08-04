@@ -6,7 +6,8 @@
 ///@arg {String} name
 ///@arg {String} placeholder
 ///@arg {Function} callback
-function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "", callback = undefined) : LuiButton(x, y, width, height, name, placeholder, callback) constructor {
+function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "", callback = undefined)
+ : LuiButton(x, y, width, height, name, "", callback) constructor {
 	
 	self.placeholder = placeholder;
 	self.items = undefined;
@@ -139,11 +140,11 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		draw_set_alpha(1);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
-		if is_undefined(self.value) {
+		if is_undefined(self.text) || self.text == "" {
 			draw_set_alpha(0.5);
 			_drawTruncatedText(_txt_x, _txt_y, self.placeholder, _text_draw_width);
 		} else {
-			_drawTruncatedText(_txt_x, _txt_y, string(self.value), _text_draw_width);
+			_drawTruncatedText(_txt_x, _txt_y, string(self.text), _text_draw_width);
 		}
 		
 		//Border
@@ -192,13 +193,14 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefined) : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
+function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item", callback = undefined)
+ : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text, callback) constructor {
 	
 	self.combobox_parent = undefined;
 	
 	///@desc Set new combobox text and close combobox
 	static chooseItem = function() {
-		self.combobox_parent.set(self.text);
+		self.combobox_parent.setText(self.text);
 		self.combobox_parent.toggle();
 	}
 	
