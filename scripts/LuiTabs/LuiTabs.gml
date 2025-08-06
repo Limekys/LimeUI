@@ -14,7 +14,6 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 	self.height = height;
 	_initElement();
 	
-	self.is_pressed = false;
 	self.tabs = undefined;
 	self.tab_height = tab_height;
 	self.tab_indent = 0;

@@ -17,7 +17,6 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.height = height;
 	_initElement();
 	
-	self.is_pressed = false;
 	self.text = text;
 	self.slider_size = min(self.width, self.height);
 	self.slider_xoffset = 0;
