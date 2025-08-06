@@ -31,7 +31,6 @@ function LuiBase() constructor {
 	self.auto_width = false;
 	self.auto_height = false;
 	self.parent = undefined;
-	self.callback = undefined;						//???//будет упразднена из-за новой системы Event Listener
 	self.content = undefined;
 	self.delayed_content = undefined;
 	self.container = self; 							//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
@@ -655,20 +654,6 @@ function LuiBase() constructor {
 		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
 			var _element = self.content[i];
 			_element.setStyleChilds(_style);
-		}
-		return self;
-	}
-	
-	///@desc Set callback function //???// возможно будет упразднена из-за будущей событийной системы
-	static setCallback = function(callback) {
-		if callback == undefined {
-			if LUI_DEBUG_CALLBACK {
-				self.callback = function() {show_debug_message(self.name + ": " + string(self.value))};
-			} else {
-				self.callback = function() { };
-			}
-		} else {
-			self.callback = method(self, callback);
 		}
 		return self;
 	}
