@@ -468,7 +468,7 @@ my_ui.addContent([
 ]);
 
 // Stress test
-
+/*
 numb = 0;
 _random_element = function(_number) {
 	var _rnd = irandom(7);
