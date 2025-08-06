@@ -312,8 +312,8 @@ my_panel_3.addContent([
 				new LuiInput(, , , , "input_typeinme", , "Type in me!"),
 				new LuiPanel().addContent([
 					new LuiText(, , , , , "Nested panel 1.1"),
-					new LuiCheckbox( , , , , "checkboxTest", false, "Check me!", function() {
-						luiShowMessage(oDemo.my_ui, , , get() ? "Checkbox in nested panel of scroll panel!" : ":(");
+					new LuiCheckbox( , , , , "checkboxTest", false, "Check me!").addEvent(LUI_EV_CLICK, function(_element) {
+						luiShowMessage(oDemo.my_ui, , , _element.get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 					}),
 					new LuiPanel().addContent([
 						new LuiText(, , , , , "Nested panel 2.1"),

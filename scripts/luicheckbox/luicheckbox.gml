@@ -7,7 +7,7 @@
 ///@arg {Bool} value
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "", callback = undefined) : LuiBase() constructor {
+function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = value;
@@ -16,7 +16,6 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	self.width = width;
 	self.height = height;
 	_initElement();
-	setCallback(callback);
 	
 	self.text = text;
 	
@@ -56,9 +55,6 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 		if self.text != "" {
 			if !self.deactivated {
 				draw_set_color(self.style.color_text);
-				//if self.isMouseHovered() {
-					//draw_set_color(merge_color(self.style.color_text, self.style.color_hover, 0.5));
-				//}
 			} else {
 				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
 			}
@@ -82,7 +78,6 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.value);
-		_element.callback(); //???// обратная совместимость
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);
 		}
