@@ -350,10 +350,6 @@ my_panel_3.addContent([
 
 	#region Add elements in tab_search
 		
-		// Function for buttons
-		deleteSelf = function() {
-			oDemo.filterElements(); self.destroy();
-		};
 		// Function for search system
 		filterElements = function() {
 			with(oDemo) {
@@ -391,7 +387,9 @@ my_panel_3.addContent([
 			]);
 		}
 		// Add other control elements
-		input_search = new LuiInput(, , , , "inputSearch", , "Search...", , 256, filterElements);
+		input_search = new LuiInput(, , , , "inputSearch", , "Search...", , 256).addEvent(LUI_EV_VALUE_UPDATE, function() {
+			oDemo.filterElements();
+		});
 		panel_control = new LuiPanel(, , , , "ControlPanel");
 		input_control = new LuiInput(, , , , , , "new element name", false, 32);
 		control_btn_add = new LuiButton(, , , , , "Add element").addEvent(LUI_EV_CLICK, function() {

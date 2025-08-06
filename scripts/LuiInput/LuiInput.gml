@@ -14,7 +14,7 @@ enum LUI_INPUT_TEXT_TYPE {
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
 ///@arg {Function} callback
-function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", placeholder = "", is_password = false, max_length = 255, callback = undefined) : LuiBase() constructor {
+function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", placeholder = "", is_password = false, max_length = 255) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = string(text);
@@ -23,7 +23,6 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	self.width = width;
 	self.height = height;
 	_initElement();
-	setCallback(callback);
 	
 	self.placeholder = placeholder;
 	self.is_password = is_password;
@@ -176,10 +175,6 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 			_element.set(_element._limit_value(_element.get() + clipboard_get_text()));
 			keyboard_string = _element.get();
 		}
-	});
-	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
-		_element.callback(); //???//обратная совместимость
 	});
 	
 	self.addEvent(LUI_EV_DESTROY, function(_element) {
