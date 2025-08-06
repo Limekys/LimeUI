@@ -104,7 +104,7 @@ function LuiMain() : LuiBase() constructor {
 		if variable_struct_exists(self.element_names, _name) {
 			return variable_struct_get(self.element_names, _name);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find element {_name}!");
+			_luiPrintError($"Can't find element {_name}!");
 			return -1;
 		}
 	}

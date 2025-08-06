@@ -348,7 +348,7 @@ function LuiStyle(_style = {}) constructor {
 				bottom : _region[3]
 			}
 		} else if LUI_LOG_ERROR_MODE == 2 {
-			print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
+			_luiPrintWarning($"setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
 		}
 		return self;
 	}

@@ -44,7 +44,7 @@ function LuiBase() constructor {
 	self.need_to_update_content = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
-	self.binding_variable = undefined;
+	self.binded_variable = undefined;
 	self.is_pressed = false;
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
@@ -184,8 +184,8 @@ function LuiBase() constructor {
 	static set = function(_value) {
 		if self.value != _value {
 			self.value = _value;
-			if !is_undefined(self.binding_variable) {
-				self._updateToBinding();
+			if !is_undefined(self.binded_variable) {
+				self._updateToBindedVariable();
 			}
 			self._dispatchEvent(LUI_EV_VALUE_UPDATE);
 			self.updateMainUiSurface();
@@ -212,7 +212,7 @@ function LuiBase() constructor {
 				self.name = _string;
 				self._registerElementName();
 			} else {
-				if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: Element name \"{_string}\" already exists! Please give another name!");
+				_luiPrintWarning($"Element name \"{_string}\" already exists! Please give another name!");
 			}
 		}
 		return self;
@@ -618,17 +618,17 @@ function LuiBase() constructor {
 	}
 	
 	///@desc Binds the object/struct variable to the element value
-	static setBinding = function(_source, _variable) {
+	static bindVariable = function(_source, _variable) {
 		if (_source != noone && _variable != "") {
-			self.binding_variable = {
+			self.binded_variable = {
 				source : _source,
 				variable : _variable
 			}
-			if LUI_LOG_ERROR_MODE == 2 && !variable_instance_exists(_source, _variable) {
-				print($"LIME_UI.WARNING({self.name}): Can't find variable '{_variable}'!");
+			if !variable_instance_exists(_source, _variable) {
+				_luiPrintWarning($"Trying to bind variable: Can't find variable '{_variable}'!");
 			}
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): Wrong variable name or instance!");
+			_luiPrintError($"Wrong variable name or instance!");
 		}
 		return self;
 	}
@@ -699,6 +699,7 @@ function LuiBase() constructor {
 	
 	///@desc Set offset region for render content
 	///@arg {struct, array} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
+	///@deprecated
 	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
 		if is_struct(_region) {
 			render_region_offset = _region;
@@ -712,7 +713,9 @@ function LuiBase() constructor {
 				top : _region[2],
 				bottom : _region[3]
 			}
-		} else if LUI_LOG_ERROR_MODE == 2 print($"LIME_UI.WARNING: setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
+		} else {
+			_luiPrintWarning($"setRenderRegionOffset: Wrong type appear, when struct or array is expected!");
+		}
 		
 		return self;
 	}
@@ -1025,8 +1028,8 @@ function LuiBase() constructor {
 		if !variable_struct_exists(self.main_ui.element_names, self.name) && self.name != LUI_AUTO_NAME {
 			variable_struct_set(self.main_ui.element_names, self.name, self);
 		} else {
-			if LUI_LOG_ERROR_MODE == 2 && self.name != LUI_AUTO_NAME {
-				print($"LIME_UI.WARNING: Element name \"{self.name}\" already exists! A new name will be given automatically");
+			if self.name != LUI_AUTO_NAME {
+				_luiPrintWarning($"Element name \"{self.name}\" already exists! A new name will be given automatically.");
 			}
 			if self.name == LUI_AUTO_NAME {
 				self.name = "";
@@ -1043,7 +1046,7 @@ function LuiBase() constructor {
 			if variable_struct_exists(self.main_ui.element_names, self.name) {
 				variable_struct_remove(self.main_ui.element_names, self.name);
 			} else {
-				if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR: Can't find element {instanceof(self)} with name \"{self.name}\"!");
+				_luiPrintError($"_deleteElementName: Can't find element {instanceof(self)} with name \"{self.name}\"!");
 			}
 		}
 	}
@@ -1254,29 +1257,31 @@ function LuiBase() constructor {
 		}
 	}
 	
-	///@desc Update element value from binding variable
+	///@desc Update element value from binded variable
 	///@ignore
-	static _updateFromBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
+	static _updateFromBindedVariable = function() {
+		var _source = self.binded_variable.source;
+		var _variable = self.binded_variable.variable;
 		if (_source != noone && variable_instance_exists(_source, _variable)) {
 			var _source_value = variable_instance_get(_source, _variable);
 			self.set(_source_value);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
+			_luiPrintError($"Binded variable is wrong or no longer available!");
+			self.binded_variable = undefined;
 		}
 	}
 	
-	///@desc Update binding variable from element value
+	///@desc Update binded variable from element value
 	///@ignore
-	static _updateToBinding = function() {
-		var _source = binding_variable.source;
-		var _variable = binding_variable.variable;
+	static _updateToBindedVariable = function() {
+		var _source = self.binded_variable.source;
+		var _variable = self.binded_variable.variable;
 		if (_source != noone && variable_instance_exists(_source, _variable)) {
 			var _element_value = self.get();
 			variable_instance_set(_source, _variable, _element_value);
 		} else {
-			if LUI_LOG_ERROR_MODE >= 1 print($"LIME_UI.ERROR({self.name}): The binding variable is no longer available!");
+			_luiPrintError($"Binded variable is wrong or no longer available!");
+			self.binded_variable = undefined;
 		}
 	}
 	
@@ -1342,7 +1347,7 @@ function LuiBase() constructor {
 	    if is_array(_ranges) {
 	        if array_length(_ranges) != _elements_count - 1 {
 	            if LUI_LOG_ERROR_MODE == 2 {
-					print($"LIME_UI.WARNING: Incorrect number of ratios for {self.name} ({instanceof(self)}). Elements {_elements_count - 1}, but ratios {array_length(_ranges)}.\nThe others will be filled in automatically and the extra ones will be cut off.");
+					_luiPrintWarning($"Incorrect number of ratios for {self.name} ({instanceof(self)}). Elements {_elements_count - 1}, but ratios {array_length(_ranges)}.\nThe others will be filled in automatically and the extra ones will be cut off.");
 	            }
 				
 				var _current_length = array_length(_ranges);
@@ -1459,8 +1464,8 @@ function LuiBase() constructor {
 	        }
 	        
 	        // Updating the bound variables
-	        if (!is_undefined(_element.binding_variable) && _element.get() != variable_instance_get(_element.binding_variable.source, _element.binding_variable.variable)) {
-	            _element._updateFromBinding();
+	        if (!is_undefined(_element.binded_variable) && _element.get() != variable_instance_get(_element.binded_variable.source, _element.binded_variable.variable)) {
+	            _element._updateFromBindedVariable();
 	        }
 	        
 	        // Update content if required
@@ -1698,7 +1703,7 @@ function LuiBase() constructor {
 		delete self.style_overrides; self.style_overrides = undefined;
 		delete self.render_region_offset; self.render_region_offset = undefined;
 		delete self.view_region; self.view_region = undefined;
-		delete self.binding_variable; self.binding_variable = undefined;
+		delete self.binded_variable; self.binded_variable = undefined;
 		delete self.data; self.data = undefined;
 		self.event_listeners = {}
 		// Decrement global counter

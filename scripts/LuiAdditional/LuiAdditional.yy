@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"Additional",
+  "%Name":"LuiAdditional",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Additional",
+  "name":"LuiAdditional",
   "parent":{
     "name":"LimeUI",
     "path":"folders/Limekys/LimeUI.yy",

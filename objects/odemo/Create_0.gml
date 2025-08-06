@@ -106,7 +106,7 @@ tabs_anim_y = tabs_target_y;
 tabs.setPosition(tabs_target_x, tabs_target_y);
 
 // Create some elements
-demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).setBinding(self, "demo_loading_value");
+demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).bindVariable(self, "demo_loading_value");
 btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message").addEvent(LUI_EV_CLICK, function() {
 	luiShowMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
@@ -137,16 +137,16 @@ createNewLoginWindow = function () {
 my_panel.addContent([
 	new LuiText( , , , , , "First panel", true).setTextHalign(fa_center),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).setBinding(self, "tabs_target_x"), [0.3, 0.7]
+		new LuiText( , , , , , "Slider"), new LuiSlider( , , , , "sliderX", tabs_min_x, tabs_max_x, 0, 1).bindVariable(self, "tabs_target_x"), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
 		new LuiText(, , , , , "ProgressBar"), demo_loading, [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false, 32).setBinding(self, "demo_login"), [0.3, 0.7]
+		new LuiText( , , , , , "Login: "), new LuiInput( , , , , , , "admin", false, 32).bindVariable(self, "demo_login"), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true, 32).setBinding(self, "demo_password"), [0.3, 0.7]
+		new LuiText( , , , , , "Password: "), new LuiInput( , , , , , , "password", true, 32).bindVariable(self, "demo_password"), [0.3, 0.7]
 	]),	
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10).setBarHeight(16), [0.3, 0.7]
@@ -155,7 +155,7 @@ my_panel.addContent([
 		oDemo.createNewLoginWindow();
 	}),
 	new LuiRow().addContent([
-		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").setBinding(self, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton")
+		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").bindVariable(self, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton")
 	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg.setIcon(sIconInfo, 1).setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
@@ -324,8 +324,8 @@ my_panel_3.addContent([
 						]),
 						new LuiPanel().addContent([
 							new LuiText(, , , , , "Nested panel 3.1"),
-							new LuiText(, , , , , "Updateble text with binding variable below").setTooltip("Try to change login in first panel"),
-							new LuiText(, , , , , ).setBinding(self, "demo_login")
+							new LuiText(, , , , , "Updateble text with binded variable below").setTooltip("Try to change login in first panel"),
+							new LuiText(, , , , , ).bindVariable(self, "demo_login")
 						])
 					]),
 					new LuiPanel().addContent([
@@ -468,7 +468,7 @@ my_ui.addContent([
 ]);
 
 // Stress test
-/*
+
 numb = 0;
 _random_element = function(_number) {
 	var _rnd = irandom(7);
