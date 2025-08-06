@@ -9,10 +9,8 @@
 ///@arg {Real} value
 ///@arg {Real} rounding
 ///@arg {Function} callback
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, value = 0, rounding = 0, callback = undefined)
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, value = 0, rounding = 0)
  : LuiProgressBar(x, y, width, height, name, min_value, max_value, true, value, rounding) constructor {
-	
-	setCallback(callback);
 	
 	self.can_drag = true;
 	self.knob_width = self.height;
@@ -104,10 +102,6 @@ function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		var _new_value = clamp(_element.value + _wheel * _wheel_step, _element.min_value, _element.max_value);
 		_new_value = _element._calculateValue(_new_value);
 		_element.set(_new_value);
-	});
-	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
-		_element.callback(); //???//обратная совместимость
 	});
 	
 	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
