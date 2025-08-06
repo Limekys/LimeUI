@@ -211,7 +211,7 @@ my_panel_2.addContent([
 
 // Create drop down menu and some items in it
 combobox_theme = new LuiComboBox(, , , , , "Select theme...").setTooltip("Change UI theme\nWIP");
-combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
+combobox_item_1 = new LuiComboBoxItem( , "Dark").addEvent(LUI_EV_CLICK, function() {
 	with(oDemo) {
 		// Change ui style
 		my_ui.setStyle(demo_style_dark);
@@ -229,7 +229,7 @@ combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
 		tab_about.setIcon(-1);
 	}
 });
-combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
+combobox_item_2 = new LuiComboBoxItem( , "Light").addEvent(LUI_EV_CLICK, function() {
 	with(oDemo) {
 		// Change ui style
 		my_ui.setStyle(demo_style_light);
@@ -247,7 +247,7 @@ combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
 		tab_about.setIcon(-1);
 	}
 });
-combobox_item_3 = new LuiComboBoxItem( , "Modern", function() { 
+combobox_item_3 = new LuiComboBoxItem( , "Modern").addEvent(LUI_EV_CLICK, function() { 
 	with(oDemo) {
 		// Change ui style
 		my_ui.setStyle(demo_style_modern);
