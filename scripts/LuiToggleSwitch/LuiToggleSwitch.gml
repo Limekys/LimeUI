@@ -94,7 +94,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	}
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.set(!_element.value);
+		_element.set(!_element.get());
 		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
 	});
 	

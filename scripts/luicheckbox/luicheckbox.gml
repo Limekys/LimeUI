@@ -77,7 +77,7 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	}
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.set(!_element.value);
+		_element.set(!_element.get());
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);
 		}

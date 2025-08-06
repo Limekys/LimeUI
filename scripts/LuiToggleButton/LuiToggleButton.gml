@@ -7,117 +7,35 @@
 ///@arg {bool} value
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase() constructor {
-	
-	self.name = name;
-	self.text = text;
-	self.value = value;
-	self.pos_x = x;
-	self.pos_y = y;
-	self.width = width;
-	self.height = height;
-	_initElement();
-	
-	self.is_pressed = false;
-	self.button_color = undefined;
-	self.icon = {
-		sprite : -1,
-		width : -1,
-		height : -1,
-		scale : 1,
-		angle : 0,
-		color : c_white,
-		alpha : 1,
-	}
-	
-	///@desc Set button text
-	///@arg {string} _button_text
-	static setText = function(_button_text) {
-		self.text = _button_text;
-		return self;
-	}
-	
-	///@desc Set button color
-	///@arg {any} _button_color
-	static setColor = function(_button_color) {
-		self.button_color = _button_color;
-		return self;
-	}
-	
-	///@arg {Asset.GMSprite} _sprite
-	///@arg {real} _scale
-	///@arg {real} _angle
-	///@arg {any} _color
-	///@arg {real} _alpha
-	static setIcon = function(_sprite, _scale = 1, _angle = 0, _color = c_white, _alpha = 1) {
-		self.icon.sprite = _sprite;
-		self.icon.scale = _scale;
-		self.icon.angle = _angle;
-		self.icon.color = _color;
-		self.icon.alpha = _alpha;
-		self._calcIconSize();
-		return self;
-	}
-	
-	///@ignore
-	static _calcIconSize = function() {
-		var _size = floor(min(self.width, self.height, sprite_get_width(self.icon.sprite), sprite_get_height(self.icon.sprite)) * self.icon.scale);
-		self.icon.width = _size;
-		self.icon.height = _size;
-	}
-	
-	///@ignore
-	static _drawIcon = function() {
-		if sprite_exists(self.icon.sprite) {
-			// Draw icon
-			var _offset = 8;
-			var _x = self.x + _offset;
-			var _y = self.y + self.height / 2 - self.icon.height / 2;
-			draw_sprite_stretched_ext(self.icon.sprite, 0, _x, _y, self.icon.width, self.icon.height, self.icon.color, self.icon.alpha);
-			//???// how to calculate icon size and position
-			//var _x = self.x + sprite_get_xoffset(self.icon.sprite);
-			//var _y = self.y + sprite_get_yoffset(self.icon.sprite);
-			//draw_sprite_ext(self.icon.sprite, 0, _x, _y, self.icon.scale, self.icon.scale, self.icon.angle, self.icon.color, self.icon.alpha);
-		}
-	}
+function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "")
+ : LuiButton(x, y, width, height, name, text) constructor {
 	
 	self.draw = function() {
-		// Base
-		if !is_undefined(self.style.sprite_button) {
-			var _blend_color = self.value == true ? self.style.color_accent : (!is_undefined(self.button_color) ? self.button_color : self.style.color_secondary);
-			if !self.deactivated {
-				if self.isMouseHovered() {
-					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
-					if self.is_pressed == true {
-						_blend_color = merge_color(_blend_color, c_black, 0.5);
-					}
-				}
-			} else {
+		
+		// Calculate colors
+		var _blend_color = self.value == true ? self.style.color_accent : (!is_undefined(self.button_color) ? self.button_color : self.style.color_secondary);
+		var _blend_text = self.style.color_text;
+		if self.deactivated {
+			_blend_color = merge_color(_blend_color, c_black, 0.5);
+			_blend_text = merge_color(_blend_text, c_black, 0.5);
+		} else if self.isMouseHovered() {
+			_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+			if self.is_pressed {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
+		}
+		
+		// Calculate positions
+		var _center_x = self.x + self.width / 2;
+		var _center_y = self.y + self.height / 2;
+		
+		// Base
+		if !is_undefined(self.style.sprite_button) {
 			draw_sprite_stretched_ext(self.style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
-		// Icon
-		self._drawIcon();
-		
-		// Text
-		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) {
-				draw_set_font(self.style.font_buttons);
-			}
-			if !self.deactivated {
-				draw_set_color(self.style.color_text);
-			} else {
-				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
-			}
-			draw_set_alpha(1);
-			draw_set_halign(fa_center);
-			draw_set_valign(fa_middle);
-			var _txt_x = self.x + self.width / 2;
-			var _txt_y = self.y + self.height / 2;
-			_drawTruncatedText(_txt_x, _txt_y, self.text, self.width);
-		}
+		// Icon and text
+		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
 		if !is_undefined(self.style.sprite_button_border) {
@@ -125,14 +43,7 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		if sprite_exists(_element.icon.sprite) {
-			_element._calcIconSize();
-		}
-	});
-	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.get());
-		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
 	});
 }
