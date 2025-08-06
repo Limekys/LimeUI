@@ -2,7 +2,7 @@
 function LuiMain() : LuiBase() constructor {
 	
 	// Main variables
-	self.name = "__lui_main_ui";
+	self.name = "_LUI_MAIN_UI";
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.ui_screen_surface = -1;

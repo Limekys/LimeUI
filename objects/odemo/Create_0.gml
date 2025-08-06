@@ -107,10 +107,10 @@ tabs.setPosition(tabs_target_x, tabs_target_y);
 
 // Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).setBinding(self, "demo_loading_value");
-btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message", function() {
+btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message").addEvent(LUI_EV_CLICK, function() {
 	luiShowMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
-btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart", function() {
+btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart").addEvent(LUI_EV_CLICK, function() {
 	game_restart();
 });
 
@@ -126,7 +126,7 @@ createNewLoginWindow = function () {
 			new LuiRow().addContent([
 				new LuiInput(, , , , , "", "password", true)
 			]),
-			new LuiButton(, , 150, 32, , "Login", function() {
+			new LuiButton(, , 150, 32, , "Login").addEvent(LUI_EV_CLICK, function() {
 				luiShowMessage(oDemo.my_ui, , , "Wrong password!", "OK!");
 			})
 		])
@@ -151,7 +151,7 @@ my_panel.addContent([
 	new LuiRow().addContent([
 		new LuiText( , , , , , "Slider with rounding 10"), new LuiSlider( , , , , "SliderRounding", 0, 100, 20, 10).setBarHeight(16), [0.3, 0.7]
 	]),
-	new LuiButton(, , , , , "Create login window", function () {
+	new LuiButton(, , , , , "Create login window").addEvent(LUI_EV_CLICK, function () {
 		oDemo.createNewLoginWindow();
 	}),
 	new LuiRow().addContent([
@@ -162,16 +162,13 @@ my_panel.addContent([
 	])
 ]);
 
-// Create some panels
-my_panel_in_second_2 = new LuiPanel();
-
 // Create deactivated button
-deactivated_button = new LuiButton( , , , , , "DEACTIVATED", function() {
-	self.destroy();
+deactivated_button = new LuiButton( , , , , , "DEACTIVATED").deactivate().addEvent(LUI_EV_CLICK, function(_element) {
+	_element.destroy();
 	oDemo.deactivated_button = -1;
-}).deactivate();
+});
 
-activate_button = new LuiButton( , , , , , "ACTIVATE", function() {
+activate_button = new LuiButton( , , , , , "ACTIVATE").addEvent(LUI_EV_CLICK, function() {
 	if oDemo.deactivated_button != -1 {
 		oDemo.deactivated_button.activate();
 		oDemo.deactivated_button.setText("DELETE");
@@ -188,8 +185,8 @@ for (var i = 0; i < 7; ++i) {
 	array_push(_sprite_buttons, _button);
 }
 
-// Add array with sprite buttons to second panel of second main panel
-my_panel_in_second_2.addContent([
+// Add array with sprite buttons to panel with sprites
+panel_with_sprites = new LuiPanel().addContent([
 	new LuiText( , , , , , "Panel with sprites buttons"),
 	new LuiRow().setFlexJustifyContent(flexpanel_justify.space_around).setFlexWrap(flexpanel_wrap.wrap).addContent(
 		_sprite_buttons
@@ -204,24 +201,23 @@ my_panel_2.addContent([
 		new LuiRow().addContent([
 			activate_button, deactivated_button
 		]),	
-		new LuiButton( , , , , "btnVisibility", "Visible", function() {
-			oDemo.my_panel_in_second_2.setVisible(!oDemo.my_panel_in_second_2.visible);
+		new LuiButton( , , , , "btnVisibility", "Visible").addEvent(LUI_EV_CLICK, function() {
+			oDemo.panel_with_sprites.setVisible(!oDemo.panel_with_sprites.visible);
 		}),
-		new LuiButton( , , , , , long_text, ).setTooltip(long_text),
+		new LuiButton().setText(long_text).setTooltip(long_text),
 	]),
-	my_panel_in_second_2
+	panel_with_sprites
 ]);
 
 // Create drop down menu and some items in it
 combobox_theme = new LuiComboBox(, , , , , "Select theme...").setTooltip("Change UI theme\nWIP");
 combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
 	with(oDemo) {
+		// Change ui style
 		my_ui.setStyle(demo_style_dark);
+		// Change background
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #191919);
-		_b = layer_background_get_id("bgSprites");
-		layer_background_blend(_b, #333333);
-		layer_background_visible(_b, true);
 		// Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
@@ -235,12 +231,11 @@ combobox_item_1 = new LuiComboBoxItem( , "Dark", function() {
 });
 combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
 	with(oDemo) {
+		// Change ui style
 		my_ui.setStyle(demo_style_light);
+		// Change background
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, c_ltgray);
-		_b = layer_background_get_id("bgSprites");
-		layer_background_blend(_b, c_white);
-		layer_background_visible(_b, true);
 		// Set colors to buttons
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.1));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.1));
@@ -254,11 +249,11 @@ combobox_item_2 = new LuiComboBoxItem( , "Light", function() {
 });
 combobox_item_3 = new LuiComboBoxItem( , "Modern", function() { 
 	with(oDemo) {
+		// Change ui style
 		my_ui.setStyle(demo_style_modern);
+		// Change background
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #32333d);
-		_b = layer_background_get_id("bgSprites");
-		layer_background_visible(_b, false);
 		// Set colors to buttons 
 		btn_show_msg.setColor(merge_color(#fa9a31, c_white, 0.25));
 		btn_restart.setColor(merge_color(#e5538d, c_white, 0.25));
@@ -278,17 +273,17 @@ combobox_theme.addItems([combobox_item_1, combobox_item_2, combobox_item_3]);
 changeRingValue = function() {
 	oDemo.my_ui.getElement("luiRing").set(irandom(100));
 }
-big_button_1 = new LuiButton().setCallback(changeRingValue).addContent([
+big_button_1 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue()}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage(, , 32, 32, , sHamburger).setMouseIgnore(), new LuiText(, , , , , "Hamburger!").setMouseIgnore()
 	])
 ]);
-big_button_2 = new LuiButton().setCallback(changeRingValue).addContent([
+big_button_2 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue()}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage(, , 32, 32, , sBoxDemo).setMouseIgnore(), new LuiText(, , , , , "A box!").setMouseIgnore()
 	])
 ]);
-big_button_3 = new LuiButton().setCallback(changeRingValue).addContent([
+big_button_3 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue()}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage(, , 32, 32, , sLogoDemo).setMouseIgnore(), new LuiText(, , , , , "Game Maker!").setMouseIgnore()
 	])
@@ -383,24 +378,31 @@ my_panel_3.addContent([
 				search_panel._applyScroll();
 			}
 		}
-		// Other elements
-		search_panel = new LuiScrollPanel(, , , , "SearchPanel").addContent([
-			new LuiButton(, , , , , "Aboba", oDemo.deleteSelf),
-			new LuiButton(, , , , , "Microba", oDemo.deleteSelf),
-			new LuiButton(, , , , , "Foo", oDemo.deleteSelf),
-			new LuiButton(, , , , , "Bar", oDemo.deleteSelf),
-			new LuiButton(, , , , , "Game maker!", oDemo.deleteSelf),
-			new LuiButton(, , , , , "777", oDemo.deleteSelf),
-		]);
+		// Create search panel
+		search_panel = new LuiScrollPanel(, , , , "SearchPanel");
+		// Add random buttons to search panel
+		for (var i = 1; i <= 10; i++) {
+			var _btn_text = string(i) + ". " + choose("Aboba", "Microba", "Foo", "Bar", "Game maker!", "777", "123");
+			search_panel.addContent([
+				new LuiButton().setText(_btn_text).addEvent(LUI_EV_CLICK, function(_element) {
+					oDemo.filterElements(); _element.destroy();
+				})
+			]);
+		}
+		// Add other control elements
 		input_search = new LuiInput(, , , , "inputSearch", , "Search...", , 256, filterElements);
 		panel_control = new LuiPanel(, , , , "ControlPanel");
 		input_control = new LuiInput(, , , , , , "new element name", false, 32);
-		control_btn_add = new LuiButton(, , , , , "Add element", function() {
+		control_btn_add = new LuiButton(, , , , , "Add element").addEvent(LUI_EV_CLICK, function() {
 			var _button_name = oDemo.input_control.get();
 			oDemo.input_control.set("");
-			oDemo.search_panel.addContent(new LuiButton(, , , , , _button_name, oDemo.deleteSelf));
+			oDemo.search_panel.addContent([
+				new LuiButton().setText(_button_name).addEvent(LUI_EV_CLICK, function(_element) {
+					oDemo.filterElements(); _element.destroy();
+				})
+			]);
 		});
-		control_btn_clear = new LuiButton(, , , , , "Clear list", function() {oDemo.search_panel.cleanScrollPanel()});
+		control_btn_clear = new LuiButton().setText("Clear list").addEvent(LUI_EV_CLICK, function() {oDemo.search_panel.cleanScrollPanel()});
 		panel_control.addContent([
 			input_control,
 			control_btn_add,
@@ -461,9 +463,9 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->", function() {
+	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->").setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16).addEvent(LUI_EV_CLICK, function() {
 		room_goto(rDemo2);
-	}).setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16),
+	})
 ]);
 
 // Stress test

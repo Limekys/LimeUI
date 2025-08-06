@@ -9,16 +9,14 @@ my_style = new LuiStyle()
 game_ui = new LuiMain().setStyle(my_style).centerContent();
 
 hello_button = new LuiButton( , , 128, 32, "btnHelloWorld", "Hello world!");
-second_button = new LuiButton( , , 128, 32, "btn2", "Second button", function() { room_goto(rDemo) });
-third_button = new LuiButton( , , 128, 32, "btn3", "Third button", function() { room_goto(rDemo2) });
+second_button = new LuiButton( , , 128, 32, "btn2", "Second button").addEvent(LUI_EV_CLICK, function() {room_goto(rDemo)});
+third_button = new LuiButton( , , 128, 32, "btn3", "Third button").addEvent(LUI_EV_CLICK, function() {room_goto(rDemo2)});
 
 game_ui.addContent([
-		hello_button
+	hello_button
 ]);
 
-hello_button.setCallback(function() {
-    room_goto(rDemo);
-})
+hello_button.addEvent(LUI_EV_CLICK, function() {room_goto(rDemo)});
 
 //game_ui.addContent(hello_button);
 //game_ui.addContent(second_button);

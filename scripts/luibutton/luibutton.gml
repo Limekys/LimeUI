@@ -6,7 +6,7 @@
 ///@arg {String} name
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", callback = undefined) : LuiBase() constructor {
+function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "") : LuiBase() constructor {
 	
 	self.name = name;
 	self.text = text;
@@ -15,7 +15,6 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.width = width;
 	self.height = height;
 	_initElement();
-	setCallback(callback);
 	
 	self.button_color = undefined;
 	self.icon = {
@@ -158,7 +157,6 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	});
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.callback(); //???// обратная совместимость
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);
 		}

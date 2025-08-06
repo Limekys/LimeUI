@@ -30,14 +30,14 @@ panel_options = new LuiPanel( , , 300, , "panelOptions");
 text_main_menu = new LuiText(, , , , "textMainMenu", "Main menu", true).setTextHalign(fa_center);
 btn_play = new LuiButton(, , , , "buttonPlay", "Play");
 btn_achievements = new LuiButton(, , , , "buttonAchievements", "Achievements");
-btn_options = new LuiButton(, , , , "buttonOptions", "Options", function() {
+btn_options = new LuiButton(, , , , "buttonOptions", "Options").addEvent(LUI_EV_CLICK, function() {
 	if oDemo2.panel_options.visible {
 		oDemo2.panel_options.hide();
 	} else {
 		oDemo2.panel_options.show();
 	}
 });
-btn_exit = new LuiButton(, , , , "buttonExit", "Exit", function() { game_end(); });
+btn_exit = new LuiButton(, , , , "buttonExit", "Exit").addEvent(LUI_EV_CLICK, function() {game_end()});
 text_options = new LuiText(, , , , "textOptions", "Options", true).setTextHalign(fa_center);
 checkbox_fullscreen = new LuiCheckbox(, , , , "checkboxFullscreen", window_get_fullscreen(), "Fullscreen", function () {window_set_fullscreen(get())});
 slider_music = new LuiSlider(, , , , "sliderMusic", 0, 100, 75, 1);
@@ -71,10 +71,10 @@ game_ui.addContent([
 ]);
 
 // Create buttons to go another demo room
-button_prev_demo = new LuiButton(, , 256, , "buttonPrevDemo", "<-- Previous demo", function() {
+button_prev_demo = new LuiButton(, , 256, , "buttonPrevDemo", "<-- Previous demo").addEvent(LUI_EV_CLICK, function() {
 	room_goto(rDemo);
 });
-button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->", function() {
+button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->").addEvent(LUI_EV_CLICK, function() {
 	room_goto(rDemo3);
 });
 

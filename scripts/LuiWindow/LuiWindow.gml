@@ -37,11 +37,11 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 		    var _button_size = self.window_header.height;
 			var _close_button = new LuiButton(, , _button_size, _button_size, , "X").setColor(self.style.color_semantic_error);
 		    var _minimize_button = new LuiButton(, , _button_size, _button_size, , "-");
-			_close_button.setCallback(function() {
-				self.parent.parent_window.closeWindow();
+			_close_button.addEvent(LUI_EV_CLICK, function(_element) {
+				_element.parent.parent_window.closeWindow();
 			});
-			_minimize_button.setCallback(function() {
-				self.parent.parent_window.toggleWindow();
+			_minimize_button.addEvent(LUI_EV_CLICK, function(_element) {
+				_element.parent.parent_window.toggleWindow();
 			});
 			self.window_header.addContent([_minimize_button, _close_button]);
 			
