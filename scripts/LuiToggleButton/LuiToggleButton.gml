@@ -7,7 +7,7 @@
 ///@arg {bool} value
 ///@arg {String} text
 ///@arg {Function} callback
-function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "", callback = undefined) : LuiBase() constructor {
+function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase() constructor {
 	
 	self.name = name;
 	self.text = text;
@@ -17,7 +17,6 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	self.width = width;
 	self.height = height;
 	_initElement();
-	setCallback(callback);
 	
 	self.is_pressed = false;
 	self.button_color = undefined;
@@ -134,7 +133,6 @@ function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.get());
-		_element.callback(); //???// обратная совместимость
 		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
 	});
 }
