@@ -10,10 +10,8 @@
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
 ///@arg {Function} callback
-function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true, callback = undefined)
+function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true)
  : LuiImage(x, y, width, height, name, sprite, subimg, color, alpha, maintain_aspect) constructor {
-	
-	setCallback(callback);
 	
 	self.draw = function() {
 		//Calculate fit size
@@ -50,7 +48,6 @@ function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	}
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.callback(); //???// обратная совместимость
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);
 		}

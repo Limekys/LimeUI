@@ -39,7 +39,7 @@ btn_options = new LuiButton(, , , , "buttonOptions", "Options").addEvent(LUI_EV_
 });
 btn_exit = new LuiButton(, , , , "buttonExit", "Exit").addEvent(LUI_EV_CLICK, function() {game_end()});
 text_options = new LuiText(, , , , "textOptions", "Options", true).setTextHalign(fa_center);
-checkbox_fullscreen = new LuiCheckbox(, , , , "checkboxFullscreen", window_get_fullscreen(), "Fullscreen", function () {window_set_fullscreen(get())});
+checkbox_fullscreen = new LuiCheckbox(, , , , "checkboxFullscreen", window_get_fullscreen(), "Fullscreen").addEvent(LUI_EV_CLICK, function (_element) {window_set_fullscreen(_element.get())});
 slider_music = new LuiSlider(, , , , "sliderMusic", 0, 100, 75, 1);
 slider_sounds = new LuiSlider(, , , , "sliderSounds", 0, 100, 25, 1);
 text_music = new LuiText(, , , , "textMusic", "Music: ");

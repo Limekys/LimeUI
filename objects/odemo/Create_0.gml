@@ -176,12 +176,13 @@ activate_button = new LuiButton( , , , , , "ACTIVATE").addEvent(LUI_EV_CLICK, fu
 });
 
 // Create sprite buttons and function to change its color
-changeButtonColor = function() {
-	self.setColor(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
+changeImageButtonColor = function(_element) {
+	_element.setColor(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
 }
 var _sprite_buttons = [];
 for (var i = 0; i < 7; ++i) {
-    var _button = new LuiImageButton( , , 80, 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i mod 2 == 0 ? true : false, changeButtonColor);
+    var _button = new LuiImageButton( , , 80, 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i mod 2 == 0 ? true : false);
+	_button.addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)});
 	array_push(_sprite_buttons, _button);
 }
 
@@ -333,7 +334,7 @@ my_panel_3.addContent([
 						new LuiPanel().addContent([
 							new LuiText(, , , , , "Nested panel 3.2"),
 							new LuiRow().addContent([
-								new LuiImageButton( , , 56, 56, , sLogoDemo, 0, c_white, 1, true, changeButtonColor),
+								new LuiImageButton( , , 56, 56, , sLogoDemo, 0, c_white, 1, true).addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)}),
 								new LuiText(, , , , , "Press me!"),
 							]),
 							new LuiSurface(, , , 100, "LuiSurface", , , 0.5, false).addContent([
@@ -438,13 +439,13 @@ my_panel_3.addContent([
 	
 		sprite_limekys = new LuiImage(, , 64, , "sprLimekys", sLimekysAvatar);
 		text_about = new LuiText(, , , , "textAbout", "Hi, i am Limekys, and this is my UI system!");
-		sprite_discord = new LuiImageButton(, , 64, 64, "sprDiscord", sDiscord_64px, , , , , function() {url_open("https://discord.gg/3bfQdhDVkC")}).setTooltip("My Discord server");
-		sprite_telegram = new LuiImageButton(, , 64, 64, "sprTelegram", sTelegram_64px, , , , , function() {url_open("https://t.me/+iOeTrZOG8QhiZTQ6")}).setTooltip("My Telegram channel");
-		sprite_twitch = new LuiImageButton(, , 64, 64, "sprTwitch", sTwitch_64px, , , , , function() {url_open("https://www.twitch.tv/limekys")}).setTooltip("My Twitch channel");
-		sprite_twitter = new LuiImageButton(, , 64, 64, "sprTwitter", sTwitter_64px, , , , , function() {url_open("https://x.com/Limekys")}).setTooltip("My X (Twitter)");
-		sprite_vk = new LuiImageButton(, , 64, 64, "sprVK", sVkontakte_64px, , , , , function() {url_open("https://vk.com/limekys_games")}).setTooltip("My VK group");
-		sprite_youtube = new LuiImageButton(, , 64, 64, "sprYT", sYoutube_64px, , , , , function() {url_open("https://www.youtube.com/@Limekys")}).setTooltip("My Youtube channel");
-		sprite_donate = new LuiImageButton(, , 64, 64, "sprDonate", sDonate, , , , , function() {url_open("https://www.donationalerts.com/r/limekys")}).setTooltip("Donate!");
+		sprite_discord = new LuiImageButton(, , 64, 64, "sprDiscord", sDiscord_64px).setTooltip("My Discord server").addEvent(LUI_EV_CLICK, function() { url_open("https://discord.gg/3bfQdhDVkC"); });
+		sprite_telegram = new LuiImageButton(, , 64, 64, "sprTelegram", sTelegram_64px).setTooltip("My Telegram channel").addEvent(LUI_EV_CLICK, function() { url_open("https://t.me/+iOeTrZOG8QhiZTQ6"); });
+		sprite_twitch = new LuiImageButton(, , 64, 64, "sprTwitch", sTwitch_64px).setTooltip("My Twitch channel").addEvent(LUI_EV_CLICK, function() { url_open("https://www.twitch.tv/limekys"); });
+		sprite_twitter = new LuiImageButton(, , 64, 64, "sprTwitter", sTwitter_64px).setTooltip("My X (Twitter)").addEvent(LUI_EV_CLICK, function() { url_open("https://x.com/Limekys"); });
+		sprite_vk = new LuiImageButton(, , 64, 64, "sprVK", sVkontakte_64px).setTooltip("My VK group").addEvent(LUI_EV_CLICK, function() { url_open("https://vk.com/limekys_games"); });
+		sprite_youtube = new LuiImageButton(, , 64, 64, "sprYT", sYoutube_64px).setTooltip("My Youtube channel").addEvent(LUI_EV_CLICK, function() { url_open("https://www.youtube.com/@Limekys"); });
+		sprite_donate = new LuiImageButton(, , 64, 64, "sprDonate", sDonate).setTooltip("Donate!").addEvent(LUI_EV_CLICK, function() { url_open("https://www.donationalerts.com/r/limekys"); });
 		text_version = new LuiText(, , , , "textLimeUIVersion", "LimeUI version: " + LIMEUI_VERSION).setFlexGrow(1).setTextValign(fa_bottom).setTextHalign(fa_right);
 		
 		tab_about.addContent([
@@ -475,7 +476,7 @@ _random_element = function(_number) {
 	var _rnd = irandom(7);
 	switch (_rnd) {
 		case 0:	return new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128));
-		case 1:	return new LuiImageButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false), changeButtonColor);
+		case 1:	return new LuiImageButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false)).addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)});;
 		case 2:	return new LuiSlider(, , , irandom_range(32, 128), , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
 		case 3:	return new LuiInput(, , , irandom_range(32, 128), , , "input_" + string(_number));
 		case 4:	return new LuiProgressRing(, , , irandom_range(32, 128), , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
