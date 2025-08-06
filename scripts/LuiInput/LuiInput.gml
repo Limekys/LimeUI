@@ -13,7 +13,6 @@ enum LUI_INPUT_TEXT_TYPE {
 ///@arg {String} placeholder
 ///@arg {Bool} is_password
 ///@arg {Real} max_length
-///@arg {Function} callback
 function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", placeholder = "", is_password = false, max_length = 255) : LuiBase() constructor {
 	
 	self.name = name;

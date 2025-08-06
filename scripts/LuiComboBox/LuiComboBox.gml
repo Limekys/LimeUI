@@ -5,7 +5,6 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {String} placeholder
-///@arg {Function} callback
 function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "")
  : LuiButton(x, y, width, height, name, "") constructor {
 	
@@ -192,7 +191,6 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@desc An element for a drop-down list.
 ///@arg {String} name
 ///@arg {String} text
-///@arg {Function} callback
 function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item")
  : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
 	

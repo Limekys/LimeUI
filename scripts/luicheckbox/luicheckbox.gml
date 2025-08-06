@@ -6,7 +6,6 @@
 ///@arg {String} name
 ///@arg {Bool} value
 ///@arg {String} text
-///@arg {Function} callback
 function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase() constructor {
 	
 	self.name = name;
