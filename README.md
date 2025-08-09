@@ -71,5 +71,9 @@ Game Maker runtime version
 ![image](https://github.com/user-attachments/assets/c256e7bd-989e-47b2-9d46-429707d086c0)
 ![2024_07_06_23_53_Runner_9kB1prHBDR](https://github.com/Limekys/LimeUI/assets/58959645/d160a519-a463-4198-8404-fe037fd558dc)
 
+# Attribution request
+Please credit the framework in your project by including the following in your game credits or documentation:  
+"LimeUI by Limekys"
+
 # ❤️ Support me ❤️
 - [DonationAlerts](https://www.donationalerts.com/r/limekys)
