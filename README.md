@@ -60,12 +60,13 @@ Game Maker runtime version
 2024.11.0.226+
 
 # GIF Preview
-![2025_02_07_17_41_Runner_0ZsNxyA2iH](https://github.com/user-attachments/assets/538272b0-d68a-4af2-868f-17cafc84b081)
+![2025_08_09_15_15_Runner_yo6hqO7jXP](https://github.com/user-attachments/assets/d84bf7b6-5209-4b6d-9d3d-c70735d0461a)
+
 # Screenshots
-<img width="1600" height="900" alt="2025_07_12_19_07_Runner_4QshxZEhtW" src="https://github.com/user-attachments/assets/9e912afd-2ef8-4e5b-b0bf-2f2d4ad284fb" />
-<img width="1600" height="900" alt="2025_07_12_19_07_Runner_28AC4Ti9U2" src="https://github.com/user-attachments/assets/afbcc52f-bc2c-4114-9f86-bbc5d0e7e4fc" />
-<img width="1600" height="900" alt="2025_07_12_19_07_Runner_ijmUl3cQmc" src="https://github.com/user-attachments/assets/4baad57a-1f0c-4e86-b941-a0d6f6180a16" />
-<img width="1600" height="900" alt="2025_07_12_19_08_Runner_bXztMsnakc" src="https://github.com/user-attachments/assets/e3b5b634-f267-4252-96b7-986b459ea7cb" />
+<img width="1600" height="900" alt="2025_08_09_15_21_Runner_FeuIOnPiVQ" src="https://github.com/user-attachments/assets/7777d664-f828-441f-a509-1c64a91493e8" />
+<img width="1600" height="900" alt="2025_08_09_15_21_Runner_4dIn9TMSVi" src="https://github.com/user-attachments/assets/18bb195a-5b25-48d9-846c-2f75aad27e2f" />
+<img width="1600" height="900" alt="2025_08_09_15_21_Runner_RKS5qwscFF" src="https://github.com/user-attachments/assets/02182226-34bc-4ef1-81d6-cb1a8f96cccb" />
+<img width="1600" height="900" alt="2025_08_09_15_21_Runner_Y18VDgAIOW" src="https://github.com/user-attachments/assets/3518d158-c80a-4a08-b5ca-b5b13aa43704" />
 
 # Example of practical use:
 ![image](https://github.com/user-attachments/assets/c256e7bd-989e-47b2-9d46-429707d086c0)
