@@ -1,39 +1,44 @@
 # LimeUI
-Free UI Framework for Game Maker games with flexpanels implementation
 
-For download last release [go here](https://github.com/Limekys/LimeUI/releases)
+**LimeUI** is a free, open-source UI framework for Game Maker, designed to simplify the creation of flexible and modern user interfaces with a powerful flexpanel system. Build responsive, animated, and touch-friendly UI for your games with ease.
 
-For documentaion check [wiki page](https://github.com/Limekys/LimeUI/wiki)
+[LATEST RELEASE](https://github.com/Limekys/LimeUI/releases) | [DOCUMENTATION](https://github.com/Limekys/LimeUI/wiki)
 
-_*Right now the system is in a very early stage of development and with each update I may change things drastically_
+# Components
+LimeUI includes a variety of UI components to build flexible interfaces:
 
-### Components:
+### Containers
+- LuiMain
 - LuiBox
-- LuiButton
-- LuiCheckbox
-- LuiComboBox
-- LuiComboBoxItem
 - LuiContainer
 - LuiAbsoluteContainer
 - LuiColumn
 - LuiRow
-- LuiImage
-- LuiImageButton
-- LuiInput
-- LuiMain
 - LuiPanel
-- LuiProgressBar
-- LuiProgressRing
 - LuiScrollPanel
-- LuiSlider
 - LuiTabs
-- LuiTab
-- LuiText
-- LuiToggleButton
-- LuiToggleSwitch
 - LuiWindow
 
-### Features:
+### Interactive Elements
+- LuiButton
+- LuiCheckbox
+- LuiComboBox
+- LuiComboBoxItem
+- LuiImageButton
+- LuiInput
+- LuiSlider
+- LuiTab
+- LuiToggleButton
+- LuiToggleSwitch
+
+### Display Elements
+- LuiImage
+- LuiProgressBar
+- LuiProgressRing
+- LuiText
+- LuiSurface
+
+# Features:
 - Flexpanels implementation
 - Styles
 - Touch support
@@ -42,7 +47,8 @@ _*Right now the system is in a very early stage of development and with each upd
 - Chain functions
 - Events listener
 
-### In development:
+# In development:
+The following components are planned for future releases:
 - LuiRadioButton
 - LuiDropdown
 - LuiVideoPlayer
@@ -55,9 +61,11 @@ _*Right now the system is in a very early stage of development and with each upd
 - LuiAttentionMessage
 - Keyboard controls binding
 
-### Compatibility:
+Have ideas or suggestions? Go to my [Discord server](https://discord.gg/zaSvSDjPpG)!
+
+# Compatibility:
 Game Maker runtime version
-2024.11.0.226+
+2024.11.0.226 or higher
 
 # GIF Preview
 ![2025_08_09_15_15_Runner_yo6hqO7jXP](https://github.com/user-attachments/assets/d84bf7b6-5209-4b6d-9d3d-c70735d0461a)
