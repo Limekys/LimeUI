@@ -75,7 +75,7 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create Tabs with absolute position on the screen
-tabs = new LuiTabs( , , 550, 350, "LuiTabs", 32).setPositionType(flexpanel_position_type.absolute);
+tabs = new LuiTabs( , , 550, 350, "LuiTabs", 32).setPositionAbsolute();
 
 // Add panels to main ui container
 my_ui.addContent([
@@ -462,7 +462,7 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->").setPositionType(flexpanel_position_type.absolute).setPosition(, , 16, 16).addEvent(LUI_EV_CLICK, function() {
+	new LuiButton(, , 256, 32, "buttonNextDemo", "Next demo -->").setPositionAbsolute().setPosition(, , 16, 16).addEvent(LUI_EV_CLICK, function() {
 		room_goto(rDemo2);
 	})
 ]);

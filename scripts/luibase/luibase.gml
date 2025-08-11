@@ -227,6 +227,12 @@ function LuiBase() constructor {
 		return self;
 	}
 	
+	///@desc Shortcut method to make element position type absolute (eq. setPositionType(flexpanel_position_type.absolute))
+	static setPositionAbsolute = function() {
+		self.setPositionType(flexpanel_position_type.absolute);
+		return self;
+	}
+	
 	///@desc Set flexpanel(element) X position
 	///@arg {real} [_x] left = X
 	static setPosX = function(_x = LUI_AUTO) {

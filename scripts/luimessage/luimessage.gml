@@ -8,7 +8,7 @@ function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = 
 	// Black block area
 	var _box_message_screen = new LuiBox(0, 0)
 		.centerContent()
-		.setPositionType(flexpanel_position_type.absolute)
+		.setPositionAbsolute()
 		.bringToFront()
 		.setFullSize();
 	// Message panel

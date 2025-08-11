@@ -51,6 +51,6 @@ function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.setPositionType(flexpanel_position_type.absolute);
+		_element.setPositionAbsolute();
 	});
 }

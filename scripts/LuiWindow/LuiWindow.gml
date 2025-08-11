@@ -7,17 +7,13 @@
 ///@arg {String} title
 function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, title = "Window") : LuiPanel(x, y, width, height, name) constructor {
     
-	self.setPositionType(flexpanel_position_type.absolute);
+	self.setPositionAbsolute();
 	
 	self.title = title;
     self.is_minimized = false;
 	self.window_header = undefined;
 	self.header_height = LUI_AUTO;
 	self.window_container = undefined;
-	
-	if self.auto_width {
-		self.setWidth(256);
-	}
 	
 	///@desc Set window title
 	///@arg {string} _title
@@ -109,6 +105,9 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
     }
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
+		if _element.auto_width {
+			_element.setWidth(256);
+		}
 		_element._initHeader();
 		_element._initWindowContainer();
 		_element.addContentOriginal([
