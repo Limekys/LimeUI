@@ -17,7 +17,7 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 	_initElement();
 	
 	self.text = text;
-	self.slider_size = min(self.width, self.height);
+	self.slider_size = 32;
 	self.slider_xoffset = 0;
 	self.slider_color_value = 0;
 	
@@ -90,6 +90,10 @@ function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = 
 			self._drawTruncatedText(self.x + _draw_width + self.style.padding, self.y + self.height div 2, self.text, _text_width);
 		}
 	}
+	
+	self.addEvent(LUI_EV_CREATE, function(_element) {
+		_element._updateSlider();
+	});
 	
 	self.addEvent(LUI_EV_CLICK, function(_element) {
 		_element.set(!_element.get());
