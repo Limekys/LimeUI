@@ -1,5 +1,8 @@
 ///@desc It's just a button.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// text
+/// color
+///@arg {Struct} [_params] Struct with parameters
 function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	
 	self.text = _params[$ "text"] ?? "";

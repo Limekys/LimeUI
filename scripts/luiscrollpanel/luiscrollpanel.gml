@@ -1,5 +1,5 @@
 ///@desc Panel with the ability to scroll down/up.
-///@arg {Struct} [_params]
+///@arg {Struct} [_params] Struct with parameters
 function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw_content_in_cutted_region = true;
@@ -22,7 +22,7 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _initScrollContainer = function() {
 		if is_undefined(self.scroll_container) {
-			self.scroll_container = new LuiAbsoluteContainer(0, 0, LUI_AUTO, LUI_AUTO);
+			self.scroll_container = new LuiAbsoluteContainer({x: 0, y: 0});
 			self.setContainer(self.scroll_container);
 		}
 	}

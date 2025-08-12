@@ -8,9 +8,9 @@ my_style = new LuiStyle()
 
 game_ui = new LuiMain().setStyle(my_style).centerContent();
 
-hello_button = new LuiButton( , , 128, 32, "btnHelloWorld", "Hello world!");
-second_button = new LuiButton( , , 128, 32, "btn2", "Second button").addEvent(LUI_EV_CLICK, function() {room_goto(rDemo)});
-third_button = new LuiButton( , , 128, 32, "btn3", "Third button").addEvent(LUI_EV_CLICK, function() {room_goto(rDemo2)});
+hello_button = new LuiButton({text: "Hello world!", width: 128});
+second_button = new LuiButton({text: "Second button", width: 128}).addEvent(LUI_EV_CLICK, function() {room_goto(rDemo)});
+third_button = new LuiButton({text: "Third button", width: 128}).addEvent(LUI_EV_CLICK, function() {room_goto(rDemo2)});
 
 game_ui.addContent([
 	hello_button

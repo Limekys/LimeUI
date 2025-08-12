@@ -1,5 +1,9 @@
 ///@desc Works like checkbox or switch, lights with accent color when value true
-///@arg {Struct} [_params]
+/// Available parameters:
+/// text
+/// color
+/// value
+///@arg {Struct} [_params] Struct with parameters
 function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 	
 	self.value = _params[$ "value"] ?? false;

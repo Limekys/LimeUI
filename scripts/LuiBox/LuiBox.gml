@@ -1,11 +1,14 @@
-///@desc Colored and may be transparent rectangle area. Use to colored an area or the whole screen, e.g. for a pop-up message. Now used in luiShowMessage
-///@arg {Struct} [_params]
+///@desc Colored and may be transparent rectangle area.
+/// Available parameters:
+/// color
+/// alpha
+///@arg {Struct} [_params] Struct with parameters
 function LuiBox(_params = {}) : LuiColumn(_params) constructor {
 	
 	self.ignore_mouse = false;
 	
-	self.color = c_black;
-	self.alpha = 0.5;
+	self.color = _params[$ "color"] ?? c_black;
+	self.alpha = _params[$ "alpha"] ?? 0.5;
 	
 	self.draw = function() {
 		draw_set_alpha(self.alpha);

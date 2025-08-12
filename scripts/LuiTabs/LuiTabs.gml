@@ -1,5 +1,8 @@
 ///@desc Panel with tabs
-///@arg {Struct} [_params]
+/// Available parameters:
+/// tab_height
+/// tab_indent
+///@arg {Struct} [_params] Struct with parameters
 function LuiTabs(_params = {}) : LuiBase(_params) constructor {
 	
 	self.tab_height = _params[$ "tab_height"] ?? 32;
@@ -34,7 +37,7 @@ function LuiTabs(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.tabs_header) {
-			self.tabs_header = new LuiRow(, , , self.tab_height).setGap(self.tab_indent).setMinHeight(self.tab_height);
+			self.tabs_header = new LuiRow({height: self.tab_height}).setGap(self.tab_indent).setMinHeight(self.tab_height);
 		}
 	}
 	
@@ -148,7 +151,10 @@ function LuiTabs(_params = {}) : LuiBase(_params) constructor {
 }
 
 ///@desc Tab, used for LuiTabs.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// text
+/// color
+///@arg {Struct} [_params] Struct with parameters
 function LuiTab(_params = {}) : LuiButton(_params) constructor {
 	
 	self.is_active = false;
@@ -164,7 +170,7 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 	///@ignore
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
-			self.tab_container = new LuiContainer(0, 0).setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
+			self.tab_container = new LuiContainer({x: 0, y: 0}).setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
 			self.setContainer(self.tab_container);
 		}
 	}

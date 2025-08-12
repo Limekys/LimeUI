@@ -10,7 +10,7 @@ enable_alpha_test = true; // true makes UI blinking if LUI_FORCE_ALPHA_1 setted 
 // Init demo variables
 demo_login = "";
 demo_password = "";
-long_text = "This is a really long text that probably won't fit in this element!";
+long_text = "This is a really long text that probably won't fit in this component!";
 demo_loading_value = 0;
 demo_loading_state = false;
 demo_surface = -1;

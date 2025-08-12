@@ -1,5 +1,10 @@
 ///@desc Just a text.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// text_halign
+/// text_valign
+/// scale_to_fit
+///@arg {Struct} [_params] Struct with parameters
 function LuiText(_params = {}) : LuiBase(_params) constructor {
 	
 	self.value = string(_params[$ "value"] ?? "");

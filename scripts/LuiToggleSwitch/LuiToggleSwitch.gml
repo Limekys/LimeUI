@@ -1,5 +1,8 @@
 ///@desc A switch in the form of a small slider that can be in the on and off position
-///@arg {Struct} [_params]
+/// Available parameters:
+/// text
+/// value
+///@arg {Struct} [_params] Struct with parameters
 function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	
 	self.value = _params[$ "value"] ?? false;

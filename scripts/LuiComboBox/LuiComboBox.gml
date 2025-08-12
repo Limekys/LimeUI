@@ -1,5 +1,7 @@
 ///@desc Drop-down list.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// placeholder
+///@arg {Struct} [_params] Struct with parameters
 function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	
 	self.placeholder = _params[$ "placeholder"] ?? "";
@@ -32,7 +34,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		var _width = self.width;
 		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
 		// Create panel
-		self.combobox_panel = new LuiPanel(0, 0, _width).hide().setVisibilitySwitching(false).setPositionAbsolute();
+		self.combobox_panel = new LuiPanel({x: 0, y: 0, width: _width}).hide().setVisibilitySwitching(false).setPositionAbsolute();
 		self.main_ui.addContent([self.combobox_panel]);
 	}
 	
@@ -184,7 +186,10 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 }
 
 ///@desc An element for a drop-down list.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// text
+/// color
+///@arg {Struct} [_params] Struct with parameters
 function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 	
 	self.combobox_parent = undefined;

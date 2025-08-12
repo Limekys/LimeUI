@@ -1,5 +1,8 @@
 ///@desc A button with a boolean value, either marked or unmarked.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// text
+///@arg {Struct} [_params] Struct with parameters
 function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 	
 	self.value = _params[$ "value"] ?? false;

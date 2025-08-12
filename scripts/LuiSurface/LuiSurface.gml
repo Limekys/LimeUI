@@ -1,5 +1,10 @@
 ///@desc This element displays the specified surface with certain settings.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// color
+/// alpha
+/// maintain_aspect
+///@arg {Struct} [_params] Struct with parameters
 function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 	
 	self.value = _params[$ "value"] ?? -1;

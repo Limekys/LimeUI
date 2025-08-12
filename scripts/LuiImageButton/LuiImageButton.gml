@@ -1,5 +1,11 @@
 ///@desc This item displays the specified sprite with certain settings but works like a button.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// subimg
+/// color
+/// alpha
+/// maintain_aspect
+///@arg {Struct} [_params] Struct with parameters
 function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	
 	self.draw = function() {

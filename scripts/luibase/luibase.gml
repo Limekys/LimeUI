@@ -108,6 +108,7 @@ function LuiBase(_params = {}) constructor {
 	self.event_listeners = {};
 	
 	///@desc Add a callback for a specific event
+	/// Check "LuiEvents" script for available events
 	///@param {string} _eventType The event type (constants of string e.g., LUI_EV_CREATE, LUI_EV_CLICK)
 	///@param {function} _callback The callback function to execute
 	///@return {struct} The element itself for chaining

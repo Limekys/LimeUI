@@ -4,7 +4,12 @@ enum LUI_INPUT_TEXT_TYPE {
 }
 
 ///@desc A field for entering text.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// placeholder
+/// is_password
+/// max_length
+///@arg {Struct} [_params] Struct with parameters
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
 	
 	self.value = string(_params[$ "value"] ?? "");

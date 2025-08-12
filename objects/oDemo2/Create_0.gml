@@ -23,27 +23,27 @@ demo2_style = new LuiStyle()
 game_ui = new LuiMain().setStyle(demo2_style).centerContent();
 
 // Create panels
-panel_menu = new LuiPanel( , , 300, , "panelMainMenu");
-panel_options = new LuiPanel( , , 300, , "panelOptions");
+panel_menu = new LuiPanel({width: 300});
+panel_options = new LuiPanel({width: 300});
 
 // Create elements
-text_main_menu = new LuiText(, , , , "textMainMenu", "Main menu", true).setTextHalign(fa_center);
-btn_play = new LuiButton(, , , , "buttonPlay", "Play");
-btn_achievements = new LuiButton(, , , , "buttonAchievements", "Achievements");
-btn_options = new LuiButton(, , , , "buttonOptions", "Options").addEvent(LUI_EV_CLICK, function() {
+text_main_menu = new LuiText({value: "Main menu"}).setTextHalign(fa_center);
+btn_play = new LuiButton({text: "Play"});
+btn_achievements = new LuiButton({text: "Achievements"});
+btn_options = new LuiButton({text: "Options"}).addEvent(LUI_EV_CLICK, function() {
 	if oDemo2.panel_options.visible {
 		oDemo2.panel_options.hide();
 	} else {
 		oDemo2.panel_options.show();
 	}
 });
-btn_exit = new LuiButton(, , , , "buttonExit", "Exit").addEvent(LUI_EV_CLICK, function() {game_end()});
-text_options = new LuiText(, , , , "textOptions", "Options", true).setTextHalign(fa_center);
-checkbox_fullscreen = new LuiCheckbox(, , , , "checkboxFullscreen", window_get_fullscreen(), "Fullscreen").addEvent(LUI_EV_CLICK, function (_element) {window_set_fullscreen(_element.get())});
-slider_music = new LuiSlider(, , , , "sliderMusic", 0, 100, 75, 1);
-slider_sounds = new LuiSlider(, , , , "sliderSounds", 0, 100, 25, 1);
-text_music = new LuiText(, , , , "textMusic", "Music: ");
-text_sounds = new LuiText(, , , , "textSounds", "Sounds: ");
+btn_exit = new LuiButton({text: "Exit"}).addEvent(LUI_EV_CLICK, function() {game_end()});
+text_options = new LuiText({value: "Options"}).setTextHalign(fa_center);
+checkbox_fullscreen = new LuiCheckbox({value: window_get_fullscreen(), text: "Fullscreen"}).addEvent(LUI_EV_CLICK, function (_element) {window_set_fullscreen(_element.get())});
+slider_music = new LuiSlider({value: 75, rounding: 1});
+slider_sounds = new LuiSlider({value: 25, rounding: 1});
+text_music = new LuiText({value: "Music: "});
+text_sounds = new LuiText({value: "Sounds: "});
 
 // Add all content to main ui
 game_ui.addContent([
@@ -71,10 +71,10 @@ game_ui.addContent([
 ]);
 
 // Create buttons to go another demo room
-button_prev_demo = new LuiButton(, , 256, , "buttonPrevDemo", "<-- Previous demo").addEvent(LUI_EV_CLICK, function() {
+button_prev_demo = new LuiButton({text: "<-- Previous demo", width: 256}).addEvent(LUI_EV_CLICK, function() {
 	room_goto(rDemo);
 });
-button_next_demo = new LuiButton(, , 256, , "buttonNextDemo", "Next demo -->").addEvent(LUI_EV_CLICK, function() {
+button_next_demo = new LuiButton({text: "Next demo -->", width: 256}).addEvent(LUI_EV_CLICK, function() {
 	room_goto(rDemo3);
 });
 

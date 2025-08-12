@@ -1,5 +1,12 @@
 ///@desc A progress ring for display loading/filling anything
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// min_value
+/// max_value
+/// rounding
+/// display_value
+/// bar_height
+///@arg {Struct} [_params] Struct with parameters
 function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	self.sprite_pos = {

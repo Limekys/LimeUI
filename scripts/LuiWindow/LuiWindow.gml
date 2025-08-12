@@ -1,5 +1,7 @@
 ///@desc A draggable window with a header, similar to Windows windows
-///@arg {Struct} [_params]
+/// Available parameters:
+/// title
+///@arg {Struct} [_params] Struct with parameters
 function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
     
 	self.setPositionAbsolute();
@@ -108,7 +110,9 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 }
 
 ///@desc Header for LuiWindow, handles dragging and contains title/buttons
-///@arg {Struct} [_params]
+/// Available parameters:
+/// title
+///@arg {Struct} [_params] Struct with parameters
 function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
     
 	self.can_drag = true;

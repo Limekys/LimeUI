@@ -1,9 +1,17 @@
 ///@desc Slider with a limited value from and to, e.g. to change the volume.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// value
+/// min_value
+/// max_value
+/// rounding
+/// display_value
+/// bar_height
+/// knob_extender
+///@arg {Struct} [_params] Struct with parameters
 function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	self.can_drag = true;
-	self.knob_width = _params[$ "knob_width"] ?? self.height;
+	
 	self.knob_extender = _params[$ "knob_extender"] ?? 1;
 	
 	// Calculate knob width in constructor

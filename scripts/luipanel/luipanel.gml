@@ -1,5 +1,7 @@
 ///@desc A visually visible container for placing elements in it.
-///@arg {Struct} [_params]
+/// Available parameters:
+/// allow_rescaling
+///@arg {Struct} [_params] Struct with parameters
 function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	
 	self.allow_rescaling = _params[$ "allow_rescaling"] ?? false; //???//
