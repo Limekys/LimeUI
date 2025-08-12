@@ -1,16 +1,12 @@
 ///@desc A draggable window with a header, similar to Windows windows
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {String} title
-function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, title = "Window") : LuiPanel(x, y, width, height, name) constructor {
+///@arg {Struct} [_params]
+function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
     
 	self.setPositionAbsolute();
 	
-	self.title = title;
-    self.is_minimized = false;
+	self.title = _params[$ "title"] ?? "Title";
+    
+	self.is_minimized = false;
 	self.window_header = undefined;
 	self.header_height = LUI_AUTO;
 	self.window_container = undefined;
@@ -28,11 +24,11 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
-			self.window_header = new LuiWindowHeader(, , self.width, self.header_height, , self.title)
+			self.window_header = new LuiWindowHeader({width: self.width, height: self.header_height, title: self.title})
 				.setGap(0).setPadding(8).setFlexDirection(flexpanel_flex_direction.row);
 			
 			// Add title text to header
-			self.window_header.text_title = new LuiText(0, 0, LUI_AUTO, LUI_AUTO, , self.title).setMouseIgnore(true);
+			self.window_header.text_title = new LuiText({x: 0, y: 0, value: self.title}).setMouseIgnore(true);
 		    self.window_header.addContent(self.window_header.text_title);
 			
 			// Set parent window link
@@ -112,18 +108,15 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 }
 
 ///@desc Header for LuiWindow, handles dragging and contains title/buttons
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {String} title
-function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, title = "Title") : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
     
-	self.title = title;
+	self.can_drag = true;
+	
+	self.title = _params[$ "title"] ?? "Title";
+	
 	self.text_title = undefined;
 	self.parent_window = undefined;
-	self.can_drag = true;
 	
 	static _initControlButtons = function() {
 		var _button_size = 32; //???//

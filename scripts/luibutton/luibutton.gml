@@ -1,14 +1,9 @@
 ///@desc It's just a button.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {String} text
-function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "") : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	
-	self.text = text;
-	self.button_color = undefined;
+	self.text = _params[$ "text"] ?? "";
+	self.button_color = _params[$ "color"] ?? undefined;
 	self.icon = {
 		sprite: -1,
 		width: -1,

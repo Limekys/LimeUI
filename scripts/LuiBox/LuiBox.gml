@@ -1,12 +1,9 @@
 ///@desc Colored and may be transparent rectangle area. Use to colored an area or the whole screen, e.g. for a pop-up message. Now used in luiShowMessage
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiColumn(x, y, width, height, name) constructor {
+///@arg {Struct} [_params]
+function LuiBox(_params = {}) : LuiColumn(_params) constructor {
 	
 	self.ignore_mouse = false;
+	
 	self.color = c_black;
 	self.alpha = 0.5;
 	

@@ -1,12 +1,8 @@
 ///@desc Works like checkbox or switch, lights with accent color when value true
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {bool} value
-///@arg {String} text
-function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiButton(x, y, width, height, name, text) constructor {
+///@arg {Struct} [_params]
+function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
+	
+	self.value = _params[$ "value"] ?? false;
 	
 	self.draw = function() {
 		

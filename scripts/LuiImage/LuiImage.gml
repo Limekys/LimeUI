@@ -1,21 +1,13 @@
 ///@desc This item displays the specified sprite with certain settings.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Asset.GMSprite} sprite
-///@arg {Real} subimg
-///@arg {any} color
-///@arg {Real} alpha
-///@arg {Bool} maintain_aspect
-function LuiImage(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiImage(_params = {}) : LuiBase(_params) constructor {
 	
-	self.value = sprite;
-	self.subimg = subimg;
-	self.color_blend = color;
-	self.alpha = alpha;
-	self.maintain_aspect = maintain_aspect;
+	self.value = _params[$ "value"] ?? undefined;
+	self.subimg = _params[$ "subimg"] ?? 0;
+	self.color_blend = _params[$ "color"] ?? c_white;
+	self.alpha = _params[$ "alpha"] ?? 1;
+	self.maintain_aspect = _params[$ "maintain_aspect"] ?? true;
+	
 	self.sprite_real_width = 0;
 	self.sprite_real_height = 0;
 	self.aspect = 1;

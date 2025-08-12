@@ -1,15 +1,11 @@
 ///@desc Panel with tabs
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Real} tab_height
-function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, tab_height = 32) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiTabs(_params = {}) : LuiBase(_params) constructor {
+	
+	self.tab_height = _params[$ "tab_height"] ?? 32;
+	self.tab_indent = _params[$ "tab_indent"] ?? 0;
 	
 	self.tabs = undefined;
-	self.tab_height = tab_height;
-	self.tab_indent = 0;
 	self.tabs_header = undefined;
 	self.active_tab = undefined;
 	
@@ -152,9 +148,8 @@ function LuiTabs(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO
 }
 
 ///@desc Tab, used for LuiTabs.
-///@arg {String} name
-///@arg {String} text
-function LuiTab(name = LUI_AUTO_NAME, text = "Tab") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
+///@arg {Struct} [_params]
+function LuiTab(_params = {}) : LuiButton(_params) constructor {
 	
 	self.is_active = false;
 	self.tabs_parent = undefined;

@@ -1,18 +1,10 @@
 ///@desc Slider with a limited value from and to, e.g. to change the volume.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Real} min_value
-///@arg {Real} max_value
-///@arg {Real} value
-///@arg {Real} rounding
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, value = 0, rounding = 0) : LuiProgressBar(x, y, width, height, name, min_value, max_value, true, value, rounding) constructor {
+///@arg {Struct} [_params]
+function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	self.can_drag = true;
-	self.knob_width = self.height;
-	self.knob_extender = 1;
+	self.knob_width = _params[$ "knob_width"] ?? self.height;
+	self.knob_extender = _params[$ "knob_extender"] ?? 1;
 	
 	// Calculate knob width in constructor
 	static _initKnobWidth = function() {

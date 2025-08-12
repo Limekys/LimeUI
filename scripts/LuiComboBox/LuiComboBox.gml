@@ -1,13 +1,9 @@
 ///@desc Drop-down list.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {String} placeholder
-function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "") : LuiButton(x, y, width, height, name, "") constructor {
+///@arg {Struct} [_params]
+function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	
-	self.placeholder = placeholder;
+	self.placeholder = _params[$ "placeholder"] ?? "";
+	
 	self.items = undefined;
 	self.is_open = false;
 	self.combobox_panel = undefined;
@@ -188,9 +184,8 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 }
 
 ///@desc An element for a drop-down list.
-///@arg {String} name
-///@arg {String} text
-function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
+///@arg {Struct} [_params]
+function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 	
 	self.combobox_parent = undefined;
 	

@@ -1,15 +1,10 @@
 ///@desc A switch in the form of a small slider that can be in the on and off position
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Bool} value
-///@arg {String} text
-function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	
-	self.value = value;
-	self.text = text;
+	self.value = _params[$ "value"] ?? false;
+	self.text = _params[$ "text"] ?? "";
+	
 	self.slider_size = 32;
 	self.slider_xoffset = 0;
 	self.slider_color_value = 0;

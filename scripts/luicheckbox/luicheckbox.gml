@@ -1,15 +1,9 @@
 ///@desc A button with a boolean value, either marked or unmarked.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Bool} value
-///@arg {String} text
-function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 	
-	self.value = value;
-	self.text = text;
+	self.value = _params[$ "value"] ?? false;
+	self.text = _params[$ "text"] ?? "";
 	
 	///@desc Set display text of checkbox (render right of checkbox)
 	///@arg {string} _text

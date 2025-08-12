@@ -1,20 +1,12 @@
 ///@desc An empty, invisible container for elements with padding on the sides for elements with column stacking
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiContainer(_params = {}) : LuiBase(_params) constructor {
 	self.ignore_mouse = true;
 }
 
 ///@desc An empty, invisible container with no padding on the sides for elements with row stacking
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
+///@arg {Struct} [_params]
+function LuiRow(_params = {}) : LuiContainer(_params) constructor {
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
@@ -22,12 +14,8 @@ function LuiRow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO,
 }
 
 ///@desc An empty, invisible container with no padding on the sides for elements with column stacking
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
+///@arg {Struct} [_params]
+function LuiColumn(_params = {}) : LuiContainer(_params) constructor {
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
@@ -35,12 +23,8 @@ function LuiColumn(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 }
 
 ///@desc An empty, invisible container with absolute position on the screen for elements
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiAbsoluteContainer(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiContainer(x, y, width, height, name) constructor {
+///@arg {Struct} [_params]
+function LuiAbsoluteContainer(_params = {}) : LuiContainer(_params) constructor {
 	
 	self.addEvent(LUI_EV_CREATE, function(_element) {
 		_element.setPositionAbsolute();

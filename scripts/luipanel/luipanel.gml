@@ -1,12 +1,8 @@
 ///@desc A visually visible container for placing elements in it.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	
-	self.allow_rescaling = false;
+	self.allow_rescaling = _params[$ "allow_rescaling"] ?? false; //???//
 	
 	self.draw = function() {
 		//Shadow

@@ -6,7 +6,7 @@
 ///@arg {String} button_text
 function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = "", button_text = "Close") {
 	// Black block area
-	var _box_message_screen = new LuiBox(0, 0)
+	var _box_message_screen = new LuiBox({x: 0, y: 0})
 		.centerContent()
 		.setPositionAbsolute()
 		.bringToFront()
@@ -19,11 +19,11 @@ function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = 
 		_content_width = max(_panel_min_width, max(string_width(message_text), string_width(button_text)) + ui.style.padding * 2);
 	}
 	var _container = new LuiColumn();
-	var _panel = new LuiPanel(, , _content_width, height);
+	var _panel = new LuiPanel({width: _content_width, height});
 	// Text
-	var _txt_message = new LuiText(, , , , , message_text).setTextHalign(fa_center);
+	var _txt_message = new LuiText({value: message_text}).setTextHalign(fa_center);
 	// Button
-	var _btn_close = new LuiButton(, , , , , button_text).setData("message_screen", _box_message_screen);
+	var _btn_close = new LuiButton({text: button_text}).setData("message_screen", _box_message_screen);
 	_btn_close.addEvent(LUI_EV_CLICK, function(_element) {
 		var _message_screen = _element.getData("message_screen");
 		_message_screen.destroy();

@@ -1,22 +1,14 @@
 ///@desc A progress bar for display loading/filling anything
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Real} min_value
-///@arg {Real} max_value
-///@arg {Bool} display_value
-///@arg {Real} value
-///@arg {Real} rounding
-function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, display_value = true, value = 0, rounding = 0) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	
-	self.value = value;
-	self.min_value = min(min_value, max_value);
-	self.max_value = max(min_value, max_value);
-	self.rounding = rounding;
-	self.display_value = display_value;
-	self.bar_height = -1;
+	self.value = _params[$ "value"] ?? 0;
+	self.min_value = min(_params[$ "min_value"] ?? 0, _params[$ "max_value"] ?? 100);
+	self.max_value = max(_params[$ "min_value"] ?? 0, _params[$ "max_value"] ?? 100);
+	self.rounding = _params[$ "rounding"] ?? 0;
+	self.display_value = _params[$ "display_value"] ?? true;
+	self.bar_height = _params[$ "bar_height"] ?? LUI_AUTO;
+	
 	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
 	///@desc Set min value
@@ -76,7 +68,7 @@ function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 		}
 		
 		// Calculate bar position and size
-		var _bar_height = self.bar_height == -1 ? self.height : self.bar_height;
+		var _bar_height = self.bar_height == LUI_AUTO ? self.height : self.bar_height;
 		var _bar_x = self.x;
 		var _bar_y = self.y + (self.height - _bar_height) div 2;
 		var _bar_w = self.width;

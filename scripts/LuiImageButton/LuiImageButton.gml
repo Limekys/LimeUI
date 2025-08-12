@@ -1,15 +1,6 @@
 ///@desc This item displays the specified sprite with certain settings but works like a button.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Asset.GMSprite} sprite
-///@arg {Real} subimg
-///@arg {any} color
-///@arg {Real} alpha
-///@arg {Bool} maintain_aspect
-function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiImage(x, y, width, height, name, sprite, subimg, color, alpha, maintain_aspect) constructor {
+///@arg {Struct} [_params]
+function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	
 	self.draw = function() {
 		//Calculate fit size

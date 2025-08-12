@@ -1,10 +1,8 @@
 ///@desc Panel with the ability to scroll down/up.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
+	
+	self.draw_content_in_cutted_region = true;
 	
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
@@ -13,8 +11,6 @@ function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = L
 	self.scroll_pin_edge_offset = 4;
 	self.scroll_smoothness = 0.02;
 	self.scroll_container = undefined;
-	
-	self.draw_content_in_cutted_region = true;
 	
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {

@@ -1,15 +1,6 @@
 ///@desc A progress ring for display loading/filling anything
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {Real} min_value
-///@arg {Real} max_value
-///@arg {Bool} display_value
-///@arg {Real} value
-///@arg {Real} rounding
-function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, display_value = true, value = 0, rounding = 0) : LuiProgressBar(x, y, width, height, name, min_value, max_value, display_value, value, rounding) constructor {
+///@arg {Struct} [_params]
+function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	self.sprite_pos = {
 		x : 0,

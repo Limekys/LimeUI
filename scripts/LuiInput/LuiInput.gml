@@ -4,23 +4,16 @@ enum LUI_INPUT_TEXT_TYPE {
 }
 
 ///@desc A field for entering text.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {String} text
-///@arg {String} placeholder
-///@arg {Bool} is_password
-///@arg {Real} max_length
-function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", placeholder = "", is_password = false, max_length = 255) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiInput(_params = {}) : LuiBase(_params) constructor {
 	
-	self.value = string(text);
-	self.placeholder = placeholder;
-	self.is_password = is_password;
-	self.max_length = max_length;
+	self.value = string(_params[$ "value"] ?? "");
+	self.placeholder = _params[$ "placeholder"] ?? "";
+	self.is_password = _params[$ "is_password"] ?? false;
+	self.max_length = _params[$ "max_length"] ?? 255;
+	
 	self.cursor_pointer = "";
-	self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function(){
+	self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function() {
 		if self.cursor_pointer == "" {
 			self.cursor_pointer = self.style.input_cursor;
 		} else {

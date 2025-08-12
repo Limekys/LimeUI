@@ -1,16 +1,11 @@
 ///@desc Just a text.
-///@arg {Real} x
-///@arg {Real} y
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} name
-///@arg {String} text
-function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", scale_to_fit = false) : LuiBase({x, y, width, height, name}) constructor {
+///@arg {Struct} [_params]
+function LuiText(_params = {}) : LuiBase(_params) constructor {
 	
-	self.value = string(text);
-	self.text_halign = fa_left;
-	self.text_valign = fa_middle;
-	self.scale_to_fit = scale_to_fit;
+	self.value = string(_params[$ "value"] ?? "");
+	self.text_halign = _params[$ "text_halign"] ?? fa_left;
+	self.text_valign = _params[$ "text_valign"] ?? fa_middle;
+	self.scale_to_fit = _params[$ "scale_to_fit"] ?? false;
 	
 	///@desc Set text
 	///@arg {string} _text
