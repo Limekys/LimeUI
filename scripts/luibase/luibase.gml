@@ -1,5 +1,5 @@
 ///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
-function LuiBase() constructor {
+function LuiBase(_params = {}) constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 		
@@ -81,6 +81,17 @@ function LuiBase() constructor {
     self.is_dragging = false;
     self.drag_offset_x = 0;
     self.drag_offset_y = 0;
+	
+	// Processing parameters from the structure
+	if is_struct(_params) {
+		self.x = _params[$ "x"] ?? LUI_AUTO;
+		self.y = _params[$ "y"] ?? LUI_AUTO;
+		self.width = _params[$ "width"] ?? LUI_AUTO;
+		self.height = _params[$ "height"] ?? LUI_AUTO;
+		self.name = _params[$ "name"] ?? LUI_AUTO_NAME;
+	} else {
+		_luiPrintError($"A structure with parameters was expected, but a {typeof(_params)} was received!");
+	}
 	
 	// Logic methods for element //???// delete uneccesery methods
 	
@@ -664,10 +675,11 @@ function LuiBase() constructor {
 	static setStyle = function(_style) {
 		self.style = new LuiStyle(_style);
 		self.is_custom_style_setted = true;
-		if is_array(self.content)
-		array_foreach(self.content, function(_elm) {
-			_elm.setStyleChilds(self.style);
-		});
+		if is_array(self.content) {
+			array_foreach(self.content, function(_elm) {
+				_elm.setStyleChilds(self.style);
+			});
+		}
 		self._applyStyles();
 		
 		return self;
@@ -1332,7 +1344,6 @@ function LuiBase() constructor {
 	
 	///@desc Added elements into container of these element
 	///@arg {Any} elements
-	///@arg {Real} _custom_padding
 	self.addContent = function(elements) {
 	    
 		// Convert to array if one element

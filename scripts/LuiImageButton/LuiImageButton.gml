@@ -9,8 +9,7 @@
 ///@arg {any} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true)
- : LuiImage(x, y, width, height, name, sprite, subimg, color, alpha, maintain_aspect) constructor {
+function LuiImageButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, sprite = undefined, subimg = 0, color = c_white, alpha = 1, maintain_aspect = true) : LuiImage(x, y, width, height, name, sprite, subimg, color, alpha, maintain_aspect) constructor {
 	
 	self.draw = function() {
 		//Calculate fit size

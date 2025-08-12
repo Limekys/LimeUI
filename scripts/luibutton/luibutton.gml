@@ -5,15 +5,9 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {String} text
-function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "") : LuiBase() constructor {
+function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "") : LuiBase({x, y, width, height, name}) constructor {
 	
-	self.name = name;
 	self.text = text;
-	self.x = x;
-	self.y = y;
-	self.width = width;
-	self.height = height;
-	
 	self.button_color = undefined;
 	self.icon = {
 		sprite: -1,

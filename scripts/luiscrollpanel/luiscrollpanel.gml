@@ -4,13 +4,7 @@
 ///@arg {Real} width
 ///@arg {Real} height
 ///@arg {String} name
-function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiBase() constructor {
-	
-	self.name = name;
-	self.x = x;
-	self.y = y;
-	self.width = width;
-	self.height = height;
+function LuiScrollPanel(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME) : LuiBase({x, y, width, height, name}) constructor {
 	
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;

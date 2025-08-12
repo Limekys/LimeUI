@@ -14,5 +14,3 @@ draw_text(4, display_get_gui_height() - 4,
 " UI isInteracting: " + string(my_ui.isInteracting()) +
 " Element count: " + string(global.lui_element_count) +
 " FPS: " + string(fps) + " FPS_REAL: " + string(fps_real));
-
-//draw_text(512, 512, string(!is_undefined(my_ui.dragging_element)));

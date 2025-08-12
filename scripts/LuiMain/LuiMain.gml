@@ -45,8 +45,7 @@ function LuiMain() : LuiBase() constructor {
 	// Recalculate grid size on size change
 	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
 		_element._recalculateScreenGrid();
-		print("TEST")
-	})
+	});
 	
 	// Init easing functions
 	_luiInitEaseFunctions();
@@ -398,7 +397,7 @@ function LuiMain() : LuiBase() constructor {
 	    }
 		
 	    // Filter elements under cursor
-	    var _filtered = array_filter(_array, function(_elm) {
+	    var _filtered = array_filter(_array, function(_elm, _ind) {
 	        return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
 	    });
 		

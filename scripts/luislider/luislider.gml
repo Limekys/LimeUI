@@ -8,8 +8,7 @@
 ///@arg {Real} max_value
 ///@arg {Real} value
 ///@arg {Real} rounding
-function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, value = 0, rounding = 0)
- : LuiProgressBar(x, y, width, height, name, min_value, max_value, true, value, rounding) constructor {
+function LuiSlider(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, value = 0, rounding = 0) : LuiProgressBar(x, y, width, height, name, min_value, max_value, true, value, rounding) constructor {
 	
 	self.can_drag = true;
 	self.knob_width = self.height;

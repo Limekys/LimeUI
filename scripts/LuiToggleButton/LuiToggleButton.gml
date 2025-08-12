@@ -6,8 +6,7 @@
 ///@arg {String} name
 ///@arg {bool} value
 ///@arg {String} text
-function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "")
- : LuiButton(x, y, width, height, name, text) constructor {
+function LuiToggleButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiButton(x, y, width, height, name, text) constructor {
 	
 	self.draw = function() {
 		

@@ -182,7 +182,7 @@ changeImageButtonColor = function(_element) {
 var _sprite_buttons = [];
 for (var i = 0; i < 7; ++i) {
     var _button = new LuiImageButton( , , 80, 56, $"sprGMSLogo_{i}", sLogoDemo, 0, c_white, 1, i mod 2 == 0 ? true : false);
-	_button.addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)});
+	_button.addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element);});
 	array_push(_sprite_buttons, _button);
 }
 
@@ -274,17 +274,17 @@ combobox_theme.addItems([combobox_item_1, combobox_item_2, combobox_item_3]);
 changeRingValue = function() {
 	oDemo.my_ui.getElement("luiRing").set(irandom(100));
 }
-big_button_1 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue()}).addContent([
+big_button_1 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue();}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage(, , 32, 32, , sHamburger).setMouseIgnore(), new LuiText(, , , , , "Hamburger!").setMouseIgnore()
 	])
 ]);
-big_button_2 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue()}).addContent([
+big_button_2 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue();}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage(, , 32, 32, , sBoxDemo).setMouseIgnore(), new LuiText(, , , , , "A box!").setMouseIgnore()
 	])
 ]);
-big_button_3 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue()}).addContent([
+big_button_3 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue();}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage(, , 32, 32, , sLogoDemo).setMouseIgnore(), new LuiText(, , , , , "Game Maker!").setMouseIgnore()
 	])
@@ -354,11 +354,11 @@ my_panel_3.addContent([
 		filterElements = function() {
 			with(oDemo) {
 				// Hide all
-				array_foreach(search_panel.getContainer().content, function(_elm) {
+				array_foreach(search_panel.getContent(), function(_elm) {
 					_elm.hide();
 				});
 				// Filter
-				var _filtered_elements = array_filter(search_panel.getContainer().content, function(_elm) {
+				var _filtered_elements = array_filter(search_panel.getContent(), function(_elm, _ind) {
 					var _elm_name = _elm.text;
 					var _search_string = input_search.get();
 					var _founded = string_pos(string_lower(_search_string), string_lower(_elm_name));

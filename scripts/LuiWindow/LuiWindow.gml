@@ -118,14 +118,8 @@ function LuiWindow(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {String} title
-function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, title = "Title") : LuiBase() constructor {
+function LuiWindowHeader(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, title = "Title") : LuiBase({x, y, width, height, name}) constructor {
     
-	self.name = name;
-	self.x = x;
-	self.y = y;
-    self.width = width;
-    self.height = height;
-	
 	self.title = title;
 	self.text_title = undefined;
 	self.parent_window = undefined;

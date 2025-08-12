@@ -9,8 +9,7 @@
 ///@arg {Bool} display_value
 ///@arg {Real} value
 ///@arg {Real} rounding
-function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, display_value = true, value = 0, rounding = 0)
- : LuiProgressBar(x, y, width, height, name, min_value, max_value, display_value, value, rounding) constructor {
+function LuiProgressRing(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, display_value = true, value = 0, rounding = 0) : LuiProgressBar(x, y, width, height, name, min_value, max_value, display_value, value, rounding) constructor {
 	
 	self.sprite_pos = {
 		x : 0,

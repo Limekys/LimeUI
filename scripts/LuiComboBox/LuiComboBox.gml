@@ -5,8 +5,7 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {String} placeholder
-function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "")
- : LuiButton(x, y, width, height, name, "") constructor {
+function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, placeholder = "") : LuiButton(x, y, width, height, name, "") constructor {
 	
 	self.placeholder = placeholder;
 	self.items = undefined;
@@ -191,8 +190,7 @@ function LuiComboBox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 ///@desc An element for a drop-down list.
 ///@arg {String} name
 ///@arg {String} text
-function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item")
- : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
+function LuiComboBoxItem(name = LUI_AUTO_NAME, text = "item") : LuiButton(LUI_AUTO, LUI_AUTO, LUI_AUTO, LUI_AUTO, name, text) constructor {
 	
 	self.combobox_parent = undefined;
 	

@@ -8,13 +8,7 @@
 ///@arg {any} color
 ///@arg {Real} alpha
 ///@arg {Bool} maintain_aspect
-function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, surface = undefined, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase() constructor {
-	
-	self.name = name;
-	self.x = x;
-	self.y = y;
-	self.width = width;
-	self.height = height;
+function LuiSurface(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, surface = undefined, color = c_white, alpha = 1, maintain_aspect = true) : LuiBase({x, y, width, height, name}) constructor {
 	
 	self.value = surface;
 	self.color_blend = color;

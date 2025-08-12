@@ -6,15 +6,9 @@
 ///@arg {String} name
 ///@arg {Bool} value
 ///@arg {String} text
-function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase() constructor {
+function LuiToggleSwitch(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, value = false, text = "") : LuiBase({x, y, width, height, name}) constructor {
 	
-	self.name = name;
 	self.value = value;
-	self.x = x;
-	self.y = y;
-	self.width = width;
-	self.height = height;
-	
 	self.text = text;
 	self.slider_size = 32;
 	self.slider_xoffset = 0;
