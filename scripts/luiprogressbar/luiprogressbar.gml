@@ -12,11 +12,10 @@
 function LuiProgressBar(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, min_value = 0, max_value = 100, display_value = true, value = 0, rounding = 0) : LuiBase() constructor {
 	
 	self.name = name;
-	self.pos_x = x;
-	self.pos_y = y;
+	self.x = x;
+	self.y = y;
 	self.width = width;
 	self.height = height;
-	_initElement();
 	
 	self.value = value;
 	self.min_value = min(min_value, max_value);

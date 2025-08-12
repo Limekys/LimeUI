@@ -9,17 +9,15 @@ function LuiBase() constructor {
 	self.data = undefined;							//Different user data for personal use
 	self.style = undefined;							//Style struct
 	self.style_overrides = {};						//Custom style for element
-	self.x = 0;										//Actual real calculated x position on the screen
-	self.y = 0;										//Actual real calculated y position on the screen
+	self.x = LUI_AUTO;										//Actual real calculated x position on the screen
+	self.y = LUI_AUTO;										//Actual real calculated y position on the screen
 	self.z = 0;										//Depth
-	self.pos_x = 0;									//Offset x position this element relative parent
-	self.pos_y = 0;									//Offset y position this element relative parent
 	self.start_x = -1;								//First x position
 	self.start_y = -1;								//First y position
 	self.prev_x = -1;								//Previous floor(x) position on the screen
 	self.prev_y = -1;								//Previous floor(y) position on the screen
-	self.width = 32;								//Actual width
-	self.height = 32;								//Actual height
+	self.width = LUI_AUTO;							//Actual real calculated width of element
+	self.height = LUI_AUTO;							//Actual real calculated height of element
 	self.prev_w = -1;								//Previous width
 	self.prev_h = -1;								//Previous height
 	self.min_width = 32;
@@ -50,8 +48,11 @@ function LuiBase() constructor {
 	self.is_adding = false;
 	self.is_custom_style_setted = false;
 	self.is_destroyed = false;
+	self.is_initialized = false;
 	self.draw_content_in_cutted_region = false;
-	self.flex_node = undefined;
+	self.flex_node = flexpanel_create_node({ name: self.name, data: {} });
+	var _data = flexpanel_node_get_data(self.flex_node);
+	_data.element = self;
 	self.render_region_offset = {
 		left : 0,
 		right : 0,
@@ -240,7 +241,9 @@ function LuiBase() constructor {
 		var _update_flex = false;
 		if _x != LUI_AUTO && self.x != _x {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
-			self.pos_x = _x;
+			if !self.is_initialized {
+				self.x = _x;
+			}
 			self.auto_x = false;
 			_update_flex = true;
 		}
@@ -257,7 +260,9 @@ function LuiBase() constructor {
 		var _update_flex = false;
 		if _y != LUI_AUTO && self.y != _y {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
-			self.pos_y = _y;
+			if !self.is_initialized {
+				self.y = _y;
+			}
 			self.auto_y = false;
 			_update_flex = true;
 		}
@@ -305,15 +310,19 @@ function LuiBase() constructor {
 	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO, _r = LUI_AUTO, _b = LUI_AUTO) {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
-		if _x != LUI_AUTO && self.pos_x != _x {
+		if _x != LUI_AUTO && self.x != _x {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
-			self.pos_x = _x;
+			if !self.is_initialized {
+				self.x = _x;
+			}
 			self.auto_x = false;
 			_update_flex = true;
 		}
-		if _y != LUI_AUTO && self.pos_y != _y {
+		if _y != LUI_AUTO && self.y != _y {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
-			self.pos_y = _y;
+			if !self.is_initialized {
+				self.y = _y;
+			}
 			self.auto_y = false;
 			_update_flex = true;
 		}
@@ -338,6 +347,9 @@ function LuiBase() constructor {
 		var _update_flex = false;
 		if _width != LUI_AUTO && self.width != _width {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.width = _width;
+			}
 			_update_flex = true;
 		}
 		if _update_flex {
@@ -353,6 +365,9 @@ function LuiBase() constructor {
 		var _update_flex = false;
 		if _height != LUI_AUTO && self.height != _height {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.height = _height;
+			}
 			_update_flex = true;
 		}
 		if _update_flex {
@@ -369,10 +384,16 @@ function LuiBase() constructor {
 		var _update_flex = false;
 		if _width != LUI_AUTO && self.width != _width {
 			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.width = _width;
+			}
 			_update_flex = true;
 		}
 		if _height != LUI_AUTO && self.height != _height {
 			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.height = _height;
+			}
 			_update_flex = true;
 		}
 		if _update_flex {
@@ -776,42 +797,25 @@ function LuiBase() constructor {
 	///@desc Init element variables
 	///@ignore
 	static _initElement = function() {
-		if self.pos_x == LUI_AUTO {
-			self.auto_x = true;
-			self.pos_x = 0;
-		}
-		if self.pos_y == LUI_AUTO {
-			self.auto_y = true;
-			self.pos_y = 0;
-		}
-		if self.width == LUI_AUTO {
-			self.auto_width = true;
-			self.width = self.min_width;
-		}
-		if self.height == LUI_AUTO {
-			self.auto_height = true;
-			self.height = self.min_height;
-		}
+		self.auto_x = self.x == LUI_AUTO;
+		self.auto_y = self.y == LUI_AUTO;
+		self.auto_width = self.width == LUI_AUTO;
+		self.auto_height = self.height == LUI_AUTO;
 		self._initFlexNode();
+		self.is_initialized = true;
 	}
 	
 	///@desc Initialize flex node
 	///@ignore
 	static _initFlexNode = function() {
-		// Flex node (default for all elements)
-		self.flex_node = flexpanel_create_node({
-			name: self.name, 
-			data: {}
-		});
-		
 		// Position X
 		if !self.auto_x {
-			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.pos_x, flexpanel_unit.point);
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.x, flexpanel_unit.point);
 		}
 		
 		// Position Y
 		if !self.auto_y {
-			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.pos_y, flexpanel_unit.point);
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.y, flexpanel_unit.point);
 		}
 		
 		// Width
@@ -826,9 +830,6 @@ function LuiBase() constructor {
 		if !self.auto_height {
 			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
 		}
-		
-		var _data = flexpanel_node_get_data(self.flex_node);
-		_data.element = self;
 	}
 	
 	///@desc Adds elements from a delayed array
@@ -901,7 +902,7 @@ function LuiBase() constructor {
 		_drawDebugText(_x, _y, 
 			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
-			"x: " + string(self.pos_x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.pos_y) + (self.auto_y ? " (auto)" : "") + "\n" +
+			"x: " + string(self.x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.y) + (self.auto_y ? " (auto)" : "") + "\n" +
 			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
 			"minw: " + string(self.min_width) + " minh: " + string(self.min_height) + "maxw: " + string(self.max_width) + " maxh: " + string(self.max_height) + "\n" +
 			"v: " + string(self.value) + "\n" +
@@ -1219,8 +1220,6 @@ function LuiBase() constructor {
 		
 	    _element.x = _pos.left;
 	    _element.y = _pos.top;
-	    _element.pos_x = _pos.left;
-	    _element.pos_y = _pos.top;
 	    _element.width = _pos.width;
 	    _element.height = _pos.height;
 	    if (_element.start_x == -1) {
@@ -1382,6 +1381,9 @@ function LuiBase() constructor {
 			// Get element
 			var _element = elements[i];
 	        
+			// Init element
+			_element._initElement();
+			
 			// Recursion prevention
 	        if _element.is_adding continue;
 	        _element.is_adding = true;

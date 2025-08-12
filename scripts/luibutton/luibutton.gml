@@ -9,11 +9,10 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	
 	self.name = name;
 	self.text = text;
-	self.pos_x = x;
-	self.pos_y = y;
+	self.x = x;
+	self.y = y;
 	self.width = width;
 	self.height = height;
-	_initElement();
 	
 	self.button_color = undefined;
 	self.icon = {
@@ -158,6 +157,12 @@ function LuiButton(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AU
 	self.addEvent(LUI_EV_CLICK, function(_element) {
 		if !is_undefined(_element.style.sound_click) {
 			audio_play_sound(_element.style.sound_click, 1, false);
+		}
+	});
+	
+	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
+		if sprite_exists(_element.icon.sprite) {
+			_element._calcIconSize();
 		}
 	});
 	

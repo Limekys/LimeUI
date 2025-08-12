@@ -17,11 +17,10 @@ function LuiInput(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUT
 	
 	self.name = name;
 	self.value = string(text);
-	self.pos_x = x;
-	self.pos_y = y;
+	self.x = x;
+	self.y = y;
 	self.width = width;
 	self.height = height;
-	_initElement();
 	
 	self.placeholder = placeholder;
 	self.is_password = is_password;

@@ -21,13 +21,11 @@ function LuiMain() : LuiBase() constructor {
 	self._screen_grid = {};
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
+	self.is_initialized = true;
 	
-	// Init Flex
-	self.flex_node = flexpanel_create_node({name: self.name, data: {}});
+	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
 	flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
-	var _data = flexpanel_node_get_data(self.flex_node);
-	_data.element = self;
 	
 	// Init Screen grid
 	///@ignore
@@ -47,6 +45,7 @@ function LuiMain() : LuiBase() constructor {
 	// Recalculate grid size on size change
 	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
 		_element._recalculateScreenGrid();
+		print("TEST")
 	})
 	
 	// Init easing functions

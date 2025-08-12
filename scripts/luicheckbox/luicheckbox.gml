@@ -10,11 +10,10 @@ function LuiCheckbox(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_
 	
 	self.name = name;
 	self.value = value;
-	self.pos_x = x;
-	self.pos_y = y;
+	self.x = x;
+	self.y = y;
 	self.width = width;
 	self.height = height;
-	_initElement();
 	
 	self.text = text;
 	

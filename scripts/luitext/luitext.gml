@@ -5,15 +5,14 @@
 ///@arg {Real} height
 ///@arg {String} name
 ///@arg {String} text
-function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "sample text", scale_to_fit = false) : LuiBase() constructor {
+function LuiText(x = LUI_AUTO, y = LUI_AUTO, width = LUI_AUTO, height = LUI_AUTO, name = LUI_AUTO_NAME, text = "", scale_to_fit = false) : LuiBase() constructor {
 	
 	self.name = name;
 	self.value = string(text);
-	self.pos_x = x;
-	self.pos_y = y;
+	self.x = x;
+	self.y = y;
 	self.width = width;
 	self.height = height;
-	_initElement();
 	
 	self.text_halign = fa_left;
 	self.text_valign = fa_middle;

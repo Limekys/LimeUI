@@ -107,10 +107,10 @@ tabs.setPosition(tabs_target_x, tabs_target_y);
 
 // Create some elements
 demo_loading = new LuiProgressBar( , , , , , 0, 100, true, demo_loading_value, 1).bindVariable(self, "demo_loading_value");
-btn_show_msg = new LuiButton(, , , 32, "btnMessage", "Show message").addEvent(LUI_EV_CLICK, function() {
+btn_show_msg = new LuiButton(, , , , "btnMessage", "Show message").setColor(merge_color(#FFFF77, c_black, 0.5)).setIcon(sIconInfo, 1).addEvent(LUI_EV_CLICK, function() {
 	luiShowMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
-btn_restart = new LuiButton( , , , 32, "btnRestart", "Restart").addEvent(LUI_EV_CLICK, function() {
+btn_restart = new LuiButton( , , , , "btnRestart", "Restart").setColor(merge_color(#FF7777, c_black, 0.5)).addEvent(LUI_EV_CLICK, function() {
 	game_restart();
 });
 
@@ -158,7 +158,7 @@ my_panel.addContent([
 		new LuiCheckbox( , , , , , false, "Checkbox"), new LuiToggleSwitch(, , , , , , "ToggleSwitch").bindVariable(self, "demo_loading_state"), new LuiToggleButton(, , , , , , "ToggleButton")
 	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
-		btn_show_msg.setIcon(sIconInfo, 1).setColor(merge_color(#FFFF77, c_black, 0.5)), btn_restart.setColor(merge_color(#FF7777, c_black, 0.5))
+		btn_show_msg, btn_restart
 	])
 ]);
 
