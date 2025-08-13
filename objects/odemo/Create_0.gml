@@ -124,7 +124,7 @@ createNewLoginWindow = function () {
 				new LuiInput({placeholder: "login"})
 			]),
 			new LuiRow().addContent([
-				new LuiInput({placeholder: "password", is_password: true})
+				new LuiInput({placeholder: "password", is_masked: true, input_mode: LUI_INPUT_MODE.password})
 			]),
 			new LuiButton({text: "Login", width: 150}).addEvent(LUI_EV_CLICK, function() {
 				luiShowMessage(oDemo.my_ui, , , "Wrong password!", "OK!");
@@ -146,7 +146,7 @@ my_panel.addContent([
 		new LuiText({value: "Login: "}), new LuiInput({placeholder: "admin", max_length: 32}).bindVariable(self, "demo_login"), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText({value: "Password: "}), new LuiInput({placeholder: "password", max_length: 32, is_password: true}).bindVariable(self, "demo_password"), [0.3, 0.7]
+		new LuiText({value: "Password: "}), new LuiInput({placeholder: "password", max_length: 32, is_masked: true, input_mode: LUI_INPUT_MODE.password}).bindVariable(self, "demo_password"), [0.3, 0.7]
 	]),	
 	new LuiRow().addContent([
 		new LuiText({value: "Slider with rounding 10"}), new LuiSlider({name: "SliderRounding", value: 20, rounding: 10, bar_height: 16}), [0.3, 0.7]
@@ -310,7 +310,7 @@ my_panel_3.addContent([
 			new LuiText({value: "Scroll panel with different elements", scale_to_fit: true}).setTextHalign(fa_center),
 			new LuiScrollPanel({name: "firstScrollPanel"}).addContent([
 				
-				new LuiInput({placeholder: "Type in me!"}),
+				new LuiInput({placeholder: "Type in me!", input_mode: LUI_INPUT_MODE.signed_numbers}),
 				new LuiPanel().addContent([
 					new LuiText({value: "Nested panel 1.1"}),
 					new LuiCheckbox({text: "Check me!"}).addEvent(LUI_EV_CLICK, function(_element) {
