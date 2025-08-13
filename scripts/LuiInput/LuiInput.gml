@@ -2,7 +2,7 @@ enum LUI_INPUT_MODE {
     text,          // All characters
     password,      // Letters, digits, specific symbols (@#$%&_); no spaces
     numbers,       // 0-9
-    signed_numbers,// 0-9 + "-" at start
+    signed_numbers,// 0-9 + "-" at start, no leading zeros or -0
     letters,       // A-Z, a-z
     alphanumeric   // A-Z, a-z, 0-9
 }
@@ -92,6 +92,23 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
                 _filtered += _char;
             }
         }
+        // Normalize signed_numbers: remove leading zeros, handle -0
+        if self.input_mode == LUI_INPUT_MODE.signed_numbers {
+            var _is_negative = string_char_at(_filtered, 1) == "-";
+            // Remove leading zeros
+            _filtered = string_replace_all(_filtered, "-", ""); // Temporarily remove minus
+            while (string_length(_filtered) > 1 && string_char_at(_filtered, 1) == "0") {
+                _filtered = string_delete(_filtered, 1, 1);
+            }
+            // Restore minus if negative
+            if _is_negative && _filtered != "0" {
+                _filtered = "-" + _filtered;
+            }
+            // If result is -0, make it 0
+            if _filtered == "-0" {
+                _filtered = "0";
+            }
+        }
         return _filtered;
     }
     
@@ -112,7 +129,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             case LUI_INPUT_MODE.alphanumeric:
                 return string_lettersdigits(_char) != "";
             case LUI_INPUT_MODE.password:
-                // Allow letters, digits, and specific symbols (@#$%&_); no spaces
+                // Allow letters, digits, and specific symbols (!?@#$%&_); no spaces
                 if _char == " " return false;
                 return string_lettersdigits(_char) != "" || string_pos(_char, "!?@#$%&_") > 0;
             case LUI_INPUT_MODE.text:
