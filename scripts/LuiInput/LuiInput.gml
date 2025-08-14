@@ -27,6 +27,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     self.excluded_chars = _params[$ "excluded_chars"] ?? "";
     self.allowed_chars = _params[$ "allowed_chars"] ?? "";
     
+    self.is_incorrect = false;
     self.cursor_pointer = "";
     self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function() {
         if self.cursor_pointer == "" {
@@ -83,6 +84,13 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     ///@arg {string} _chars Allowed chars, e.g. "!@", takes priority over excluded_chars
     static setAllowedChars = function(_chars) {
         self.allowed_chars = _chars;
+        return self;
+    }
+    
+    ///@desc Set whether input is marked as incorrect (affects border, background, and placeholder color)
+    ///@arg {bool} _is_incorrect Mark input as incorrect (true) or not (false)
+    static setIncorrect = function(_is_incorrect) {
+        self.is_incorrect = _is_incorrect;
         return self;
     }
     
@@ -159,6 +167,9 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
                 if !self.has_focus && self.isMouseHovered() {
                     _blend_color = merge_color(self.style.color_back, self.style.color_hover, 0.5);
                 }
+                if self.is_incorrect {
+                    _blend_color = merge_color(_blend_color, self.style.color_semantic_error, 0.5);
+                }
             } else {
                 _blend_color = merge_color(_blend_color, c_black, 0.5);
             }
@@ -194,7 +205,11 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         if self.value == "" && !self.has_focus {
             _display_text = self.placeholder;
             draw_set_alpha(0.5);
-            draw_set_color(self.style.color_text_hint);
+            if self.is_incorrect {
+                draw_set_color(merge_color(self.style.color_text_hint, self.style.color_semantic_error, 0.5));
+            } else {
+                draw_set_color(self.style.color_text_hint);
+            }
         }
         
         //Cut
@@ -215,6 +230,9 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             var _border_color = self.style.color_border;
             if self.has_focus {
                 _border_color = self.style.color_accent;
+            }
+            if self.is_incorrect {
+                _border_color = self.style.color_semantic_error;
             }
             draw_sprite_stretched_ext(self.style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
         }
