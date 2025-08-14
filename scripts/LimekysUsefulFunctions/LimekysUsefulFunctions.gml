@@ -1,7 +1,7 @@
 // Feather ignore all
 
 //Useful functions by Limekys (This script has MIT Licence)
-#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2025.03.07"
+#macro LIMEKYS_USEFUL_FUNCTIONS_VERSION "2025.08.14"
 
 // Debug timers (used to test prerfomance)
 // add DEBUG_INIT_TIMER before code you want to test
@@ -657,3 +657,37 @@ function struct_merge(_default, _new) {
 	}
 	return _result;
 }
+
+///@desc Return true if string is unsigned integer number
+function string_is_uint(_string) {
+	var n = string_length(string_digits(_string));
+	return n > 0 && n == string_length(_string);
+}
+
+///@desc Return true if string is signed integer number
+function string_is_int(_string) {
+	var n = string_length(string_digits(_string));
+	return n > 0 && n == string_length(_string) - (string_ord_at(_string, 1) == ord("-"));
+}
+
+///@desc Return true if string is real number
+function string_is_real(_string) {
+	var n = string_length(string_digits(_string));
+	return n > 0 && n == string_length(_string) - (string_ord_at(_string, 1) == ord("-")) - (string_pos(".", _string) != 0);
+}
+
+///@desc Return true if string is real exponential number
+function string_is_real_exp(_string) {
+	var s = argument0;
+	var n = string_length(string_digits(_string));
+	var p = string_pos(".", _string);
+	var e = string_pos("e", _string);
+	switch (e) {
+	    case 0: break; // ok!
+	    case 1: return false; // "e#"
+	    case 2: if (p > 0) return false; break; // ".e#" or "1e."
+	    default: if (p > 0 && e < p) return false; break; // "1e3.3"
+	}
+	return n && n == string_length(_string) - (string_char_at(_string, 1) == "-") - (p != 0) - (e != 0);
+}
+
