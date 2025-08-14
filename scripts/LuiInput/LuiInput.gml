@@ -94,6 +94,16 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         return self;
     }
     
+    ///@desc Return real number or _default_value
+    ///@arg {real} [_default_value] Value to return if string is not a valid number, default is 0
+    ///@return {real}
+    static getReal = function(_default_value = 0) {
+        var _v = self.get();
+        var _n = string_length(string_digits(_v));
+        var _is_real = _n > 0 && _n == string_length(_v) - (string_ord_at(_v, 1) == ord("-")) - (string_pos(".", _v) != 0);
+        return _is_real ? real(_v) : _default_value;
+    }
+    
     ///@ignore
     static _limit_value = function(_string) {
         return string_copy(_string, 1, self.max_length);
