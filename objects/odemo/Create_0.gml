@@ -310,7 +310,7 @@ my_panel_3.addContent([
 			new LuiText({value: "Scroll panel with different elements", scale_to_fit: true}).setTextHalign(fa_center),
 			new LuiScrollPanel({name: "firstScrollPanel"}).addContent([
 				
-				new LuiInput({placeholder: "sint numbers", input_mode: LUI_INPUT_MODE.sint}),
+				new LuiInput({placeholder: "only numbers allowed", input_mode: LUI_INPUT_MODE.numbers, allowed_chars: "-."}),
 				new LuiPanel().addContent([
 					new LuiText({value: "Nested panel 1.1"}),
 					new LuiCheckbox({text: "Check me!"}).addEvent(LUI_EV_CLICK, function(_element) {

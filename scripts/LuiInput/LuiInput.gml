@@ -15,6 +15,7 @@ enum LUI_INPUT_MODE {
 /// max_length
 /// input_mode (LUI_INPUT_MODE: text, password, numbers, sint, letters, alphanumeric)
 /// excluded_chars (string of forbidden chars, e.g. "!@#")
+/// allowed_chars (string of allowed chars, e.g. "!@", takes priority over excluded_chars)
 ///@arg {Struct} [_params] Struct with parameters
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
@@ -24,6 +25,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     self.max_length = _params[$ "max_length"] ?? 255;
     self.input_mode = _params[$ "input_mode"] ?? LUI_INPUT_MODE.text;
     self.excluded_chars = _params[$ "excluded_chars"] ?? "";
+    self.allowed_chars = _params[$ "allowed_chars"] ?? "";
     
     self.cursor_pointer = "";
     self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function() {
@@ -77,6 +79,13 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         return self;
     }
     
+    ///@desc Set allowed characters (string)
+    ///@arg {string} _chars Allowed chars, e.g. "!@", takes priority over excluded_chars
+    static setAllowedChars = function(_chars) {
+        self.allowed_chars = _chars;
+        return self;
+    }
+    
     ///@ignore
     static _limit_value = function(_string) {
         return string_copy(_string, 1, self.max_length);
@@ -115,7 +124,10 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
     ///@ignore
     static _is_char_allowed = function(_char, _is_first) {
-        // Check excluded chars first
+        // Allow chars in allowed_chars, overriding excluded_chars
+        if string_pos(_char, self.allowed_chars) > 0 return true;
+        
+        // Check excluded chars
         if string_pos(_char, self.excluded_chars) > 0 return false;
         
         // Mode checks
