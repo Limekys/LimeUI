@@ -163,8 +163,8 @@ my_panel.addContent([
 ]);
 
 // Create deactivated button
-deactivated_button = new LuiButton({text: "DEACTIVATED"}).deactivate().addEvent(LUI_EV_CLICK, function(_element) {
-	_element.destroy();
+deactivated_button = new LuiButton({text: "DEACTIVATED"}).deactivate().addEvent(LUI_EV_CLICK, function(_e) {
+	_e.destroy();
 	oDemo.deactivated_button = -1;
 });
 
@@ -176,13 +176,13 @@ activate_button = new LuiButton({text: "ACTIVATE"}).addEvent(LUI_EV_CLICK, funct
 });
 
 // Create sprite buttons and function to change its color
-changeImageButtonColor = function(_element) {
-	_element.setColor(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
+changeImageButtonColor = function(_e) {
+	_e.setColor(merge_color(make_color_hsv(random(255), 255, 255), c_white, 0.5));
 }
 var _sprite_buttons = [];
 for (var i = 0; i < 7; ++i) {
     var _button = new LuiImageButton({width: 80, height: 56, value: sLogoDemo, maintain_aspect: i mod 2 == 0 ? true : false});
-	_button.addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element);});
+	_button.addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeImageButtonColor(_e);});
 	array_push(_sprite_buttons, _button);
 }
 
@@ -315,8 +315,8 @@ my_panel_3.addContent([
 				}),
 				new LuiPanel().addContent([
 					new LuiText({value: "Nested panel 1.1"}),
-					new LuiCheckbox({text: "Check me!"}).addEvent(LUI_EV_CLICK, function(_element) {
-						luiShowMessage(oDemo.my_ui, , , _element.get() ? "Checkbox in nested panel of scroll panel!" : ":(");
+					new LuiCheckbox({text: "Check me!"}).addEvent(LUI_EV_CLICK, function(_e) {
+						luiShowMessage(oDemo.my_ui, , , _e.get() ? "Checkbox in nested panel of scroll panel!" : ":(");
 					}),
 					new LuiPanel().addContent([
 						new LuiText({value: "Nested panel 2.1"}),
@@ -336,7 +336,7 @@ my_panel_3.addContent([
 						new LuiPanel().addContent([
 							new LuiText({value: "Nested panel 3.2"}),
 							new LuiRow().addContent([
-								new LuiImageButton({value: sLogoDemo, width: 56, height: 56}).addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)}),
+								new LuiImageButton({value: sLogoDemo, width: 56, height: 56}).addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeImageButtonColor(_e)}),
 								new LuiText({value: "Press me!"}),
 							]),
 							new LuiSurface({height: 100, name: "LuiSurface", alpha: 0.5, maintain_aspect: false}).addContent([
@@ -383,8 +383,8 @@ my_panel_3.addContent([
 		for (var i = 1; i <= 10; i++) {
 			var _btn_text = string(i) + ". " + choose("Aboba", "Microba", "Foo", "Bar", "Game maker!", "777", "123");
 			search_panel.addContent([
-				new LuiButton().setText(_btn_text).addEvent(LUI_EV_CLICK, function(_element) {
-					oDemo.filterElements(); _element.destroy();
+				new LuiButton().setText(_btn_text).addEvent(LUI_EV_CLICK, function(_e) {
+					oDemo.filterElements(); _e.destroy();
 				})
 			]);
 		}
@@ -398,8 +398,8 @@ my_panel_3.addContent([
 			var _button_name = oDemo.input_control.get();
 			oDemo.input_control.set("");
 			oDemo.search_panel.addContent([
-				new LuiButton().setText(_button_name).addEvent(LUI_EV_CLICK, function(_element) {
-					oDemo.filterElements(); _element.destroy();
+				new LuiButton().setText(_button_name).addEvent(LUI_EV_CLICK, function(_e) {
+					oDemo.filterElements(); _e.destroy();
 				})
 			]);
 		});
@@ -423,10 +423,10 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		spr_car_1 = new LuiImage({value: sCar, name: "sCar"}).addEvent(LUI_EV_CLICK, function(_element) {print($"Clicked on image {_element.name}!")});
-		spr_car_2 = new LuiImage({value: sCar, maintain_aspect: false, name: "sCar_stretched"}).addEvent(LUI_EV_CLICK, function(_element) {print($"Clicked on image {_element.name}!")});
-		spr_car_3 = new LuiImage({value: sHamburger, name: "sHamburger"}).addEvent(LUI_EV_CLICK, function(_element) {print($"Clicked on image {_element.name}!")});
-		spr_car_4 = new LuiImage({value: sHamburger, maintain_aspect: false, name: "sHamburger_stretched"}).addEvent(LUI_EV_CLICK, function(_element) {print($"Clicked on image {_element.name}!")});
+		spr_car_1 = new LuiImage({value: sCar, name: "sCar"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_car_2 = new LuiImage({value: sCar, maintain_aspect: false, name: "sCar_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_car_3 = new LuiImage({value: sHamburger, name: "sHamburger"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_car_4 = new LuiImage({value: sHamburger, maintain_aspect: false, name: "sHamburger_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
 		tab_sprites.addContent([
 			new LuiRow({height: 500}).addContent([
 				spr_car_1, spr_car_2, spr_car_3, spr_car_4
