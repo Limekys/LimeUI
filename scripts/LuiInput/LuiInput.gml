@@ -1,8 +1,8 @@
 enum LUI_INPUT_MODE {
     text,          // All characters
-    password,      // Letters, digits, specific symbols (@#$%&_); no spaces
+    password,      // Letters, digits, specific symbols (!?@#$%&_); no spaces
     numbers,       // 0-9
-    signed_numbers,// 0-9 + "-" at start, no leading zeros or -0
+    sint,          // 0-9, "-", no leading zeros, no -0
     letters,       // A-Z, a-z
     alphanumeric   // A-Z, a-z, 0-9
 }
@@ -13,7 +13,7 @@ enum LUI_INPUT_MODE {
 /// placeholder
 /// is_masked (bool, default: false, masks text with dots)
 /// max_length
-/// input_mode (LUI_INPUT_MODE: text, password, numbers, signed_numbers, letters, alphanumeric)
+/// input_mode (LUI_INPUT_MODE: text, password, numbers, sint, letters, alphanumeric)
 /// excluded_chars (string of forbidden chars, e.g. "!@#")
 ///@arg {Struct} [_params] Struct with parameters
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
@@ -92,19 +92,20 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
                 _filtered += _char;
             }
         }
-        // Normalize signed_numbers: remove leading zeros, handle -0
-        if self.input_mode == LUI_INPUT_MODE.signed_numbers {
+        // Normalize sint: remove leading zeros, handle -0
+        if self.input_mode == LUI_INPUT_MODE.sint {
             var _is_negative = string_char_at(_filtered, 1) == "-";
+            // Remove minus temporarily
+            _filtered = string_replace_all(_filtered, "-", "");
             // Remove leading zeros
-            _filtered = string_replace_all(_filtered, "-", ""); // Temporarily remove minus
             while (string_length(_filtered) > 1 && string_char_at(_filtered, 1) == "0") {
                 _filtered = string_delete(_filtered, 1, 1);
             }
-            // Restore minus if negative
+            // Restore minus if negative and not zero
             if _is_negative && _filtered != "0" {
                 _filtered = "-" + _filtered;
             }
-            // If result is -0, make it 0
+            // Handle -0
             if _filtered == "-0" {
                 _filtered = "0";
             }
@@ -121,7 +122,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         switch (self.input_mode) {
             case LUI_INPUT_MODE.numbers:
                 return string_digits(_char) != "";
-            case LUI_INPUT_MODE.signed_numbers:
+            case LUI_INPUT_MODE.sint:
                 if _char == "-" && _is_first return true;
                 return string_digits(_char) != "";
             case LUI_INPUT_MODE.letters:
