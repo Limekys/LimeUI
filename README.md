@@ -2,7 +2,7 @@
 
 **LimeUI** is a free, open-source UI framework for Game Maker, designed to simplify the creation of flexible and modern user interfaces with a powerful flexpanel system. Build responsive, animated, and touch-friendly UI for your games with ease.
 
-[LATEST RELEASE](https://github.com/Limekys/LimeUI/releases) | [DOCUMENTATION](https://github.com/Limekys/LimeUI/wiki)
+<div align="center"><a href="https://github.com/Limekys/LimeUI/releases">LATEST RELEASE</a> | <a href="https://github.com/Limekys/LimeUI/wiki">DOCUMENTATION</a></div>
 
 # Components
 LimeUI includes a variety of UI components to build flexible interfaces:
