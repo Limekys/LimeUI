@@ -259,14 +259,20 @@ Set flag to display or not display white rectangle on focused element
 ### `isInteracting`
 Return true if we interacting with UI at the moment with mouse or keyboard
 
+**Returns:**  
+- `{bool}`  
 
 ### `isInteractingMouse`
 Return true if we interacting with UI at the moment with mouse
 
+**Returns:**  
+- `{bool}`  
 
 ### `isInteractingKeyboard`
 Return true if we interacting with UI at the moment with keyboard
 
+**Returns:**  
+- `{bool}`  
 
 ### `getElement`
 Get element by name

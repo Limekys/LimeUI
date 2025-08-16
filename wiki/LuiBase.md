@@ -1,6 +1,13 @@
 # LuiBase
 
 The basic constructor of all elements, which contains all the basic functions and logic of each element.  
+**Available parameters:**  
+x - x position for element (left position of flex node)  
+y - y position for element (top position of flex node)  
+width or w - width of element  
+height or h - height of element  
+name - unique name_id for element  
+
 ## Methods
 ### `addEvent`
 Add a callback for a specific event
@@ -301,11 +308,11 @@ Enables/Disables mouse ignore mode
 
 
 ### `setDepth`
-
+Sets a new depth value for the element and recalculates depth_array for itself and its children
 
 
 ### `bringToFront`
-
+Brings the element to the front by setting a new maximum z value
 
 
 ### `flexUpdateAll`

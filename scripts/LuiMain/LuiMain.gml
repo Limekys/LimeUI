@@ -1,4 +1,4 @@
-/// @desc Main UI container wich would be controll and render your UI.
+///@desc Main UI container which would control and render your UI.
 function LuiMain() : LuiBase() constructor {
 	
 	// Main variables
@@ -80,16 +80,19 @@ function LuiMain() : LuiBase() constructor {
 	// CHECKERS
 	
 	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
+	///@return {bool}
 	static isInteracting = function() {
 		return self.isInteractingKeyboard() || self.isInteractingMouse();
 	}
 	
 	///@desc Return true if we interacting with UI at the moment with mouse
+	///@return {bool}
 	static isInteractingMouse = function() {
 		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
 	}
 	
 	///@desc Return true if we interacting with UI at the moment with keyboard
+	///@return {bool}
 	static isInteractingKeyboard = function() {
 		return self.visible && !self.deactivated && self.waiting_for_keyboard_input;
 	}

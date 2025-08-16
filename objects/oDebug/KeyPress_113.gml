@@ -1,2 +1,2 @@
-/// @desc Toggle debug mode
+///@desc Toggle debug mode
 luiNextDebugMode();

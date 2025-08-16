@@ -28,6 +28,7 @@ demo_style_light = new LuiStyle()
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
 	.setColors(c_white, c_white, merge_color(c_white, c_black, 0.05), #45C952, merge_color(c_white, c_black, 0.5)) //_primary, _secondary, _back, _accent, _border
+	.setColorAccent(#45C952)
 	.setColorHover(c_gray)
 	.setColorText(merge_color(c_black, c_white, 0.2), c_gray)
 	.setSounds(sndBasicClick);
@@ -45,6 +46,7 @@ demo_style_dark = new LuiStyle()
 	.setSpriteRing(sRing, sRing)
 	.setSpriteTabs(sUI_tabs, sUI_tab, sUI_tabs_border, sUI_tab_border)
 	.setColors(#393c4f, #393c4f, merge_color(#393c4f, c_black, 0.1), #3a7d44, merge_color(#393c4f, c_black, 0.5)) //_primary, _secondary, _back, _accent, _border
+	.setColorAccent(#3a7d44)
 	.setColorHover(c_gray)
 	.setColorText(merge_color(c_white, #393c4f, 0.2), #77726e)
 	.setSounds(sndBasicClick);
@@ -62,6 +64,7 @@ demo_style_modern = new LuiStyle()
 	.setSpriteRing(sRing, sRing)
 	.setSpriteScrollSlider(sUI_Square_6r, sUI_Square_6r)
 	.setColors(#393a44, merge_color(#393a44, c_white, 0.1), merge_color(#393a44, c_black, 0.2), #64d0b9) //_primary, _secondary, _back, _accent, _border
+	.setColorAccent(#64d0b9)
 	.setColorHover(c_gray)
 	.setColorText(#ffffff, #9a9daf)
 	.setSounds(sndBasicClick);
@@ -468,11 +471,6 @@ my_ui.addContent([
 		room_goto(rDemo2);
 	})
 ]);
-
-var input_str = "-0.5"
-var _t_str = string_digits(input_str);
-var age = real(input_str);
-print(age);
 
 // Stress test
 /*

@@ -1,25 +1,32 @@
 ///@desc The basic constructor of all elements, which contains all the basic functions and logic of each element.
+/// Available parameters:
+/// x - x position for element (left position of flex node)
+/// y - y position for element (top position of flex node)
+/// width or w - width of element
+/// height or h - height of element
+/// name - unique name_id for element
+///@arg {Struct} [_params] Struct with parameters
 function LuiBase(_params = {}) constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 		
 	self.element_id = global.lui_element_count++;
-	self.name = LUI_AUTO_NAME;						//Unique element identifier
-	self.value = undefined;							//Value
-	self.data = undefined;							//Different user data for personal use
-	self.style = undefined;							//Style struct
-	self.style_overrides = {};						//Custom style for element
-	self.x = LUI_AUTO;										//Actual real calculated x position on the screen
-	self.y = LUI_AUTO;										//Actual real calculated y position on the screen
-	self.z = 0;										//Depth
-	self.start_x = -1;								//First x position
-	self.start_y = -1;								//First y position
-	self.prev_x = -1;								//Previous floor(x) position on the screen
-	self.prev_y = -1;								//Previous floor(y) position on the screen
-	self.width = LUI_AUTO;							//Actual real calculated width of element
-	self.height = LUI_AUTO;							//Actual real calculated height of element
-	self.prev_w = -1;								//Previous width
-	self.prev_h = -1;								//Previous height
+	self.name = LUI_AUTO_NAME;							//Unique element identifier
+	self.value = undefined;								//Value
+	self.data = undefined;								//Different user data for personal use
+	self.style = undefined;								//Style struct
+	self.style_overrides = {};							//Custom style for element
+	self.x = LUI_AUTO;									//Actual real calculated x position on the screen
+	self.y = LUI_AUTO;									//Actual real calculated y position on the screen
+	self.z = 0;											//Depth
+	self.start_x = -1;									//First x position
+	self.start_y = -1;									//First y position
+	self.prev_x = -1;									//Previous floor(x) position on the screen
+	self.prev_y = -1;									//Previous floor(y) position on the screen
+	self.width = LUI_AUTO;								//Actual real calculated width of element
+	self.height = LUI_AUTO;								//Actual real calculated height of element
+	self.prev_w = -1;									//Previous width
+	self.prev_h = -1;									//Previous height
 	self.min_width = 32;
 	self.min_height = 32;
 	self.max_width = 3200;
@@ -31,7 +38,7 @@ function LuiBase(_params = {}) constructor {
 	self.parent = undefined;
 	self.content = undefined;
 	self.delayed_content = undefined;
-	self.container = self; 							//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
+	self.container = self; 								//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	self.deactivated = false;
 	self.visible = true;
 	self.visibility_switching = true;
@@ -86,8 +93,8 @@ function LuiBase(_params = {}) constructor {
 	if is_struct(_params) {
 		self.x = _params[$ "x"] ?? LUI_AUTO;
 		self.y = _params[$ "y"] ?? LUI_AUTO;
-		self.width = _params[$ "width"] ?? LUI_AUTO;
-		self.height = _params[$ "height"] ?? LUI_AUTO;
+		self.width = _params[$ "width"] ?? _params[$ "w"] ?? LUI_AUTO;
+		self.height = _params[$ "height"] ?? _params[$ "h"] ??  LUI_AUTO;
 		self.name = _params[$ "name"] ?? LUI_AUTO_NAME;
 	} else {
 		_luiPrintError($"A structure with parameters was expected, but a {typeof(_params)} was received!");
@@ -768,7 +775,7 @@ function LuiBase(_params = {}) constructor {
 	
 	// DEPTH SYSTEM
 	
-	/// @desc Sets a new depth value for the element and recalculates depth_array for itself and its children
+	///@desc Sets a new depth value for the element and recalculates depth_array for itself and its children
 	static setDepth = function(_new_z) {
 	    // Update the element's z value
 	    self.z = _new_z;
@@ -794,7 +801,7 @@ function LuiBase(_params = {}) constructor {
 	    return self;
 	}
 	
-	/// @desc Brings the element to the front by setting a new maximum z value
+	///@desc Brings the element to the front by setting a new maximum z value
 	static bringToFront = function() {
 		// Increment global.lui_max_z to get a new maximum z
 		global.lui_max_z++;
@@ -854,10 +861,10 @@ function LuiBase(_params = {}) constructor {
 		}
 	}
 	
-	/// @desc Renders debug rectangles for element boundaries and view region
-	/// @param {real} _x X-coordinate for rendering (default 0)
-	/// @param {real} _y Y-coordinate for rendering (default 0)
-	/// @ignore
+	///@desc Renders debug rectangles for element boundaries and view region
+	///@param {real} _x X-coordinate for rendering (default 0)
+	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@ignore
 	static _renderDebugRectangles = function(_x = 0, _y = 0) {
 	    // Remember previous colors
 	    var _prev_color = draw_get_color();
@@ -888,10 +895,10 @@ function LuiBase(_params = {}) constructor {
 	    draw_set_alpha(_prev_alpha);
 	}
 	
-	/// @desc Renders debug text information for the element
-	/// @param {real} _x X-coordinate for rendering (default 0)
-	/// @param {real} _y Y-coordinate for rendering (default 0)
-	/// @ignore
+	///@desc Renders debug text information for the element
+	///@param {real} _x X-coordinate for rendering (default 0)
+	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@ignore
 	static _renderDebugInfo = function(_x = 0, _y = 0) {
 	    // Set font if defined
 	    if !is_undefined(self.style.font_debug) {
@@ -930,10 +937,10 @@ function LuiBase(_params = {}) constructor {
 	    draw_set_alpha(_prev_alpha);
 	}
 	
-	/// @desc Renders debug info for the element (rectangles and text)
-	/// @param {real} _x X-coordinate for rendering (default 0)
-	/// @param {real} _y Y-coordinate for rendering (default 0)
-	/// @ignore
+	///@desc Renders debug info for the element (rectangles and text)
+	///@param {real} _x X-coordinate for rendering (default 0)
+	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@ignore
 	static _renderDebug = function(_x = 0, _y = 0) {
 	    // Draw rectangles
 	    self._renderDebugRectangles(_x, _y);
@@ -1320,7 +1327,7 @@ function LuiBase(_params = {}) constructor {
 	    return 0;
 	}
 	
-	/// @desc Recalculates depth_array for the element and all its children
+	///@desc Recalculates depth_array for the element and all its children
 	///@ignore
 	static _recalculateDepthArray = function() {
 	    // Rebuild depth_array: parent's depth_array + current z

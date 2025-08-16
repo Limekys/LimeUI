@@ -1,2 +1,2 @@
-/// @desc Toggle debug grid
+///@desc Toggle debug grid
 luiToggleDebugGrid();
