@@ -29,8 +29,8 @@ function LuiBase(_params = {}) constructor {
 	self.height = LUI_AUTO;								//Actual real calculated height of element
 	self.prev_w = -1;									//Previous width
 	self.prev_h = -1;									//Previous height
-	self.min_width = 1;
-	self.min_height = 1;
+	self.min_width = LUI_AUTO;
+	self.min_height = LUI_AUTO;
 	self.max_width = 3200;
 	self.max_height = 3200;
 	self.auto_x = false;
@@ -98,6 +98,8 @@ function LuiBase(_params = {}) constructor {
 		self.y = _params[$ "y"] ?? LUI_AUTO;
 		self.r = _params[$ "r"] ?? LUI_AUTO;
 		self.b = _params[$ "b"] ?? LUI_AUTO;
+		self.min_width = _params[$ "min_width"] ?? LUI_AUTO;
+		self.min_height = _params[$ "min_height"] ?? LUI_AUTO;
 		self.width = _params[$ "width"] ?? _params[$ "w"] ?? LUI_AUTO;
 		self.height = _params[$ "height"] ?? _params[$ "h"] ??  LUI_AUTO;
 		self.name = _params[$ "name"] ?? LUI_AUTO_NAME;
@@ -1482,15 +1484,19 @@ function LuiBase(_params = {}) constructor {
 			}
 			
 			// Flex setting up
-	        if _element.auto_width {
-				_element.min_width = _element.style.min_width;
-			} else {
-				_element.min_width = min(_element.width, _element.style.min_width);
+			if _element.min_width == LUI_AUTO {
+		        if _element.auto_width {
+					_element.min_width = _element.style.min_width;
+				} else {
+					_element.min_width = min(_element.width, _element.style.min_width);
+				}
 			}
-			if _element.auto_height {
-				_element.min_height = _element.style.min_height;
-			} else {
-				_element.min_height = min(_element.height, _element.style.min_height);
+			if _element.min_height == LUI_AUTO {
+				if _element.auto_height {
+					_element.min_height = _element.style.min_height;
+				} else {
+					_element.min_height = min(_element.height, _element.style.min_height);
+				}
 			}
 			flexpanel_node_style_set_min_width(_element.flex_node, _element.min_width, flexpanel_unit.point);
 			flexpanel_node_style_set_min_height(_element.flex_node, _element.min_height, flexpanel_unit.point);
