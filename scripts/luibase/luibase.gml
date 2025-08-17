@@ -1477,7 +1477,8 @@ function LuiBase(_params = {}) constructor {
 	        _element.main_ui = self.main_ui;
 	        _element.style = self.style;
 			_element.ignore_mouse_all = !is_undefined(self.ignore_mouse_all) ? self.ignore_mouse_all : _element.ignore_mouse_all;
-			_element.ignore_mouse = self.ignore_mouse_all;
+			_element.ignore_mouse = !is_undefined(self.ignore_mouse_all) ? self.ignore_mouse_all : _element.ignore_mouse_all;
+			
 			// Flex setting up
 	        if _element.auto_width {
 				_element.min_width = _element.style.min_width;
