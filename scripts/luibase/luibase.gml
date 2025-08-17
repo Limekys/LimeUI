@@ -45,6 +45,7 @@ function LuiBase(_params = {}) constructor {
 	self.has_focus = false;
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
+	self.ignore_mouse_all = undefined;
 	self.render_content_enabled = true;
 	self.need_to_update_content = false;
 	self.main_ui = undefined;
@@ -784,6 +785,18 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
+	///@desc Enables/Disables mouse ignore mode for this and all nested elements
+	static setMouseIgnoreAll = function(_ignore = true) {
+		self.ignore_mouse = _ignore;
+		self.ignore_mouse_all = _ignore;
+		var _content = self.getContent();
+		for (var i = 0, n = array_length(_content); i < n; i++) {
+			var _e = _content[i];
+			_e.setMouseIgnoreAll(self.ignore_mouse_all);
+		}
+		return self;
+	}
+	
 	// DEPTH SYSTEM
 	
 	///@desc Sets a new depth value for the element and recalculates depth_array for itself and its children
@@ -1433,7 +1446,8 @@ function LuiBase(_params = {}) constructor {
 	        _element.parent = self;
 	        _element.main_ui = self.main_ui;
 	        _element.style = self.style;
-	        
+			_element.ignore_mouse_all = !is_undefined(self.ignore_mouse_all) ? self.ignore_mouse_all : _element.ignore_mouse_all;
+			_element.ignore_mouse = self.ignore_mouse_all;
 			// Flex setting up
 	        if _element.auto_width {
 				_element.min_width = _element.style.min_width;
