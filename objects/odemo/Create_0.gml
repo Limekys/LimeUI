@@ -153,7 +153,7 @@ my_panel.addContent([
 	]),
 	new LuiRow().addContent([
 		new LuiText({value: "Password: "}), new LuiInput({placeholder: "password", max_length: 32, is_masked: true, input_mode: LUI_INPUT_MODE.password}).bindVariable(self, "demo_password"), [0.3, 0.7]
-	]),	
+	]),
 	new LuiRow().addContent([
 		new LuiText({value: "Slider with rounding 10"}), new LuiSlider({name: "SliderRounding", value: 20, rounding: 10, bar_height: 16}), [0.3, 0.7]
 	]),

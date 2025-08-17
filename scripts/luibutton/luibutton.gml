@@ -23,16 +23,16 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	*/
 	
 	///@desc Set button text
-	///@arg {string} _button_text
-	static setText = function(_button_text) {
-		self.text = _button_text;
+	///@arg {string} _text
+	static setText = function(_text) {
+		self.text = _text;
 		return self;
 	}
 	
 	///@desc Set custom button color
-	///@arg {any} _button_color
-	static setColor = function(_button_color) {
-		self.button_color = _button_color;
+	///@arg {any} _color
+	static setColor = function(_color) {
+		self.button_color = _color;
 		return self;
 	}
 	

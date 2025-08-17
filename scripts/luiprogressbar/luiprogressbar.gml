@@ -6,6 +6,7 @@
 /// rounding
 /// display_value
 /// bar_height
+/// color - custom bar accent color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	
@@ -15,6 +16,7 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	self.rounding = _params[$ "rounding"] ?? 0;
 	self.display_value = _params[$ "display_value"] ?? true;
 	self.bar_height = _params[$ "bar_height"] ?? LUI_AUTO;
+	self.bar_color = _params[$ "color"] ?? undefined;
 	
 	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
@@ -55,6 +57,13 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	///@desc Set custom bar color
+	///@arg {any} _color
+	static setColor = function(_color) {
+		self.bar_color = _color;
+		return self;
+	}
+	
 	///@desc Calculate final value with rounding and clamping
 	///@ignore
 	static _calculateValue = function(_value) {
@@ -65,7 +74,7 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	self.draw = function() {
 		// Calculate colors
 		var _blend_back = self.style.color_back;
-		var _blend_accent = self.style.color_accent;
+		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : self.style.color_accent;
 		var _blend_text = self.style.color_text;
 		var _blend_border = self.style.color_border;
 		if self.deactivated {
