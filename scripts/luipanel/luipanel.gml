@@ -1,10 +1,45 @@
 ///@desc A visually visible container for placing elements in it.
 /// Available parameters:
-/// allow_rescaling
+/// allow_resize
 ///@arg {Struct} [_params] Struct with parameters
 function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	
-	self.allow_rescaling = _params[$ "allow_rescaling"] ?? false; //???//
+	self.allow_resize = _params[$ "allow_resize"] ?? false;
+	
+	self.resizer = undefined;
+	
+	///@desc Set allow to resize panel or not
+	///@arg {bool} _allow
+	static setAllowResize = function(_allow) {
+		self.allow_resize = _allow;
+		if _allow {
+			self._initResizer();
+		} else {
+			if !is_undefined(self.resizer) {
+				self.resizer.destroy();
+				self.resizer = undefined;
+			}
+		}
+		return self;
+	}
+	
+	///@ignore
+	static _initResizer = function() {
+		if is_undefined(self.resizer) && self.allow_resize {
+			self.resizer = new LuiBox({r: 0, b: 0, w: 8, h: 8, color: c_red}).setPositionAbsolute(); //???//
+			self.resizer.can_drag = true;
+			self.resizer.setData("panel", self);
+			self.resizer.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
+				var _new_x = _data.new_x;
+				var _new_y = _data.new_y;
+				var _panel = _e.getData("panel");
+				var _new_width = max(_new_x - _panel.x, _panel.min_width);
+				var _new_height = max(_new_y - _panel.y, _panel.min_height);
+				_panel.setSize(_new_width, _new_height);
+			});
+			self.addContent(self.resizer);
+		}
+	}
 	
 	self.draw = function() {
 		//Shadow
@@ -25,12 +60,9 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		if !is_undefined(self.style.sprite_panel_border) {
 			draw_sprite_stretched_ext(self.style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
 		}
-		// Debug
-		if self.allow_rescaling {
-			var _offset = 8;
-			draw_set_color(c_red);
-			draw_set_alpha(0.5);
-			draw_rectangle(self.x + self.width - _offset, self.y + self.height - _offset, self.x + self.width, self.y + self.height, false);
-		}
 	}
+	
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._initResizer();
+	});
 }
