@@ -2,8 +2,12 @@
 /// Available parameters:
 /// x - x position for element (left position of flex node)
 /// y - y position for element (top position of flex node)
+/// r - right position for element (right position of flex node)
+/// b - bottom position for element (bottom position of flex node)
 /// width or w - width of element
 /// height or h - height of element
+/// min_width - minimum width of element
+/// min_height - minimum height of element
 /// name - unique name_id for element
 ///@arg {Struct} [_params] Struct with parameters
 function LuiBase(_params = {}) constructor {
