@@ -470,7 +470,7 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiButton({text: "Next demo -->", width: 256}).setPositionAbsolute().setPosition(, , 16, 16).addEvent(LUI_EV_CLICK, function() {
+	new LuiButton({text: "Next demo -->", width: 256, r: 16, b: 16}).setPositionAbsolute().addEvent(LUI_EV_CLICK, function() {
 		room_goto(rDemo2);
 	})
 ]);

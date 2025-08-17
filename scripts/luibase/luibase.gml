@@ -18,6 +18,8 @@ function LuiBase(_params = {}) constructor {
 	self.style_overrides = {};							//Custom style for element
 	self.x = LUI_AUTO;									//Actual real calculated x position on the screen
 	self.y = LUI_AUTO;									//Actual real calculated y position on the screen
+	self.r = LUI_AUTO;
+	self.b = LUI_AUTO;
 	self.z = 0;											//Depth
 	self.start_x = -1;									//First x position
 	self.start_y = -1;									//First y position
@@ -36,8 +38,8 @@ function LuiBase(_params = {}) constructor {
 	self.auto_width = false;
 	self.auto_height = false;
 	self.parent = undefined;
-	self.content = undefined;
-	self.delayed_content = undefined;
+	self.content = [];
+	self.delayed_content = [];
 	self.container = self; 								//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
 	self.deactivated = false;
 	self.visible = true;
@@ -58,15 +60,15 @@ function LuiBase(_params = {}) constructor {
 	self.is_destroyed = false;
 	self.is_initialized = false;
 	self.draw_content_in_cutted_region = false;
-	self.flex_node = flexpanel_create_node({ name: self.name, data: {} });
-	var _data = flexpanel_node_get_data(self.flex_node);
-	_data.element = self;
-	self.render_region_offset = {
+	self.render_region_offset = { //???// в целом еще может пригодится
 		left : 0,
 		right : 0,
 		top : 0,
 		bottom : 0
 	};
+	self.flex_node = flexpanel_create_node({ name: self.name, data: {} });
+	var _data = flexpanel_node_get_data(self.flex_node);
+	_data.element = self;
 	// Screen grid system
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
 	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
@@ -94,6 +96,8 @@ function LuiBase(_params = {}) constructor {
 	if is_struct(_params) {
 		self.x = _params[$ "x"] ?? LUI_AUTO;
 		self.y = _params[$ "y"] ?? LUI_AUTO;
+		self.r = _params[$ "r"] ?? LUI_AUTO;
+		self.b = _params[$ "b"] ?? LUI_AUTO;
 		self.width = _params[$ "width"] ?? _params[$ "w"] ?? LUI_AUTO;
 		self.height = _params[$ "height"] ?? _params[$ "h"] ??  LUI_AUTO;
 		self.name = _params[$ "name"] ?? LUI_AUTO_NAME;
@@ -299,6 +303,10 @@ function LuiBase(_params = {}) constructor {
 		var _update_flex = false;
 		if _r != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.r = _r;
+			}
+			self.auto_x = false;
 			_update_flex = true;
 		}
 		if _update_flex {
@@ -313,7 +321,11 @@ function LuiBase(_params = {}) constructor {
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _b != LUI_AUTO {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _b, flexpanel_unit.point);
+			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.bottom, _b, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.b = _b;
+			}
+			self.auto_y = false;
 			_update_flex = true;
 		}
 		if _update_flex {
@@ -348,10 +360,18 @@ function LuiBase(_params = {}) constructor {
 		}
 		if _r != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.r = _r;
+			}
+			self.auto_x = false;
 			_update_flex = true;
 		}
 		if _b != LUI_AUTO {
 			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.bottom, _b, flexpanel_unit.point);
+			if !self.is_initialized {
+				self.b = _b;
+			}
+			self.auto_y = false;
 			_update_flex = true;
 		}
 		if _update_flex {
@@ -759,7 +779,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Set offset region for render content
 	///@arg {struct, array} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
 	///@deprecated
-	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
+	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) { //???// в целом еще может пригодится
 		if is_struct(_region) {
 			render_region_offset = _region;
 		} else if is_array(_region) {
@@ -841,8 +861,8 @@ function LuiBase(_params = {}) constructor {
 	///@desc Init element variables
 	///@ignore
 	static _initElement = function() {
-		self.auto_x = self.x == LUI_AUTO;
-		self.auto_y = self.y == LUI_AUTO;
+		self.auto_x = self.x == LUI_AUTO && self.r == LUI_AUTO;
+		self.auto_y = self.y == LUI_AUTO && self.b == LUI_AUTO;
 		self.auto_width = self.width == LUI_AUTO;
 		self.auto_height = self.height == LUI_AUTO;
 		self._initFlexNode();
@@ -854,12 +874,22 @@ function LuiBase(_params = {}) constructor {
 	static _initFlexNode = function() {
 		// Position X
 		if !self.auto_x {
-			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.x, flexpanel_unit.point);
+			if self.x != LUI_AUTO {
+				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.x, flexpanel_unit.point);
+			}
+			if self.r != LUI_AUTO {
+				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.right, self.r, flexpanel_unit.point);
+			}
 		}
 		
 		// Position Y
 		if !self.auto_y {
-			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.y, flexpanel_unit.point);
+			if self.y != LUI_AUTO {
+				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.y, flexpanel_unit.point);
+			}
+			if self.b != LUI_AUTO {
+				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.bottom, self.b, flexpanel_unit.point);
+			}
 		}
 		
 		// Width
