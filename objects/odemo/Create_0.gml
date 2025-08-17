@@ -19,6 +19,7 @@ demo_surface = -1;
 demo_style_light = new LuiStyle()
 	.setMinSize(32, 32)
 	.setPadding(16)
+	.setGap(16)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
@@ -37,6 +38,7 @@ demo_style_light = new LuiStyle()
 demo_style_dark = new LuiStyle()
 	.setMinSize(32, 32)
 	.setPadding(16)
+	.setGap(16)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
@@ -55,6 +57,7 @@ demo_style_dark = new LuiStyle()
 demo_style_modern = new LuiStyle()
 	.setMinSize(32, 32)
 	.setPadding(16)
+	.setGap(16)
 	.setSymbolPassword("*")
 	.setFonts(fModern, fModern, fDebug)
 	.setSprites(sUI_Square_21r, sUI_Square_6r)
@@ -431,7 +434,7 @@ my_panel_3.addContent([
 		spr_car_3 = new LuiImage({value: sHamburger, name: "sHamburger"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
 		spr_car_4 = new LuiImage({value: sHamburger, maintain_aspect: false, name: "sHamburger_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
 		tab_sprites.addContent([
-			new LuiRow({height: 500}).addContent([
+			new LuiRow().setFullSize().addContent([
 				spr_car_1, spr_car_2, spr_car_3, spr_car_4
 			])
 		]);

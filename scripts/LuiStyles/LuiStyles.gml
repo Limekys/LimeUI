@@ -62,10 +62,11 @@ function LuiStyle(_style = {}) constructor {
 	//Sounds
 	sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
-	min_width = _style[$ "min_width"] ?? 32;
-	min_height = _style[$ "min_height"] ?? 32;
-	padding = _style[$ "padding"] ?? 16;
-	gap = _style[$ "gap"] ?? 16;
+	min_width = _style[$ "min_width"] ?? 1;
+	min_height = _style[$ "min_height"] ?? 1;
+	margin = _style[$ "margin"] ?? 0;
+	padding = _style[$ "padding"] ?? 0;
+	gap = _style[$ "gap"] ?? 0;
 	border = _style[$ "border"] ?? 0;
 	scroll_step = _style[$ "scroll_step"] ?? 32;
 	scroll_slider_width = _style[$ "scroll_slider_width"] ?? 16;
@@ -347,6 +348,13 @@ function LuiStyle(_style = {}) constructor {
 	static setMinSize = function(_min_width = 32, _min_height = 32) {
 		self.min_width = _min_width;
 		self.min_height = _min_height;
+		return self;
+	}
+	
+	///@desc Set default margin for all elements (_margin)
+	///@arg {real} [_margin]
+	static setMargin = function(_margin) {
+		self.margin = _margin;
 		return self;
 	}
 	

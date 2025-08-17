@@ -77,8 +77,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			if !is_undefined(self.style.font_default) {
 				draw_set_font(self.style.font_default);
 			}
-			var _text_width = min(string_width(self.text), self.width - _draw_width - self.style.padding);
-			self._drawTruncatedText(self.x + _draw_width + self.style.padding, self.y + self.height div 2, self.text, _text_width);
+			var _text_width = min(string_width(self.text), self.width - _draw_width - self.style.gap);
+			self._drawTruncatedText(self.x + _draw_width + self.style.gap, self.y + self.height div 2, self.text, _text_width);
 		}
 	}
 	

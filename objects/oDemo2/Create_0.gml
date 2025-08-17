@@ -6,6 +6,7 @@ LIME_RESOLUTION.init();
 demo2_style = new LuiStyle()
 	.setMinSize(48, 48)
 	.setPadding(24)
+	.setGap(24)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fntDemo2, fntDemo2, fDebug)
 	.setSprites(sPanelDemo2, sBtnDemo2)

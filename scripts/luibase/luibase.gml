@@ -27,8 +27,8 @@ function LuiBase(_params = {}) constructor {
 	self.height = LUI_AUTO;								//Actual real calculated height of element
 	self.prev_w = -1;									//Previous width
 	self.prev_h = -1;									//Previous height
-	self.min_width = 32;
-	self.min_height = 32;
+	self.min_width = 1;
+	self.min_height = 1;
 	self.max_width = 3200;
 	self.max_height = 3200;
 	self.auto_x = false;
@@ -526,6 +526,17 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
+	///@desc Set flexpanel margin
+	///@arg {real} _margin
+	static setMargin = function(_margin) {
+		self.style_overrides.margin = _margin;
+		if (!is_undefined(self.main_ui)) {
+	        self._applyStyles();
+	        self.updateMainUiFlex();
+	    }
+		return self;
+	}
+	
 	///@desc Set flexpanel padding
 	///@arg {real} _padding
 	static setPadding = function(_padding) {
@@ -922,9 +933,10 @@ function LuiBase(_params = {}) constructor {
 		_drawDebugText(_x, _y, 
 			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
+			"class: " + instanceof(self) + "\n" +
 			"x: " + string(self.x) + (self.auto_x ? " (auto)" : "") + " y: " + string(self.y) + (self.auto_y ? " (auto)" : "") + "\n" +
 			"w: " + string(self.width) + (self.auto_width ? " (auto)" : "") + " h: " + string(self.height) + (self.auto_height ? " (auto)" : "") + "\n" +
-			"minw: " + string(self.min_width) + " minh: " + string(self.min_height) + "maxw: " + string(self.max_width) + " maxh: " + string(self.max_height) + "\n" +
+			"min_w: " + string(self.min_width) + " min_h: " + string(self.min_height) + " max_w: " + string(self.max_width) + " max_h: " + string(self.max_height) + "\n" +
 			"v: " + string(self.value) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
@@ -1187,6 +1199,7 @@ function LuiBase(_params = {}) constructor {
 	    var _container_node = self.getContainer().flex_node;
 		
 	    // Base style
+	    flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, self.style.margin);
 	    flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, self.style.padding);
 	    flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, self.style.gap);
 	    flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, self.style.border);
@@ -1201,7 +1214,11 @@ function LuiBase(_params = {}) constructor {
 	        var _value = self.style_overrides[$ _key];
 			
 	        switch (_key) {
-	            case "padding":
+	            case "margin":
+	                flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, _value);
+	                break;
+				
+				case "padding":
 	                flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, _value);
 	                break;
 	            
@@ -1418,8 +1435,18 @@ function LuiBase(_params = {}) constructor {
 	        _element.style = self.style;
 	        
 			// Flex setting up
-	        flexpanel_node_style_set_min_width(_element.flex_node, _element.style.min_width, flexpanel_unit.point);
-	        flexpanel_node_style_set_min_height(_element.flex_node, _element.style.min_height, flexpanel_unit.point);
+	        if _element.auto_width {
+				_element.min_width = _element.style.min_width;
+			} else {
+				_element.min_width = min(_element.width, _element.style.min_width);
+			}
+			if _element.auto_height {
+				_element.min_height = _element.style.min_height;
+			} else {
+				_element.min_height = min(_element.height, _element.style.min_height);
+			}
+			flexpanel_node_style_set_min_width(_element.flex_node, _element.min_width, flexpanel_unit.point);
+			flexpanel_node_style_set_min_height(_element.flex_node, _element.min_height, flexpanel_unit.point);
 	        if array_length(_ranges) > 0 && i+1 <= array_length(_ranges) {
 				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
 				flexpanel_node_style_set_flex_shrink(_element.flex_node, _ranges[i]);
