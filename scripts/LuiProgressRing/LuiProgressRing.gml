@@ -70,19 +70,19 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._calcSpritePos(_element.style.sprite_progress_ring);
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._calcSpritePos(_e.style.sprite_progress_ring);
 	});
 	
-	self.addEvent(LUI_EV_POSITION_UPDATE, function(_element) {
-		_element._calcSpritePos(_element.style.sprite_progress_ring);
+	self.addEvent(LUI_EV_POSITION_UPDATE, function(_e) {
+		_e._calcSpritePos(_e.style.sprite_progress_ring);
 	});
 	
-	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
-		_element._calcSpritePos(_element.style.sprite_progress_ring);
+	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
+		_e._calcSpritePos(_e.style.sprite_progress_ring);
 	});
 	
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		delete _element.sprite_pos;
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		delete _e.sprite_pos;
 	});
 }

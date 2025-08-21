@@ -81,7 +81,7 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create Tabs with absolute position on the screen
-tabs = new LuiTabs({width: 550, height: 350, name: "LuiTabs", tab_height: 32}).setPositionAbsolute();
+tabs = new LuiTabs({width: 550, min_width: 336, min_height: 350, name: "LuiTabs", tab_height: 32, allow_resize: true}).setPositionAbsolute();
 
 // Add panels to main ui container
 my_ui.addContent([
@@ -476,19 +476,23 @@ my_ui.addContent([
 ]);
 
 // Stress test
-/*
+
+makeRandomColor = function() {
+	return make_color_hsv(irandom(255), irandom_range(128,255), 255);
+}
+
 numb = 0;
 _random_element = function(_number) {
 	var _rnd = irandom(7);
 	switch (_rnd) {
-		case 0:	return new LuiButton(, , , irandom_range(32, 128), , "button_" + string(_number)).setColor(make_color_hsv(irandom(255), irandom_range(128,255), 128));
-		case 1:	return new LuiImageButton(, , , irandom_range(32, 128), , sLogoDemo, 0, make_color_hsv(irandom(255), irandom_range(128,255), 255), 1, choose(true, false)).addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)});;
-		case 2:	return new LuiSlider(, , , irandom_range(32, 128), , 0, _number, irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
-		case 3:	return new LuiInput(, , , irandom_range(32, 128), , , "input_" + string(_number));
-		case 4:	return new LuiProgressRing(, , , irandom_range(32, 128), , 0, _number, choose(true, false), irandom(_number), choose(25,10,5,2,1,0.5,0.1,0.01));
-		case 5:	return new LuiCheckbox(, , , irandom_range(32, 128), , choose(true, false), choose("checkbox_" + string(_number), ""));
-		case 6:	return new LuiToggleSwitch(, , , irandom_range(32, 128), , choose(true, false), choose("switch_" + string(_number), ""));
-		case 7:	return new LuiToggleButton(, , , irandom_range(32, 128), , choose(true, false), "toggleButton_" + string(_number));
+		case 0:	return new LuiButton({height: irandom_range(32, 128), text: "button_" + string(_number)}).setColor(makeRandomColor());
+		case 1:	return new LuiImageButton({height: irandom_range(32, 128), value: sLogoDemo, color: makeRandomColor(), alpha: choose(0.5, 1), maintain_spect: choose(true, false)}).addEvent(LUI_EV_CLICK, function(_element) {oDemo.changeImageButtonColor(_element)});;
+		case 2:	return new LuiSlider({height: irandom_range(32, 128), max_value: _number, value: random(_number), rounding: choose(25,10,5,2,1,0.5,0.1,0.01)});
+		case 3:	return new LuiInput({height: irandom_range(32, 128), placeholder: choose("", "input_" + string(_number))}).setIncorrect(choose(true, false));
+		case 4:	return new LuiProgressRing({height: irandom_range(32, 128), max_value: _number, value: random(_number), rounding: choose(25,10,5,2,1,0.5,0.1,0.01), display_value: choose(true, false), color: makeRandomColor()});
+		case 5:	return new LuiCheckbox({height: irandom_range(32, 128), value: choose(true, false), text: choose("checkbox_" + string(_number), "")});
+		case 6:	return new LuiToggleSwitch({height: irandom_range(32, 128), value: choose(true, false), text: choose("switch_" + string(_number), "")});
+		case 7:	return new LuiToggleButton({height: irandom_range(32, 128), value: choose(true, false), text: "toggleButton_" + string(_number)});
 	}
 }
 repeat (250) {

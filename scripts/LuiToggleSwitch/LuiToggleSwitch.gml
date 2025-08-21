@@ -8,8 +8,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
 	
-	self.slider_size = 32;
-	self.slider_xoffset = 0;
+	self.knob_size = 32;
+	self.knob_xoffset = 0;
 	self.slider_color_value = 0;
 	
 	///@desc Set display text (render right of element)
@@ -21,19 +21,19 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	
 	///@ignore
 	static _updateSlider = function() {
-		self.slider_size = min(self.width, self.height);
+		self.knob_size = min(self.width, self.height);
 		if self.value == false {
 			self.slider_color_value = 0;
-			self.slider_xoffset = 0;
+			self.knob_xoffset = 0;
 		} else {
 			self.slider_color_value = 1;
 			var _draw_width = min(self.width, self.height) * 2;
-			self.slider_xoffset = _draw_width - self.slider_size;
+			self.knob_xoffset = _draw_width - self.knob_size;
 		}
 	}
 	
 	self.draw = function() {
-		self.slider_size = min(self.width, self.height);
+		self.knob_size = min(self.width, self.height);
 		var _draw_width = min(self.width, self.height) * 2;
 		var _draw_height = min(self.width, self.height);
 		// Base
@@ -44,7 +44,7 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			}
 			draw_sprite_stretched_ext(self.style.sprite_toggleswitch, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
-		// Slider
+		// Knob
 		if !is_undefined(self.style.sprite_toggleswitch_slider) {
 			var _blend_color = self.style.color_primary;
 			if !self.deactivated {
@@ -54,11 +54,11 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, self.x + self.slider_xoffset, self.y, self.slider_size, self.slider_size, _blend_color, 1);
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider, 0, self.x + self.knob_xoffset, self.y, self.knob_size, self.knob_size, _blend_color, 1);
 		}
-		// Slider border
+		// Knob border
 		if !is_undefined(self.style.sprite_toggleswitch_slider_border) {
-			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider_border, 0, self.x + self.slider_xoffset, self.y, self.slider_size, self.slider_size, self.style.color_border, 1);
+			draw_sprite_stretched_ext(self.style.sprite_toggleswitch_slider_border, 0, self.x + self.knob_xoffset, self.y, self.knob_size, self.knob_size, self.style.color_border, 1);
 		}
 		// Border
 		if !is_undefined(self.style.sprite_toggleswitch_border) {
@@ -82,27 +82,27 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._updateSlider();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._updateSlider();
 	});
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.set(!_element.get());
-		if _element.style.sound_click != undefined audio_play_sound(_element.style.sound_click, 1, false);
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		_e.set(!_e.get());
+		if _e.style.sound_click != undefined audio_play_sound(_e.style.sound_click, 1, false);
 	});
 	
-	self.addEvent(LUI_EV_POSITION_UPDATE, function(_element) {
-		_element._updateSlider();
+	self.addEvent(LUI_EV_POSITION_UPDATE, function(_e) {
+		_e._updateSlider();
 	});
 	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
 		var _anim_time = 0.2;
 		// Slider animation
-		var _draw_width = min(_element.width, _element.height) * 2;
-		var _target_slider_xoffset = _element.value == false ? 0 : _draw_width - _element.slider_size;
-		_element.main_ui.animate(_element, "slider_xoffset", _target_slider_xoffset, _anim_time);
+		var _draw_width = min(_e.width, _e.height) * 2;
+		var _target_knob_xoffset = _e.value == false ? 0 : _draw_width - _e.knob_size;
+		_e.main_ui.animate(_e, "knob_xoffset", _target_knob_xoffset, _anim_time);
 		// Slider back color animation
-		var _target_color_value = _element.value == true ? 1 : 0;
-		_element.main_ui.animate(_element, "slider_color_value", _target_color_value, _anim_time);
+		var _target_color_value = _e.value == true ? 1 : 0;
+		_e.main_ui.animate(_e, "slider_color_value", _target_color_value, _anim_time);
 	});
 }

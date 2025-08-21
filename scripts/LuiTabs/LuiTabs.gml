@@ -3,7 +3,7 @@
 /// tab_height
 /// tab_indent
 ///@arg {Struct} [_params] Struct with parameters
-function LuiTabs(_params = {}) : LuiBase(_params) constructor {
+function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	
 	self.tab_height = _params[$ "tab_height"] ?? 32;
 	self.tab_indent = _params[$ "tab_indent"] ?? 0;
