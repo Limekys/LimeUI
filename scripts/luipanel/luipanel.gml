@@ -26,7 +26,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _initResizer = function() {
 		if is_undefined(self.resizer) && self.allow_resize {
-			self.resizer = new LuiBox({r: 0, b: 0, w: 8, h: 8, color: c_red}).setPositionAbsolute(); //???//
+			self.resizer = new LuiBox({r: 0, b: 0, w: 8, h: 8, color: c_red, alpha: 0}).setPositionAbsolute(); //???//
 			self.resizer.can_drag = true;
 			self.resizer.setData("panel", self);
 			self.resizer.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
