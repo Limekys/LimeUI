@@ -74,7 +74,7 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		draw_text(_text_x, _text_y, self.value);
 		
 		// Slider knob
-		var _knob_x = clamp(self.x + self.width * self.bar_value - self.knob_width div 2, self.x, self.x + self.width - self.knob_width);
+		var _knob_x = clamp(floor(self.x + self.width * self.bar_value - self.knob_width / 2), self.x, self.x + self.width - self.knob_width);
 		var _spr_x1 = _knob_x - self.knob_extender;
 		var _spr_y1 = self.y - self.knob_extender;
 		var _spr_w = self.knob_width + self.knob_extender*2;
