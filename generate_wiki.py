@@ -9,10 +9,25 @@ WIKI_DIR = "wiki"    # Output directory for Markdown files
 if not os.path.exists(WIKI_DIR):
     os.makedirs(WIKI_DIR)
 
+# Files to ignore
+ignored_files = {'luiadditional', 'luievents', 'luimessage', 'luisettings', 'luistyles', 'luitween'}
+# Files to generate in separate Markdown files
+separated_files = {'luibase'}
+
 def parse_gml_file(file_path):
     """Parse a GML file and extract JSDoc comments for functions and class parameters."""
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
+    
+    # Extract class name from function definition
+    class_name = None
+    class_match = re.search(r'function\s+(\w+)(?:\s*:\s*\w+)?\s*\(', content, re.MULTILINE)
+    if class_match:
+        class_name = class_match.group(1)
+        print(f"Found class name: {class_name}")
+    else:
+        print(f"Warning: No class name found in {file_path}")
+        class_name = os.path.splitext(os.path.basename(file_path))[0]
     
     # Extract function definitions with JSDoc and class parameters
     functions = []
@@ -30,11 +45,10 @@ def parse_gml_file(file_path):
     while i < len(lines):
         line = lines[i].strip()
         if line.startswith('function') and 'constructor' in line:
-            before_constructor = False  # Stop collecting class description and parameters
+            before_constructor = False
             i += 1
             continue
         if line.startswith('static') and 'function' in line:
-            # Process method
             func_name = re.search(r'static\s+(\w+)\s*=', line)
             if func_name and not ignore_next and not func_name.group(1).startswith('_'):
                 current_func = {
@@ -52,14 +66,13 @@ def parse_gml_file(file_path):
             i += 1
             continue
         if line.startswith('///@desc') and before_constructor:
-            # Handle multi-line @desc for class and parameters
             desc_lines = [line.replace('///@desc', '').strip()]
-            print(f"Raw desc line: {desc_lines[0]}")  # Debug raw line
+            print(f"Raw desc line: {desc_lines[0]}")
             j = i + 1
             while j < len(lines) and lines[j].strip().startswith('///') and not lines[j].strip().startswith('///@'):
                 desc_line = lines[j].replace('///', '').strip()
                 desc_lines.append(desc_line)
-                print(f"Raw desc line: {desc_line}")  # Debug additional lines
+                print(f"Raw desc line: {desc_line}")
                 j += 1
             full_desc = '\n'.join([line for line in desc_lines if line]).strip()
             print(f"Found description block: {full_desc}")
@@ -78,7 +91,6 @@ def parse_gml_file(file_path):
             i = j
             continue
         elif line.startswith('///@desc'):
-            # Handle method description
             desc_lines = [line.replace('///@desc', '').strip()]
             j = i + 1
             while j < len(lines) and lines[j].strip().startswith('///') and not lines[j].strip().startswith('///@'):
@@ -103,7 +115,7 @@ def parse_gml_file(file_path):
     print(f"Parsed file: {file_path}")
     print(f"Parameters found: {parameters}")
     print(f"Methods found: {[f['name'] for f in functions]}")
-    return functions, class_desc, parameters
+    return functions, class_desc, parameters, class_name
 
 def generate_markdown(functions, output_file, class_name, class_desc, parameters):
     """Generate Markdown content for Wiki."""
@@ -134,39 +146,41 @@ def generate_markdown(functions, output_file, class_name, class_desc, parameters
                 f.write("\n")
 
 # Process all GML files in scripts folder and its subfolders
-ignored_files = {'LuiAdditional', 'LuiEvents', 'LuiMessage', 'LuiSettings', 'LuiStyles', 'Luitween'}
 all_classes = {}
 for root, dirs, files in os.walk(GML_DIR):
     print(f"Scanning folder: {root}")
     for filename in files:
-        if filename.endswith('.gml') and filename.startswith('Lui'):
-            class_name = filename.replace('.gml', '')
-            if class_name in ignored_files:
+        if filename.endswith('.gml') and filename.lower().startswith('lui'):
+            class_name_lower = filename.lower().replace('.gml', '')
+            if class_name_lower in ignored_files:
                 print(f"Skipped GML file (ignored): {filename}")
                 continue
             print(f"Found GML file: {filename}")
             file_path = os.path.join(root, filename)
-            functions, class_desc, parameters = parse_gml_file(file_path)
+            functions, class_desc, parameters, class_name = parse_gml_file(file_path)
             all_classes[class_name] = {
                 'functions': functions,
                 'desc': class_desc,
-                'parameters': parameters
+                'parameters': parameters,
+                'filename': filename
             }
         elif filename.endswith('.gml'):
             print(f"Skipped GML file (no Lui prefix): {filename}")
 
-# Generate LuiBase.md separately
-if 'LuiBase' in all_classes:
-    output_file = os.path.join(WIKI_DIR, "LuiBase.md")
-    print(f"Generating Markdown: {output_file}")
-    generate_markdown(
-        all_classes['LuiBase']['functions'],
-        output_file,
-        'LuiBase',
-        all_classes['LuiBase']['desc'],
-        all_classes['LuiBase']['parameters']
-    )
-    del all_classes['LuiBase']  # Remove LuiBase from all_classes to exclude it from Components.md
+# Generate separate Markdown files for classes in separated_files
+for class_name, data in list(all_classes.items()):
+    filename_lower = data['filename'].lower().replace('.gml', '')
+    if filename_lower in separated_files:
+        output_file = os.path.join(WIKI_DIR, f"{class_name}.md")
+        print(f"Generating Markdown: {output_file}")
+        generate_markdown(
+            data['functions'],
+            output_file,
+            class_name,
+            data['desc'],
+            data['parameters']
+        )
+        del all_classes[class_name]  # Remove from all_classes to exclude from Components.md
 
 # Generate Components.md for all other Lui* classes
 output_file = os.path.join(WIKI_DIR, "Components.md")

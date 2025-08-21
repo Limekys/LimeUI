@@ -32,14 +32,14 @@ color
 Set button text
 
 **Parameters:**  
-- `{string} _button_text`  
+- `{string} _text`  
 
 
 ### `setColor`
 Set custom button color
 
 **Parameters:**  
-- `{any} _button_color`  
+- `{any} _color`  
 
 
 ### `setIcon`
@@ -284,7 +284,15 @@ Get element by name
 
 A visually visible container for placing elements in it.  
 **Available parameters:**  
-allow_rescaling  
+allow_resize  
+
+## Methods
+### `setAllowResize`
+Set allow to resize panel or not
+
+**Parameters:**  
+- `{bool} _allow`  
+
 
 # LuiProgressBar
 
@@ -296,6 +304,7 @@ max_value
 rounding  
 display_value  
 bar_height  
+color - custom bar accent color  
 
 ## Methods
 ### `setMinValue`
@@ -333,6 +342,13 @@ Sets bar height
 - `{real} _height`  
 
 
+### `setColor`
+Set custom bar color
+
+**Parameters:**  
+- `{any} _color`  
+
+
 # LuiProgressRing
 
 A progress ring for display loading/filling anything  
@@ -343,6 +359,7 @@ max_value
 rounding  
 display_value  
 bar_height  
+color - custom bar accent color  
 
 # LuiScrollPanel
 
@@ -363,6 +380,7 @@ rounding
 display_value  
 bar_height  
 knob_extender  
+color - custom bar accent color  
 
 # LuiSurface
 
@@ -521,14 +539,6 @@ Set display text (render right of element)
 
 **Parameters:**  
 - `{string} _text`  
-
-
-# LuiTween
-
-A Tween object that handles animating a single property of an element.  
-## Methods
-### `update`
-Updates the animation state. Returns true if still running.
 
 
 # LuiWindow

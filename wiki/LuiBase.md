@@ -4,8 +4,12 @@ The basic constructor of all elements, which contains all the basic functions an
 **Available parameters:**  
 x - x position for element (left position of flex node)  
 y - y position for element (top position of flex node)  
+r - right position for element (right position of flex node)  
+b - bottom position for element (bottom position of flex node)  
 width or w - width of element  
 height or h - height of element  
+min_width - minimum width of element  
+min_height - minimum height of element  
 name - unique name_id for element  
 
 ## Methods
@@ -172,6 +176,13 @@ Set flexpanel(element) min/max sizes
 - `{real} [_max_height]`  
 
 
+### `setMargin`
+Set flexpanel margin
+
+**Parameters:**  
+- `{real} _margin`  
+
+
 ### `setPadding`
 Set flexpanel padding
 
@@ -305,6 +316,10 @@ Set offset region for render content
 
 ### `setMouseIgnore`
 Enables/Disables mouse ignore mode
+
+
+### `setMouseIgnoreAll`
+Enables/Disables mouse ignore mode for this and all nested elements
 
 
 ### `setDepth`
