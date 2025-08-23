@@ -37,6 +37,14 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 				var _new_height = max(_new_y - _panel.y, _panel.min_height);
 				_panel.setSize(_new_width, _new_height);
 			});
+			if LUI_ALLOW_CHANGE_CURSOR {
+				self.resizer.addEvent(LUI_EV_MOUSE_ENTER, function() {
+					window_set_cursor(cr_size_nwse);
+				});
+				self.resizer.addEvent(LUI_EV_MOUSE_LEAVE, function() {
+					window_set_cursor(cr_default);
+				});
+			}
 			self.addContent(self.resizer);
 		}
 	}

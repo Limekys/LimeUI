@@ -284,6 +284,15 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         }
     });
     
+	if LUI_ALLOW_CHANGE_CURSOR {
+		self.addEvent(LUI_EV_MOUSE_ENTER, function() {
+			window_set_cursor(cr_beam);
+		});
+		self.addEvent(LUI_EV_MOUSE_LEAVE, function() {
+			window_set_cursor(cr_default);
+		});
+	}
+	
     self.addEvent(LUI_EV_DESTROY, function(_e) {
         if time_source_exists(_e.cursor_timer) {
             time_source_destroy(_e.cursor_timer);
