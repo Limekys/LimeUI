@@ -64,7 +64,7 @@ The following components are planned for future releases:
 Have ideas or suggestions? Go to my [Discord server](https://discord.gg/zaSvSDjPpG)!
 
 # Compatibility:
-Game Maker runtime version 2024.13.1 or higher
+Game Maker runtime version 2024.13.1 or higher  
 Previous versions have not been tested.
 
 # GIF Preview
