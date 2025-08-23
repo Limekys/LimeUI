@@ -106,7 +106,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		// Calculate colors
-		var _blend_color = !is_undefined(self.button_color) ? self.button_color : self.style.color_secondary;
+		var _blend_color = self.button_color ?? self.style.color_secondary;
 		var _blend_text = self.style.color_text;
 		if self.deactivated {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
