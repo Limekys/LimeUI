@@ -124,8 +124,8 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 	
 	static _initControlButtons = function() {
 		var _button_size = 32; //???//
-		var _close_button = new LuiButton().setSize(_button_size, _button_size).setText("X").setColor(self.style.color_semantic_error);
-		var _minimize_button = new LuiButton().setSize(_button_size, _button_size).setText("-");
+		var _close_button = new LuiButton({width: _button_size, height: _button_size, text: "X", color: self.style.color_semantic_error});
+		var _minimize_button = new LuiButton({width: _button_size, height: _button_size, text: "-"});
 		_close_button.addEvent(LUI_EV_CLICK, function(_e) {
 			_e.parent.parent_window.closeWindow();
 		});
