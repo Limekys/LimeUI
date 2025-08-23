@@ -81,14 +81,16 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create Tabs with absolute position on the screen
-tabs = new LuiTabs({width: 550, min_width: 336, min_height: 350, name: "LuiTabs", tab_height: 32, allow_resize: true}).setPositionAbsolute();
+tabs = new LuiTabs({name: "LuiTabs", tab_height: 32});
 
 // Add panels to main ui container
 my_ui.addContent([
-	new LuiRow().addContent([
+	new LuiRow({height: 512}).addContent([
 		my_panel, my_panel_2, my_panel_3, [0.4, 0.4, 0.2] // Add panels with a width ratio of 40% 40% and 20%
 	]),
-	tabs //Adding tab group below these panels (it doesn't matter if we add it before or after, it has an absolute position)
+	new LuiRow().setFlexGrow(1).addContent([
+		tabs
+	])
 ]);
 
 // Create tab's
@@ -99,17 +101,6 @@ tab_about = new LuiTab({text: "About"});
 
 // Add tab's to Tabs
 tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
-
-// Adjust Tabs position on the screen
-tabs_min_x = 0;
-tabs_max_x = room_width - tabs.width;
-tabs_min_y = 540;
-tabs_max_y = room_height - tabs.height;
-tabs_target_x = 470;
-tabs_target_y = 540;
-tabs_anim_x = tabs_target_x;
-tabs_anim_y = tabs_target_y;
-tabs.setPosition(tabs_target_x, tabs_target_y);
 
 // Create some elements
 demo_loading = new LuiProgressBar({value: demo_loading_value, rounding: 1}).bindVariable(self, "demo_loading_value");
@@ -143,10 +134,13 @@ createNewLoginWindow = function () {
 my_panel.addContent([
 	new LuiText({value: "First panel", scale_to_fit: true}).setTextHalign(fa_center),
 	new LuiRow().addContent([
-		new LuiText({value: "Slider"}), new LuiSlider({name: "sliderX", value: 0, min_value: tabs_min_x, max_value: tabs_max_x, rounding: 1}).bindVariable(self, "tabs_target_x"), [0.3, 0.7]
+		new LuiText({value: "ProgressBar"}), demo_loading, [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText({value: "ProgressBar"}), demo_loading, [0.3, 0.7]
+		new LuiText({value: "Slider"}), new LuiSlider(), [0.3, 0.7]
+	]),
+	new LuiRow().addContent([
+		new LuiText({value: "Slider with rounding 10"}), new LuiSlider({name: "SliderRounding", value: 20, rounding: 10, bar_height: 16}), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
 		new LuiText({value: "Login: "}), new LuiInput({placeholder: "admin", max_length: 32}).bindVariable(self, "demo_login"), [0.3, 0.7]
@@ -155,14 +149,11 @@ my_panel.addContent([
 		new LuiText({value: "Password: "}), new LuiInput({placeholder: "password", max_length: 32, is_masked: true, input_mode: LUI_INPUT_MODE.password}).bindVariable(self, "demo_password"), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText({value: "Slider with rounding 10"}), new LuiSlider({name: "SliderRounding", value: 20, rounding: 10, bar_height: 16}), [0.3, 0.7]
+		new LuiCheckbox({text: "Checkbox"}), new LuiToggleSwitch({text: "ToggleSwitch"}).bindVariable(self, "demo_loading_state"), new LuiToggleButton({text: "ToggleButton"})
 	]),
 	new LuiButton({text: "Create login window"}).addEvent(LUI_EV_CLICK, function () {
 		oDemo.createNewLoginWindow();
 	}),
-	new LuiRow().addContent([
-		new LuiCheckbox({text: "Checkbox"}), new LuiToggleSwitch({text: "ToggleSwitch"}).bindVariable(self, "demo_loading_state"), new LuiToggleButton({text: "ToggleButton"})
-	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg, btn_restart
 	])
@@ -434,7 +425,7 @@ my_panel_3.addContent([
 		spr_car_3 = new LuiImage({value: sHamburger, name: "sHamburger"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
 		spr_car_4 = new LuiImage({value: sHamburger, maintain_aspect: false, name: "sHamburger_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
 		tab_sprites.addContent([
-			new LuiRow().setFullSize().addContent([
+			new LuiRow().setFlexGrow(1).addContent([
 				spr_car_1, spr_car_2, spr_car_3, spr_car_4
 			])
 		]);
@@ -470,13 +461,15 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiButton({text: "Next demo -->", width: 256, r: 16, b: 16}).setPositionAbsolute().addEvent(LUI_EV_CLICK, function() {
-		room_goto(rDemo2);
-	})
+	new LuiRow().setFlexAlignItems(flexpanel_align.flex_end).setFlexJustifyContent(flexpanel_justify.flex_end).addContent([
+		new LuiButton({text: "Next demo -->", width: 256}).addEvent(LUI_EV_CLICK, function() {
+			room_goto(rDemo2);
+		})
+	])
 ]);
 
 // Stress test
-
+/*
 makeRandomColor = function() {
 	return make_color_hsv(irandom(255), irandom_range(128,255), 255);
 }
