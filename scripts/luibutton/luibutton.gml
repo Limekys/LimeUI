@@ -140,39 +140,39 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		if sprite_exists(_element.icon.sprite) {
-			_element._calcIconSize();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		if sprite_exists(_e.icon.sprite) {
+			_e._calcIconSize();
 		}
 	});
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		if !is_undefined(_element.style.sound_click) {
-			audio_play_sound(_element.style.sound_click, 1, false);
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		if !is_undefined(_e.style.sound_click) {
+			audio_play_sound(_e.style.sound_click, 1, false);
 		}
 	});
 	
-	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
-		if sprite_exists(_element.icon.sprite) {
-			_element._calcIconSize();
+	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
+		if sprite_exists(_e.icon.sprite) {
+			_e._calcIconSize();
 		}
 	});
 	
 	/* //???// Button animation test
-	self.addEvent(LUI_EV_MOUSE_ENTER, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
 		var _anim_time = 0.2;
 		// 
-		_element.main_ui.animate(_element, "width_offset", 4, _anim_time);
+		_e.main_ui.animate(_e, "width_offset", 4, _anim_time);
 		// 
-		_element.main_ui.animate(_element, "height_offset", 4, _anim_time);
+		_e.main_ui.animate(_e, "height_offset", 4, _anim_time);
 	});
 	
-	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_element) {
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
 		var _anim_time = 0.2;
 		// 
-		_element.main_ui.animate(_element, "width_offset", 0, _anim_time);
+		_e.main_ui.animate(_e, "width_offset", 0, _anim_time);
 		// 
-		_element.main_ui.animate(_element, "height_offset", 0, _anim_time);
+		_e.main_ui.animate(_e, "height_offset", 0, _anim_time);
 	});
 	*/
 }

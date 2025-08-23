@@ -115,18 +115,18 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._initScrollContainer();
-		_element.addContentOriginal(_element.scroll_container);
-		if _element.auto_height {
-			flexpanel_node_style_set_flex(_element.flex_node, 1); //???//
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._initScrollContainer();
+		_e.addContentOriginal(_e.scroll_container);
+		if _e.auto_height {
+			flexpanel_node_style_set_flex(_e.flex_node, 1); //???//
 		}
-		flexpanel_node_style_set_border(_element.flex_node, flexpanel_edge.right, _element.style.scroll_slider_width + _element.scroll_pin_edge_offset); //???//
+		flexpanel_node_style_set_border(_e.flex_node, flexpanel_edge.right, _e.style.scroll_slider_width + _e.scroll_pin_edge_offset); //???//
 	});
 	
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		if !is_undefined(_element.scroll_container) {
-			_element.scroll_container.destroy();
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if !is_undefined(_e.scroll_container) {
+			_e.scroll_container.destroy();
 		}
 	});
 }

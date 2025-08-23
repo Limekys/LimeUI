@@ -120,33 +120,33 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
+	self.addEvent(LUI_EV_CREATE, function(_e) {
 		// Setting up padding for tabs
-		_element.setPadding(0).setGap(_element.tab_indent);
+		_e.setPadding(0).setGap(_e.tab_indent);
 		// Init header container for tabs
-		_element._initHeader();
+		_e._initHeader();
 		// Add header
-		_element.addContent(_element.tabs_header);
+		_e.addContent(_e.tabs_header);
 		// Init tab's
-		_element._initTabs();
+		_e._initTabs();
 	});
 	
-	self.addEvent(LUI_EV_SHOW, function(_element) {
+	self.addEvent(LUI_EV_SHOW, function(_e) {
 		//Turn of visible of deactivated tab_container's
-		var _tab_count = array_length(_element.tabs);
+		var _tab_count = array_length(_e.tabs);
 		for (var i = 0; i < _tab_count; ++i) {
-			var _tab = _element.tabs[i];
+			var _tab = _e.tabs[i];
 			if !_tab.is_active {
 				_tab.tab_container.setVisible(false);
 			}
 		}
 	});
 	
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		if !is_undefined(_element.tabs_header) {
-			_element.tabs_header.destroy();
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if !is_undefined(_e.tabs_header) {
+			_e.tabs_header.destroy();
 		}
-		_element.tabs = -1;
+		_e.tabs = -1;
 	});
 }
 
@@ -238,19 +238,19 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._initContainer();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._initContainer();
 	});
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		if !_element.is_active {
-			_element.tabs_parent.switchTab(_element);
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		if !_e.is_active {
+			_e.tabs_parent.switchTab(_e);
 		}
 	});
 	
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		if !is_undefined(_element.tab_container) {
-			_element.tab_container.destroy();
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if !is_undefined(_e.tab_container) {
+			_e.tab_container.destroy();
 		}
 	});
 }

@@ -41,7 +41,7 @@ function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.set(!_element.get());
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		_e.set(!_e.get());
 	});
 }

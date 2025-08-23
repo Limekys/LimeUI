@@ -43,8 +43,8 @@ function LuiMain() : LuiBase() constructor {
 	self._recalculateScreenGrid();
 	
 	// Recalculate grid size on size change
-	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
-		_element._recalculateScreenGrid();
+	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
+		_e._recalculateScreenGrid();
 	});
 	
 	// Init easing functions
@@ -459,17 +459,17 @@ function LuiMain() : LuiBase() constructor {
 	};
 	
 	// Cleanup
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		if surface_exists(_element.ui_screen_surface) {
-			surface_free(_element.ui_screen_surface);
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if surface_exists(_e.ui_screen_surface) {
+			surface_free(_e.ui_screen_surface);
 		}
-		_element.pre_draw_list = -1;
-		_element.element_in_focus = undefined;
-		_element.dragging_element = undefined;
-		_element.active_animations = -1;
-		delete _element._screen_grid;
-		delete _element.element_names;
-		global.lui_element_count = 0;
+		_e.pre_draw_list = -1;
+		_e.element_in_focus = undefined;
+		_e.dragging_e = undefined;
+		_e.active_animations = -1;
+		delete _e._screen_grid;
+		delete _e.element_names;
+		global.lui_e_count = 0;
 		global.lui_max_z = 0;
 	});
 }

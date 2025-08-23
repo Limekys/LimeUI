@@ -8,8 +8,8 @@ function LuiContainer(_params = {}) : LuiBase(_params) constructor {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiRow(_params = {}) : LuiContainer(_params) constructor {
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
 	});
 }
 
@@ -17,8 +17,8 @@ function LuiRow(_params = {}) : LuiContainer(_params) constructor {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiColumn(_params = {}) : LuiContainer(_params) constructor {
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
 	});
 }
 
@@ -26,7 +26,7 @@ function LuiColumn(_params = {}) : LuiContainer(_params) constructor {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiAbsoluteContainer(_params = {}) : LuiContainer(_params) constructor {
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.setPositionAbsolute();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e.setPositionAbsolute();
 	});
 }

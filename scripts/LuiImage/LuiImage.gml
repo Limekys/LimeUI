@@ -89,11 +89,11 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._calcSpriteSize();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._calcSpriteSize();
 	});
 	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
-		_element._calcSpriteSize();
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
+		_e._calcSpriteSize();
 	});
 }

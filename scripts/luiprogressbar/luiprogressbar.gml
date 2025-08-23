@@ -115,12 +115,12 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element.value = _calculateValue(_element.value);
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e.value = _calculateValue(_e.value);
 	});
 	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
-		var _target_bar_value = Range(_element.value, _element.min_value, _element.max_value, 0, 1);
-		_element.main_ui.animate(_element, "bar_value", _target_bar_value, 0.1);
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
+		var _target_bar_value = Range(_e.value, _e.min_value, _e.max_value, 0, 1);
+		_e.main_ui.animate(_e, "bar_value", _target_bar_value, 0.1);
 	});
 }

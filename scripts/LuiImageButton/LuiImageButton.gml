@@ -42,9 +42,9 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		if !is_undefined(_element.style.sound_click) {
-			audio_play_sound(_element.style.sound_click, 1, false);
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		if !is_undefined(_e.style.sound_click) {
+			audio_play_sound(_e.style.sound_click, 1, false);
 		}
 	});
 }

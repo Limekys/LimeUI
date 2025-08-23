@@ -89,24 +89,24 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._initKnobWidth();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._initKnobWidth();
 	});
 	
-	self.addEvent(LUI_EV_MOUSE_WHEEL, function(_element) {
-		var _wheel_step = max(_element.rounding, (_element.max_value - _element.min_value) * 0.02);
+	self.addEvent(LUI_EV_MOUSE_WHEEL, function(_e) {
+		var _wheel_step = max(_e.rounding, (_e.max_value - _e.min_value) * 0.02);
 		var _wheel_up = mouse_wheel_up() ? 1 : 0;
 		var _wheel_down = mouse_wheel_down() ? 1 : 0;
 		var _wheel = _wheel_up - _wheel_down;
-		var _new_value = clamp(_element.value + _wheel * _wheel_step, _element.min_value, _element.max_value);
-		_new_value = _element._calculateValue(_new_value);
-		_element.set(_new_value);
+		var _new_value = clamp(_e.value + _wheel * _wheel_step, _e.min_value, _e.max_value);
+		_new_value = _e._calculateValue(_new_value);
+		_e.set(_new_value);
 	});
 	
-	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
-		var x1 = _element.x;
-		var x2 = x1 + _element.width;
-		var _new_value = _element._calculateValue((_data.mouse_x - x1) / (x2 - x1) * (_element.max_value - _element.min_value) + _element.min_value);
-		_element.set(_new_value);
+	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
+		var x1 = _e.x;
+		var x2 = x1 + _e.width;
+		var _new_value = _e._calculateValue((_data.mouse_x - x1) / (x2 - x1) * (_e.max_value - _e.min_value) + _e.min_value);
+		_e.set(_new_value);
 	});
 }

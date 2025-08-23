@@ -149,39 +149,39 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._calculateTextWidth();
-		if is_undefined(_element.combobox_panel) {
-			_element._initComboBoxPanel();
-			_element._initItems();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._calculateTextWidth();
+		if is_undefined(_e.combobox_panel) {
+			_e._initComboBoxPanel();
+			_e._initItems();
 		}
 	});
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.toggle();
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		_e.toggle();
 	});
 	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
-		_element._calculateTextWidth();
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
+		_e._calculateTextWidth();
 	});
 	
-	self.addEvent(LUI_EV_HIDE, function(_element) {
-		if _element.is_open {
-			_element.toggle();
+	self.addEvent(LUI_EV_HIDE, function(_e) {
+		if _e.is_open {
+			_e.toggle();
 		}
 	});
 	
-	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_element) {
-		if _element.is_open && !_element.combobox_panel.isMouseHoveredExc() {
-			_element.toggle();
+	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_e) {
+		if _e.is_open && !_e.combobox_panel.isMouseHoveredExc() {
+			_e.toggle();
 		}
 	});
 	
-	self.addEvent(LUI_EV_DESTROY, function(_element) {
-		if !is_undefined(_element.combobox_panel) {
-			_element.combobox_panel.destroy();
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if !is_undefined(_e.combobox_panel) {
+			_e.combobox_panel.destroy();
 		}
-		_element.items = -1;
+		_e.items = -1;
 	});
 }
 
@@ -227,7 +227,7 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 		}
 	}
 	
-	self.addEvent(LUI_EV_CLICK, function(_element) {
-		_element.chooseItem();
+	self.addEvent(LUI_EV_CLICK, function(_e) {
+		_e.chooseItem();
 	});
 }

@@ -86,7 +86,7 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 									_blend_color, self.alpha);
 	}
 	
-	self.addEvent(LUI_EV_VALUE_UPDATE, function(_element) {
-		_element._calcSurfaceSize();
+	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
+		_e._calcSurfaceSize();
 	});
 }

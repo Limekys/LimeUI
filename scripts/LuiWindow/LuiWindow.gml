@@ -91,21 +91,21 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		}
     }
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		if _element.auto_width {
-			_element.setWidth(256);
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		if _e.auto_width {
+			_e.setWidth(256);
 		}
-		_element._initHeader();
-		_element._initWindowContainer();
-		_element.addContentOriginal([
-			_element.window_header,
-			_element.window_container
+		_e._initHeader();
+		_e._initWindowContainer();
+		_e.addContentOriginal([
+			_e.window_header,
+			_e.window_container
 		]);
-		_element.bringToFront();
+		_e.bringToFront();
 	});
 	
-	self.addEvent(LUI_EV_SIZE_UPDATE, function(_element) {
-		_element.window_header.setWidth(_element.width);
+	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
+		_e.window_header.setWidth(_e.width);
 	});
 }
 
@@ -126,11 +126,11 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 		var _button_size = 32; //???//
 		var _close_button = new LuiButton().setSize(_button_size, _button_size).setText("X").setColor(self.style.color_semantic_error);
 		var _minimize_button = new LuiButton().setSize(_button_size, _button_size).setText("-");
-		_close_button.addEvent(LUI_EV_CLICK, function(_element) {
-			_element.parent.parent_window.closeWindow();
+		_close_button.addEvent(LUI_EV_CLICK, function(_e) {
+			_e.parent.parent_window.closeWindow();
 		});
-		_minimize_button.addEvent(LUI_EV_CLICK, function(_element) {
-			_element.parent.parent_window.toggleWindow();
+		_minimize_button.addEvent(LUI_EV_CLICK, function(_e) {
+			_e.parent.parent_window.toggleWindow();
 		});
 		self.addContent([_minimize_button, _close_button]);
 	}
@@ -149,19 +149,19 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 		}
     }
 	
-	self.addEvent(LUI_EV_CREATE, function(_element) {
-		_element._initControlButtons();
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		_e._initControlButtons();
 	});
 	
-	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_element) {
-		_element.parent_window.bringToFront();
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
+		_e.parent_window.bringToFront();
 	});
 	
-	self.addEvent(LUI_EV_DRAGGING, function(_element, _data) {
-		if (!is_undefined(_element.parent_window)) {
+	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
+		if (!is_undefined(_e.parent_window)) {
             var _new_pos_x = clamp(_data.new_x, 0, self.main_ui.width - self.width);
 			var _new_pos_y = clamp(_data.new_y, 0, self.main_ui.height - self.height);
-			_element.parent_window.setPosition(_new_pos_x, _new_pos_y);
+			_e.parent_window.setPosition(_new_pos_x, _new_pos_y);
         }
 	});
 }

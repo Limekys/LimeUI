@@ -1339,15 +1339,6 @@ function LuiBase(_params = {}) constructor {
 	    }
 	}
 	
-	///@desc Update position, size and z depth of all elements with depth reset
-	///@deprecated
-	static flexUpdateAll = function() {
-		if !is_undefined(main_ui) {
-			// Update all elements
-			_updateFlex(self.main_ui.flex_node);
-		}
-	}
-	
 	///@desc Update element value from binded variable
 	///@ignore
 	static _updateFromBindedVariable = function() {
@@ -1720,23 +1711,6 @@ function LuiBase(_params = {}) constructor {
 		if is_undefined(self.parent) return true;
 		if self.isMouseHoveredExc() {
 			return self.parent.isMouseHoveredParents();
-		} else {
-			return false;
-		}
-	}
-	
-	///@desc Returns true if the specified rectangle is within the parent and its parents at the same time
-	///@deprecated
-	static isInsideParents = function(_x1, _y1, _x2, _y2) {
-		if is_undefined(self.parent) return true;
-		var _parent_x = self.parent.x;
-		var _parent_y = self.parent.y;
-		var _inside_parent = rectangle_in_rectangle(
-			_x1, _y1, _x2, _y2,
-			_parent_x, _parent_y, _parent_x + self.parent.width, _parent_y + self.parent.height
-		);
-		if _inside_parent {
-			return self.parent.isInsideParents(_x1, _y1, _x2, _y2);
 		} else {
 			return false;
 		}

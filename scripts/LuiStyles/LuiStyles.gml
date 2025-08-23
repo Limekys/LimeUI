@@ -259,14 +259,6 @@ function LuiStyle(_style = {}) constructor {
     
     ///@desc Sets the accent color for interactive elements.
     ///@arg {Real} [_color] The accent color for active states (default: c_green).
-    ///@deprecated
-    static setColorValue = function(_color = c_green) {
-        _luiPrintWarning($"setColorValue: function is deprecated! Please use setColorAccent!");
-        return self.setColorAccent(_color);
-    }
-    
-    ///@desc Sets the accent color for interactive elements.
-    ///@arg {Real} [_color] The accent color for active states (default: c_green).
     static setColorAccent = function(_color = c_green) {
         self.color_accent = _color;
         return self;
@@ -277,15 +269,6 @@ function LuiStyle(_style = {}) constructor {
     static setColorHover = function(_hover = c_gray) {
         self.color_hover = _hover;
         return self;
-    }
-    
-    ///@desc Sets the text and text hint colors for UI elements.
-    ///@arg {Real} [_font] The color for text (default: c_black).
-    ///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
-    ///@deprecated
-    static setColorFont = function(_font = c_black, _font_hint = c_gray) {
-        _luiPrintWarning($"setColorFont: function is deprecated! Please use setColorText!");
-        return self.setColorText(_font, _font_hint);
     }
     
     ///@desc Sets the text and text hint colors for UI elements.
@@ -419,15 +402,6 @@ function LuiStyle(_style = {}) constructor {
 	static setTextCursor = function(_text_cursor = "|") {
 		self.input_cursor = _text_cursor;
 		return self;
-	}
-	
-	///@desc Set cursor symbol for LuiInput (_symbol_cursor)
-	///@arg {string} [_symbol_cursor]
-	///@deprecated
-	///@ignore
-	static setSymbolCursor = function(_symbol_cursor = "|") {
-		_luiPrintWarning($"setSymbolCursor: function is deprecated! Please use setTextCursor!");
-		return self.setTextCursor(_symbol_cursor);
 	}
 	
 	///@desc Set password symbol (_symbol_password)
