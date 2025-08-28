@@ -1,6 +1,8 @@
 ///@desc Main UI container which would control and render your UI.
 function LuiMain() : LuiBase() constructor {
 	
+	self.is_initialized = true;
+	
 	// Main variables
 	self.name = "_LUI_MAIN_UI";
 	self.width = display_get_gui_width();
@@ -18,10 +20,11 @@ function LuiMain() : LuiBase() constructor {
 	self.needs_update_flex = true;
 	self.current_debug_mode = 0;
 	self.active_animations = [];
-	self._screen_grid = {};
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
-	self.is_initialized = true;
+	self.rectangles_to_redraw = [];
+	
+	self._screen_grid = {};
 	
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
