@@ -26,7 +26,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
-			self.window_header = new LuiWindowHeader({width: self.width, height: self.header_height, title: self.title})
+			self.window_header = new LuiWindowHeader({height: self.header_height, title: self.title})
 				.setGap(0).setPadding(8).setFlexDirection(flexpanel_flex_direction.row);
 			
 			// Add title text to header
@@ -102,10 +102,6 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 			_e.window_container
 		]);
 		_e.bringToFront();
-	});
-	
-	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
-		_e.window_header.setWidth(_e.width);
 	});
 }
 
