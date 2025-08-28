@@ -8,6 +8,8 @@
 /// height or h - height of element
 /// min_width - minimum width of element
 /// min_height - minimum height of element
+/// max_width - maximum width of element
+/// max_height - maximum height of element
 /// name - unique name_id for element
 ///@arg {Struct} [_params] Struct with parameters
 function LuiBase(_params = {}) constructor {
@@ -35,8 +37,8 @@ function LuiBase(_params = {}) constructor {
 	self.prev_h = -1;									//Previous height
 	self.min_width = LUI_AUTO;
 	self.min_height = LUI_AUTO;
-	self.max_width = 3200;
-	self.max_height = 3200;
+	self.max_width = LUI_AUTO;
+	self.max_height = LUI_AUTO;
 	self.auto_x = false;
 	self.auto_y = false;
 	self.auto_width = false;
@@ -104,6 +106,8 @@ function LuiBase(_params = {}) constructor {
 		self.b = _params[$ "b"] ?? LUI_AUTO;
 		self.min_width = _params[$ "min_width"] ?? LUI_AUTO;
 		self.min_height = _params[$ "min_height"] ?? LUI_AUTO;
+		self.max_width = _params[$ "max_width"] ?? 10000;
+		self.max_height = _params[$ "max_height"] ?? 10000;
 		self.width = _params[$ "width"] ?? _params[$ "w"] ?? LUI_AUTO;
 		self.height = _params[$ "height"] ?? _params[$ "h"] ??  LUI_AUTO;
 		self.name = _params[$ "name"] ?? LUI_AUTO_NAME;
