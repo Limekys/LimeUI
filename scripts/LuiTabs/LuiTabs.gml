@@ -55,7 +55,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 				// Set tabs parent for tab
 				_tab.tabs_parent = self;
 				// Add tab container to tabs_parent
-				self.addContent(_tab.tab_container);
+				self.addContentOriginal(_tab.tab_container);
 			}
 			//Add tab to header of tabs_parent
 			self.tabs_header.addContent(self.tabs);
@@ -126,7 +126,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		// Init header container for tabs
 		_e._initHeader();
 		// Add header
-		_e.addContent(_e.tabs_header);
+		_e.addContentOriginal(_e.tabs_header);
 		// Init tab's
 		_e._initTabs();
 	});

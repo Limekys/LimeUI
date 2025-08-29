@@ -45,7 +45,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 					window_set_cursor(cr_default);
 				});
 			}
-			self.addContent(self.resizer);
+			self.addContentOriginal(self.resizer);
 		}
 	}
 	

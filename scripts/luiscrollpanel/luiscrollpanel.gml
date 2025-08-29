@@ -27,9 +27,6 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	///@desc Original addContent for compatibility
-	self.addContentOriginal = method(self, addContent);
-	
 	///@desc Redirect addContent
 	self.addContent = function(elements) {
 		self._initScrollContainer();

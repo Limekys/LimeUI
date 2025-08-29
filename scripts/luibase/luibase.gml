@@ -47,6 +47,7 @@ function LuiBase(_params = {}) constructor {
 	self.content = [];
 	self.delayed_content = [];
 	self.container = self; 								//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
+	self.container_original = self; 					//Original self container
 	self.deactivated = false;
 	self.visible = true;
 	self.visibility_switching = true;
@@ -1528,6 +1529,9 @@ function LuiBase(_params = {}) constructor {
 	    
 	    return self;
 	}
+	
+	///@desc Original addContent
+	self.addContentOriginal = method(self, addContent);
 	
 	///@desc This function updates all nested elements
 	static update = function() {
