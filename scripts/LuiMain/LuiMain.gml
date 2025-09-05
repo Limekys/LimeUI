@@ -23,6 +23,7 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
 	self._screen_grid = {};
+	self.ignore_mouse = true;
 	
 	self.rectangles_to_redraw = [];
 	
