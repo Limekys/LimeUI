@@ -14,9 +14,11 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiBase(_params = {}) constructor {
 	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
+	if !variable_global_exists("lui_id_count") variable_global_set("lui_id_count", 0);
 	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
 		
-	self.element_id = global.lui_element_count++;
+	global.lui_element_count++;
+	self.element_id = global.lui_id_count++;
 	self.name = LUI_AUTO_NAME;							//Unique element identifier
 	self.value = undefined;								//Value
 	self.data = undefined;								//Different user data for personal use
@@ -67,7 +69,7 @@ function LuiBase(_params = {}) constructor {
 	self.is_destroyed = false;
 	self.is_initialized = false;
 	self.draw_content_in_cutted_region = false;
-	self.render_region_offset = { //???// в целом еще может пригодится
+	self.render_region_offset = { //???// it may still be useful
 		left : 0,
 		right : 0,
 		top : 0,
@@ -86,8 +88,14 @@ function LuiBase(_params = {}) constructor {
 	self.view_region = {
 		x1: 0,
 		y1: 0,
-		x2: 5000,
-		y2: 5000
+		x2: 10000,
+		y2: 10000
+	};
+	self.prev_view_region = {
+		x1: 0,
+		y1: 0,
+		x2: 10000,
+		y2: 10000
 	};
 	self.is_visible_in_region = false;
 	// Depth system
@@ -143,7 +151,7 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
-	///@desc Remove a callback for a specific event //???// возможно удаление подписки на событие с колбэком не очень правильное (поиск по точному колбэку странное решение)
+	///@desc Remove a callback for a specific event //???// It may not be appropriate to unsubscribe from an event with a callback (searching by exact callback is a peculiar solution).
 	///@param {string} _eventType The event type
 	///@param {function} _callback The callback function to remove
 	///@return {struct} The element itself for chaining
@@ -732,6 +740,7 @@ function LuiBase(_params = {}) constructor {
 			});
 		}
 		self._applyStyles();
+		self.updateMainUiSurface();
 		
 		return self;
 	}
@@ -749,10 +758,12 @@ function LuiBase(_params = {}) constructor {
 	}
 	
 	///@desc Set flag to update content
-	static setNeedToUpdateContent = function(_update_parent) {
-		if is_undefined(self.parent) return self;
+	static setNeedToUpdateContent = function(_update_parent = false) {
 		self.need_to_update_content = true;
-		self.parent.setNeedToUpdateContent(_update_parent);
+		if _update_parent {
+			if is_undefined(self.parent) return self;
+			self.parent.setNeedToUpdateContent(_update_parent);
+		}
 		return self;
 	}
 	
@@ -775,7 +786,9 @@ function LuiBase(_params = {}) constructor {
 					self.content[i].setVisible(self.visible);
 				}
 				// Main surface update 
-				self.updateMainUiSurface();
+				if self.is_visible_in_region {
+					self.updateMainUiSurface();
+				}
 			}
 		}
 		return self;
@@ -790,7 +803,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Set offset region for render content
 	///@arg {struct, array} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
 	///@deprecated
-	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) { //???// в целом еще может пригодится
+	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) { //???// it may still be useful
 		if is_struct(_region) {
 			render_region_offset = _region;
 		} else if is_array(_region) {
@@ -1007,13 +1020,22 @@ function LuiBase(_params = {}) constructor {
 	///@param {real} _x X-coordinate for rendering (default 0)
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
-	static _renderDebug = function(_x = 0, _y = 0) {
+	static _renderDebug = function(_x = 0, _y = 0, _recursive = false) {
 	    // Draw rectangles
 	    self._renderDebugRectangles(_x, _y);
 	    
 	    // Draw debug text info
 		if global.lui_debug_mode == 2
 	    self._renderDebugInfo(_x, _y);
+		
+		// Recursive
+		if _recursive {
+			for (var i = 0, n = array_length(self.content); i < n; i++) {
+				//Get element
+				var _element = self.content[i];
+				_element._renderDebug(_element.x, _element.y, true);
+			}
+		}
 	}
 	
 	///@desc Draw debug text
@@ -1148,7 +1170,7 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _addToScreenGrid = function() {
 		if (!self.is_visible_in_region || !self.visible) {
-			return false;
+			return;
 		}
 	
 		// Calculate the start and end cells that the element intersects
@@ -1195,6 +1217,20 @@ function LuiBase(_params = {}) constructor {
 		self._addToScreenGrid();
 	}
 	
+	///@desc Recursively forces an invisible state onto itself and all descendants
+	///@ignore
+	static _propagateVisibleRegionState = function() {
+		if (!self.is_visible_in_region) return;
+		
+		self.is_visible_in_region = false;
+		
+		self._updateScreenGrid();
+		
+		for (var i = 0, n = array_length(self.content); i < n; i++) {
+			self.content[i]._propagateVisibleRegionState();
+		}
+	}
+	
 	///@desc Delete element from grid and clean up array
 	///@ignore
 	static _cleanupScreenGrid = function() {
@@ -1238,11 +1274,6 @@ function LuiBase(_params = {}) constructor {
 	    self.is_visible_in_region = (_region_width > 0 && _region_height > 0) &&
 	                                !(self.x + self.width < _parent_region.x1 || self.x > _parent_region.x2 ||
 	                                  self.y + self.height < _parent_region.y1 || self.y > _parent_region.y2);
-		
-		// Update grid if visibility changed
-		if (_was_visible != self.is_visible_in_region) {
-			self._updateScreenGrid();
-		}
 	}
 	
 	///@desc Apply local and inherited styles to the flex node
@@ -1300,7 +1331,10 @@ function LuiBase(_params = {}) constructor {
 	///@desc Update position, size and z depth for specified flex node
 	///@ignore
 	static _updateFlex = function(_node) {
-	    var _pos = flexpanel_node_layout_get_position(_node, false);
+	    
+		if is_undefined(_node)  return;
+		
+		var _pos = flexpanel_node_layout_get_position(_node, false);
 	    var _data = flexpanel_node_get_data(_node);
 	    var _element = _data.element;
 	    
@@ -1320,23 +1354,42 @@ function LuiBase(_params = {}) constructor {
 	        _element.start_y = _element.y;
 	    }
 		
-		// If position was changed, call position update event
+		_element._updateViewRegion();
+		
+		_element._updateScreenGrid();
+		
+		// On position change
 		if (_position_changed) {
 			_element._dispatchEvent(LUI_EV_POSITION_UPDATE);
+			_element.updateMainUiSurface();
+			_element.prev_x = _element.x;
+			_element.prev_y = _element.y;
 		}
 		
-		// If size was changed, call size update event
+		// On size change
 		if (_size_changed) {
 			_element._dispatchEvent(LUI_EV_SIZE_UPDATE);
+			_element.updateMainUiSurface();
+			_element.prev_w = _element.width;
+			_element.prev_h = _element.height;
 		}
 	    
-	    _element._updateViewRegion();
+		// Update previous view region
+		_element.prev_view_region = {
+	        x1: _element.view_region.x1,
+	        y1: _element.view_region.y1,
+	        x2: _element.view_region.x2,
+	        y2: _element.view_region.y2
+		};
 		
 		if _element.is_visible_in_region == false {
-			_element._deleteFromScreenGrid();
+			for (var i = 0, n = array_length(_element.content); i < n; i++) {
+				_element.content[i]._propagateVisibleRegionState();
+			}
 			return;
 		}
 		
+		// Update childrens
 	    var _children_count = flexpanel_node_get_num_children(_node);
 	    for (var i = 0; i < _children_count; i++) {
 	        var _child = flexpanel_node_get_child(_node, i);
@@ -1519,13 +1572,13 @@ function LuiBase(_params = {}) constructor {
 	        
 			// Call create event
 			_element._dispatchEvent(LUI_EV_CREATE);
-	        
+			
 	        _element.is_adding = false;
 	    }
-	    
-		// Apply all positions and update content
-	    self.updateMainUiFlex();
-	    self.setNeedToUpdateContent(true);
+		
+		// Apply all positions and update content //???//
+		self.setNeedToUpdateContent();
+		self.updateMainUiFlex();
 	    
 	    return self;
 	}
@@ -1553,58 +1606,26 @@ function LuiBase(_params = {}) constructor {
 	        // Skip the invisible elements
 	        if (!_element.is_visible_in_region || !_element.visible || self.deactivated) continue;
 	        
-	        var _cur_x = _element.x;
-	        var _cur_y = _element.y;
-	        
-	        // Update surface UI if the coordinates have changed
-	        if (_element.prev_x != _cur_x || _element.prev_y != _cur_y) {
-	            _element.prev_x = _cur_x;
-	            _element.prev_y = _cur_y;
-	            _element.updateMainUiSurface();
-	        }
-			
-			var _cur_w = _element.width;
-	        var _cur_h = _element.height;
-			
-			// Update surface UI if the size have changed
-	        if (_element.prev_w != _cur_w || _element.prev_h != _cur_h) {
-	            _element.prev_w = _cur_w;
-	            _element.prev_h = _cur_h;
-	            _element.updateMainUiSurface();
-	        }
-	        
 	        // Updating the bound variables
 	        if (!is_undefined(_element.binded_variable) && _element.get() != variable_instance_get(_element.binded_variable.source, _element.binded_variable.variable)) {
 	            _element._updateFromBindedVariable();
 	        }
 	        
-	        // Update content if required
+			// Update content if required
 	        if (_element.need_to_update_content) {
 				_element._dispatchEvent(LUI_EV_CONTENT_UPDATE);
 	            _element.need_to_update_content = false;
 	        }
-	        
-	        // Update the grid if the area has changed
-	        var _grid_x1 = floor(_element.x / LUI_GRID_ACCURACY);
-	        var _grid_y1 = floor(_element.y / LUI_GRID_ACCURACY);
-	        var _grid_x2 = floor((_element.x + _element.width) / LUI_GRID_ACCURACY);
-	        var _grid_y2 = floor((_element.y + _element.height) / LUI_GRID_ACCURACY);
-	        if (_element.grid_previous_x1 != _grid_x1 || _element.grid_previous_y1 != _grid_y1 || 
-	            _element.grid_previous_x2 != _grid_x2 || _element.grid_previous_y2 != _grid_y2) {
-	            _element._updateScreenGrid();
-	            _element.grid_previous_x1 = _grid_x1;
-	            _element.grid_previous_y1 = _grid_y1;
-	            _element.grid_previous_x2 = _grid_x2;
-	            _element.grid_previous_y2 = _grid_y2;
-	        }
-	        
+			
 	        // Execute custom step and recursive update
 	        if (is_method(_element.step)) _element.step();
-	        _element.update();
+	        
+			// Call update for nested elements
+			_element.update();
 	    }
 	}
 	
-	///@desc This function draws all nested elements
+	///@desc This function draws all nested elements //???// not used now because of new dirty rects render system
 	static render = function() {
 		
 		if !is_array(self.content) return;
@@ -1621,7 +1642,7 @@ function LuiBase(_params = {}) constructor {
 			// Draw self
 			if is_method(_element.draw) _element.draw();
 			// Draw content
-			if _element.render_content_enabled { //???// is it right place for gpu_set_scissor ?
+			if _element.render_content_enabled {
 				if self.draw_content_in_cutted_region {
 					var _gpu_scissor = gpu_get_scissor();
 					var _x = self.x + self.style.render_region_offset.left;
@@ -1646,7 +1667,6 @@ function LuiBase(_params = {}) constructor {
 				if !_element.visible || !_element.is_visible_in_region continue;
 				_element._renderDebug(_element.x, _element.y);
 			}
-			
 		}
 	}
 	 
@@ -1666,28 +1686,50 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Activate an element
 	static activate = function() {
-		self.deactivated = false;
-		if is_array(self.content)
-		array_foreach(self.content, function(_elm) {
-			_elm.activate();
-		});
+		if self.deactivated {
+			self.deactivated = false;
+			if is_array(self.content)
+			array_foreach(self.content, function(_elm) {
+				_elm.activate();
+			});
+			self.updateMainUiSurface();
+		}
 		return self;
 	}
 	
 	///@desc Deactivate an element
 	static deactivate = function() {
-		self.deactivated = true;
-		if is_array(self.content)
-		array_foreach(self.content, function(_elm) {
-			_elm.deactivate();
-		});
+		if !self.deactivated {
+			self.deactivated = true;
+			if is_array(self.content)
+			array_foreach(self.content, function(_elm) {
+				_elm.deactivate();
+			});
+			self.updateMainUiSurface();
+		}
 		return self;
 	}
 	
 	///@desc Update main ui surface
 	static updateMainUiSurface = function() {
 		if is_undefined(self.main_ui) return self;
-		self.main_ui.needs_redraw_surface = true;
+		//self.main_ui.needs_redraw_surface = true;
+		
+		// Calculate coords and sizes
+		//var _x1 = min(self.x, self.prev_x);
+		//var _y1 = min(self.y, self.prev_y);
+		//var _x2 = max(self.x, self.prev_x) + max(self.width, self.prev_w);
+		//var _y2 = max(self.y, self.prev_y) + max(self.height, self.prev_h);
+		
+		// Add dirty rectangle to update
+		if self.is_visible_in_region {
+			var _x1 = min(self.view_region.x1, self.prev_view_region.x1);
+			var _y1 = min(self.view_region.y1, self.prev_view_region.y1);
+			var _x2 = max(self.view_region.x2, self.prev_view_region.x2);
+			var _y2 = max(self.view_region.y2, self.prev_view_region.y2);
+			self.main_ui.addRedrawRect(_x1, _y1, _x2, _y2);
+		}
+		
 		return self;
 	}
 	
@@ -1778,7 +1820,7 @@ function LuiBase(_params = {}) constructor {
 		}
 		self._deleteElementName();
 		self._cleanupScreenGrid();
-		self.setNeedToUpdateContent(true);
+		if !is_undefined(self.parent) self.parent.setNeedToUpdateContent();
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		// Delete flex_node
@@ -1796,6 +1838,7 @@ function LuiBase(_params = {}) constructor {
 		delete self.style_overrides; self.style_overrides = undefined;
 		delete self.render_region_offset; self.render_region_offset = undefined;
 		delete self.view_region; self.view_region = undefined;
+		delete self.prev_view_region; self.prev_view_region = undefined;
 		delete self.binded_variable; self.binded_variable = undefined;
 		delete self.data; self.data = undefined;
 		self.event_listeners = {}

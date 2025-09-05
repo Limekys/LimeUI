@@ -261,6 +261,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         if os_type == os_android || os_type == os_ios {
             keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, false);
         }
+		_e.updateMainUiSurface();
     });
     
     self.addEvent(LUI_EV_FOCUS_REMOVE, function(_e) {
@@ -271,6 +272,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         if os_type == os_android || os_type == os_ios {
             keyboard_virtual_hide();
         }
+		_e.updateMainUiSurface();
     });
     
     self.addEvent(LUI_EV_KEYBOARD_INPUT, function(_e) {
@@ -282,6 +284,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             _e.set(_e._limit_value(_e.get() + _paste));
             keyboard_string = _e.get();
         }
+		_e.updateMainUiSurface();
     });
     
 	if LUI_ALLOW_CHANGE_CURSOR {
@@ -292,6 +295,18 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
 			window_set_cursor(cr_default);
 		});
 	}
+	
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
+		_e.updateMainUiSurface();
+	});
 	
     self.addEvent(LUI_EV_DESTROY, function(_e) {
         if time_source_exists(_e.cursor_timer) {

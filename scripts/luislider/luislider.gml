@@ -6,14 +6,13 @@
 /// rounding
 /// display_value
 /// bar_height
-/// knob_extender
 /// color - custom bar accent color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	self.can_drag = true;
 	
-	self.knob_extender = _params[$ "knob_extender"] ?? 1;
+	self.knob_extender = 0;
 	
 	// Calculate knob width in constructor
 	static _initKnobWidth = function() {
@@ -108,5 +107,21 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		var x2 = x1 + _e.width;
 		var _new_value = _e._calculateValue((_data.mouse_x - x1) / (x2 - x1) * (_e.max_value - _e.min_value) + _e.min_value);
 		_e.set(_new_value);
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_RELEASED, function(_e) {
+		_e.updateMainUiSurface();
 	});
 }

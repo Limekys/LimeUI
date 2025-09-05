@@ -300,9 +300,8 @@ my_panel_3.addContent([
 
 #region Fill all tab's in Tabs
 
-	#region Add scroll panel in tab_panels
+	#region Add elements in tab_panels
 
-		// Create scroll panel with different elements
 		tab_panels.addContent([
 			new LuiText({value: "Scroll panel with different elements", scale_to_fit: true}).setTextHalign(fa_center),
 			new LuiScrollPanel({name: "firstScrollPanel"}).addContent([
@@ -375,7 +374,7 @@ my_panel_3.addContent([
 			}
 		}
 		// Create search panel
-		search_panel = new LuiScrollPanel();
+		search_panel = new LuiScrollPanel({name: "searchPanel"});
 		// Add random buttons to search panel
 		for (var i = 1; i <= 10; i++) {
 			var _btn_text = string(i) + ". " + choose("Aboba", "Microba", "Foo", "Bar", "Game maker!", "777", "123");
@@ -415,7 +414,7 @@ my_panel_3.addContent([
 				panel_control
 			])
 		]);
-
+		
 	#endregion
 
 	#region Add some sprites in tab_sprites

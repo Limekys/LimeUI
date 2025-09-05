@@ -22,9 +22,98 @@ function LuiMain() : LuiBase() constructor {
 	self.active_animations = [];
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
+	self._screen_grid = {};
+	
 	self.rectangles_to_redraw = [];
 	
-	self._screen_grid = {};
+	/// @desc Adds a rectangle to the list of areas needing a redraw. Merges overlapping rectangles.
+	/// @arg {real} _x1
+	/// @arg {real} _y1
+	/// @arg {real} _x2
+	/// @arg {real} _y2
+	static addRedrawRect = function(_x1, _y1, _x2, _y2) {
+	    // Normilize coords
+	    var x1 = min(_x1, _x2);
+	    var y1 = min(_y1, _y2);
+	    var x2 = max(_x1, _x2);
+	    var y2 = max(_y1, _y2);
+	
+	    var _new_rect = { x1: x1, y1: y1, x2: x2, y2: y2 };
+	    var _rects = self.rectangles_to_redraw;
+	
+	    // If list is empty add new
+	    if (array_length(_rects) == 0) {
+	        array_push(_rects, _new_rect);
+	        return self;
+	    }
+	
+	    // Array for remove rects
+	    var _to_remove = [];
+	
+	    // Check all rects and merge
+	    for (var i = 0; i < array_length(_rects); i++) {
+	        var _existing = _rects[i];
+	
+	        // Check
+	        if (_new_rect.x1 <= _existing.x2 + 1 && 
+	            _new_rect.x2 >= _existing.x1 - 1 &&
+	            _new_rect.y1 <= _existing.y2 + 1 && 
+	            _new_rect.y2 >= _existing.y1 - 1) {
+	            
+	            // Merge
+	            _new_rect.x1 = min(_new_rect.x1, _existing.x1);
+	            _new_rect.y1 = min(_new_rect.y1, _existing.y1);
+	            _new_rect.x2 = max(_new_rect.x2, _existing.x2);
+	            _new_rect.y2 = max(_new_rect.y2, _existing.y2);
+	
+	            // Mark to remove old rect
+	            array_push(_to_remove, i);
+	        }
+	    }
+	
+	    // Delete old rects
+	    for (var j = array_length(_to_remove) - 1; j >= 0; j--) {
+	        array_delete(_rects, _to_remove[j], 1);
+	    }
+	
+	    // Add new merged rect
+	    array_push(_rects, _new_rect);
+	
+	    return self;
+	}
+	
+	///@desc Returns all elements intersecting with a given rectangle
+	///@ignore
+	static _getElementsInRect = function(_rect) {
+		var _elements_in_rect = [];
+		var _checked_elements = {};
+		
+		var _x_start = floor(_rect.x1 / LUI_GRID_SIZE);
+		var _y_start = floor(_rect.y1 / LUI_GRID_SIZE);
+		var _x_end = floor(_rect.x2 / LUI_GRID_SIZE);
+		var _y_end = floor(_rect.y2 / LUI_GRID_SIZE);
+		
+		for (var _x = _x_start; _x <= _x_end; ++_x) {
+			for (var _y = _y_start; _y <= _y_end; ++_y) {
+				var _key = string(_x) + "_" + string(_y);
+				if (variable_struct_exists(self._screen_grid, _key)) {
+					var _cell_array = self._screen_grid[$ _key];
+					for (var i = 0; i < array_length(_cell_array); i++) {
+						var _elm = _cell_array[i];
+						// Check that the element has not yet been processed and actually intersects
+						if (!variable_struct_exists(_checked_elements, _elm.element_id) &&
+							_elm.x < _rect.x2 && _elm.x + _elm.width > _rect.x1 &&
+							_elm.y < _rect.y2 && _elm.y + _elm.height > _rect.y1) {
+							
+							array_push(_elements_in_rect, _elm);
+							_checked_elements[$ string(_elm.element_id)] = true;
+						}
+					}
+				}
+			}
+		}
+		return _elements_in_rect;
+	}
 	
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
@@ -140,14 +229,12 @@ function LuiMain() : LuiBase() constructor {
 				_previous_hovered_element.is_mouse_hovered = false;
 				_previous_hovered_element.is_pressed = false;
 				_previous_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEAVE);
-				self.updateMainUiSurface();
 			}
 			
 			if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
 				if self.topmost_hovered_element.is_mouse_hovered == false {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_ENTER);
-					self.updateMainUiSurface();
 				}
 				
 				// Handle on mouse pressed
@@ -172,7 +259,6 @@ function LuiMain() : LuiBase() constructor {
 						self.dragging_element = self.topmost_hovered_element;
 						self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAG_START);
 					}
-					self.updateMainUiSurface();
 				}
 				
 				// Handle on mouse left
@@ -209,7 +295,6 @@ function LuiMain() : LuiBase() constructor {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus = undefined;
 					}
-					self.updateMainUiSurface();
 				}
 				if (mouse_wheel_down() || mouse_wheel_up()) {
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_WHEEL);
@@ -222,7 +307,6 @@ function LuiMain() : LuiBase() constructor {
 						self.element_in_focus.is_pressed = false;
 						self.element_in_focus = undefined;
 						self.dragging_element = undefined;
-						self.updateMainUiSurface();
 					}
 				}
 			}
@@ -246,7 +330,6 @@ function LuiMain() : LuiBase() constructor {
 			if keyboard_check_pressed(vk_escape) { //???//
 				self.element_in_focus.removeFocus();
 				self.element_in_focus = undefined;
-				self.updateMainUiSurface(); //???//
 			}
 		}
 		
@@ -254,15 +337,16 @@ function LuiMain() : LuiBase() constructor {
 	    if (array_length(self.active_animations) > 0) {
 	        for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
 	            var _tween = self.active_animations[i];
-	            // If update return false, animate end
+	            _tween.target.updateMainUiSurface();
+				// If update return false, animate end
 	            if (!_tween.update(DT)) {
 	                array_delete(self.active_animations, i, 1);
 	            }
 	        }
 	        // Redraw surface on active animations
-	        if (array_length(self.active_animations) > 0) {
-	            self.updateMainUiSurface();
-	        }
+	        //if (array_length(self.active_animations) > 0) {
+	            //self.updateMainUiSurface();
+	        //}
 	    }
 		
 		// Update debug mode states
@@ -283,13 +367,8 @@ function LuiMain() : LuiBase() constructor {
 	self.base_render = method(self, render);
 	self.render = function() {
 		 
-		// Get previous alpha
 		var _prev_alpha = draw_get_alpha();
-		
-		// Set alpha before render
-		if LUI_FORCE_ALPHA_1 {
-			draw_set_alpha(1);
-		}
+		if LUI_FORCE_ALPHA_1 { draw_set_alpha(1); }
 		
 		// Pre draw events
 		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
@@ -297,44 +376,144 @@ function LuiMain() : LuiBase() constructor {
 			if is_method(_element.preDraw) _element.preDraw();
 		}
 		
-		// Create main ui surface
-		if !surface_exists(self.ui_screen_surface) {
+		// >> Surface render logic start
+		
+		// First frame all screen redraw
+		var _is_first_draw = !surface_exists(self.ui_screen_surface);
+		if (_is_first_draw) {
 			self.ui_screen_surface = surface_create(self.width, self.height);
-			self.needs_redraw_surface = true;
+			self.addRedrawRect(0, 0, self.width, self.height);
 		}
 		
-		// Check surface size
+		// Redraw all screen on resizing
 		if surface_get_width(self.ui_screen_surface) != self.width || surface_get_height(self.ui_screen_surface) != self.height {
 			surface_resize(self.ui_screen_surface, self.width, self.height);
+			self.addRedrawRect(0, 0, self.width, self.height);
 		}
 		
-		// Update main ui surface
-		if self.needs_redraw_surface {
-			// Set alpha 1 for drawing surface
-			draw_set_alpha(1);
-			
-			// Set ui surface
+		// Dirty rectangles redraw logic
+		if (array_length(self.rectangles_to_redraw) > 0) {
 			surface_set_target(self.ui_screen_surface);
-			draw_clear_alpha(c_black, 0);
-			gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
 			
-			// Draw all elements
-			self.base_render();
+			// Save original gpu scissors
+			var _original_scissor = gpu_get_scissor();
 			
-			// Reset ui surface
-			gpu_set_blendequation(bm_eq_add);
+			// Iterate over all “dirty” rectangles
+			for (var i = 0; i < array_length(self.rectangles_to_redraw); i++) {
+				var _rect = self.rectangles_to_redraw[i];
+				
+				// 1. Set scissors
+				gpu_set_scissor(floor(_rect.x1), floor(_rect.y1), ceil(_rect.x2 - _rect.x1), ceil(_rect.y2 - _rect.y1));
+				
+				// 2. Clean up this area
+				var _prev_bm = gpu_get_blendmode();
+				gpu_set_blendmode_ext(bm_zero, bm_zero);
+				draw_rectangle(_rect.x1, _rect.y1, _rect.x2, _rect.y2, false);
+				gpu_set_blendmode(_prev_bm);
+				
+				// 3. Find all elements that intersect with this area
+				var _elements_to_draw = self._getElementsInRect(_rect);
+				
+				// 4. We sort them by depth (z) to maintain the rendering order.
+				array_sort(_elements_to_draw, function(a, b) { return _compareDepthArrays(a.depth_array, b.depth_array); });
+				
+				// 5. Drawing each element
+				gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
+				for (var j = 0; j < array_length(_elements_to_draw); j++) {
+					var _element = _elements_to_draw[j];
+					if (_element.visible && _element.is_visible_in_region && !_element.is_destroyed) {
+						
+						// 1. Calculating the area for rendering
+						var _final_scissor_x = floor(_rect.x1);
+						var _final_scissor_y = floor(_rect.y1);
+						var _final_scissor_w = ceil(_rect.x2 - _rect.x1);
+						var _final_scissor_h = ceil(_rect.y2 - _rect.y1);
+						
+						// 2. Going up the ancestral hierarchy
+						var _ancestor = _element.parent;
+						while (!is_undefined(_ancestor)) {
+							// 3. If an ancestor requires content to be cut off
+							if (_ancestor.draw_content_in_cutted_region) {
+								// Calculating the ancestor's cutoff region
+								var _ancestor_x1 = _ancestor.x + _ancestor.style.render_region_offset.left;
+								var _ancestor_y1 = _ancestor.y + _ancestor.style.render_region_offset.top;
+								var _ancestor_x2 = _ancestor.x + _ancestor.width - _ancestor.style.render_region_offset.right;
+								var _ancestor_y2 = _ancestor.y + _ancestor.height - _ancestor.style.render_region_offset.bottom;
+								
+								// 4. Find the intersection of the current clipping region and the ancestor region.
+								var _new_x1 = max(_final_scissor_x, _ancestor_x1);
+								var _new_y1 = max(_final_scissor_y, _ancestor_y1);
+								var _new_x2 = min(_final_scissor_x + _final_scissor_w, _ancestor_x2);
+								var _new_y2 = min(_final_scissor_y + _final_scissor_h, _ancestor_y2);
+								
+								// 5. Updating the final cutoff area
+								_final_scissor_x = _new_x1;
+								_final_scissor_y = _new_y1;
+								_final_scissor_w = max(0, _new_x2 - _new_x1);
+								_final_scissor_h = max(0, _new_y2 - _new_y1);
+							}
+							_ancestor = _ancestor.parent;
+						}
+						
+						// 6. Apply the final calculated cutoff region
+						gpu_set_scissor(
+							floor(_final_scissor_x), 
+							floor(_final_scissor_y), 
+							ceil(_final_scissor_w), 
+							ceil(_final_scissor_h)
+						);
+						
+						// 7. Draw element
+						if is_method(_element.draw) {
+							_element.draw();
+						}
+					}
+				}
+				gpu_set_blendequation(bm_eq_add);
+			}
+			
+			// Restoring gpu scissors
+			gpu_set_scissor(_original_scissor.x, _original_scissor.y, _original_scissor.w, _original_scissor.h);
+			
 			surface_reset_target();
-			self.needs_redraw_surface = false;
 			
-			// Reset alpha
-			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+			// Clear the rects list after rendering
+			if global.lui_debug_mode == 0 {
+				self.rectangles_to_redraw = [];
+			}
+			
+			// << Surface render logic end
 		}
 		
 		// Draw all to screen
 		if self.visible {
-			//Draw main ui surface
+			// Draw main ui surface
 			draw_surface_ext(self.ui_screen_surface, self.x, self.y, 1, 1, 0, c_white, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
-			//Draw other stuff
+			
+			if global.lui_debug_mode != 0 {
+				for (var i = 0, n = array_length(self.content); i < n; i++) {
+					//Get element
+					var _element = self.content[i];
+					// Restriction
+					if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
+					// Draw debug
+					if !_element.visible || !_element.is_visible_in_region continue;
+					_element._renderDebug(_element.x, _element.y, true);
+				}
+			}
+			
+			// Draw debug rects
+			if global.lui_debug_mode > 0 {
+				for (var i = 0; i < array_length(self.rectangles_to_redraw); i++) {
+					var _rect = self.rectangles_to_redraw[i];
+					draw_set_color(c_red);
+					draw_set_alpha(0.5);
+					draw_rectangle(floor(_rect.x1), floor(_rect.y1), ceil(_rect.x2), ceil(_rect.y2), false);
+				}
+				self.rectangles_to_redraw = [];
+			}
+			
+			// Draw other stuff
 			if self.display_focused_element {
 				if !is_undefined(self.element_in_focus) {
 					var _elm_x = self.element_in_focus.x;
@@ -472,7 +651,8 @@ function LuiMain() : LuiBase() constructor {
 		_e.active_animations = -1;
 		delete _e._screen_grid;
 		delete _e.element_names;
-		global.lui_e_count = 0;
+		global.lui_element_count = 0;
+		global.lui_id_count = 0;
 		global.lui_max_z = 0;
 	});
 }

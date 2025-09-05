@@ -158,6 +158,22 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		}
 	});
 	
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_RELEASED, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
 	/* //???// Button animation test
 	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
 		var _anim_time = 0.2;

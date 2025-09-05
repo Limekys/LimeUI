@@ -110,4 +110,20 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 		var _target_color_value = _e.value == true ? 1 : 0;
 		_e.main_ui.animate(_e, "slider_color_value", _target_color_value, _anim_time);
 	});
+	
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_RELEASED, function(_e) {
+		_e.updateMainUiSurface();
+	});
 }

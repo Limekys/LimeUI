@@ -47,4 +47,20 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 			audio_play_sound(_e.style.sound_click, 1, false);
 		}
 	});
+	
+	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
+		_e.updateMainUiSurface();
+	});
+	
+	self.addEvent(LUI_EV_MOUSE_LEFT_RELEASED, function(_e) {
+		_e.updateMainUiSurface();
+	});
 }
