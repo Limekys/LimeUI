@@ -1177,10 +1177,10 @@ function LuiBase(_params = {}) constructor {
 		}
 	
 		// Calculate the start and end cells that the element intersects
-		var _elm_x_start = floor(self.x / LUI_GRID_SIZE);
-		var _elm_y_start = floor(self.y / LUI_GRID_SIZE);
-		var _elm_x_end = floor((self.x + self.width) / LUI_GRID_SIZE);
-		var _elm_y_end = floor((self.y + self.height) / LUI_GRID_SIZE);
+		var _elm_x_start = floor(self.view_region.x1 / LUI_GRID_SIZE);
+		var _elm_y_start = floor(self.view_region.y1 / LUI_GRID_SIZE);
+		var _elm_x_end = floor(self.view_region.x2 / LUI_GRID_SIZE);
+		var _elm_y_end = floor(self.view_region.y2 / LUI_GRID_SIZE);
 	
 		// Restrict grid pass to only the required cells
 		for (var _x = _elm_x_start; _x <= _elm_x_end; ++_x) {
@@ -1251,12 +1251,10 @@ function LuiBase(_params = {}) constructor {
 		var _was_visible = self.is_visible_in_region;
 		
 		// Set the initial dimensions of the visible region based on the current coordinates and dimensions of the element
-	    self.view_region = {
-	        x1: self.x,
-	        y1: self.y,
-	        x2: self.x + self.width,
-	        y2: self.y + self.height
-	    };
+	    self.view_region.x1 = self.x;
+	    self.view_region.y1 = self.y;
+	    self.view_region.x2 = self.x + self.width;
+	    self.view_region.y2 = self.y + self.height;
 	    
 	    // If there is no parent or it has no view_region, the element is considered visible, exit
 	    if (self.parent == undefined) {
