@@ -2,6 +2,7 @@
 function LuiMain() : LuiBase() constructor {
 	
 	self.is_initialized = true;
+	self.ignore_mouse = true;
 	
 	// Main variables
 	self.name = "_LUI_MAIN_UI";
@@ -23,98 +24,7 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
 	self._screen_grid = {};
-	self.ignore_mouse = true;
-	
 	self.rectangles_to_redraw = [];
-	
-	/// @desc Adds a rectangle to the list of areas needing a redraw. Merges overlapping rectangles.
-	/// @arg {real} _x1
-	/// @arg {real} _y1
-	/// @arg {real} _x2
-	/// @arg {real} _y2
-	static addRedrawRect = function(_x1, _y1, _x2, _y2) {
-	    // Normilize coords
-	    var x1 = min(_x1, _x2);
-	    var y1 = min(_y1, _y2);
-	    var x2 = max(_x1, _x2);
-	    var y2 = max(_y1, _y2);
-	
-	    var _new_rect = { x1: x1, y1: y1, x2: x2, y2: y2 };
-	    var _rects = self.rectangles_to_redraw;
-	
-	    // If list is empty add new
-	    if (array_length(_rects) == 0) {
-	        array_push(_rects, _new_rect);
-	        return self;
-	    }
-	
-	    // Array for remove rects
-	    var _to_remove = [];
-	
-	    // Check all rects and merge
-	    for (var i = 0; i < array_length(_rects); i++) {
-	        var _existing = _rects[i];
-	
-	        // Check
-	        if (_new_rect.x1 <= _existing.x2 + 1 && 
-	            _new_rect.x2 >= _existing.x1 - 1 &&
-	            _new_rect.y1 <= _existing.y2 + 1 && 
-	            _new_rect.y2 >= _existing.y1 - 1) {
-	            
-	            // Merge
-	            _new_rect.x1 = min(_new_rect.x1, _existing.x1);
-	            _new_rect.y1 = min(_new_rect.y1, _existing.y1);
-	            _new_rect.x2 = max(_new_rect.x2, _existing.x2);
-	            _new_rect.y2 = max(_new_rect.y2, _existing.y2);
-	
-	            // Mark to remove old rect
-	            array_push(_to_remove, i);
-	        }
-	    }
-	
-	    // Delete old rects
-	    for (var j = array_length(_to_remove) - 1; j >= 0; j--) {
-	        array_delete(_rects, _to_remove[j], 1);
-	    }
-	
-	    // Add new merged rect
-	    array_push(_rects, _new_rect);
-	
-	    return self;
-	}
-	
-	///@desc Returns all elements intersecting with a given rectangle
-	///@ignore
-	static _getElementsInRect = function(_rect) {
-		var _elements_in_rect = [];
-		var _checked_elements = {};
-		
-		var _x_start = floor(_rect.x1 / LUI_GRID_SIZE);
-		var _y_start = floor(_rect.y1 / LUI_GRID_SIZE);
-		var _x_end = floor(_rect.x2 / LUI_GRID_SIZE);
-		var _y_end = floor(_rect.y2 / LUI_GRID_SIZE);
-		
-		for (var _x = _x_start; _x <= _x_end; ++_x) {
-			for (var _y = _y_start; _y <= _y_end; ++_y) {
-				var _key = string(_x) + "_" + string(_y);
-				if (variable_struct_exists(self._screen_grid, _key)) {
-					var _cell_array = self._screen_grid[$ _key];
-					for (var i = 0; i < array_length(_cell_array); i++) {
-						var _elm = _cell_array[i];
-						// Check that the element has not yet been processed and actually intersects
-						if (!variable_struct_exists(_checked_elements, _elm.element_id) &&
-							_elm.x < _rect.x2 && _elm.x + _elm.width > _rect.x1 &&
-							_elm.y < _rect.y2 && _elm.y + _elm.height > _rect.y1) {
-							
-							array_push(_elements_in_rect, _elm);
-							_checked_elements[$ string(_elm.element_id)] = true;
-						}
-					}
-				}
-			}
-		}
-		return _elements_in_rect;
-	}
 	
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
@@ -203,7 +113,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 	}
 	
-	// Update
+	// UPDATE
 	self.base_update = method(self, update);
 	self.update = function() {
 		
@@ -364,7 +274,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 	}
 	
-	// Render
+	// RENDER
 	self.base_render = method(self, render);
 	self.render = function() {
 		 
@@ -383,13 +293,13 @@ function LuiMain() : LuiBase() constructor {
 		var _is_first_draw = !surface_exists(self.ui_screen_surface);
 		if (_is_first_draw) {
 			self.ui_screen_surface = surface_create(self.width, self.height);
-			self.addRedrawRect(0, 0, self.width, self.height);
+			self._addRedrawRect(0, 0, self.width, self.height);
 		}
 		
 		// Redraw all screen on resizing
 		if surface_get_width(self.ui_screen_surface) != self.width || surface_get_height(self.ui_screen_surface) != self.height {
 			surface_resize(self.ui_screen_surface, self.width, self.height);
-			self.addRedrawRect(0, 0, self.width, self.height);
+			self._addRedrawRect(0, 0, self.width, self.height);
 		}
 		
 		// Dirty rectangles redraw logic
@@ -598,6 +508,96 @@ function LuiMain() : LuiBase() constructor {
 		
 		// Return top front element
 	    return _filtered[0];
+	}
+	
+	///@desc Adds a rectangle to the list of areas needing a redraw. Merges overlapping rectangles.
+	///@arg {real} _x1
+	///@arg {real} _y1
+	///@arg {real} _x2
+	///@arg {real} _y2
+	///@ignore
+	static _addRedrawRect = function(_x1, _y1, _x2, _y2) {
+	    // Normilize coords
+	    var x1 = min(_x1, _x2);
+	    var y1 = min(_y1, _y2);
+	    var x2 = max(_x1, _x2);
+	    var y2 = max(_y1, _y2);
+	
+	    var _new_rect = { x1: x1, y1: y1, x2: x2, y2: y2 };
+	    var _rects = self.rectangles_to_redraw;
+	
+	    // If list is empty add new
+	    if (array_length(_rects) == 0) {
+	        array_push(_rects, _new_rect);
+	        return self;
+	    }
+	
+	    // Array for remove rects
+	    var _to_remove = [];
+	
+	    // Check all rects and merge
+	    for (var i = 0; i < array_length(_rects); i++) {
+	        var _existing = _rects[i];
+	
+	        // Check
+	        if (_new_rect.x1 <= _existing.x2 + 1 && 
+	            _new_rect.x2 >= _existing.x1 - 1 &&
+	            _new_rect.y1 <= _existing.y2 + 1 && 
+	            _new_rect.y2 >= _existing.y1 - 1) {
+	            
+	            // Merge
+	            _new_rect.x1 = min(_new_rect.x1, _existing.x1);
+	            _new_rect.y1 = min(_new_rect.y1, _existing.y1);
+	            _new_rect.x2 = max(_new_rect.x2, _existing.x2);
+	            _new_rect.y2 = max(_new_rect.y2, _existing.y2);
+	
+	            // Mark to remove old rect
+	            array_push(_to_remove, i);
+	        }
+	    }
+	
+	    // Delete old rects
+	    for (var j = array_length(_to_remove) - 1; j >= 0; j--) {
+	        array_delete(_rects, _to_remove[j], 1);
+	    }
+	
+	    // Add new merged rect
+	    array_push(_rects, _new_rect);
+	
+	    return self;
+	}
+	
+	///@desc Returns all elements intersecting with a given rectangle
+	///@ignore
+	static _getElementsInRect = function(_rect) {
+		var _elements_in_rect = [];
+		var _checked_elements = {};
+		
+		var _x_start = floor(_rect.x1 / LUI_GRID_SIZE);
+		var _y_start = floor(_rect.y1 / LUI_GRID_SIZE);
+		var _x_end = floor(_rect.x2 / LUI_GRID_SIZE);
+		var _y_end = floor(_rect.y2 / LUI_GRID_SIZE);
+		
+		for (var _x = _x_start; _x <= _x_end; ++_x) {
+			for (var _y = _y_start; _y <= _y_end; ++_y) {
+				var _key = string(_x) + "_" + string(_y);
+				if (variable_struct_exists(self._screen_grid, _key)) {
+					var _cell_array = self._screen_grid[$ _key];
+					for (var i = 0; i < array_length(_cell_array); i++) {
+						var _elm = _cell_array[i];
+						// Check that the element has not yet been processed and actually intersects
+						if (!variable_struct_exists(_checked_elements, _elm.element_id) &&
+							_elm.x < _rect.x2 && _elm.x + _elm.width > _rect.x1 &&
+							_elm.y < _rect.y2 && _elm.y + _elm.height > _rect.y1) {
+							
+							array_push(_elements_in_rect, _elm);
+							_checked_elements[$ string(_elm.element_id)] = true;
+						}
+					}
+				}
+			}
+		}
+		return _elements_in_rect;
 	}
 	
 	///@desc Draw debug grid info

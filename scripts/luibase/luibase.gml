@@ -1730,7 +1730,7 @@ function LuiBase(_params = {}) constructor {
 			var _y1 = min(self.view_region.y1, self.prev_view_region.y1);
 			var _x2 = max(self.view_region.x2, self.prev_view_region.x2);
 			var _y2 = max(self.view_region.y2, self.prev_view_region.y2);
-			self.main_ui.addRedrawRect(_x1, _y1, _x2, _y2);
+			self.main_ui._addRedrawRect(_x1, _y1, _x2, _y2);
 		}
 		
 		return self;
