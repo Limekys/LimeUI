@@ -81,7 +81,7 @@ my_panel_2 = new LuiPanel();
 my_panel_3 = new LuiPanel();
 
 // Create Tabs with absolute position on the screen
-tabs = new LuiTabs({name: "LuiTabs", tab_height: 32});
+tabs = new LuiTabs({name: "LuiTabs"});
 
 // Add panels to main ui container
 my_ui.addContent([

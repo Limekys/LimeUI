@@ -5,7 +5,7 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	
-	self.tab_height = _params[$ "tab_height"] ?? 32;
+	self.tab_height = _params[$ "tab_height"] ?? LUI_AUTO;
 	self.tab_indent = _params[$ "tab_indent"] ?? 0;
 	
 	self.tabs = undefined;
@@ -129,6 +129,10 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		_e.addContentOriginal(_e.tabs_header);
 		// Init tab's
 		_e._initTabs();
+		// Correct tab height
+		if _e.tab_height == LUI_AUTO || _e.tab_height < _e.tabs_header.style.min_height {
+			_e.setTabHeight(_e.tabs_header.style.min_height);
+		}
 	});
 	
 	self.addEvent(LUI_EV_SHOW, function(_e) {
