@@ -1378,12 +1378,10 @@ function LuiBase(_params = {}) constructor {
 		}
 	    
 		// Update previous view region
-		_element.prev_view_region = {
-	        x1: _element.view_region.x1,
-	        y1: _element.view_region.y1,
-	        x2: _element.view_region.x2,
-	        y2: _element.view_region.y2
-		};
+		_element.prev_view_region.x1 = _element.view_region.x1;
+		_element.prev_view_region.x2 = _element.view_region.x2;
+		_element.prev_view_region.y1 = _element.view_region.y1;
+		_element.prev_view_region.y2 = _element.view_region.y2;
 		
 		if _element.is_visible_in_region == false {
 			for (var i = 0, n = array_length(_element.content); i < n; i++) {
