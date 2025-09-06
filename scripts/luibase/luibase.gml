@@ -1019,7 +1019,11 @@ function LuiBase(_params = {}) constructor {
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebug = function(_x = 0, _y = 0, _recursive = false) {
-	    // Draw rectangles
+		
+		// Restriction
+		if self.is_destroyed || !self.is_visible_in_region return;
+		
+		// Draw rectangles
 	    self._renderDebugRectangles(_x, _y);
 	    
 	    // Draw debug text info
@@ -1029,8 +1033,9 @@ function LuiBase(_params = {}) constructor {
 		// Recursive
 		if _recursive {
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
-				//Get element
+				// Get element
 				var _element = self.content[i];
+				// Draw
 				_element._renderDebug(_element.x, _element.y, true);
 			}
 		}

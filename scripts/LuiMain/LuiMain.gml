@@ -401,6 +401,7 @@ function LuiMain() : LuiBase() constructor {
 			// Draw main ui surface
 			draw_surface_ext(self.ui_screen_surface, self.x, self.y, 1, 1, 0, c_white, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 			
+			// Draw debug rectangles of elements
 			if global.lui_debug_mode != 0 {
 				for (var i = 0, n = array_length(self.content); i < n; i++) {
 					//Get element
