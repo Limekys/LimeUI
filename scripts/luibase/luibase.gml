@@ -786,9 +786,7 @@ function LuiBase(_params = {}) constructor {
 					self.content[i].setVisible(self.visible);
 				}
 				// Main surface update 
-				if self.is_visible_in_region {
-					self.updateMainUiSurface();
-				}
+				self.updateMainUiSurface();
 			}
 		}
 		return self;
@@ -1535,6 +1533,9 @@ function LuiBase(_params = {}) constructor {
 				_element.ignore_mouse_all = true;
 				_element.ignore_mouse = true;
 			}
+			if self.visible == false {
+				_element.visible = self.visible;
+			}
 			
 			// Flex setting up
 			if _element.min_width == LUI_AUTO {
@@ -1576,8 +1577,10 @@ function LuiBase(_params = {}) constructor {
 	        _element.is_adding = false;
 	    }
 		
-		// Apply all positions and update content //???//
+		// Update content
 		self.setNeedToUpdateContent();
+		
+		// Update flex
 		self.updateMainUiFlex();
 	    
 	    return self;
