@@ -1796,8 +1796,20 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
+	///@desc Destroys all elements from real element container
+	self.destroyContent = function() {
+	    var _content = self.getContent();
+		while (array_length(_content) > 0) {
+	        var _element = array_pop(_content);
+	        if (!is_undefined(_element)) {
+	            _element.destroy();
+	        }
+	    }
+	}
+	
 	///@desc Destroys all nested elements
-	static destroyContent = function() {
+	///@ignore
+	static _destroyAllNestedElements = function() {
 	    while (array_length(self.content) > 0) {
 	        var _element = array_pop(self.content);
 	        if (!is_undefined(_element)) {
@@ -1815,7 +1827,7 @@ function LuiBase(_params = {}) constructor {
 		// Double-Destroy protection
 		self.is_destroyed = true;
 		// Destroy all content
-		self.destroyContent();
+		self._destroyAllNestedElements();
 		// Remove focus from main ui
 		if !is_undefined(main_ui) && self == main_ui.element_in_focus {
 			//self.main_ui.element_in_focus.removeFocus(); //???//
@@ -1823,7 +1835,7 @@ function LuiBase(_params = {}) constructor {
 		}
 		self._deleteElementName();
 		self._cleanupScreenGrid();
-		if !is_undefined(self.parent) self.parent.setNeedToUpdateContent();
+		if !is_undefined(self.parent) self.parent.setNeedToUpdateContent(true);
 		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		// Delete flex_node

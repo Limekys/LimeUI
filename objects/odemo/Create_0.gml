@@ -368,9 +368,6 @@ my_panel_3.addContent([
 				    var _element = _filtered_elements[i];
 					_element.show();
 				}
-				// Apply scrolling to correct its position //???// should this happen automatically?
-				search_panel.scroll_target_offset_y = 0;
-				search_panel._applyScroll();
 			}
 		}
 		// Create search panel
@@ -380,7 +377,7 @@ my_panel_3.addContent([
 			var _btn_text = string(i) + ". " + choose("Aboba", "Microba", "Foo", "Bar", "Game maker!", "777", "123");
 			search_panel.addContent([
 				new LuiButton().setText(_btn_text).addEvent(LUI_EV_CLICK, function(_e) {
-					oDemo.filterElements(); _e.destroy();
+					_e.destroy();
 				})
 			]);
 		}
@@ -395,11 +392,12 @@ my_panel_3.addContent([
 			oDemo.input_control.set("");
 			oDemo.search_panel.addContent([
 				new LuiButton().setText(_button_name).addEvent(LUI_EV_CLICK, function(_e) {
-					oDemo.filterElements(); _e.destroy();
+					_e.destroy();
 				})
 			]);
+			oDemo.filterElements();
 		});
-		control_btn_clear = new LuiButton().setText("Clear list").addEvent(LUI_EV_CLICK, function() {oDemo.search_panel.cleanScrollPanel()});
+		control_btn_clear = new LuiButton().setText("Clear list").addEvent(LUI_EV_CLICK, function() {oDemo.search_panel.destroyContent()});
 		panel_control.addContent([
 			input_control,
 			control_btn_add,

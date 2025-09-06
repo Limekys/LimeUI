@@ -35,10 +35,9 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	}
 	
 	///@desc Delete scroll panel content
+	///@deprecated
 	static cleanScrollPanel = function() {
-		self.scroll_container.destroyContent();
-		self.scroll_offset_y = 0;
-		self.scroll_target_offset_y = 0;
+		self.destroyContent();
 	}
 	
 	///@ignore
@@ -119,6 +118,11 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 			flexpanel_node_style_set_flex(_e.flex_node, 1); //???//
 		}
 		flexpanel_node_style_set_border(_e.flex_node, flexpanel_edge.right, _e.style.scroll_slider_width + _e.scroll_pin_edge_offset); //???//
+	});
+	
+	self.addEvent(LUI_EV_CONTENT_UPDATE, function(_e) {
+		_e.scroll_target_offset_y = clamp(_e.scroll_target_offset_y, -(_e.scroll_container.height - _e.height), 0);
+		_e._applyScroll();
 	});
 	
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
