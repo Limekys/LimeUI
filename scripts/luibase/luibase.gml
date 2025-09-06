@@ -690,8 +690,11 @@ function LuiBase(_params = {}) constructor {
 	///@arg {constant.flexpanel_display} [_flex_display]
 	static setFlexDisplay = function(_flex_display = flexpanel_display.flex) {
 		var _flex_node = self.flex_node;
-		flexpanel_node_style_set_display(_flex_node, _flex_display);
-		self.updateMainUiFlex();
+		if flexpanel_node_style_get_display(_flex_node) != _flex_display {
+			flexpanel_node_style_set_display(_flex_node, _flex_display);
+			self.updateMainUiFlex(true);
+			self.setNeedToUpdateContent(true);
+		}
 		return self;
 	}
 	
@@ -1717,13 +1720,6 @@ function LuiBase(_params = {}) constructor {
 	///@desc Update main ui surface
 	static updateMainUiSurface = function() {
 		if is_undefined(self.main_ui) return self;
-		//self.main_ui.needs_redraw_surface = true;
-		
-		// Calculate coords and sizes
-		//var _x1 = min(self.x, self.prev_x);
-		//var _y1 = min(self.y, self.prev_y);
-		//var _x2 = max(self.x, self.prev_x) + max(self.width, self.prev_w);
-		//var _y2 = max(self.y, self.prev_y) + max(self.height, self.prev_h);
 		
 		// Add dirty rectangle to update
 		if self.is_visible_in_region {
@@ -1737,10 +1733,19 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
-	///@desc Update main ui flex
-	static updateMainUiFlex = function() {
+	///@desc Add element to main ui list for update flex
+	static updateMainUiFlex = function(_update_parent = false) {
 		if is_undefined(self.main_ui) return self;
-		self.main_ui.needs_update_flex = true;
+		
+		var _element_to_update = self;
+		
+		if _update_parent {
+			if !is_undefined(_element_to_update) {
+				_element_to_update = _element_to_update.parent;
+			}
+		}
+		
+		self.main_ui._addFlexUpdate(_element_to_update);
 		return self;
 	}
 	
@@ -1837,7 +1842,7 @@ function LuiBase(_params = {}) constructor {
 		self._deleteElementName();
 		self._cleanupScreenGrid();
 		if !is_undefined(self.parent) self.parent.setNeedToUpdateContent(true);
-		self.updateMainUiFlex();
+		self.updateMainUiFlex(true);
 		self.updateMainUiSurface();
 		// Delete flex_node
 		if (!is_undefined(self.flex_node)) {

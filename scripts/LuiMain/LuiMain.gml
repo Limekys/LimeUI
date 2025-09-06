@@ -25,6 +25,7 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_y = -1;
 	self._screen_grid = {};
 	self.rectangles_to_redraw = [];
+	self.elements_to_update_flex = [];
 	
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
@@ -271,6 +272,16 @@ function LuiMain() : LuiBase() constructor {
 			self.needs_update_flex = false;
 			self._calculateLayout();
 			self._updateFlex(self.flex_node);
+		}
+		
+		// Update list of elements to update flex
+		if array_length(self.elements_to_update_flex) > 0 {
+			self._calculateLayout();
+			while (array_length(self.elements_to_update_flex) > 0) {
+				var _e = array_pop(self.elements_to_update_flex);
+				_e._updateFlex(_e.flex_node);
+				print("updated: ", _e.name)
+			}
 		}
 	}
 	
@@ -599,6 +610,13 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		return _elements_in_rect;
+	}
+	
+	///@desc Add element to list for update flex node
+	///@ignore
+	static _addFlexUpdate = function(_element) {
+		array_push(self.elements_to_update_flex, _element);
+		self.elements_to_update_flex = array_unique(self.elements_to_update_flex);
 	}
 	
 	///@desc Draw debug grid info
