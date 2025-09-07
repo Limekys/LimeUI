@@ -279,6 +279,7 @@ function LuiMain() : LuiBase() constructor {
 			self._calculateLayout();
 			while (array_length(self.elements_to_update_flex) > 0) {
 				var _e = array_pop(self.elements_to_update_flex);
+				if is_undefined(_e) continue;
 				_e._updateFlex(_e.flex_node);
 			}
 		}

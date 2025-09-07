@@ -22,7 +22,12 @@ if !my_ui.isInteractingKeyboard() {
 	//var _element = my_ui.getElement("tabPanels");
 	//print(_element.getData("test"));
 	
-	//my_ui.setVisible(!my_ui.visible)
+	//my_ui.setVisible(!my_ui.visible);
+	if my_ui.visible {
+		my_ui.hide();
+	} else {
+		my_ui.show();
+	}
 	
 	var _surface_element = my_ui.getElement("LuiSurface");
 	print(_surface_element.view_region);
