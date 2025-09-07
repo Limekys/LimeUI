@@ -280,7 +280,6 @@ function LuiMain() : LuiBase() constructor {
 			while (array_length(self.elements_to_update_flex) > 0) {
 				var _e = array_pop(self.elements_to_update_flex);
 				_e._updateFlex(_e.flex_node);
-				print("updated: ", _e.name)
 			}
 		}
 	}
