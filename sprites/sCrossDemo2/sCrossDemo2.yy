@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"sCrossDemo2",
   "bboxMode":0,
   "bbox_bottom":57,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"e46a0956-a978-4781-aa5c-6c8a1ad9a98e","name":"e46a0956-a978-4781-aa5c-6c8a1ad9a98e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"e46a0956-a978-4781-aa5c-6c8a1ad9a98e","name":"e46a0956-a978-4781-aa5c-6c8a1ad9a98e","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"sBarBackDemo2",
   "bboxMode":0,
   "bbox_bottom":31,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"65f6d85a-b3e7-4c92-b31e-d8562cbbca19","name":"65f6d85a-b3e7-4c92-b31e-d8562cbbca19","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"65f6d85a-b3e7-4c92-b31e-d8562cbbca19","name":"65f6d85a-b3e7-4c92-b31e-d8562cbbca19","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

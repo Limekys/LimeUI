@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"",
+  "$GMSprite":"v2",
   "%Name":"sVkontakte_64px",
   "bboxMode":0,
   "bbox_bottom":63,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"adf9b1a5-32d4-4d98-bd3c-7c798eeb8ba1","name":"adf9b1a5-32d4-4d98-bd3c-7c798eeb8ba1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"adf9b1a5-32d4-4d98-bd3c-7c798eeb8ba1","name":"adf9b1a5-32d4-4d98-bd3c-7c798eeb8ba1","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
