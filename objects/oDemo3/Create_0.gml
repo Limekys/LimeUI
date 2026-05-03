@@ -1,8 +1,10 @@
 LIME_RESOLUTION.init();
 
 my_style = new LuiStyle()
-	.setPadding(16)	// Padding for all elements is 16
-	.setFonts(fDemo, fDemo)	// Default font and font for interactive elements
+	.setPadding(16)	// Padding for all elements
+    .setBorder(16)
+	//.setMargin(4)
+	.setFonts(fDemo, fDemo, fDebug)	// Default font and font for interactive elements
 	.setSprites(sUI_button, sUI_button)	// The same sprite for panels and for elements
 	.setSounds(sndBasicClick); // Click sound
 

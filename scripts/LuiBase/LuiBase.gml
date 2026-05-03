@@ -979,7 +979,13 @@ function LuiBase(_params = {}) constructor {
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectPadding = function(_x = 0, _y = 0) {
-		// Remember previous colors
+		
+        // Get value
+        var _p = flexpanel_node_style_get_padding(self.flex_node, flexpanel_edge.all_edges).value;
+        
+        if _p == 0 return;
+        
+        // Remember previous colors
 		var _prev_color = draw_get_color();
 		var _prev_alpha = draw_get_alpha();
 		
@@ -989,13 +995,13 @@ function LuiBase(_params = {}) constructor {
 		
 		// Draw rectangle's
 		// top
-		draw_rectangle(_x, _y, _x + self.width, _y + self.style.padding, false);
+		draw_rectangle(_x, _y, _x + self.width, _y + _p, false);
 		// bottom
-		draw_rectangle(_x, _y + self.height - self.style.padding, _x + self.width, _y + self.height, false);
+		draw_rectangle(_x, _y + self.height - _p, _x + self.width, _y + self.height, false);
 		// left
-		draw_rectangle(_x, _y + self.style.padding, _x + self.style.padding, _y + self.height - self.style.padding, false);
+		draw_rectangle(_x, _y + _p, _x + _p, _y + self.height - _p, false);
 		// right
-		draw_rectangle(_x + self.width - self.style.padding, _y + self.style.padding, _x + self.width, _y + self.height - self.style.padding, false);
+		draw_rectangle(_x + self.width - _p, _y + _p, _x + self.width, _y + self.height - _p, false);
 		
 		// Draw text
 		draw_set_valign(fa_top);
@@ -1013,7 +1019,13 @@ function LuiBase(_params = {}) constructor {
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectBorder = function(_x = 0, _y = 0) {
-		// Remember previous colors
+		
+        // Get value
+        var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
+        
+        if _b == 0 return;
+        
+        // Remember previous colors
 		var _prev_color = draw_get_color();
 		var _prev_alpha = draw_get_alpha();
 		
@@ -1022,7 +1034,6 @@ function LuiBase(_params = {}) constructor {
 		draw_set_color(c_yellow);
 		
 		// Draw rectangle's
-		var _b = self.style.border;
 		// top
 		draw_rectangle(_x - _b, _y - _b, _x + self.width + _b, _y, false);
 		// bottom
@@ -1048,7 +1059,14 @@ function LuiBase(_params = {}) constructor {
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectMargin = function(_x = 0, _y = 0) {
-		// Remember previous colors
+		
+        // Get value
+        var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
+		var _m = flexpanel_node_style_get_margin(self.flex_node, flexpanel_edge.all_edges).value;
+        
+        if _m == 0 return;
+        
+        // Remember previous colors
 		var _prev_color = draw_get_color();
 		var _prev_alpha = draw_get_alpha();
 		
@@ -1057,8 +1075,6 @@ function LuiBase(_params = {}) constructor {
 		draw_set_color(c_aqua);
 		
 		// Draw rectangle's
-		var _b = self.style.border;
-		var _m = self.style.margin;
 		// top
 		draw_rectangle(_x - _b - _m, _y - _b - _m, _x + self.width + _b + _m, _y - _b, false);
 		// bottom
@@ -1072,7 +1088,7 @@ function LuiBase(_params = {}) constructor {
 		draw_set_valign(fa_top);
 		draw_set_halign(fa_left);
 		draw_set_color(c_white);
-		draw_text(_x - _b, _y - _b, "margin");
+		draw_text(_x - _b - _m, _y - _b - _m, "margin");
 		
 		// Reset colors
 		draw_set_color(_prev_color);
