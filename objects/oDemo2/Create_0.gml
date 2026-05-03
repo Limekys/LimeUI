@@ -5,8 +5,10 @@ LIME_RESOLUTION.init();
 //Light theme
 demo2_style = new LuiStyle()
 	.setMinSize(48, 48)
-	.setPadding(24)
-	.setGap(24)
+	.setPadding(8)
+	.setGap(8)
+	.setBorder(8)
+	.setMargin(8)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fntDemo2, fntDemo2, fDebug)
 	.setSprites(sPanelDemo2, sBtnDemo2)

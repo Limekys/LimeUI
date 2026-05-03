@@ -425,7 +425,7 @@ function LuiMain() : LuiBase() constructor {
 				}
 			}
 			
-			// Draw debug rects
+			// Draw debug dirty rects
 			if global.lui_debug_mode > 0 {
 				for (var i = 0; i < array_length(self.rectangles_to_redraw); i++) {
 					var _rect = self.rectangles_to_redraw[i];

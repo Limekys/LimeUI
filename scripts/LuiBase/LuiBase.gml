@@ -974,6 +974,111 @@ function LuiBase(_params = {}) constructor {
 	    draw_set_alpha(_prev_alpha);
 	}
 	
+	///@desc Renders debug rectangles for element 
+	///@param {real} _x X-coordinate for rendering (default 0)
+	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@ignore
+	static _renderDebugRectPadding = function(_x = 0, _y = 0) {
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
+		
+		// Set colors
+		draw_set_alpha(0.5);
+		draw_set_color(c_red);
+		
+		// Draw rectangle's
+		// top
+		draw_rectangle(_x, _y, _x + self.width, _y + self.style.padding, false);
+		// bottom
+		draw_rectangle(_x, _y + self.height - self.style.padding, _x + self.width, _y + self.height, false);
+		// left
+		draw_rectangle(_x, _y + self.style.padding, _x + self.style.padding, _y + self.height - self.style.padding, false);
+		// right
+		draw_rectangle(_x + self.width - self.style.padding, _y + self.style.padding, _x + self.width, _y + self.height - self.style.padding, false);
+		
+		// Draw text
+		draw_set_valign(fa_top);
+		draw_set_halign(fa_left);
+		draw_set_color(c_white);
+		draw_text(_x, _y, "padding");
+		
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
+	}
+	
+	///@desc Renders debug rectangles for element 
+	///@param {real} _x X-coordinate for rendering (default 0)
+	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@ignore
+	static _renderDebugRectBorder = function(_x = 0, _y = 0) {
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
+		
+		// Set colors
+		draw_set_alpha(0.5);
+		draw_set_color(c_yellow);
+		
+		// Draw rectangle's
+		var _b = self.style.border;
+		// top
+		draw_rectangle(_x - _b, _y - _b, _x + self.width + _b, _y, false);
+		// bottom
+		draw_rectangle(_x - _b, _y + self.height, _x + self.width + _b, _y + self.height + _b, false);
+		// left
+		draw_rectangle(_x - _b, _y, _x, _y + self.height, false);
+		// right
+		draw_rectangle(_x + self.width, _y, _x + self.width + _b, _y + self.height, false);
+		
+		// Draw text
+		draw_set_valign(fa_top);
+		draw_set_halign(fa_left);
+		draw_set_color(c_white);
+		draw_text(_x - _b, _y - _b, "border");
+		
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
+	}
+	
+	///@desc Renders debug rectangles for element 
+	///@param {real} _x X-coordinate for rendering (default 0)
+	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@ignore
+	static _renderDebugRectMargin = function(_x = 0, _y = 0) {
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
+		
+		// Set colors
+		draw_set_alpha(0.5);
+		draw_set_color(c_aqua);
+		
+		// Draw rectangle's
+		var _b = self.style.border;
+		var _m = self.style.margin;
+		// top
+		draw_rectangle(_x - _b - _m, _y - _b - _m, _x + self.width + _b + _m, _y - _b, false);
+		// bottom
+		draw_rectangle(_x - _b - _m, _y + self.height + _b, _x + self.width + _b + _m, _y + self.height + _b + _m, false);
+		// left
+		draw_rectangle(_x - _b - _m, _y - _b, _x - _b, _y + self.height + _b, false);
+		// right
+		draw_rectangle(_x + self.width + _b, _y - _b, _x + self.width + _b + _m, _y + self.height + _b, false);
+		
+		// Draw text
+		draw_set_valign(fa_top);
+		draw_set_halign(fa_left);
+		draw_set_color(c_white);
+		draw_text(_x - _b, _y - _b, "margin");
+		
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
+	}
+	
 	///@desc Renders debug text information for the element
 	///@param {real} _x X-coordinate for rendering (default 0)
 	///@param {real} _y Y-coordinate for rendering (default 0)
@@ -1028,6 +1133,14 @@ function LuiBase(_params = {}) constructor {
 		
 		// Draw rectangles
 	    self._renderDebugRectangles(_x, _y);
+		
+		// Set font if defined
+	    if !is_undefined(self.style.font_debug) {
+	        draw_set_font(self.style.font_debug);
+	    }
+		self._renderDebugRectPadding(_x, _y);
+		self._renderDebugRectBorder(_x, _y);
+		self._renderDebugRectMargin(_x, _y);
 	    
 	    // Draw debug text info
 		if global.lui_debug_mode == 2
