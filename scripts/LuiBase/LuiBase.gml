@@ -974,125 +974,128 @@ function LuiBase(_params = {}) constructor {
 	    draw_set_alpha(_prev_alpha);
 	}
 	
-	///@desc Renders debug rectangles for element 
+	///@desc Renders debug rectangles for element
 	///@param {real} _x X-coordinate for rendering (default 0)
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectPadding = function(_x = 0, _y = 0) {
-		
-        // Get value
-        var _p = flexpanel_node_style_get_padding(self.flex_node, flexpanel_edge.all_edges).value;
-        
-        if _p == 0 return;
-        
-        // Remember previous colors
-		var _prev_color = draw_get_color();
-		var _prev_alpha = draw_get_alpha();
-		
-		// Set colors
-		draw_set_alpha(0.5);
-		draw_set_color(c_red);
-		
-		// Draw rectangle's
-		// top
-		draw_rectangle(_x, _y, _x + self.width, _y + _p, false);
-		// bottom
-		draw_rectangle(_x, _y + self.height - _p, _x + self.width, _y + self.height, false);
-		// left
-		draw_rectangle(_x, _y + _p, _x + _p, _y + self.height - _p, false);
-		// right
-		draw_rectangle(_x + self.width - _p, _y + _p, _x + self.width, _y + self.height - _p, false);
-		
-		// Draw text
-		draw_set_valign(fa_top);
-		draw_set_halign(fa_left);
-		draw_set_color(c_white);
-		draw_text(_x, _y, "padding");
-		
-		// Reset colors
-		draw_set_color(_prev_color);
-		draw_set_alpha(_prev_alpha);
+	    
+	    // Get values
+	    var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
+	    var _p = flexpanel_node_style_get_padding(self.flex_node, flexpanel_edge.all_edges).value;
+	    
+	    if _p == 0 return;
+	    
+	    // Remember previous colors
+	    var _prev_color = draw_get_color();
+	    var _prev_alpha = draw_get_alpha();
+	    
+	    // Set colors
+	    draw_set_alpha(0.5);
+	    draw_set_color(#F06292);
+	    
+	    // Draw padding INSIDE border (border-box model)
+	    // Top padding
+	    draw_rectangle(_x + _b, _y + _b, _x + self.width - _b, _y + _b + _p, false);
+	    // Bottom padding
+	    draw_rectangle(_x + _b, _y + self.height - _b - _p, _x + self.width - _b, _y + self.height - _b, false);
+	    // Left padding
+	    draw_rectangle(_x + _b, _y + _b + _p, _x + _b + _p, _y + self.height - _b - _p, false);
+	    // Right padding
+	    draw_rectangle(_x + self.width - _b - _p, _y + _b + _p, _x + self.width - _b, _y + self.height - _b - _p, false);
+	    
+	    // Draw text
+	    draw_set_valign(fa_top);
+	    draw_set_halign(fa_left);
+	    draw_set_alpha(0.75);
+		draw_set_color(#C2185B);
+	    draw_text(_x + _b + 2, _y + _b + 2, "padding");
+	    
+	    // Reset colors
+	    draw_set_color(_prev_color);
+	    draw_set_alpha(_prev_alpha);
 	}
 	
-	///@desc Renders debug rectangles for element 
+	///@desc Renders debug rectangles for element
 	///@param {real} _x X-coordinate for rendering (default 0)
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectBorder = function(_x = 0, _y = 0) {
-		
-        // Get value
-        var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
-        
-        if _b == 0 return;
-        
-        // Remember previous colors
-		var _prev_color = draw_get_color();
-		var _prev_alpha = draw_get_alpha();
-		
-		// Set colors
-		draw_set_alpha(0.5);
-		draw_set_color(c_yellow);
-		
-		// Draw rectangle's
-		// top
-		draw_rectangle(_x - _b, _y - _b, _x + self.width + _b, _y, false);
-		// bottom
-		draw_rectangle(_x - _b, _y + self.height, _x + self.width + _b, _y + self.height + _b, false);
-		// left
-		draw_rectangle(_x - _b, _y, _x, _y + self.height, false);
-		// right
-		draw_rectangle(_x + self.width, _y, _x + self.width + _b, _y + self.height, false);
-		
-		// Draw text
-		draw_set_valign(fa_top);
-		draw_set_halign(fa_left);
-		draw_set_color(c_white);
-		draw_text(_x - _b, _y - _b, "border");
-		
-		// Reset colors
-		draw_set_color(_prev_color);
-		draw_set_alpha(_prev_alpha);
+	    
+	    // Get value
+	    var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
+	    
+	    if _b == 0 return;
+	    
+	    // Remember previous colors
+	    var _prev_color = draw_get_color();
+	    var _prev_alpha = draw_get_alpha();
+	    
+	    // Set colors
+	    draw_set_alpha(0.5);
+	    draw_set_color(#4DD0E1);
+	    
+	    // Draw border ON THE EDGE of self.width/height (border-box model)
+	    // Top border (full width)
+	    draw_rectangle(_x, _y, _x + self.width, _y + _b, false);
+	    // Bottom border (full width)
+	    draw_rectangle(_x, _y + self.height - _b, _x + self.width, _y + self.height, false);
+	    // Left border (inner height only, excluding top/bottom borders)
+	    draw_rectangle(_x, _y + _b, _x + _b, _y + self.height - _b, false);
+	    // Right border (inner height only, excluding top/bottom borders)
+	    draw_rectangle(_x + self.width - _b, _y + _b, _x + self.width, _y + self.height - _b, false);
+	    
+	    // Draw text
+	    draw_set_valign(fa_top);
+	    draw_set_halign(fa_left);
+		draw_set_alpha(0.75);
+	    draw_set_color(#00838F);
+	    draw_text(_x + 2, _y + 2, "border");
+	    
+	    // Reset colors
+	    draw_set_color(_prev_color);
+	    draw_set_alpha(_prev_alpha);
 	}
 	
-	///@desc Renders debug rectangles for element 
+	///@desc Renders debug rectangles for element
 	///@param {real} _x X-coordinate for rendering (default 0)
 	///@param {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectMargin = function(_x = 0, _y = 0) {
-		
-        // Get value
-        var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
-		var _m = flexpanel_node_style_get_margin(self.flex_node, flexpanel_edge.all_edges).value;
-        
-        if _m == 0 return;
-        
-        // Remember previous colors
-		var _prev_color = draw_get_color();
-		var _prev_alpha = draw_get_alpha();
-		
-		// Set colors
-		draw_set_alpha(0.5);
-		draw_set_color(c_aqua);
-		
-		// Draw rectangle's
-		// top
-		draw_rectangle(_x - _b - _m, _y - _b - _m, _x + self.width + _b + _m, _y - _b, false);
-		// bottom
-		draw_rectangle(_x - _b - _m, _y + self.height + _b, _x + self.width + _b + _m, _y + self.height + _b + _m, false);
-		// left
-		draw_rectangle(_x - _b - _m, _y - _b, _x - _b, _y + self.height + _b, false);
-		// right
-		draw_rectangle(_x + self.width + _b, _y - _b, _x + self.width + _b + _m, _y + self.height + _b, false);
-		
-		// Draw text
-		draw_set_valign(fa_top);
-		draw_set_halign(fa_left);
-		draw_set_color(c_white);
-		draw_text(_x - _b - _m, _y - _b - _m, "margin");
-		
-		// Reset colors
-		draw_set_color(_prev_color);
-		draw_set_alpha(_prev_alpha);
+	    
+	    // Get value
+	    var _m = flexpanel_node_style_get_margin(self.flex_node, flexpanel_edge.all_edges).value;
+	    
+	    if _m == 0 return;
+	    
+	    // Remember previous colors
+	    var _prev_color = draw_get_color();
+	    var _prev_alpha = draw_get_alpha();
+	    
+	    // Set colors
+	    draw_set_alpha(0.5);
+	    draw_set_color(#FFB74D);
+	    
+	    // Draw margin OUTSIDE the element (border-box edge is at _x,_y,width,height)
+	    // Top margin (full width including side margins)
+	    draw_rectangle(_x - _m, _y - _m, _x + self.width + _m, _y, false);
+	    // Bottom margin (full width including side margins)
+	    draw_rectangle(_x - _m, _y + self.height, _x + self.width + _m, _y + self.height + _m, false);
+	    // Left margin (inner height only, excluding top/bottom margins to avoid corner overlap)
+	    draw_rectangle(_x - _m, _y, _x, _y + self.height, false);
+	    // Right margin (inner height only, excluding top/bottom margins)
+	    draw_rectangle(_x + self.width, _y, _x + self.width + _m, _y + self.height, false);
+	    
+	    // Draw text
+	    draw_set_valign(fa_top);
+	    draw_set_halign(fa_left);
+		draw_set_alpha(0.75);
+	    draw_set_color(#E65100);
+	    draw_text(_x - _m, _y - _m, "margin");
+	    
+	    // Reset colors
+	    draw_set_color(_prev_color);
+	    draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc Renders debug text information for the element
@@ -1147,19 +1150,23 @@ function LuiBase(_params = {}) constructor {
 		// Restriction
 		if self.is_destroyed || !self.is_visible_in_region return;
 		
-		// Draw rectangles
-	    self._renderDebugRectangles(_x, _y);
-		
-		// Set font if defined
+		// Set font
 	    if !is_undefined(self.style.font_debug) {
 	        draw_set_font(self.style.font_debug);
 	    }
-		self._renderDebugRectPadding(_x, _y);
-		self._renderDebugRectBorder(_x, _y);
-		self._renderDebugRectMargin(_x, _y);
+		
+		// Draw rectangles
+	    self._renderDebugRectangles(_x, _y);
+		
+		// Margin, border, padding
+		if global.lui_debug_mode == 2 {
+			self._renderDebugRectMargin(_x, _y);
+			self._renderDebugRectBorder(_x, _y);
+			self._renderDebugRectPadding(_x, _y);
+		}
 	    
 	    // Draw debug text info
-		if global.lui_debug_mode == 2
+		if global.lui_debug_mode == 3
 	    self._renderDebugInfo(_x, _y);
 		
 		// Recursive
@@ -1181,11 +1188,11 @@ function LuiBase(_params = {}) constructor {
 		_x = clamp(_x, 0, display_get_gui_width() - _text_width);
 		_y = clamp(_y, 0, display_get_gui_height() - _text_height);
 		draw_set_color(c_black);
-		draw_rectangle(_x, _y, _x + _text_width, _y + _text_height, false);
+		draw_rectangle(_x, _y, _x + _text_width + 1, _y + _text_height + 1, false);
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);
 		draw_set_color(c_white);
-		draw_text(_x, _y, text);
+		draw_text(_x + 1, _y + 1, text);
 	}
 	
 	///@desc Returns text fit to width

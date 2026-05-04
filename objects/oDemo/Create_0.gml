@@ -132,7 +132,7 @@ createNewLoginWindow = function () {
 
 // Add elements to first panel and init some new here
 my_panel.addContent([
-	new LuiText({value: "First panel", scale_to_fit: true}).setTextHalign(fa_center),
+	new LuiText({value: "First panel", text_halign: fa_center, scale_to_fit: true}).setMargin(0),
 	new LuiRow().addContent([
 		new LuiText({value: "ProgressBar"}), demo_loading, [0.3, 0.7]
 	]),
@@ -140,7 +140,7 @@ my_panel.addContent([
 		new LuiText({value: "Slider"}), new LuiSlider(), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
-		new LuiText({value: "Slider with rounding 10"}), new LuiSlider({name: "SliderRounding", value: 20, rounding: 10, bar_height: 16}), [0.3, 0.7]
+		new LuiText({value: "Slider with rounding"}), new LuiSlider({name: "SliderRounding", value: 75, rounding: 25, bar_height: 16}), [0.3, 0.7]
 	]),
 	new LuiRow().addContent([
 		new LuiText({value: "Login: "}), new LuiInput({placeholder: "admin", max_length: 32}).bindVariable(self, "demo_login"), [0.3, 0.7]
@@ -157,7 +157,7 @@ my_panel.addContent([
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg, btn_restart
 	])
-]);
+]).setMargin(16);
 
 // Create deactivated button
 deactivated_button = new LuiButton({text: "DEACTIVATED"}).deactivate().addEvent(LUI_EV_CLICK, function(_e) {

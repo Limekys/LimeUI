@@ -3,19 +3,18 @@ LIME_RESOLUTION.init();
 my_style = new LuiStyle()
 	.setPadding(16)	// Padding for all elements
     .setBorder(16)
-	//.setMargin(4)
 	.setFonts(fDemo, fDemo, fDebug)	// Default font and font for interactive elements
 	.setSprites(sUI_button, sUI_button)	// The same sprite for panels and for elements
 	.setSounds(sndBasicClick); // Click sound
 
 game_ui = new LuiMain().setStyle(my_style).centerContent();
 
-hello_button = new LuiButton({text: "Hello world!", width: 128});
+hello_button = new LuiButton({text: "Hello world!", width: 100, height: 100});
 second_button = new LuiButton({text: "Second button", width: 128}).addEvent(LUI_EV_CLICK, function() {room_goto(rDemo)});
 third_button = new LuiButton({text: "Third button", width: 128}).addEvent(LUI_EV_CLICK, function() {room_goto(rDemo2)});
 
 game_ui.addContent([
-	hello_button
+	hello_button, second_button, third_button
 ]);
 
 hello_button.addEvent(LUI_EV_CLICK, function() {room_goto(rDemo)});

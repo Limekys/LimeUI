@@ -420,7 +420,6 @@ function LuiMain() : LuiBase() constructor {
 					// Restriction
 					if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
 					// Draw debug
-					if !_element.visible || !_element.is_visible_in_region continue;
 					_element._renderDebug(_element.x, _element.y, true);
 				}
 			}

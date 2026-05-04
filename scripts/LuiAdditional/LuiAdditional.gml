@@ -11,7 +11,7 @@ function luiRescale(_ui, _width, _height) {
 
 ///@desc Turn on next debug mode
 function luiNextDebugMode() {
-	if global.lui_debug_mode < 2 {
+	if global.lui_debug_mode < 3 {
 		global.lui_debug_mode++;
 	} else {
 		global.lui_debug_mode = 0;
