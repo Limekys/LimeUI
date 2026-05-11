@@ -77,37 +77,68 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	self.contains_hovered_slider = function(_arr)
+	{
+		for (var i = 0, n = array_length(_arr); i < n; i++)
+		{
+			var _elm = _arr[i];
+        
+			if variable_instance_exists(_elm, "knob_extender") and _elm.isMouseHovered()
+			{
+				return true;
+			}
+        
+			if is_array(_elm.content) and contains_hovered_slider(_elm.content)
+			{
+				return true;
+			}
+		}
+    
+		return false;
+	}
+	
 	self.step = function() {
-		// Mouse wheel input
-		if self.isMouseHoveredExc() && self.isMouseHoveredChilds() {
-			var _wheel_up = mouse_wheel_up() ? 1 : 0;
-			var _wheel_down = mouse_wheel_down() ? 1 : 0;
-			var _wheel = _wheel_up - _wheel_down;
-			if _wheel != 0 {
-				self.scroll_target_offset_y += self.style.scroll_step * _wheel;
+		// Loop through children to check if mouse over any scrolling element		
+		var _contains_hovered_slider = contains_hovered_slider(self.content);
+		
+		if !_contains_hovered_slider
+		{
+			// Mouse wheel input
+			if self.isMouseHoveredExc() && self.isMouseHoveredChilds() {
+				var _wheel_up = mouse_wheel_up() ? 1 : 0;
+				var _wheel_down = mouse_wheel_down() ? 1 : 0;
+				var _wheel = _wheel_up - _wheel_down;
+				if _wheel != 0 {
+					self.scroll_target_offset_y += self.style.scroll_step * _wheel;
+				}
+				// Touch compatibility //???// (WIP)
+				if self.drag_start_y == -1 && mouse_check_button_pressed(mb_left) {
+					self.drag_start_y = device_mouse_y_to_gui(0);
+				}
 			}
 			// Touch compatibility //???// (WIP)
-			if self.drag_start_y == -1 && mouse_check_button_pressed(mb_left) {
-				self.drag_start_y = device_mouse_y_to_gui(0);
+			if self.drag_start_y != -1 {
+				if mouse_check_button(mb_left) 
+					&& (is_undefined(self.main_ui.element_in_focus) || (!is_undefined(self.main_ui.element_in_focus) && is_undefined(self.main_ui.dragging_element))) {
+					self.drag_y = device_mouse_y_to_gui(0);
+					self.scroll_target_offset_y = self.scroll_target_offset_y - self.drag_start_y + self.drag_y;
+					self.drag_start_y = SmoothApproachDelta(self.drag_start_y, self.drag_y, self.scroll_smoothness, 0.1);
+				}
+				if mouse_check_button_released(mb_left) {
+					self.drag_start_y = -1;
+				}
+			}
+			
+			// Scrolling
+			if self.scroll_offset_y != self.scroll_target_offset_y {
+				self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
+				self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, self.scroll_smoothness, 0.1);
+				self._applyScroll();
 			}
 		}
-		// Touch compatibility //???// (WIP)
-		if self.drag_start_y != -1 {
-			if mouse_check_button(mb_left) 
-				&& (is_undefined(self.main_ui.element_in_focus) || (!is_undefined(self.main_ui.element_in_focus) && is_undefined(self.main_ui.dragging_element))) {
-				self.drag_y = device_mouse_y_to_gui(0);
-				self.scroll_target_offset_y = self.scroll_target_offset_y - self.drag_start_y + self.drag_y;
-				self.drag_start_y = SmoothApproachDelta(self.drag_start_y, self.drag_y, self.scroll_smoothness, 0.1);
-			}
-			if mouse_check_button_released(mb_left) {
-				self.drag_start_y = -1;
-			}
-		}
-		// Scrolling
-		if self.scroll_offset_y != self.scroll_target_offset_y {
-			self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
-			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, self.scroll_smoothness, 0.1);
-			self._applyScroll();
+		else
+		{
+			self.scroll_target_offset_y = self.scroll_offset_y;
 		}
 	}
 	
