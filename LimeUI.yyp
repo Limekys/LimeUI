@@ -37,7 +37,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.4.222",
+    "IDEVersion":"2026.0.0.16",
   },
   "name":"LimeUI",
   "resources":[
@@ -152,8 +152,8 @@
     {"roomId":{"name":"rDemo","path":"rooms/rDemo/rDemo.yy",},},
     {"roomId":{"name":"rDemo2","path":"rooms/rDemo2/rDemo2.yy",},},
     {"roomId":{"name":"rDemo3","path":"rooms/rDemo3/rDemo3.yy",},},
-    {"roomId":{"name":"rMemTest","path":"rooms/rMemTest/rMemTest.yy",},},
     {"roomId":{"name":"rDemoShowcase","path":"rooms/rDemoShowcase/rDemoShowcase.yy",},},
+    {"roomId":{"name":"rMemTest","path":"rooms/rMemTest/rMemTest.yy",},},
   ],
   "templateType":null,
   "TextureGroups":[
