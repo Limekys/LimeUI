@@ -3,9 +3,7 @@
 /// color
 /// alpha
 ///@arg {Struct} [_params] Struct with parameters
-function LuiBox(_params = {}) : LuiColumn(_params) constructor {
-	
-	self.ignore_mouse = false;
+function LuiBox(_params = {}) : LuiBase(_params) constructor {
 	
 	self.color = _params[$ "color"] ?? c_black;
 	self.alpha = _params[$ "alpha"] ?? 0.5;
