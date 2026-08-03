@@ -5,6 +5,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
     
+	self.class_name = "LuiWindow";
+	
 	self.setPositionAbsolute();
 	
 	self.title = _params[$ "title"] ?? "Title";
@@ -41,7 +43,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
 			self.window_header = new LuiWindowHeader({title: self.title, show_controls: self.show_controls})
-				.setGap(0).setPadding(8).setFlexDirection(flexpanel_flex_direction.row);
+				.setFlexDirection(flexpanel_flex_direction.row);
 			
 			// Set parent window link
 			self.window_header.parent_window = self;
@@ -118,6 +120,8 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
     
+	self.class_name = "LuiWindowHeader";
+	
 	self.can_drag = true;
 	
 	self.title = _params[$ "title"] ?? "Title";
@@ -136,6 +140,7 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 	static _initControlButtons = function() {
 		var _button_size = 32; //???//
 		var _close_button = new LuiButton({width: _button_size, height: _button_size, text: "X", color: self.style.color_semantic_error});
+		
 		var _minimize_button = new LuiButton({width: _button_size, height: _button_size, text: "-"});
 		_close_button.addEvent(LUI_EV_CLICK, function(_e) {
 			_e.parent.parent_window.closeWindow();

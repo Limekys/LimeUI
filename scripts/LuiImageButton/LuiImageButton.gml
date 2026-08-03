@@ -8,6 +8,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	
+	self.class_name = "LuiImageButton";
+	
 	self.draw = function() {
 		//Calculate fit size
 		var _width = self.width;

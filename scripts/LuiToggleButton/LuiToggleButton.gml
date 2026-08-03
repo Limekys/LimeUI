@@ -6,6 +6,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 	
+	self.class_name = "LuiToggleButton";
+	
 	self.value = _params[$ "value"] ?? false;
 	
 	self.draw = function() {

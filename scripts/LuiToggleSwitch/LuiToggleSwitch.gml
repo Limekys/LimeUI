@@ -2,11 +2,15 @@
 /// Available parameters:
 /// text
 /// value
+/// icon_spacing
 ///@arg {Struct} [_params] Struct with parameters
 function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	
+	self.class_name = "LuiToggleSwitch";
+	
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
+	self.icon_spacing = _params[$ "icon_spacing"] ?? 8;
 	
 	self.knob_size = 32;
 	self.knob_xoffset = 0;
@@ -82,8 +86,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			if !is_undefined(self.style.font_default) {
 				draw_set_font(self.style.font_default);
 			}
-			var _text_width = min(string_width(self.text), self.width - self.draw_width - self.style.gap);
-			var _text_x = _slider_x + self.draw_width + self.style.gap;
+			var _text_width = min(string_width(self.text), self.width - self.draw_width - self.icon_spacing);
+			var _text_x = _slider_x + self.draw_width + self.icon_spacing;
 			self._drawTruncatedText(_text_x, self.y + self.height / 2, self.text, _text_width);
 		}
 	}

@@ -10,6 +10,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	
+	self.class_name = "LuiProgressBar";
+	
 	self.value = _params[$ "value"] ?? 0;
 	self.min_value = min(_params[$ "min_value"] ?? 0, _params[$ "max_value"] ?? 100);
 	self.max_value = max(_params[$ "min_value"] ?? 0, _params[$ "max_value"] ?? 100);

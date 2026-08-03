@@ -18,8 +18,8 @@ demo_surface = -1;
 // Create Light style theme
 demo_style_light = new LuiStyle()
 	.setMinSize(32, 32)
-	.setPadding(16)
 	.setGap(16)
+	.setPadding(16)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
@@ -37,8 +37,8 @@ demo_style_light = new LuiStyle()
 // Create Dark style theme
 demo_style_dark = new LuiStyle()
 	.setMinSize(32, 32)
-	.setPadding(16)
 	.setGap(16)
+	.setPadding(16)
 	.setRenderRegionOffset([0,0,1,3])
 	.setFonts(fDemo, fDemo, fDebug)
 	.setSprites(sUI_panel, sUI_button, sUI_panel_border, sUI_button_border)
@@ -56,8 +56,8 @@ demo_style_dark = new LuiStyle()
 // Create Modern style theme
 demo_style_modern = new LuiStyle()
 	.setMinSize(32, 32)
-	.setPadding(16)
 	.setGap(16)
+	.setPadding(16)
 	.setSymbolPassword("*")
 	.setFonts(fModern, fModern, fDebug)
 	.setSprites(sUI_Square_21r, sUI_Square_6r)
@@ -105,7 +105,7 @@ tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
 // Create some elements
 demo_loading = new LuiProgressBar({value: demo_loading_value, rounding: 1}).bindVariable(self, "demo_loading_value");
 btn_show_msg = new LuiButton({text: "Show message"}).setColor(merge_color(#FFFF77, c_black, 0.5)).setIcon(sIconInfo, 1).addEvent(LUI_EV_CLICK, function() {
-	luiShowMessage(oDemo.my_ui, , , "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
+	luiShowMessage(oDemo.my_ui, , 150, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
 btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_black, 0.5)).addEvent(LUI_EV_CLICK, function() {
 	game_restart();
@@ -132,7 +132,7 @@ createNewLoginWindow = function () {
 
 // Add elements to first panel and init some new here
 my_panel.addContent([
-	new LuiText({value: "First panel", text_halign: fa_center, scale_to_fit: true}).setMargin(0),
+	new LuiText({value: "First panel", text_halign: fa_center, scale_to_fit: true}),
 	new LuiRow().addContent([
 		new LuiText({value: "ProgressBar"}), demo_loading, [0.3, 0.7]
 	]),
@@ -157,7 +157,7 @@ my_panel.addContent([
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg, btn_restart
 	])
-]).setMargin(16);
+]);
 
 // Create deactivated button
 deactivated_button = new LuiButton({text: "DEACTIVATED"}).deactivate().addEvent(LUI_EV_CLICK, function(_e) {

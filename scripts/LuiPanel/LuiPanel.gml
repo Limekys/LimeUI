@@ -4,6 +4,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	
+	self.class_name = "LuiPanel";
+	
 	self.allow_resize = _params[$ "allow_resize"] ?? false;
 	
 	self.resizer = undefined;

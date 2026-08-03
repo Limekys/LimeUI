@@ -6,80 +6,138 @@ enum LUI_ANIM {
 ///@arg {Struct} [_style]
 function LuiStyle(_style = {}) constructor {
 	//Fonts
-	font_default = _style[$ "font_default"] ?? undefined;
-	font_buttons = _style[$ "font_buttons"] ?? undefined;
-	font_debug = _style[$ "font_debug"] ?? undefined;
+	self.font_default = _style[$ "font_default"] ?? undefined;
+	self.font_buttons = _style[$ "font_buttons"] ?? undefined;
+	self.font_debug = _style[$ "font_debug"] ?? undefined;
 	//Sprites
-	sprite_panel = _style[$ "sprite_panel"] ?? undefined;
-	sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
-	sprite_input = _style[$ "sprite_input"] ?? undefined;
-	sprite_input_border = _style[$ "sprite_input_border"] ?? undefined;
-	sprite_button = _style[$ "sprite_button"] ?? undefined;
-	sprite_button_border = _style[$ "sprite_button_border"] ?? undefined;
-	sprite_checkbox = _style[$ "sprite_checkbox"] ?? undefined;
-	sprite_checkbox_pin = _style[$ "sprite_checkbox_pin"] ?? undefined;
-	sprite_checkbox_border = _style[$ "sprite_checkbox_border"] ?? undefined;
-	sprite_progress_bar = _style[$ "sprite_progress_bar"] ?? undefined;
-	sprite_progress_bar_value = _style[$ "sprite_progress_bar_value"] ?? undefined;
-	sprite_progress_bar_border = _style[$ "sprite_progress_bar_border"] ?? undefined;
-	sprite_progress_ring = _style[$ "sprite_progress_ring"] ?? undefined;
-	sprite_progress_ring_value = _style[$ "sprite_progress_ring_value"] ?? undefined;
-	sprite_progress_ring_border = _style[$ "sprite_progress_ring_border"] ?? undefined;
-	sprite_slider_knob = _style[$ "sprite_slider_knob"] ?? undefined;
-	sprite_slider_knob_border = _style[$ "sprite_slider_knob_border"] ?? undefined;
-	sprite_scroll_pin = _style[$ "sprite_scroll_pin"] ?? undefined;
-	sprite_scroll_pin_border = _style[$ "sprite_scroll_pin_border"] ?? undefined;
-	sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
-	sprite_combobox = _style[$ "sprite_combobox"] ?? undefined;
-	sprite_combobox_border = _style[$ "sprite_combobox_border"] ?? undefined;
-	sprite_combobox_item = _style[$ "sprite_combobox_item"] ?? undefined;
-	sprite_combobox_item_border = _style[$ "sprite_combobox_item_border"] ?? undefined;
-	sprite_combobox_arrow = _style[$ "sprite_combobox_arrow"] ?? undefined;
-	sprite_tab = _style[$ "sprite_tab"] ?? undefined;
-	sprite_tab_border = _style[$ "sprite_tab_border"] ?? undefined;
-	sprite_tabs = _style[$ "sprite_tabs"] ?? undefined;
-	sprite_tabs_border = _style[$ "sprite_tabs_border"] ?? undefined;
-	sprite_tooltip = _style[$ "sprite_tooltip"] ?? undefined;
-	sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
-	sprite_toggleswitch = _style[$ "sprite_toggleswitch"] ?? undefined;
-	sprite_toggleswitch_slider = _style[$ "sprite_toggleswitch_slider"] ?? undefined;
-	sprite_toggleswitch_border = _style[$ "sprite_toggleswitch_border"] ?? undefined;
-	sprite_toggleswitch_slider_border = _style[$ "sprite_toggleswitch_slider_border"] ?? undefined;
+	self.sprite_panel = _style[$ "sprite_panel"] ?? undefined;
+	self.sprite_panel_border = _style[$ "sprite_panel_border"] ?? undefined;
+	self.sprite_input = _style[$ "sprite_input"] ?? undefined;
+	self.sprite_input_border = _style[$ "sprite_input_border"] ?? undefined;
+	self.sprite_button = _style[$ "sprite_button"] ?? undefined;
+	self.sprite_button_border = _style[$ "sprite_button_border"] ?? undefined;
+	self.sprite_checkbox = _style[$ "sprite_checkbox"] ?? undefined;
+	self.sprite_checkbox_pin = _style[$ "sprite_checkbox_pin"] ?? undefined;
+	self.sprite_checkbox_border = _style[$ "sprite_checkbox_border"] ?? undefined;
+	self.sprite_progress_bar = _style[$ "sprite_progress_bar"] ?? undefined;
+	self.sprite_progress_bar_value = _style[$ "sprite_progress_bar_value"] ?? undefined;
+	self.sprite_progress_bar_border = _style[$ "sprite_progress_bar_border"] ?? undefined;
+	self.sprite_progress_ring = _style[$ "sprite_progress_ring"] ?? undefined;
+	self.sprite_progress_ring_value = _style[$ "sprite_progress_ring_value"] ?? undefined;
+	self.sprite_progress_ring_border = _style[$ "sprite_progress_ring_border"] ?? undefined;
+	self.sprite_slider_knob = _style[$ "sprite_slider_knob"] ?? undefined;
+	self.sprite_slider_knob_border = _style[$ "sprite_slider_knob_border"] ?? undefined;
+	self.sprite_scroll_pin = _style[$ "sprite_scroll_pin"] ?? undefined;
+	self.sprite_scroll_pin_border = _style[$ "sprite_scroll_pin_border"] ?? undefined;
+	self.sprite_scroll_slider = _style[$ "sprite_scroll_slider"] ?? undefined;
+	self.sprite_combobox = _style[$ "sprite_combobox"] ?? undefined;
+	self.sprite_combobox_border = _style[$ "sprite_combobox_border"] ?? undefined;
+	self.sprite_combobox_item = _style[$ "sprite_combobox_item"] ?? undefined;
+	self.sprite_combobox_item_border = _style[$ "sprite_combobox_item_border"] ?? undefined;
+	self.sprite_combobox_arrow = _style[$ "sprite_combobox_arrow"] ?? undefined;
+	self.sprite_tab = _style[$ "sprite_tab"] ?? undefined;
+	self.sprite_tab_border = _style[$ "sprite_tab_border"] ?? undefined;
+	self.sprite_tabs = _style[$ "sprite_tabs"] ?? undefined;
+	self.sprite_tabs_border = _style[$ "sprite_tabs_border"] ?? undefined;
+	self.sprite_tooltip = _style[$ "sprite_tooltip"] ?? undefined;
+	self.sprite_tooltip_border = _style[$ "sprite_tooltip_border"] ?? undefined;
+	self.sprite_toggleswitch = _style[$ "sprite_toggleswitch"] ?? undefined;
+	self.sprite_toggleswitch_slider = _style[$ "sprite_toggleswitch_slider"] ?? undefined;
+	self.sprite_toggleswitch_border = _style[$ "sprite_toggleswitch_border"] ?? undefined;
+	self.sprite_toggleswitch_slider_border = _style[$ "sprite_toggleswitch_slider_border"] ?? undefined;
 	//Colors
-	color_primary = _style[$ "color_primary"] ?? c_white;
-	color_secondary = _style[$ "color_secondary"] ?? c_white;
-    color_accent = _style[$ "color_accent"] ?? #45C952;
-    color_border = _style[$ "color_border"] ?? c_gray;
-    color_back = _style[$ "color_back"] ?? c_ltgray;
-    color_deactivated = _style[$ "color_deactivated"] ?? c_gray;
-    color_text = _style[$ "color_text"] ?? c_black;
-	color_text_hint = _style[$ "color_text_hint"] ?? c_gray;
-    color_hover = _style[$ "color_hover"] ?? c_gray;
-    color_semantic_success = _style[$ "color_semantic_success"] ?? #4CAF50;
-    color_semantic_warning = _style[$ "color_semantic_warning"] ?? #FF9800;
-	color_semantic_error = _style[$ "color_semantic_error"] ?? #F44336;
-    color_shadow = _style[$ "color_shadow"] ?? c_black;
+	self.color_primary = _style[$ "color_primary"] ?? c_white;
+	self.color_secondary = _style[$ "color_secondary"] ?? c_white;
+    self.color_accent = _style[$ "color_accent"] ?? #45C952;
+    self.color_border = _style[$ "color_border"] ?? c_gray;
+    self.color_back = _style[$ "color_back"] ?? c_ltgray;
+    self.color_deactivated = _style[$ "color_deactivated"] ?? c_gray;
+    self.color_text = _style[$ "color_text"] ?? c_black;
+	self.color_text_hint = _style[$ "color_text_hint"] ?? c_gray;
+    self.color_hover = _style[$ "color_hover"] ?? c_gray;
+    self.color_semantic_success = _style[$ "color_semantic_success"] ?? #4CAF50;
+    self.color_semantic_warning = _style[$ "color_semantic_warning"] ?? #FF9800;
+	self.color_semantic_error = _style[$ "color_semantic_error"] ?? #F44336;
+    self.color_shadow = _style[$ "color_shadow"] ?? c_black;
 	//Sounds
-	sound_click = _style[$ "sound_click"] ?? undefined;
+	self.sound_click = _style[$ "sound_click"] ?? undefined;
 	//Settings
-	min_width = _style[$ "min_width"] ?? 1;
-	min_height = _style[$ "min_height"] ?? 1;
-	margin = _style[$ "margin"] ?? 0;
-	padding = _style[$ "padding"] ?? 0;
-	gap = _style[$ "gap"] ?? 0;
-	border = _style[$ "border"] ?? 0;
-	scroll_step = _style[$ "scroll_step"] ?? 32;
-	scroll_slider_width = _style[$ "scroll_slider_width"] ?? 16;
-	render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
-	input_cursor = _style[$ "input_cursor"] ?? "|";
-	input_password = _style[$ "input_password"] ?? "•";
+	self.min_width = _style[$ "min_width"] ?? 1;
+	self.min_height = _style[$ "min_height"] ?? 1;
+	self.margin = _style[$ "margin"] ?? 0;
+	self.padding = _style[$ "padding"] ?? 0;
+	self.gap = _style[$ "gap"] ?? 0;
+	self.border = _style[$ "border"] ?? 0;
+	self.scroll_step = _style[$ "scroll_step"] ?? 32;
+	self.scroll_slider_width = _style[$ "scroll_slider_width"] ?? 16;
+	self.render_region_offset = _style[$ "render_region_offset"] ?? {left : 0, right : 0, top : 0, bottom : 0};
+	self.input_cursor = _style[$ "input_cursor"] ?? "|";
+	self.input_password = _style[$ "input_password"] ?? "•";
 	//Render functions
-	sprite_render_function = _style[$ "sprite_render_function"] ?? undefined; //function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha)
+	self.sprite_render_function = _style[$ "sprite_render_function"] ?? undefined; //function(_sprite, _subimg, _x, _y, _width, _height, _color, _alpha)
 	//Animations (WIP) //???//
-	anim_on_create = _style[$ "anim_on_create"] ?? LUI_ANIM.none;
-	anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
-	anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;
-	anim_on_mouse_leave = _style[$ "anim_on_mouse_leave"] ?? LUI_ANIM.none;
+	self.anim_on_create = _style[$ "anim_on_create"] ?? LUI_ANIM.none;
+	self.anim_on_destroy = _style[$ "anim_on_destroy"] ?? LUI_ANIM.none;
+	self.anim_on_mouse_enter = _style[$ "anim_on_mouse_enter"] ?? LUI_ANIM.none;
+	self.anim_on_mouse_leave = _style[$ "anim_on_mouse_leave"] ?? LUI_ANIM.none;
+	
+	self._class_overrides = {}; // Specific styles
+	
+	if !is_undefined(_style[$ "_class_overrides"]) {
+		self._class_overrides = struct_copy(_style[$ "_class_overrides"]);
+	}
+	
+	// Specific styles
+	
+	/// @desc Set padding for specific class elements
+	/// @param {real} value padding value
+	/// @param {array} class_names Array of class names ["LuiPanel", "LuiContainer"]
+	static setPaddingFor = function(value, class_names) {
+	    for (var i = 0; i < array_length(class_names); i++) {
+	        var cls = class_names[i];
+	        if (!variable_struct_exists(self._class_overrides, cls)) {
+	            self._class_overrides[$ cls] = {};
+	        }
+	        self._class_overrides[$ cls][$ "padding"] = value;
+	    }
+		return self;
+	}
+	
+	/// Аналогично для border
+	static setBorderFor = function(value, class_names) {
+	    for (var i = 0; i < array_length(class_names); i++) {
+	        var cls = class_names[i];
+	        if (!variable_struct_exists(self._class_overrides, cls)) {
+	            self._class_overrides[$ cls] = {};
+	        }
+	        self._class_overrides[$ cls][$ "border"] = value;
+	    }
+		return self;
+	}
+	
+	/// Аналогично для margin (если нужно)
+	static setMarginFor = function(value, class_names) {
+	    for (var i = 0; i < array_length(class_names); i++) {
+	        var cls = class_names[i];
+	        if (!variable_struct_exists(self._class_overrides, cls)) {
+	            self._class_overrides[$ cls] = {};
+	        }
+	        self._class_overrides[$ cls][$ "margin"] = value;
+	    }
+		return self;
+	}
+	
+	/// Аналогично для gap (если нужно)
+	static setGapFor = function(value, class_names) {
+	    for (var i = 0; i < array_length(class_names); i++) {
+	        var cls = class_names[i];
+			if (!variable_struct_exists(self._class_overrides, cls)) {
+	            self._class_overrides[$ cls] = {};
+	        }
+	        self._class_overrides[$ cls][$ "gap"] = value;
+	    }
+		return self;
+	}
 	
 	// FONTS FUNCTIONS
 	

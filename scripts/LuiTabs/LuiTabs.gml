@@ -5,6 +5,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	
+	self.class_name = "LuiTabs";
+	
 	self.tab_height = _params[$ "tab_height"] ?? LUI_AUTO;
 	self.tab_indent = _params[$ "tab_indent"] ?? 0;
 	
@@ -160,6 +162,8 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 /// color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiTab(_params = {}) : LuiButton(_params) constructor {
+	
+	self.class_name = "LuiTab";
 	
 	self.is_active = false;
 	self.tabs_parent = undefined;

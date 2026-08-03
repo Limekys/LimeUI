@@ -1,6 +1,8 @@
 ///@desc Main UI container which would control and render your UI.
 function LuiMain() : LuiBase() constructor {
 	
+	self.class_name = "LuiMain";
+	
 	self.is_initialized = true;
 	self.ignore_mouse = true;
 	

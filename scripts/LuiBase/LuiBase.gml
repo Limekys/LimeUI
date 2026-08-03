@@ -20,6 +20,7 @@ function LuiBase(_params = {}) constructor {
 	global.lui_element_count++;
 	self.element_id = global.lui_id_count++;
 	self.name = LUI_AUTO_NAME;							//Unique element identifier
+	self.class_name = "LuiBase";						//Class name
 	self.value = undefined;								//Value
 	self.data = undefined;								//Different user data for personal use
 	self.style = undefined;								//Style struct
@@ -1423,14 +1424,36 @@ function LuiBase(_params = {}) constructor {
 		
 	    var _container_node = self.getContainer().flex_node;
 		
-	    // Base style
+	    // Global style settings
 	    flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, self.style.margin);
 	    flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, self.style.padding);
 	    flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, self.style.gap);
 	    flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, self.style.border);
 	    // ... 
 		
-	    // Local style
+		// Specific class style settings
+		
+	    // Проверяем, есть ли правила для этого класса в стиле
+	    if (variable_struct_exists(self.style._class_overrides, self.class_name)) {
+			var rules = self.style._class_overrides[$ self.class_name];
+			if (variable_struct_exists(rules, "margin")) {
+				flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, rules[$ "margin"]);
+	        }
+			
+	        if (variable_struct_exists(rules, "padding")) {
+				flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, rules[$ "padding"]);
+	        }
+	        
+			if (variable_struct_exists(rules, "gap")) {
+				flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, rules[$ "gap"]);
+	        }
+			
+	        if (variable_struct_exists(rules, "border")) {
+				flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, rules[$ "border"]);
+	        }
+	    }
+		
+	    // Local style settings
 	    var _override_keys = variable_struct_get_names(self.style_overrides);
 		
 	    // Apply local style

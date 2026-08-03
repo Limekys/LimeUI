@@ -10,8 +10,11 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 	
+	self.class_name = "LuiSlider";
+	
 	self.can_drag = true;
 	
+	self.knob_width = 0;
 	self.knob_extender = 0;
 	
 	// Calculate knob width in constructor

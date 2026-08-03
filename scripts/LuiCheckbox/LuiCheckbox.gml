@@ -2,11 +2,15 @@
 /// Available parameters:
 /// value
 /// text
+/// icon_spacing
 ///@arg {Struct} [_params] Struct with parameters
 function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 	
+	self.class_name = "LuiCheckbox";
+	
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
+	self.icon_spacing = _params[$ "icon_spacing"] ?? 8;
 	
 	///@desc Set display text of checkbox (render right of checkbox)
 	///@arg {string} _text
@@ -54,8 +58,8 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 				draw_set_font(self.style.font_default);
 			}
 			var _draw_width = min(self.width, self.height);
-			var _text_width = min(string_width(self.text), self.width - _draw_width - self.style.gap);
-			self._drawTruncatedText(self.x + _draw_width + self.style.gap, self.y + self.height div 2, self.text, _text_width);
+			var _text_width = min(string_width(self.text), self.width - _draw_width - self.icon_spacing);
+			self._drawTruncatedText(self.x + _draw_width + self.icon_spacing, self.y + self.height div 2, self.text, _text_width);
 		}
 		// Border
 		if !is_undefined(self.style.sprite_checkbox_border) {

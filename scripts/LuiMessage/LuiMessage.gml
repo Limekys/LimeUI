@@ -21,7 +21,10 @@ function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = 
 	var _container = new LuiColumn();
 	var _panel = new LuiPanel({width: _content_width, height});
 	// Text
-	var _txt_message = new LuiText({value: message_text}).setTextHalign(fa_center);
+	var _txt_message = new LuiText({value: message_text, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setTextHalign(fa_center);
+	if height != LUI_AUTO {
+		_txt_message.setFullSize();
+	}
 	// Button
 	var _btn_close = new LuiButton({text: button_text}).setData("message_screen", _box_message_screen);
 	_btn_close.addEvent(LUI_EV_CLICK, function(_e) {

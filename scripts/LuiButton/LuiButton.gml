@@ -5,6 +5,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	
+	self.class_name = "LuiButton";
+	
 	self.text = _params[$ "text"] ?? "";
 	self.button_color = _params[$ "color"] ?? undefined;
 	self.icon = {

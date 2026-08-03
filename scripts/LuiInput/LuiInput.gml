@@ -19,6 +19,8 @@ enum LUI_INPUT_MODE {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
+	self.class_name = "LuiInput";
+	
     self.value = string(_params[$ "value"] ?? "");
     self.placeholder = _params[$ "placeholder"] ?? "";
     self.is_masked = _params[$ "is_masked"] ?? false;
@@ -201,8 +203,8 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         draw_set_valign(fa_middle);
         
         //Get text
-        var _margin = 6;
-        var _txt_x = self.x + _margin;
+        var _txt_padding = self.style.padding;
+		var _txt_x = self.x + _txt_padding;
         var _txt_y = self.y + self.height / 2;
         var _display_text = self.value;
         
@@ -224,7 +226,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         
         //Cut
         if _display_text != "" {
-            while(string_width(_display_text) > (self.width - (2 * _margin)))
+            while(string_width(_display_text) > (self.width - (2 * _txt_padding)))
                 _display_text = string_delete(_display_text, 1, 1);
         }
         
