@@ -196,7 +196,7 @@ function LuiBase(_params = {}) constructor {
 			return self.data[$ _key];
 		}
 	}
-	///@desc Get style. Returns merged self_style + style for rendering
+	///@desc Get merged style (self_style overrides style). Returns the final style for rendering.
 	/// Local overrides take precedence over container styles
 	///@return {Struct} Merged style struct
 	static getStyle = function() {
@@ -775,37 +775,47 @@ function LuiBase(_params = {}) constructor {
 ///@desc Set style. Updates both self_style and style. Children will inherit this style.
 ///@arg {Struct} _style Style struct or properties
 static setStyle = function(_style) {
-var _newStyle = new LuiStyle(_style);
-self.self_style = _newStyle;
-self.style = _newStyle;
-
-if is_array(self.content) {
-array_foreach(self.content, function(_elm) {
-_elm._inheritContainerStyle(self.style);
-});
-}
-self._applyStyles();
-self.updateMainUiSurface();
-
-return self;
+	var _newStyle = new LuiStyle(_style);
+	self.self_style = _newStyle;
+	self.style = _newStyle;
+	
+	if is_array(self.content) {
+		array_foreach(self.content, function(_elm) {
+			_elm._inheritContainerStyle(self.style);
+		});
+	}
+	self._applyStyles();
+	self.updateMainUiSurface();
+	
+	return self;
 }
 
 ///@desc Set local style. Updates only self_style, does NOT affect children.
-/// Children will still inherit style from parent.
+/// Children will still inherit style from parent's container style.
 ///@arg {Struct} _style Style struct or properties
 static setLocalStyle = function(_style) {
-	var _newStyle = new LuiStyle(_style);
+	// Initialize self_style if needed
+	if is_undefined(self.self_style) {
+		self.self_style = {};
+	}
 	
-	// If style doesn't exist yet, initialize it from parent or create new
+	// If style doesn't exist yet, initialize it
 	if is_undefined(self.style) {
 		self.style = new LuiStyle();
 	}
 	
-	// Merge existing self_style with new style if it exists
-	if !is_undefined(self.self_style) {
-		struct_merge(self.self_style, _newStyle);
-	} else {
-		self.self_style = _newStyle;
+	// Copy only explicitly set properties from input _style
+	// We check what exists in the original _style parameter
+	var _styleNames = variable_struct_get_names(_style);
+	
+	for (var i = 0; i < array_length(_styleNames); i++) {
+		var _prop = _styleNames[i];
+		var _value = _style[$_prop];
+		
+		// Only copy defined values
+		if !is_undefined(_value) {
+			self.self_style[$_prop] = _value;
+		}
 	}
 	
 	self._applyStyles();
@@ -817,19 +827,17 @@ static setLocalStyle = function(_style) {
 ///@desc Internal method to inherit container style from parent
 ///@ignore
 static _inheritContainerStyle = function(_parentContainerStyle) {
-self.style = _parentContainerStyle;
-
-if is_array(self.content) {
-array_foreach(self.content, function(_elm) {
-_elm._inheritContainerStyle(_parentContainerStyle);
-});
-}
-
-if is_undefined(self.self_style) {
-self._applyStyles();
-}
-
-return self;
+	self.style = _parentContainerStyle;
+	
+	if is_array(self.content) {
+		array_foreach(self.content, function(_elm) {
+			_elm._inheritContainerStyle(_parentContainerStyle);
+		});
+	}
+	
+	self._applyStyles();
+	
+	return self;
 }
 
 ///@desc Set style for child elements (deprecated, use _inheritContainerStyle instead)
@@ -1755,16 +1763,16 @@ flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, rules
 			// Flex setting up
 			if _element.min_width == LUI_AUTO {
 		        if _element.auto_width {
-					_element.min_width = _element.style.min_width;
+					_element.min_width = _element.getContainerStyle().min_width;
 				} else {
-					_element.min_width = min(_element.width, _element.style.min_width);
+					_element.min_width = min(_element.width, _element.getContainerStyle().min_width);
 				}
 			}
 			if _element.min_height == LUI_AUTO {
 				if _element.auto_height {
-					_element.min_height = _element.style.min_height;
+					_element.min_height = _element.getContainerStyle().min_height;
 				} else {
-					_element.min_height = min(_element.height, _element.style.min_height);
+					_element.min_height = min(_element.height, _element.getContainerStyle().min_height);
 				}
 			}
 			flexpanel_node_style_set_min_width(_element.flex_node, _element.min_width, flexpanel_unit.point);
