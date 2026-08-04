@@ -796,56 +796,57 @@ static setStyle = function(_style) {
 static setLocalStyle = function(_style) {
 	// Initialize self_style if needed
 	if is_undefined(self.self_style) {
-		self.self_style = {};
+		self.self_style = new LuiStyle();
 	}
 	
-	// If style doesn't exist yet, initialize it
-	if is_undefined(self.style) {
-		self.style = new LuiStyle();
+	// Merge new style properties into self_style
+	struct_merge(self.self_style, _style);
+	
+	// If element already has a container style, update it immediately
+	if !is_undefined(self.style) {
+		self.style = new LuiStyle(self.style);
+		struct_merge(self.style, self.self_style);
+		self._applyStyles();
+		self.updateMainUiSurface();
 	}
-	
-	// Copy only explicitly set properties from input _style
-	// We check what exists in the original _style parameter
-	var _styleNames = variable_struct_get_names(_style);
-	
-	for (var i = 0; i < array_length(_styleNames); i++) {
-		var _prop = _styleNames[i];
-		var _value = _style[$_prop];
-		
-		// Only copy defined values
-		if !is_undefined(_value) {
-			self.self_style[$_prop] = _value;
-		}
-	}
-	
-	self._applyStyles();
-	self.updateMainUiSurface();
 	
 	return self;
 }
+	
 
 ///@desc Internal method to inherit container style from parent
 ///@ignore
 static _inheritContainerStyle = function(_parentContainerStyle) {
+	// 1. Базовый стиль берется от родителя (контейнерный стиль)
 	self.style = _parentContainerStyle;
-	
+
+	// 2. Если у элемента есть свой локальный стиль (self_style), применяем его ПОВЕРХ родительского
+	// Это позволяет задать стиль ДО добавления в иерархию, и он сохранится
+	if !is_undefined(self.self_style) {
+		struct_merge(self.style, self.self_style);
+	}
+
+	// 3. Рекурсивно передаем обновленный контейнерный стиль детям
 	if is_array(self.content) {
 		array_foreach(self.content, function(_elm) {
-			_elm._inheritContainerStyle(_parentContainerStyle);
+			_elm._inheritContainerStyle(self.style);
 		});
 	}
-	
-	self._applyStyles();
-	
+
+	// 4. Применяем стили визуально, если элемент уже создан
+	if !is_undefined(self.instance_id) {
+		self._applyStyles();
+	}
+
 	return self;
 }
 
 ///@desc Set style for child elements (deprecated, use _inheritContainerStyle instead)
 ///@ignore
 static setStyleChilds = function(_style) {
-_luiPrintWarning("setStyleChilds is deprecated, use _inheritContainerStyle instead");
-self._inheritContainerStyle(_style);
-return self;
+	_luiPrintWarning("setStyleChilds is deprecated, use _inheritContainerStyle instead");
+	self._inheritContainerStyle(_style);
+	return self;
 }
 	
 	///@desc Set flag to update content
