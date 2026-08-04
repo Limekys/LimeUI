@@ -23,8 +23,8 @@ function LuiBase(_params = {}) constructor {
 	self.class_name = "LuiBase";						//Class name
 	self.value = undefined;								//Value
 	self.data = undefined;								//Different user data for personal use
-	self.style = undefined;								//Style struct
-	self.style_overrides = {};							//Custom style for element
+	self.self_style = undefined;							//Style for this element only (not inherited by children)
+	self.container_style = undefined;						//Style that will be passed to children
 	self.x = LUI_AUTO;									//Actual real calculated x position on the screen
 	self.y = LUI_AUTO;									//Actual real calculated y position on the screen
 	self.r = LUI_AUTO;
@@ -66,7 +66,7 @@ function LuiBase(_params = {}) constructor {
 	self.is_pressed = false;
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
-	self.is_custom_style_setted = false;
+	// is_custom_style_setted removed - replaced by self_style/container_style architecture
 	self.is_destroyed = false;
 	self.is_initialized = false;
 	self.draw_content_in_cutted_region = false;
@@ -196,10 +196,32 @@ function LuiBase(_params = {}) constructor {
 			return self.data[$ _key];
 		}
 	}
-	
-	///@desc Get style
+	///@desc Get style. Returns merged self_style + container_style for rendering
+	/// Local overrides take precedence over container styles
+	///@return {Struct} Merged style struct
 	static getStyle = function() {
-		return self.style;
+		if is_undefined(self.container_style) && is_undefined(self.self_style) {
+			return undefined;
+		}
+		
+		// If only one style exists, return it
+		if is_undefined(self.self_style) {
+			return self.container_style;
+		}
+		if is_undefined(self.container_style) {
+			return self.self_style;
+		}
+		
+		// Merge container_style with self_style (self_style takes precedence)
+		var _merged = new LuiStyle(self.container_style);
+		struct_merge(_merged, self.self_style);
+		return _merged;
+	}
+	
+	///@desc Get container style (the style that will be passed to children)
+	///@return {Struct} Container style struct
+	static getContainerStyle = function() {
+		return self.container_style;
 	}
 	
 	///@desc Get first element in content array
@@ -569,48 +591,65 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Set flexpanel margin
 	///@arg {real} _margin
-	static setMargin = function(_margin) {
-		self.style_overrides.margin = _margin;
-		if (!is_undefined(self.main_ui)) {
-	        self._applyStyles();
-	        self.updateMainUiFlex();
-	    }
-		return self;
-	}
-	
-	///@desc Set flexpanel padding
-	///@arg {real} _padding
-	static setPadding = function(_padding) {
-		self.style_overrides.padding = _padding;
-		if (!is_undefined(self.main_ui)) {
-	        self._applyStyles();
-	        self.updateMainUiFlex();
-	    }
-		return self;
-	}
-	
-	///@desc Set flexpanel gap
-	///@arg {real} _gap
-	static setGap = function(_gap) {
-		self.style_overrides.gap = _gap;
-		if (!is_undefined(self.main_ui)) {
-	        self._applyStyles();
-	        self.updateMainUiFlex();
-	    }
-		return self;
-	}
-	
-	///@desc Set flexpanel border
-	///@arg {real} _border
-	static setBorder = function(_border) {
-		self.style_overrides.border = _border;
-		if (!is_undefined(self.main_ui)) {
-	        self._applyStyles();
-	        self.updateMainUiFlex();
-	    }
-		return self;
-	}
-	
+///@desc Set flexpanel margin (uses setLocalStyle internally)
+///@arg {real} _margin
+static setMargin = function(_margin) {
+if is_undefined(self.self_style) {
+self.setLocalStyle({ margin: _margin });
+} else {
+self.self_style.margin = _margin;
+if (!is_undefined(self.main_ui)) {
+self._applyStyles();
+self.updateMainUiFlex();
+}
+}
+return self;
+}
+
+///@desc Set flexpanel padding (uses setLocalStyle internally)
+///@arg {real} _padding
+static setPadding = function(_padding) {
+if is_undefined(self.self_style) {
+self.setLocalStyle({ padding: _padding });
+} else {
+self.self_style.padding = _padding;
+if (!is_undefined(self.main_ui)) {
+self._applyStyles();
+self.updateMainUiFlex();
+}
+}
+return self;
+}
+
+///@desc Set flexpanel gap (uses setLocalStyle internally)
+///@arg {real} _gap
+static setGap = function(_gap) {
+if is_undefined(self.self_style) {
+self.setLocalStyle({ gap: _gap });
+} else {
+self.self_style.gap = _gap;
+if (!is_undefined(self.main_ui)) {
+self._applyStyles();
+self.updateMainUiFlex();
+}
+}
+return self;
+}
+
+///@desc Set flexpanel border (uses setLocalStyle internally)
+///@arg {real} _border
+static setBorder = function(_border) {
+if is_undefined(self.self_style) {
+self.setLocalStyle({ border: _border });
+} else {
+self.self_style.border = _border;
+if (!is_undefined(self.main_ui)) {
+self._applyStyles();
+self.updateMainUiFlex();
+}
+}
+return self;
+}
 	///@desc Set flexpanel direction (Default: flexpanel_flex_direction.column)
 	///@arg {constant.flexpanel_flex_direction} [_direction]
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
@@ -734,32 +773,73 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
-	///@desc Set style
-	static setStyle = function(_style) {
-		self.style = new LuiStyle(_style);
-		self.is_custom_style_setted = true;
-		if is_array(self.content) {
-			array_foreach(self.content, function(_elm) {
-				_elm.setStyleChilds(self.style);
-			});
-		}
-		self._applyStyles();
-		self.updateMainUiSurface();
-		
-		return self;
+///@desc Set style. Updates both self_style and container_style. Children will inherit this style.
+///@arg {Struct} _style Style struct or properties
+static setStyle = function(_style) {
+var _newStyle = new LuiStyle(_style);
+self.self_style = _newStyle;
+self.container_style = _newStyle;
+
+if is_array(self.content) {
+array_foreach(self.content, function(_elm) {
+_elm._inheritContainerStyle(self.container_style);
+});
+}
+self._applyStyles();
+self.updateMainUiSurface();
+
+return self;
+}
+
+///@desc Set local style. Updates only self_style, does NOT affect children.
+/// Children will still inherit container_style from parent.
+///@arg {Struct} _style Style struct or properties
+static setLocalStyle = function(_style) {
+	var _newStyle = new LuiStyle(_style);
+	
+	// If container_style doesn't exist yet, initialize it from parent or create new
+	if is_undefined(self.container_style) {
+		self.container_style = new LuiStyle();
 	}
 	
-	///@desc Set style for child elements
-	static setStyleChilds = function(_style) {
-		if self.is_custom_style_setted == false {
-			self.style = _style;
-		}
-		for (var i = array_length(self.content)-1; i >= 0 ; --i) {
-			var _element = self.content[i];
-			_element.setStyleChilds(_style);
-		}
-		return self;
+	// Merge existing self_style with new style if it exists
+	if !is_undefined(self.self_style) {
+		struct_merge(self.self_style, _newStyle);
+	} else {
+		self.self_style = _newStyle;
 	}
+	
+	self._applyStyles();
+	self.updateMainUiSurface();
+	
+	return self;
+}
+
+///@desc Internal method to inherit container style from parent
+///@ignore
+static _inheritContainerStyle = function(_parentContainerStyle) {
+self.container_style = _parentContainerStyle;
+
+if is_array(self.content) {
+array_foreach(self.content, function(_elm) {
+_elm._inheritContainerStyle(_parentContainerStyle);
+});
+}
+
+if is_undefined(self.self_style) {
+self._applyStyles();
+}
+
+return self;
+}
+
+///@desc Set style for child elements (deprecated, use _inheritContainerStyle instead)
+///@ignore
+static setStyleChilds = function(_style) {
+_luiPrintWarning("setStyleChilds is deprecated, use _inheritContainerStyle instead");
+self._inheritContainerStyle(_style);
+return self;
+}
 	
 	///@desc Set flag to update content
 	static setNeedToUpdateContent = function(_update_parent = false) {
@@ -1105,8 +1185,8 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _renderDebugInfo = function(_x = 0, _y = 0) {
 	    // Set font if defined
-	    if !is_undefined(self.style.font_debug) {
-	        draw_set_font(self.style.font_debug);
+	    if !is_undefined(self.getStyle().font_debug) {
+	        draw_set_font(self.getStyle().font_debug);
 	    }
 	    
 	    // Remember previous colors
@@ -1152,8 +1232,8 @@ function LuiBase(_params = {}) constructor {
 		if self.is_destroyed || !self.is_visible_in_region return;
 		
 		// Set font
-	    if !is_undefined(self.style.font_debug) {
-	        draw_set_font(self.style.font_debug);
+	    if !is_undefined(self.getStyle().font_debug) {
+	        draw_set_font(self.getStyle().font_debug);
 	    }
 		
 		// Draw rectangles
@@ -1417,70 +1497,43 @@ function LuiBase(_params = {}) constructor {
 	                                  self.y + self.height < _parent_region.y1 || self.y > _parent_region.y2);
 	}
 	
-	///@desc Apply local and inherited styles to the flex node
-	///@ignore
-	static _applyStyles = function() {
-	    if (is_undefined(self.style)) return;
-		
-	    var _container_node = self.getContainer().flex_node;
-		
-	    // Global style settings
-	    flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, self.style.margin);
-	    flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, self.style.padding);
-	    flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, self.style.gap);
-	    flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, self.style.border);
-	    // ... 
-		
-		// Specific class style settings
-		
-	    // Проверяем, есть ли правила для этого класса в стиле
-	    if (variable_struct_exists(self.style._class_overrides, self.class_name)) {
-			var rules = self.style._class_overrides[$ self.class_name];
-			if (variable_struct_exists(rules, "margin")) {
-				flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, rules[$ "margin"]);
-	        }
-			
-	        if (variable_struct_exists(rules, "padding")) {
-				flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, rules[$ "padding"]);
-	        }
-	        
-			if (variable_struct_exists(rules, "gap")) {
-				flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, rules[$ "gap"]);
-	        }
-			
-	        if (variable_struct_exists(rules, "border")) {
-				flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, rules[$ "border"]);
-	        }
-	    }
-		
-	    // Local style settings
-	    var _override_keys = variable_struct_get_names(self.style_overrides);
-		
-	    // Apply local style
-	    for (var i = 0; i < array_length(_override_keys); i++) {
-	        var _key = _override_keys[i];
-	        var _value = self.style_overrides[$ _key];
-			
-	        switch (_key) {
-	            case "margin":
-	                flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, _value);
-	                break;
-				
-				case "padding":
-	                flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, _value);
-	                break;
-	            
-	            case "gap":
-	                flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, _value);
-	                break;
-	            
-	            case "border":
-	                flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, _value);
-	                break;
-	        }
-	    }
-	}
-	
+///@desc Apply local and inherited styles to the flex node
+///@ignore
+static _applyStyles = function() {
+    var _style = self.getStyle();
+    if (is_undefined(_style)) return;
+
+    var _container_node = self.getContainer().flex_node;
+
+    // Global style settings
+    flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, _style.margin);
+    flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, _style.padding);
+    flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, _style.gap);
+    flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, _style.border);
+    // ... 
+
+// Specific class style settings
+
+// Проверяем, есть ли правила для этого класса в стиле
+    if (variable_struct_exists(_style._class_overrides, self.class_name)) {
+var rules = _style._class_overrides[$ self.class_name];
+if (variable_struct_exists(rules, "margin")) {
+flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, rules[$ "margin"]);
+        }
+
+        if (variable_struct_exists(rules, "padding")) {
+flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, rules[$ "padding"]);
+        }
+        
+if (variable_struct_exists(rules, "gap")) {
+flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, rules[$ "gap"]);
+        }
+        
+        if (variable_struct_exists(rules, "border")) {
+flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, rules[$ "border"]);
+        }
+    }
+}
 	///@desc Calculate all sizes and positions of elements
 	///@ignore
 	static _calculateLayout = function() {
@@ -1691,7 +1744,7 @@ function LuiBase(_params = {}) constructor {
 			// Inherit variables
 	        _element.parent = self;
 	        _element.main_ui = self.main_ui;
-	        _element.style = self.style;
+	        _element._inheritContainerStyle(self.container_style);
 			if !is_undefined(self.ignore_mouse_all) {
 				_element.ignore_mouse_all = true;
 				_element.ignore_mouse = true;
@@ -1811,10 +1864,10 @@ function LuiBase(_params = {}) constructor {
 			if _element.render_content_enabled {
 				if self.draw_content_in_cutted_region {
 					var _gpu_scissor = gpu_get_scissor();
-					var _x = self.x + self.style.render_region_offset.left;
-					var _y = self.y + self.style.render_region_offset.top;
-					var _w = self.width - self.style.render_region_offset.left - self.style.render_region_offset.right;
-					var _h = self.height - self.style.render_region_offset.top - self.style.render_region_offset.bottom;
+					var _x = self.x + self.render_region_offset.left;
+					var _y = self.y + self.render_region_offset.top;
+					var _w = self.width - self.render_region_offset.left - self.render_region_offset.right;
+					var _h = self.height - self.render_region_offset.top - self.render_region_offset.bottom;
 					gpu_set_scissor(_x, _y, _w, _h);
 				}
 				_element.render();
@@ -2015,7 +2068,6 @@ function LuiBase(_params = {}) constructor {
 		// Clean all arrays and structs
 		self.content = -1;
 		self.depth_array = -1;
-		delete self.style_overrides; self.style_overrides = undefined;
 		delete self.render_region_offset; self.render_region_offset = undefined;
 		delete self.view_region; self.view_region = undefined;
 		delete self.prev_view_region; self.prev_view_region = undefined;
