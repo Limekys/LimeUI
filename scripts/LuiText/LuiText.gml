@@ -62,14 +62,15 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		//Set font properties
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
+		if !is_undefined(_style.font_default) {
+			draw_set_font(_style.font_default);
 		}
 		if !self.deactivated {
-			draw_set_color(self.style.color_text);
+			draw_set_color(_style.color_text);
 		} else {
-			draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
+			draw_set_color(merge_color(_style.color_text, c_black, 0.5));
 		}
 		draw_set_alpha(1);
 		draw_set_halign(self.text_halign);

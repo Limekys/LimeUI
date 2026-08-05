@@ -31,11 +31,12 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		// Calculate colors
-		var _blend_back = self.style.color_back;
-		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : self.style.color_accent;
-		var _blend_text = self.style.color_text;
-		var _blend_border = self.style.color_border;
+		var _blend_back = _style.color_back;
+		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : _style.color_accent;
+		var _blend_text = _style.color_text;
+		var _blend_border = _style.color_border;
 		if self.deactivated {
 			_blend_back = merge_color(_blend_back, c_black, 0.5);
 			_blend_accent = merge_color(_blend_accent, c_black, 0.5);
@@ -48,23 +49,23 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 		var _scale = self.sprite_pos.scale;
 		
 		// Base
-		if !is_undefined(self.style.sprite_progress_ring) {
-			draw_sprite_ext(self.style.sprite_progress_ring, 0, _x, _y, _scale, _scale, 0, _blend_back, 1);
+		if !is_undefined(_style.sprite_progress_ring) {
+			draw_sprite_ext(_style.sprite_progress_ring, 0, _x, _y, _scale, _scale, 0, _blend_back, 1);
 		}
 		
 		// Bar value
-		if !is_undefined(self.style.sprite_progress_ring_value) {
-			drawSpriteRadial(self.style.sprite_progress_ring_value, 0, self.bar_value, _x, _y, _scale, _scale, _blend_accent, 1);
+		if !is_undefined(_style.sprite_progress_ring_value) {
+			drawSpriteRadial(_style.sprite_progress_ring_value, 0, self.bar_value, _x, _y, _scale, _scale, _blend_accent, 1);
 		}
 		
 		// Border
-		if !is_undefined(self.style.sprite_progress_ring_border) {
-			draw_sprite_ext(self.style.sprite_progress_ring_border, 0, _x, _y, _scale, _scale, 0, _blend_border, 1);
+		if !is_undefined(_style.sprite_progress_ring_border) {
+			draw_sprite_ext(_style.sprite_progress_ring_border, 0, _x, _y, _scale, _scale, 0, _blend_border, 1);
 		}
 		
 		// Text value
 		if self.display_value {
-			if !is_undefined(self.style.font_default) draw_set_font(self.style.font_default);
+			if !is_undefined(_style.font_default) draw_set_font(_style.font_default);
 			draw_set_color(_blend_text);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
@@ -73,15 +74,15 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 	}
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
-		_e._calcSpritePos(_e.style.sprite_progress_ring);
+		_e._calcSpritePos(_e.getStyle().sprite_progress_ring);
 	});
 	
 	self.addEvent(LUI_EV_POSITION_UPDATE, function(_e) {
-		_e._calcSpritePos(_e.style.sprite_progress_ring);
+		_e._calcSpritePos(_e.getStyle().sprite_progress_ring);
 	});
 	
 	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
-		_e._calcSpritePos(_e.style.sprite_progress_ring);
+		_e._calcSpritePos(_e.getStyle().sprite_progress_ring);
 	});
 	
 	self.addEvent(LUI_EV_DESTROY, function(_e) {

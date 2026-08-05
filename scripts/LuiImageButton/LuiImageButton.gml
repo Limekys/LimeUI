@@ -11,6 +11,7 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	self.class_name = "LuiImageButton";
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		//Calculate fit size
 		var _width = self.width;
 		var _height = self.height;
@@ -25,7 +26,7 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 		var _blend_color = self.color_blend;
 		if !self.deactivated {
 			if self.isMouseHovered() {
-				_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+				_blend_color = merge_color(_blend_color, _style.color_hover, 0.5);
 				if self.is_pressed {
 					_blend_color = merge_color(_blend_color, c_black, 0.5);
 				}
@@ -34,7 +35,7 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
 		}
 		//Draw sprite button
-		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
+		var _sprite_render_function = _style.sprite_render_function ?? draw_sprite_stretched_ext;
 		if !is_undefined(self.value) && sprite_exists(self.value) {
 			_sprite_render_function(self.value, self.subimg, 
 										floor(self.x + self.width/2 - _width/2), 
@@ -45,8 +46,9 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	}
 	
 	self.addEvent(LUI_EV_CLICK, function(_e) {
-		if !is_undefined(_e.style.sound_click) {
-			audio_play_sound(_e.style.sound_click, 1, false);
+		var _style = _e.getStyle();
+		if !is_undefined(_style.sound_click) {
+			audio_play_sound(_style.sound_click, 1, false);
 		}
 	});
 	

@@ -358,11 +358,13 @@ function LuiMain() : LuiBase() constructor {
 						while (!is_undefined(_ancestor)) {
 							// 3. If an ancestor requires content to be cut off
 							if (_ancestor.draw_content_in_cutted_region) {
+								var _style = _ancestor.getStyle();
+								
 								// Calculating the ancestor's cutoff region
-								var _ancestor_x1 = _ancestor.x + _ancestor.style.render_region_offset.left;
-								var _ancestor_y1 = _ancestor.y + _ancestor.style.render_region_offset.top;
-								var _ancestor_x2 = _ancestor.x + _ancestor.width - _ancestor.style.render_region_offset.right;
-								var _ancestor_y2 = _ancestor.y + _ancestor.height - _ancestor.style.render_region_offset.bottom;
+								var _ancestor_x1 = _ancestor.x + _style.render_region_offset.left;
+								var _ancestor_y1 = _ancestor.y + _style.render_region_offset.top;
+								var _ancestor_x2 = _ancestor.x + _ancestor.width - _style.render_region_offset.right;
+								var _ancestor_y2 = _ancestor.y + _ancestor.height - _style.render_region_offset.bottom;
 								
 								// 4. Find the intersection of the current clipping region and the ancestor region.
 								var _new_x1 = max(_final_scissor_x, _ancestor_x1);
@@ -455,23 +457,24 @@ function LuiMain() : LuiBase() constructor {
 		// Draw tooltip text
 		if !is_undefined(_element) {
 			if _element.tooltip != "" {
-				var _padding = self.style.padding; //Screen border indentation
-				var _padding_text = self.style.padding; //Text border indentation inside tooltip box
-				draw_set_font(self.style.font_default);
+				var _style = self.getStyle();
+				var _padding = _style.padding; //Screen border indentation
+				var _padding_text = _style.padding; //Text border indentation inside tooltip box
+				draw_set_font(_style.font_default);
 				var _width = string_width(_element.tooltip) + _padding_text*2;
 				var _height = string_height(_element.tooltip) + _padding_text*2;
 				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
 				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
 				// Draw tooltip sprite back
-				if !is_undefined(self.style.sprite_tooltip) {
-					draw_sprite_stretched_ext(self.style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+				if !is_undefined(_style.sprite_tooltip) {
+					draw_sprite_stretched_ext(_style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, _style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
 				// Draw tooltip sprite border
-				if !is_undefined(self.style.sprite_tooltip_border) {
-					draw_sprite_stretched_ext(self.style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, self.style.color_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+				if !is_undefined(_style.sprite_tooltip_border) {
+					draw_sprite_stretched_ext(_style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, _style.color_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
 				// Draw text
-				draw_set_color(self.style.color_text);
+				draw_set_color(_style.color_text);
 				draw_set_halign(fa_left);
 				draw_set_valign(fa_top);
 				draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);

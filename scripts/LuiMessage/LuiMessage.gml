@@ -15,8 +15,9 @@ function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = 
 	var _content_width = width;
 	var _panel_min_width = 256;
 	if _content_width == LUI_AUTO {
-		draw_set_font(ui.style.font_default);
-		_content_width = max(_panel_min_width, max(string_width(message_text), string_width(button_text)) + ui.style.padding * 2);
+		var _style = ui.getStyle();
+		draw_set_font(_style.font_default);
+		_content_width = max(_panel_min_width, max(string_width(message_text), string_width(button_text)) + _style.padding * 2);
 	}
 	var _container = new LuiColumn();
 	var _panel = new LuiPanel({width: _content_width, height});

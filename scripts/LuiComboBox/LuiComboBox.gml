@@ -22,8 +22,9 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	
 	///@ignore
 	static _calculateTextWidth = function() { //???// not used now
-		if !is_undefined(self.style) && !is_undefined(self.style.sprite_combobox_arrow) {
-			self.text_width = self.width - sprite_get_width(self.style.sprite_combobox_arrow)*4;
+		var _style = self.getStyle();
+		if !is_undefined(_style) && !is_undefined(_style.sprite_combobox_arrow) {
+			self.text_width = self.width - sprite_get_width(_style.sprite_combobox_arrow)*4;
 		} else {
 			self.text_width = self.width;
 		}
@@ -33,8 +34,9 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	static _initComboBoxPanel = function() {
 		var _item_count = array_length(self.items);
 		// Calculate panel sizes
+		var _style = self.getStyle();
 		var _width = self.width;
-		var _height = (self.height + self.style.padding) * _item_count + self.style.padding;
+		var _height = (self.height + _style.padding) * _item_count + _style.padding;
 		// Create panel
 		self.combobox_panel = new LuiPanel({x: 0, y: 0, width: _width}).hide().setVisibilitySwitching(false).setPositionAbsolute();
 		self.main_ui.addContent([self.combobox_panel]);
@@ -94,44 +96,45 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
     }
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		//Base
-		if !is_undefined(self.style.sprite_combobox) {
-			var _blend_color = self.style.color_secondary;
+		if !is_undefined(_style.sprite_combobox) {
+			var _blend_color = _style.color_secondary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_color(self.style.color_secondary, self.style.color_hover, 0.5);
+					_blend_color = merge_color(_style.color_secondary, _style.color_hover, 0.5);
 					if self.is_pressed == true {
-						_blend_color = merge_color(self.style.color_secondary, c_black, 0.5);
+						_blend_color = merge_color(_style.color_secondary, c_black, 0.5);
 					}
 				}
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_combobox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_combobox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
 		//Arrow
-		if !is_undefined(self.style.sprite_combobox_arrow) {
-			var _x_offset = sprite_get_width(self.style.sprite_combobox_arrow);
-			var _blend_color = self.style.color_border;
+		if !is_undefined(_style.sprite_combobox_arrow) {
+			var _x_offset = sprite_get_width(_style.sprite_combobox_arrow);
+			var _blend_color = _style.color_border;
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_ext(self.style.sprite_combobox_arrow, 0, self.x + self.width - _x_offset, self.y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
+			draw_sprite_ext(_style.sprite_combobox_arrow, 0, self.x + self.width - _x_offset, self.y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
 		}
 		
 		//Text
-		if !is_undefined(self.style.font_buttons) {
-			draw_set_font(self.style.font_buttons);
+		if !is_undefined(_style.font_buttons) {
+			draw_set_font(_style.font_buttons);
 		}
 		if !self.deactivated {
-			draw_set_color(self.style.color_text);
+			draw_set_color(_style.color_text);
 		} else {
-			draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
+			draw_set_color(merge_color(_style.color_text, c_black, 0.5));
 		}
 		var _text_draw_width = self.width;
-		if !is_undefined(self.style.sprite_combobox_arrow) {
-			_text_draw_width -= sprite_get_width(self.style.sprite_combobox_arrow)*3;
+		if !is_undefined(_style.sprite_combobox_arrow) {
+			_text_draw_width -= sprite_get_width(_style.sprite_combobox_arrow)*3;
 		}
 		var _txt_x = self.x + self.width / 2;
 		var _txt_y = self.y + self.height / 2;
@@ -146,8 +149,8 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		}
 		
 		//Border
-		if !is_undefined(self.style.sprite_combobox_border) {
-			draw_sprite_stretched_ext(self.style.sprite_combobox_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		if !is_undefined(_style.sprite_combobox_border) {
+			draw_sprite_stretched_ext(_style.sprite_combobox_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 		}
 	}
 	
@@ -205,29 +208,30 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		
 		// Calculate positions
 		var _center_x = self.x + self.width / 2;
 		var _center_y = self.y + self.height / 2;
 		
 		//Base
-		if !is_undefined(self.style.sprite_combobox_item) {
-			var _blend_color = self.style.color_secondary;
+		if !is_undefined(_style.sprite_combobox_item) {
+			var _blend_color = _style.color_secondary;
 			if !self.deactivated && self.isMouseHovered() {
-				_blend_color = merge_color(self.style.color_secondary, self.style.color_hover, 0.5);
+				_blend_color = merge_color(_style.color_secondary, _style.color_hover, 0.5);
 				if self.is_pressed == true {
-					_blend_color = merge_color(self.style.color_secondary, c_black, 0.5);
+					_blend_color = merge_color(_style.color_secondary, c_black, 0.5);
 				}
 			}
-			draw_sprite_stretched_ext(self.style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
 		// Icon and text
-		_drawIconAndText(_center_x, _center_y, self.width, self.style.color_text);
+		_drawIconAndText(_center_x, _center_y, self.width, _style.color_text);
 		
 		//Border
-		if !is_undefined(self.style.sprite_combobox_item_border) {
-			draw_sprite_stretched_ext(self.style.sprite_combobox_item_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		if !is_undefined(_style.sprite_combobox_item_border) {
+			draw_sprite_stretched_ext(_style.sprite_combobox_item_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 		}
 	}
 	

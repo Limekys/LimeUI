@@ -108,17 +108,18 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
     }
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		//Base
-		if !is_undefined(self.style.sprite_tabs) {
-			var _blend_color = self.style.color_primary;//self.nesting_level == 0 ? self.style.color_primary : merge_color(self.style.color_primary, self.style.color_secondary, 0.25);
+		if !is_undefined(_style.sprite_tabs) {
+			var _blend_color = _style.color_primary;//self.nesting_level == 0 ? _style.color_primary : merge_color(_style.color_primary, _style.color_secondary, 0.25);
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(self.style.sprite_tabs, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_tabs, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _blend_color, 1);
 		}
 		//Border
-		if !is_undefined(self.style.sprite_tabs_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tabs_border, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, self.style.color_border, 1);
+		if !is_undefined(_style.sprite_tabs_border) {
+			draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _style.color_border, 1);
 		}
 	}
 	
@@ -132,8 +133,9 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		// Init tab's
 		_e._initTabs();
 		// Correct tab height
-		if _e.tab_height == LUI_AUTO || _e.tab_height < _e.tabs_header.style.min_height {
-			_e.setTabHeight(_e.tabs_header.style.min_height);
+		var _style = _e.tabs_header.getStyle();
+		if _e.tab_height == LUI_AUTO || _e.tab_height < _style.min_height {
+			_e.setTabHeight(_style.min_height);
 		}
 	});
 	
@@ -212,16 +214,17 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		// Calculate colors
-		var _blend_color = self.button_color ?? self.style.color_primary;
-		var _blend_text = self.style.color_text;
+		var _blend_color = self.button_color ?? _style.color_primary;
+		var _blend_text = _style.color_text;
 		if self.deactivated {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
 			_blend_text = merge_color(_blend_text, c_black, 0.5);
 		} else if !self.is_active {
 			_blend_color = merge_color(_blend_color, c_black, 0.25);
 			if self.isMouseHovered() {
-				_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+				_blend_color = merge_color(_blend_color, _style.color_hover, 0.5);
 				if self.is_pressed {
 					_blend_color = merge_color(_blend_color, c_black, 0.5);
 				}
@@ -233,16 +236,16 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 		var _center_y = self.y + self.height / 2;
 		
 		// Base
-		if !is_undefined(self.style.sprite_tab) {
-			draw_sprite_stretched_ext(self.style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+		if !is_undefined(_style.sprite_tab) {
+			draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
 		
 		// Icon and text
 		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
-		if !is_undefined(self.style.sprite_tab_border) {
-			draw_sprite_stretched_ext(self.style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		if !is_undefined(_style.sprite_tab_border) {
+			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 		}
 	}
 	

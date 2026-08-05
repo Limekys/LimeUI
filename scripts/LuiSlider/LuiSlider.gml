@@ -19,27 +19,29 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	// Calculate knob width in constructor
 	static _initKnobWidth = function() {
-		if !is_undefined(self.style.sprite_slider_knob) {
-			var _slider_knob_nineslice = sprite_get_nineslice(self.style.sprite_slider_knob);
+		var _style = self.getStyle();
+		if !is_undefined(_style.sprite_slider_knob) {
+			var _slider_knob_nineslice = sprite_get_nineslice(_style.sprite_slider_knob);
 			var _nineslice_left_right = _slider_knob_nineslice.left + _slider_knob_nineslice.right;
-			self.knob_width = _nineslice_left_right == 0 ? sprite_get_width(self.style.sprite_slider_knob) : _nineslice_left_right;
+			self.knob_width = _nineslice_left_right == 0 ? sprite_get_width(_style.sprite_slider_knob) : _nineslice_left_right;
 		}
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		// Calculate colors based on state
-		var _blend_back = self.style.color_back;
-		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : self.style.color_accent;
-		var _blend_secondary = self.style.color_secondary;
-		var _blend_text = self.style.color_text;
-		var _blend_border = self.style.color_border;
+		var _blend_back = _style.color_back;
+		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : _style.color_accent;
+		var _blend_secondary = _style.color_secondary;
+		var _blend_text = _style.color_text;
+		var _blend_border = _style.color_border;
 		if self.deactivated {
 			_blend_back = merge_color(_blend_back, c_black, 0.5);
 			_blend_accent = merge_color(_blend_accent, c_black, 0.5);
 			_blend_secondary = merge_color(_blend_secondary, c_black, 0.5);
 			_blend_text = merge_color(_blend_text, c_black, 0.5);
 		} else if self.isMouseHovered() {
-			_blend_secondary = merge_color(_blend_secondary, self.style.color_hover, 0.5);
+			_blend_secondary = merge_color(_blend_secondary, _style.color_hover, 0.5);
 		}
 		
 		// Calculate bar position and size
@@ -50,23 +52,23 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		var _bar_h = _bar_height;
 		
 		// Base
-		if !is_undefined(self.style.sprite_progress_bar) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_back, 1);
+		if !is_undefined(_style.sprite_progress_bar) {
+			draw_sprite_stretched_ext(_style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_back, 1);
 		}
 		
 		// Bar value
-		if !is_undefined(self.style.sprite_progress_bar_value) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * self.bar_value, _bar_h, _blend_accent, 1);
+		if !is_undefined(_style.sprite_progress_bar_value) {
+			draw_sprite_stretched_ext(_style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * self.bar_value, _bar_h, _blend_accent, 1);
 		}
 		
 		// Border
-		if !is_undefined(self.style.sprite_progress_bar_border) {
-			draw_sprite_stretched_ext(self.style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_border, 1);
+		if !is_undefined(_style.sprite_progress_bar_border) {
+			draw_sprite_stretched_ext(_style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_border, 1);
 		}
 		
 		// Text
-		if !is_undefined(self.style.font_default) {
-			draw_set_font(self.style.font_default);
+		if !is_undefined(_style.font_default) {
+			draw_set_font(_style.font_default);
 		}
 		draw_set_color(_blend_text);
 		draw_set_halign(fa_center);
@@ -81,13 +83,13 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		var _spr_y1 = self.y - self.knob_extender;
 		var _spr_w = self.knob_width + self.knob_extender*2;
 		var _spr_h = self.height + self.knob_extender*2;
-		if !is_undefined(self.style.sprite_slider_knob) {
-			draw_sprite_stretched_ext(self.style.sprite_slider_knob, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_secondary, 1);
+		if !is_undefined(_style.sprite_slider_knob) {
+			draw_sprite_stretched_ext(_style.sprite_slider_knob, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_secondary, 1);
 		}
 		
 		// Knob border
-		if !is_undefined(self.style.sprite_slider_knob_border) {
-			draw_sprite_stretched_ext(self.style.sprite_slider_knob_border, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_border, 1);
+		if !is_undefined(_style.sprite_slider_knob_border) {
+			draw_sprite_stretched_ext(_style.sprite_slider_knob_border, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_border, 1);
 		}
 	}
 	

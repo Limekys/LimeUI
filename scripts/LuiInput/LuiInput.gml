@@ -33,7 +33,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     self.cursor_pointer = "";
     self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function() {
         if self.cursor_pointer == "" {
-            self.cursor_pointer = self.style.input_cursor;
+            self.cursor_pointer = self.getStyle().input_cursor;
         } else {
             self.cursor_pointer = "";
         }
@@ -172,30 +172,31 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     }
     
     self.draw = function() {
-        //Base
-        if !is_undefined(self.style.sprite_input) {
-            var _blend_color = self.style.color_back;
+        var _style = self.getStyle();
+		//Base
+        if !is_undefined(_style.sprite_input) {
+            var _blend_color = _style.color_back;
             if !self.deactivated {
                 if !self.has_focus && self.isMouseHovered() {
-                    _blend_color = merge_color(self.style.color_back, self.style.color_hover, 0.5);
+                    _blend_color = merge_color(_style.color_back, _style.color_hover, 0.5);
                 }
                 if self.is_incorrect {
-                    _blend_color = merge_color(_blend_color, self.style.color_semantic_error, 0.5);
+                    _blend_color = merge_color(_blend_color, _style.color_semantic_error, 0.5);
                 }
             } else {
                 _blend_color = merge_color(_blend_color, c_black, 0.5);
             }
-            draw_sprite_stretched_ext(self.style.sprite_input, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+            draw_sprite_stretched_ext(_style.sprite_input, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
         }
         
         //Set text properties
-        if !is_undefined(self.style.font_default) {
-            draw_set_font(self.style.font_default);
+        if !is_undefined(_style.font_default) {
+            draw_set_font(_style.font_default);
         }
         if !self.deactivated {
-            draw_set_color(self.style.color_text);
+            draw_set_color(_style.color_text);
         } else {
-            draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
+            draw_set_color(merge_color(_style.color_text, c_black, 0.5));
         }
         var _prev_alpha = draw_get_alpha();
         draw_set_alpha(1);
@@ -203,14 +204,14 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         draw_set_valign(fa_middle);
         
         //Get text
-        var _txt_padding = self.style.padding;
+        var _txt_padding = _style.padding;
 		var _txt_x = self.x + _txt_padding;
         var _txt_y = self.y + self.height / 2;
         var _display_text = self.value;
         
         //Masked text (dots)
         if self.is_masked {
-            _display_text = string_repeat(self.style.input_password, string_length(self.value));
+            _display_text = string_repeat(_style.input_password, string_length(self.value));
         }
         
         //Placeholder
@@ -218,9 +219,9 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             _display_text = self.placeholder;
             draw_set_alpha(0.5);
             if self.is_incorrect {
-                draw_set_color(merge_color(self.style.color_text_hint, self.style.color_semantic_error, 0.5));
+                draw_set_color(merge_color(_style.color_text_hint, _style.color_semantic_error, 0.5));
             } else {
-                draw_set_color(self.style.color_text_hint);
+                draw_set_color(_style.color_text_hint);
             }
         }
         
@@ -238,15 +239,15 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         draw_set_alpha(_prev_alpha);
         
         //Border
-        if !is_undefined(self.style.sprite_input_border) {
-            var _border_color = self.style.color_border;
+        if !is_undefined(_style.sprite_input_border) {
+            var _border_color = _style.color_border;
             if self.has_focus {
-                _border_color = self.style.color_accent;
+                _border_color = _style.color_accent;
             }
             if self.is_incorrect {
-                _border_color = self.style.color_semantic_error;
+                _border_color = _style.color_semantic_error;
             }
-            draw_sprite_stretched_ext(self.style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
+            draw_sprite_stretched_ext(_style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
         }
     }
     
@@ -256,7 +257,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
     self.addEvent(LUI_EV_FOCUS_SET, function(_e) {
         time_source_start(_e.cursor_timer);
-        _e.cursor_pointer = _e.style.input_cursor;
+        _e.cursor_pointer = _e.getStyle().input_cursor;
         keyboard_string = get();
         _e.main_ui.waiting_for_keyboard_input = true;
         //Touch compatibility
