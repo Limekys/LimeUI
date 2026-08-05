@@ -16,8 +16,6 @@ enum LUI_TEXT_OVERFLOW {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiText(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiText";
-	
 	self.value = string(_params[$ "value"] ?? "");
 	self.text_halign = _params[$ "text_halign"] ?? fa_left;
 	self.text_valign = _params[$ "text_valign"] ?? fa_middle;

@@ -4,8 +4,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	
-	self.class_name = "LuiComboBox";
-	
 	self.placeholder = _params[$ "placeholder"] ?? "";
 	
 	self.items = undefined;
@@ -196,8 +194,6 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 /// color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
-	
-	self.class_name = "LuiComboBoxItem";
 	
 	self.combobox_parent = undefined;
 	

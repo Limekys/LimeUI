@@ -7,8 +7,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiSurface";
-	
 	self.value = _params[$ "value"] ?? -1;
 	self.color_blend = _params[$ "color"] ?? c_white;
 	self.alpha = _params[$ "alpha"] ?? 1;

@@ -5,8 +5,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiBox(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiBox";
-	
 	self.color = _params[$ "color"] ?? c_black;
 	self.alpha = _params[$ "alpha"] ?? 0.5;
 	

@@ -8,8 +8,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiImage(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiImage";
-	
 	self.value = _params[$ "value"] ?? undefined;
 	self.subimg = _params[$ "subimg"] ?? 0;
 	self.color_blend = _params[$ "color"] ?? c_white;

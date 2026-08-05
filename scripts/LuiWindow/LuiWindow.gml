@@ -4,8 +4,6 @@
 /// show_controls
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
-    
-	self.class_name = "LuiWindow";
 	
 	self.setPositionAbsolute();
 	
@@ -120,8 +118,6 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 /// title
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
-    
-	self.class_name = "LuiWindowHeader";
 	
 	self.can_drag = true;
 	

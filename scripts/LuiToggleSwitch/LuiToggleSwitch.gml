@@ -6,8 +6,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiToggleSwitch";
-	
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
 	self.icon_spacing = _params[$ "icon_spacing"] ?? 8;

@@ -2,8 +2,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiScrollPanel";
-	
 	self.draw_content_in_cutted_region = true;
 	
 	self.scroll_offset_y = 0;

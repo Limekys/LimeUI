@@ -2,16 +2,12 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiContainer(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiContainer";
-	
 	self.ignore_mouse = true;
 }
 
 ///@desc An empty, invisible container with no padding on the sides for elements with row stacking
 ///@arg {Struct} [_params] Struct with parameters
 function LuiRow(_params = {}) : LuiContainer(_params) constructor {
-	
-	self.class_name = "LuiRow";
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e.setPadding(0).setFlexDirection(flexpanel_flex_direction.row);
@@ -22,8 +18,6 @@ function LuiRow(_params = {}) : LuiContainer(_params) constructor {
 ///@arg {Struct} [_params] Struct with parameters
 function LuiColumn(_params = {}) : LuiContainer(_params) constructor {
 	
-	self.class_name = "LuiColumn";
-	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e.setPadding(0).setFlexDirection(flexpanel_flex_direction.column);
 	});
@@ -32,8 +26,6 @@ function LuiColumn(_params = {}) : LuiContainer(_params) constructor {
 ///@desc An empty, invisible container with absolute position on the screen for elements
 ///@arg {Struct} [_params] Struct with parameters
 function LuiAbsoluteContainer(_params = {}) : LuiContainer(_params) constructor {
-	
-	self.class_name = "LuiAbsoluteContainer";
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e.setPositionAbsolute();

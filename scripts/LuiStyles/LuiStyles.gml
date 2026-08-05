@@ -107,7 +107,7 @@ function LuiStyle(_style = {}) constructor {
 	
 	/// @desc Set padding for specific class elements
 	/// @param {real} value padding value
-	/// @param {array} class_names Array of class names ["LuiPanel", "LuiContainer"]
+	/// @param {array} class_names Array of class names ["LuiPanel", "LuiContainer"...]
 	static setPaddingFor = function(value, class_names) {
 	    for (var i = 0; i < array_length(class_names); i++) {
 	        var cls = class_names[i];

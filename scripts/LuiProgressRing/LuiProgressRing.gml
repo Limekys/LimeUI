@@ -10,8 +10,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 	
-	self.class_name = "LuiProgressRing";
-	
 	self.sprite_pos = {
 		x : 0,
 		y : 0,

@@ -6,8 +6,6 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 	
-	self.class_name = "LuiCheckbox";
-	
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
 	self.icon_spacing = _params[$ "icon_spacing"] ?? 8;

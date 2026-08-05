@@ -20,7 +20,6 @@ function LuiBase(_params = {}) constructor {
 	global.lui_element_count++;
 	self.element_id = global.lui_id_count++;
 	self.name = LUI_AUTO_NAME;							//Unique element identifier
-	self.class_name = "LuiBase";						//Class name
 	self.value = undefined;								//Value
 	self.data = undefined;								//Different user data for personal use
 	self.style = undefined;								//Inheritable style (LuiStyle), flows down the hierarchy
@@ -980,7 +979,7 @@ function LuiBase(_params = {}) constructor {
 	static _buildEffectiveStyle = function() {
 		var _base = self.style;
 		var _has_local = is_struct(self.local_style) && array_length(variable_struct_get_names(self.local_style)) > 0;
-		var _has_class_rules = is_struct(_base) && variable_struct_exists(_base._class_overrides, self.class_name);
+		var _has_class_rules = is_struct(_base) && variable_struct_exists(_base._class_overrides, instanceof(self));
 		// Fast path: nothing to overlay. If no base style exists, return a default style
 		// so getStyle() always returns a valid LuiStyle instance (no undefined checks needed).
 		if (!_has_local && !_has_class_rules) {
@@ -991,7 +990,7 @@ function LuiBase(_params = {}) constructor {
 		// Merge order: base <- class rules <- local overrides
 		var _raw = _luiStyleToRawStruct(_base);
 		if (_has_class_rules) {
-			_raw = struct_merge(_raw, _base._class_overrides[$ self.class_name]);
+			_raw = struct_merge(_raw, _base._class_overrides[$ instanceof(self)]);
 		}
 		if (_has_local) {
 			_raw = struct_merge(_raw, self.local_style);

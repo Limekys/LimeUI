@@ -18,8 +18,6 @@ enum LUI_INPUT_MODE {
 /// allowed_chars (string of allowed chars, e.g. "!@", takes priority over excluded_chars)
 ///@arg {Struct} [_params] Struct with parameters
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
-    
-	self.class_name = "LuiInput";
 	
     self.value = string(_params[$ "value"] ?? "");
     self.placeholder = _params[$ "placeholder"] ?? "";
