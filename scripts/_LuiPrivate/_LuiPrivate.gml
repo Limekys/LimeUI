@@ -50,3 +50,20 @@ function _luiMergeOverrides(_dest, _src) {
 	}
 	return _dest;
 }
+
+///@desc Merges _src into _dest in place. Unlike _luiMergeOverrides, this function
+/// preserves undefined values (does not remove keys). Used for merging defaults.
+///@param {Struct} _dest Target struct
+///@param {Struct} _src Source struct
+///@return {Struct} Merged destination struct
+///@ignore
+function _luiMergeStruct(_dest, _src) {
+	if (!is_struct(_dest)) _dest = {};
+	if (!is_struct(_src)) return _dest;
+	var _names = variable_struct_get_names(_src);
+	for (var i = 0; i < array_length(_names); i++) {
+		var _key = _names[i];
+		_dest[$ _key] = _src[$ _key];
+	}
+	return _dest;
+}

@@ -92,7 +92,7 @@ function LuiStyleDefaults() {
 function LuiStyle(_style = {}) constructor {
 	if (!is_struct(_style)) _style = {};
 	// Merge: defaults <- user values (undefined values are skipped)
-	var _merged = _luiMergeOverrides(LuiStyleDefaults(), _style);
+	var _merged = _luiMergeStruct(LuiStyleDefaults(), _style);
 	// Copy the merged result onto self
 	var _names = variable_struct_get_names(_merged);
 	for (var i = 0; i < array_length(_names); i++) {

@@ -137,7 +137,6 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
-		print(is_undefined(_style))
 		if !is_undefined(_style.sprite_button_border) {
 			draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 			//???// Button animation test
