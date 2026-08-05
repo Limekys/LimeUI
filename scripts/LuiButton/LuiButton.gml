@@ -78,13 +78,14 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _drawIconAndText = function(_center_x, _center_y, _available_width, _text_color) {
 		if self.text != "" {
-			if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+			var _style = self.getStyle();
+			if !is_undefined(_style.font_buttons) draw_set_font(_style.font_buttons);
 			draw_set_color(_text_color);
 			draw_set_alpha(1);
 			draw_set_valign(fa_middle);
 			var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
 			if _draw_icon {
-				if !is_undefined(self.style.font_buttons) draw_set_font(self.style.font_buttons);
+				if !is_undefined(_style.font_buttons) draw_set_font(_style.font_buttons);
 				var _space_width = string_width(" ");
 				var _text_width = string_width(self.text);
 				_draw_icon = self.icon.width + _space_width + _text_width <= _available_width;
@@ -107,14 +108,15 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		// Calculate colors
-		var _blend_color = self.button_color ?? self.style.color_secondary;
-		var _blend_text = self.style.color_text;
+		var _blend_color = self.button_color ?? _style.color_secondary;
+		var _blend_text = _style.color_text;
 		if self.deactivated {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
 			_blend_text = merge_color(_blend_text, c_black, 0.5);
 		} else if self.isMouseHovered() {
-			_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+			_blend_color = merge_color(_blend_color, _style.color_hover, 0.5);
 			if self.is_pressed {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
@@ -125,20 +127,21 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		var _center_y = self.y + self.height / 2;
 		
 		// Base
-		if !is_undefined(self.style.sprite_button) {
-			draw_sprite_stretched_ext(self.style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+		if !is_undefined(_style.sprite_button) {
+			draw_sprite_stretched_ext(_style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 			//???// Button animation test
-			//draw_sprite_stretched_ext(self.style.sprite_button, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, _blend_color, 1);
+			//draw_sprite_stretched_ext(_style.sprite_button, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, _blend_color, 1);
 		}
 		
 		// Icon and text
 		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
-		if !is_undefined(self.style.sprite_button_border) {
-			draw_sprite_stretched_ext(self.style.sprite_button_border, 0, self.x, self.y, self.width, self.height, self.style.color_border, 1);
+		print(is_undefined(_style))
+		if !is_undefined(_style.sprite_button_border) {
+			draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 			//???// Button animation test
-			//draw_sprite_stretched_ext(self.style.sprite_button_border, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, self.style.color_border, 1);
+			//draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, _style.color_border, 1);
 		}
 	}
 	
@@ -149,8 +152,9 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	});
 	
 	self.addEvent(LUI_EV_CLICK, function(_e) {
-		if !is_undefined(_e.style.sound_click) {
-			audio_play_sound(_e.style.sound_click, 1, false);
+		var _style = _e.getStyle();
+		if !is_undefined(_style.sound_click) {
+			audio_play_sound(_style.sound_click, 1, false);
 		}
 	});
 	

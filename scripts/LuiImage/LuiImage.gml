@@ -81,7 +81,7 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
 		}
 		//Draw sprite
-		var _sprite_render_function = self.style.sprite_render_function ?? draw_sprite_stretched_ext;
+		var _sprite_render_function = is_callable(self.getStyle().sprite_render_function) ? self.getStyle().sprite_render_function : draw_sprite_stretched_ext;
 		if !is_undefined(self.value) && sprite_exists(self.value) {
 			_sprite_render_function(self.value, self.subimg, 
 										floor(self.x + self.width/2 - _width/2), 

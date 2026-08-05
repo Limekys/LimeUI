@@ -104,7 +104,7 @@ tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
 
 // Create some elements
 demo_loading = new LuiProgressBar({value: demo_loading_value, rounding: 1}).bindVariable(self, "demo_loading_value");
-btn_show_msg = new LuiButton({text: "Show message"}).setColor(merge_color(#FFFF77, c_black, 0.5)).setIcon(sIconInfo, 1).addEvent(LUI_EV_CLICK, function() {
+btn_show_msg = new LuiButton({text: "Show message"}).setColor(merge_color(#FFFF77, c_black, 0.5)).setIcon(sIconInfo, 1).addEvent(LUI_EV_CLICK, function(_e) {
 	luiShowMessage(oDemo.my_ui, , 150, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
 });
 btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_black, 0.5)).addEvent(LUI_EV_CLICK, function() {
@@ -271,17 +271,17 @@ combobox_theme.addItems([combobox_item_1, combobox_item_2, combobox_item_3]);
 changeRingValue = function() {
 	oDemo.my_ui.getElement("luiRing").set(irandom(100));
 }
-big_button_1 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue();}).addContent([
+big_button_1 = new LuiButton().setStyle({padding: 8}).addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeRingValue(); print(_e.getStyle().padding)}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
-		new LuiImage({value: sHamburger, width: 32, height: 32}).setMouseIgnore(), new LuiText({value: "Hamburger!"}).setMouseIgnore()
+		new LuiImage({value: sHamburger, width: 32, height: 32}).addEvent(LUI_EV_MOUSE_ENTER, function (_e) {print(_e.getStyle().padding)}), new LuiText({value: "Hamburger!"}).setMouseIgnore()
 	])
 ]);
-big_button_2 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue();}).addContent([
+big_button_2 = new LuiButton().addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeRingValue();}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage({value: sBoxDemo, width: 32, height: 32}).setMouseIgnore(), new LuiText({value: "A box!"}).setMouseIgnore()
 	])
 ]);
-big_button_3 = new LuiButton().addEvent(LUI_EV_CLICK, function() {oDemo.changeRingValue();}).addContent([
+big_button_3 = new LuiButton().addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeRingValue();}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
 		new LuiImage({value: sLogoDemo, width: 32, height: 32}).setMouseIgnore(), new LuiText({value: "Game Maker!"}).setMouseIgnore()
 	])

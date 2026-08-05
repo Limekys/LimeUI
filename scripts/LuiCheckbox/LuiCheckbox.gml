@@ -20,52 +20,53 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 	}
 	
 	self.draw = function() {
+		var _style = self.getStyle();
 		// Base
-		if !is_undefined(self.style.sprite_checkbox) {
-			var _blend_color = self.style.color_back;
+		if !is_undefined(_style.sprite_checkbox) {
+			var _blend_color = _style.color_back;
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
 		// Pin
-		if !is_undefined(self.style.sprite_checkbox_pin) {
-			var _blend_color = self.value ? self.style.color_accent : self.style.color_primary;
+		if !is_undefined(_style.sprite_checkbox_pin) {
+			var _blend_color = self.value ? _style.color_accent : _style.color_primary;
 			if !self.deactivated {
 				if self.isMouseHovered() {
-					_blend_color = merge_color(_blend_color, self.style.color_hover, 0.5);
+					_blend_color = merge_color(_blend_color, _style.color_hover, 0.5);
 				}
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
 		}
 		// Text
 		if self.text != "" {
 			if !self.deactivated {
-				draw_set_color(self.style.color_text);
+				draw_set_color(_style.color_text);
 			} else {
-				draw_set_color(merge_color(self.style.color_text, c_black, 0.5));
+				draw_set_color(merge_color(_style.color_text, c_black, 0.5));
 			}
 			draw_set_alpha(1);
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
-			if !is_undefined(self.style.font_default) {
-				draw_set_font(self.style.font_default);
+			if !is_undefined(_style.font_default) {
+				draw_set_font(_style.font_default);
 			}
 			var _draw_width = min(self.width, self.height);
 			var _text_width = min(string_width(self.text), self.width - _draw_width - self.icon_spacing);
 			self._drawTruncatedText(self.x + _draw_width + self.icon_spacing, self.y + self.height div 2, self.text, _text_width);
 		}
 		// Border
-		if !is_undefined(self.style.sprite_checkbox_border) {
+		if !is_undefined(_style.sprite_checkbox_border) {
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(self.style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, self.style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, _style.color_border, 1);
 		}
 	}
 	
