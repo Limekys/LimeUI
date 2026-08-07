@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiWindow",
   "parent":{
-    "name":"Components",
-    "path":"folders/Limekys/LimeUI/Components.yy",
+    "name":"Widgets",
+    "path":"folders/Limekys/LimeUI/Widgets.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

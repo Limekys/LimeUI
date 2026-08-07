@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiMessage",
   "parent":{
-    "name":"LimeUI",
-    "path":"folders/Limekys/LimeUI.yy",
+    "name":"Widgets",
+    "path":"folders/Limekys/LimeUI/Widgets.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

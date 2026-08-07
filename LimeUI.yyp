@@ -27,6 +27,11 @@
     {"$GMFolder":"","%Name":"Limekys","folderPath":"folders/Limekys.yy","name":"Limekys","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"LimeUI","folderPath":"folders/Limekys/LimeUI.yy","name":"LimeUI","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Components","folderPath":"folders/Limekys/LimeUI/Components.yy","name":"Components","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Display","folderPath":"folders/Limekys/LimeUI/Components/Display.yy","name":"Display","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Interactive","folderPath":"folders/Limekys/LimeUI/Components/Interactive.yy","name":"Interactive","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Layout","folderPath":"folders/Limekys/LimeUI/Components/Layout.yy","name":"Layout","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Core","folderPath":"folders/Limekys/LimeUI/Core.yy","name":"Core","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Widgets","folderPath":"folders/Limekys/LimeUI/Widgets.yy","name":"Widgets","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"UsefulTools","folderPath":"folders/Limekys/UsefulTools.yy","name":"UsefulTools","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "ForcedPrefabProjectReferences":[

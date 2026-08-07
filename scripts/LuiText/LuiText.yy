@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiText",
   "parent":{
-    "name":"Components",
-    "path":"folders/Limekys/LimeUI/Components.yy",
+    "name":"Display",
+    "path":"folders/Limekys/LimeUI/Components/Display.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

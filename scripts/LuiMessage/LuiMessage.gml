@@ -1,49 +1,79 @@
-///@desc Show message with custom message text and button text
-///@arg {Struct.LuiMain} ui
-///@arg {Real} width
-///@arg {Real} height
-///@arg {String} message_text
-///@arg {String} button_text
-function luiShowMessage(ui, width = LUI_AUTO, height = LUI_AUTO, message_text = "", button_text = "OK") {
-	// Black block area
-	var _box_message_screen = new LuiBox({x: 0, y: 0})
-		.centerContent()
-		.setPositionAbsolute()
-		.bringToFront()
-		.setFullSize();
-	// Message panel
-	var _content_width = width;
-	var _panel_min_width = 256;
-	if _content_width == LUI_AUTO {
-		var _style = ui.getStyle();
-		draw_set_font(_style.font_default);
-		_content_width = max(_panel_min_width, max(string_width(message_text), string_width(button_text)) + _style.padding * 2);
+///@desc Modal message dialog widget.
+/// Available parameters:
+/// text - message text (default: "")
+/// button_text - button label (default: "OK")
+/// width - dialog panel width (default: LUI_AUTO)
+/// height - dialog panel height (default: LUI_AUTO)
+///@arg {Struct} [_params] Struct with parameters
+function LuiMessage(_params = {}) : LuiBox(_params) constructor {
+	
+	self.message_text = _params[$ "text"] ?? "";
+	self.button_text = _params[$ "button_text"] ?? "OK";
+	self.dialog_width = _params[$ "width"] ?? LUI_AUTO;
+	self.dialog_height = _params[$ "height"] ?? LUI_AUTO;
+	
+	///@desc Close the message dialog
+	static close = function() {
+		self.destroy();
 	}
-	var _container = new LuiColumn();
-	var _panel = new LuiPanel({width: _content_width, height});
-	// Text
-	var _txt_message = new LuiText({value: message_text, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setTextHalign(fa_center);
-	if height != LUI_AUTO {
-		_txt_message.setFullSize();
-	}
-	// Button
-	var _btn_close = new LuiButton({text: button_text}).setData("message_screen", _box_message_screen);
-	_btn_close.addEvent(LUI_EV_CLICK, function(_e) {
-		var _message_screen = _e.getData("message_screen");
-		_message_screen.destroy();
-	});
-	// Build message screen
-	ui.addContent([
-		_box_message_screen.addContent([
-			_panel.addContent([
-				_container.addContent([
-					_txt_message
-				]),
-				new LuiColumn().setFlexGrow(1).setFlexJustifyContent(flexpanel_justify.flex_end).addContent([
+	
+	self.addEvent(LUI_EV_CREATE, function(_e) {
+		
+		// Overlay setup: full-screen, absolute, centered, on top
+		_e.setPositionAbsolute()
+			.setFullSize()
+			.centerContent()
+			.bringToFront();
+		
+		// Calculate panel width based on content and style
+		var _panel_width = _e.dialog_width;
+		if _panel_width == LUI_AUTO {
+			var _panel_min_width = 256;
+			var _style = _e.getStyle();
+			if (!is_undefined(_style) && !is_undefined(_style.font_default)) {
+				draw_set_font(_style.font_default);
+			}
+			var _padding = is_undefined(_style) ? 0 : (_style.padding ?? 0);
+			_panel_width = max(
+				_panel_min_width,
+				max(string_width(_e.message_text), string_width(_e.button_text)) + _padding * 2
+			);
+		}
+		
+		// Build internal structure
+		var _container = new LuiColumn();
+		var _panel = new LuiPanel({width: _panel_width, height: _e.dialog_height});
+		
+		// Text
+		var _txt_message = new LuiText({
+			value: _e.message_text,
+			overflow: LUI_TEXT_OVERFLOW.WrapScale
+		}).setTextHalign(fa_center);
+		
+		if _e.dialog_height != LUI_AUTO {
+			_txt_message.setFullSize();
+		}
+		
+		// Button
+		var _btn_close = new LuiButton({text: _e.button_text}).setData("message", _e);
+		_btn_close.addEvent(LUI_EV_CLICK, function(_btn) {
+			var _message = _btn.getData("message");
+			_message.close();
+		});
+		
+		// Assemble
+		_panel.addContent([
+			_container.addContent([
+				_txt_message
+			]),
+			new LuiColumn()
+				.setFlexGrow(1)
+				.setFlexJustifyContent(flexpanel_justify.flex_end)
+				.addContent([
 					_btn_close
 				])
-			])
-		])
-	]);
-	return _container;
+		]);
+		
+		_e.addContent(_panel);
+	});
 }

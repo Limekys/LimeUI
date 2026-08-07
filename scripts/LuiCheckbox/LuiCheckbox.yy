@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiCheckbox",
   "parent":{
-    "name":"Components",
-    "path":"folders/Limekys/LimeUI/Components.yy",
+    "name":"Interactive",
+    "path":"folders/Limekys/LimeUI/Components/Interactive.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

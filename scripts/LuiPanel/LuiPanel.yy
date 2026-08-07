@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiPanel",
   "parent":{
-    "name":"Components",
-    "path":"folders/Limekys/LimeUI/Components.yy",
+    "name":"Layout",
+    "path":"folders/Limekys/LimeUI/Components/Layout.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

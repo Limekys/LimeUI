@@ -106,7 +106,7 @@ tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
 // Create some elements
 demo_loading = new LuiProgressBar({value: demo_loading_value, rounding: 1}).bindVariable(self, "demo_loading_value");
 btn_show_msg = new LuiButton({text: "Show message"}).setColor(merge_color(#FFFF77, c_black, 0.5)).setIcon(sIconInfo, 1).addEvent(LUI_EV_CLICK, function(_e) {
-	luiShowMessage(oDemo.my_ui, , 150, "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, "Got it!");
+	oDemo.my_ui.alert({text: "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, button_text: "Got it!", height: 150});
 });
 btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_black, 0.5)).addEvent(LUI_EV_CLICK, function() {
 	game_restart();
@@ -125,7 +125,7 @@ createNewLoginWindow = function () {
 				new LuiInput({placeholder: "password", is_masked: true, input_mode: LUI_INPUT_MODE.password})
 			]),
 			new LuiButton({text: "Login", width: 150}).addEvent(LUI_EV_CLICK, function() {
-				luiShowMessage(oDemo.my_ui, , , "Wrong password!", "OK!");
+				oDemo.my_ui.alert({text: "Wrong password!"});
 			})
 		])
 	])
@@ -313,7 +313,7 @@ my_panel_3.addContent([
 				new LuiPanel().addContent([
 					new LuiText({value: "Nested panel 1.1"}),
 					new LuiCheckbox({text: "Check me!"}).addEvent(LUI_EV_CLICK, function(_e) {
-						luiShowMessage(oDemo.my_ui, , , _e.get() ? "Checkbox in nested panel of scroll panel!" : ":(");
+						oDemo.my_ui.alert({text: _e.get() ? "Checkbox in nested panel of scroll panel!" : ":("});
 					}),
 					new LuiPanel().addContent([
 						new LuiText({value: "Nested panel 2.1"}),

@@ -494,6 +494,16 @@ function LuiMain() : LuiBase() constructor {
 		}
 	}
 	
+	// DIALOGS
+	
+	///@desc Show a modal message dialog (convenience wrapper for LuiMessage widget)
+	///@arg {Struct} [_params] Parameters: text, button_text, width, height
+	static alert = function(_params = {}) {
+		var _message = new LuiMessage(_params);
+		self.addContent(_message);
+		return _message;
+	}
+	
 	// PRIVATE
 	
 	///@desc Returns topmost element on UI

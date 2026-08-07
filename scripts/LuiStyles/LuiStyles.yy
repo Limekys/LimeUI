@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiStyles",
   "parent":{
-    "name":"LimeUI",
-    "path":"folders/Limekys/LimeUI.yy",
+    "name":"Core",
+    "path":"folders/Limekys/LimeUI/Core.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
