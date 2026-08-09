@@ -19,8 +19,9 @@ function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		
-		// Overlay setup: full-screen, absolute, centered, on top
+		// Overlay setup: full-screen, absolute position in 0,0, centered, on top
 		_e.setPositionAbsolute()
+			.setPosition(0,0)
 			.setFullSize()
 			.centerContent()
 			.bringToFront();
