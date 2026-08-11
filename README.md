@@ -4,7 +4,8 @@
 
 <div align="center">
   
-![GitHub last commit](https://img.shields.io/github/last-commit/Limekys/LimeUI) ![GitHub License](https://img.shields.io/github/license/Limekys/LimeUI) ![GitHub repo size](https://img.shields.io/github/repo-size/Limekys/LimeUI)
+![GitHub last commit](https://img.shields.io/github/last-commit/Limekys/LimeUI) ![GitHub Release](https://img.shields.io/github/v/release/Limekys/LimeUI?include_prereleases&link=https%3A%2F%2Fgithub.com%2FLimekys%2FLimeUI%2Freleases)
+![GitHub License](https://img.shields.io/github/license/Limekys/LimeUI) ![GitHub repo size](https://img.shields.io/github/repo-size/Limekys/LimeUI)
   
 </a></div>
 
