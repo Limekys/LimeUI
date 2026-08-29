@@ -274,7 +274,7 @@ changeRingValue = function() {
 }
 big_button_1 = new LuiButton().setStyle({padding: 8}).addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeRingValue(); print(_e.getStyle().padding)}).addContent([
 	new LuiRow().setMouseIgnore().addContent([
-		new LuiImage({value: sHamburger, width: 32, height: 32}).addEvent(LUI_EV_MOUSE_ENTER, function (_e) {print(_e.getStyle().padding)}), new LuiText({value: "Hamburger!"}).setMouseIgnore()
+		new LuiImage({value: sHamburger, width: 32, height: 32}), new LuiText({value: "Hamburger!"}).setMouseIgnore()
 	])
 ]);
 big_button_2 = new LuiButton().addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeRingValue();}).addContent([

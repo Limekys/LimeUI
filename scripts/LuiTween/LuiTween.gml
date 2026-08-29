@@ -6,7 +6,7 @@
 function LuiTween(target_element, property, end_value, duration, easing_func) constructor {
 	self.target = target_element;
 	self.property = property;
-	self.start_value = target_element[$ property];
+	self.start_value = target_element[$ property] ?? 0;
 	self.end_value = end_value;
 	self.duration = max(0.01, duration);
 	self.easing_func = easing_func;

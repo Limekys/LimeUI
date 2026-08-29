@@ -249,7 +249,8 @@ function LuiMain() : LuiBase() constructor {
 	    if (array_length(self.active_animations) > 0) {
 	        for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
 	            var _tween = self.active_animations[i];
-	            _tween.target.updateMainUiSurface();
+	            if _tween.target.is_destroyed continue;
+				_tween.target.updateMainUiSurface();
 				// If update return false, animate end
 	            if (!_tween.update(DT)) {
 	                array_delete(self.active_animations, i, 1);
