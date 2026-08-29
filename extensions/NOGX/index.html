@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <!-- Custom PreHead code is injected here -->
+  ${GM_HTML5_PreHead}
+<head>
+  <meta charset="UTF-8" />
+  <meta name ="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>${GM_HTML5_BrowserTitle}</title>
+  <!-- Custom PreStyle code is injected here -->
+  ${GM_HTML5_PreStyle}
+  <style>
+    html {
+      height: 100%
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      background-image: linear-gradient(to top, #20375a, #245076, #276b92, #2987ac, #2fa4c4);
+      font-family: sans-serif;
+      color: white;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    #status {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    canvas {
+      display: none;
+      image-rendering: optimizeSpeed;
+      -webkit-interpolation-mode: nearest-neighbor;
+      -ms-touch-action: none;
+      touch-action: none;
+      margin: 0px;
+      padding: 0px;
+      border: 0px;
+      box-shadow: 0px 0px 4em rgba(0, 0, 0, 0.5);
+    }
+    .progress-bar {
+      width: 256px;
+      height: 24px;
+      background: linear-gradient(
+        to right,
+        #a3e3ff 0%,
+        #ffffff var(--progress),
+        #23395c var(--progress),
+        #23395c 100%
+      );
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+  </style>
+  <!-- Custom PostStyle code is injected here -->
+  ${GM_HTML5_PostStyle}
+</head>
+<!-- Custom PostHead code is injected here -->
+${GM_HTML5_PostHead}
+<!-- Custom PreBody code is injected here -->
+${GM_HTML5_PreBody}
+<body>
+  <canvas id="canvas" width="640" height="360" tabindex="-1" style="position: absolute; top: 50%; left: 50%; bottom: -50%; right: -50%; transform: translate(-50%, -50%);">
+  </canvas>
+  <div id="status">0%</div>
+  <div class="progress-bar" id="loadingProgress"></div>
+
+  <script>
+    var Module = {
+      canvas: document.getElementById("canvas"),
+      show: function() {
+        Module.canvas.style.display = "block";
+        document.getElementById("status").style.display = "none";
+        document.getElementById("loadingProgress").style.display = "none";
+      },
+      setStatus: function(text) {
+        if(text==="Running..." || text=="") {
+          return;
+        }
+        document.getElementById("status").textContent = text || "";
+      },
+      totalDependencies: 0,
+      monitorRunDependencies: function(left) {
+        this.totalDependencies = Math.max(this.totalDependencies, left);
+        const progressMax = Math.max(this.totalDependencies, 1);
+        const progressValue = progressMax - left;
+        const progress = Math.floor( progressValue / progressMax * 100 ) + "%";
+        const progressElem = document.getElementById("loadingProgress");
+        progressElem.style.setProperty("--progress", progress);
+        this.setStatus(progress);
+      }
+    };
+    Module.canvas.style.display = "none";
+
+    // functions for runner.js
+    var g_pWadLoadCallback = undefined;
+    function setWadLoadCallback( _wadLoadCallback ) { g_pWadLoadCallback = _wadLoadCallback; }
+
+    var g_pAddAsyncMethod = -1;
+    function setAddAsyncMethod( asyncMethod ) { g_pAddAsyncMethod = asyncMethod; }
+
+    var g_pJSExceptionHandler = undefined;
+    function setJSExceptionHandler( exceptionHandler ) {
+      if (typeof exceptionHandler == "function") {
+          g_pJSExceptionHandler = exceptionHandler;
+      }
+    }
+
+    function hasJSExceptionHandler() {
+      return (g_pJSExceptionHandler != undefined) && (typeof g_pJSExceptionHandler == "function");
+    }
+
+    function doJSExceptionHandler( exceptionJSON ) {
+      if (typeof g_pJSExceptionHandler == "function") {
+        const exception = JSON.parse( exceptionJSON );
+        g_pJSExceptionHandler( exception );
+      }
+    }
+
+    function manifestFiles() { return [ "runner.data", "runner.js", "runner.wasm", "audio-worklet.js", "game.unx", "options.ini" ].join( ";"); }
+    function manifestFilesMD5() { console.log("manifestFilesMD5 called"); return undefined; }
+
+    function onFirstFrameRendered() {
+      console.log("-------------First frame rendered!-----------");
+      Module.show();
+    }
+
+    function onGameSetWindowSize(width, height) {}
+
+    var __NOGX_ready = false;
+    function updateCanvasSize() {
+      if(__NOGX_ready) {
+        __NOGX_update_canvas_size();
+      }
+    }
+    const resizeObserver = new ResizeObserver(() => window.requestAnimationFrame(updateCanvasSize));
+    resizeObserver.observe(document.body);
+
+    // disable context menu
+    document.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+    });
+
+    document.addEventListener('touchstart', (event) => {
+      if(event.target===document.body || event.target===Module.canvas) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+  </script>
+  <script async src="runner.js"></script>
+</body>
+<!-- Custom PostBody code is injected here -->
+${GM_HTML5_PostBody}
+</html>

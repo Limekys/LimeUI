@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Bypass -File "%~dp0pre_build_step.ps1"

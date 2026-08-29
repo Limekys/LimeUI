@@ -24,6 +24,7 @@
     {"$GMFolder":"","%Name":"_unused","folderPath":"folders/DEMO/Sprites/_unused.yy","name":"_unused","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Socials","folderPath":"folders/DEMO/Sprites/Socials.yy","name":"Socials","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"UI elements","folderPath":"folders/DEMO/Sprites/UI elements.yy","name":"UI elements","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Extensions","folderPath":"folders/Extensions.yy","name":"Extensions","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Limekys","folderPath":"folders/Limekys.yy","name":"Limekys","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"LimeUI","folderPath":"folders/Limekys/LimeUI.yy","name":"LimeUI","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Components","folderPath":"folders/Limekys/LimeUI/Components.yy","name":"Components","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -46,6 +47,7 @@
   },
   "name":"LimeUI",
   "resources":[
+    {"id":{"name":"NOGX","path":"extensions/NOGX/NOGX.yy",},},
     {"id":{"name":"fDebug","path":"fonts/fDebug/fDebug.yy",},},
     {"id":{"name":"fDemo","path":"fonts/fDemo/fDemo.yy",},},
     {"id":{"name":"fModern","path":"fonts/fModern/fModern.yy",},},

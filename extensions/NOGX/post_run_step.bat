@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Bypass -File "%~dp0post_run_step.ps1"

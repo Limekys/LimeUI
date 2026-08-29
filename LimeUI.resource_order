@@ -13,6 +13,7 @@
     {"name":"_unused","order":35,"path":"folders/DEMO/Sprites/_unused.yy",},
     {"name":"Socials","order":21,"path":"folders/DEMO/Sprites/Socials.yy",},
     {"name":"UI elements","order":36,"path":"folders/DEMO/Sprites/UI elements.yy",},
+    {"name":"Extensions","order":8,"path":"folders/Extensions.yy",},
     {"name":"Components","order":3,"path":"folders/Limekys/LimeUI/Components.yy",},
     {"name":"Display","order":31,"path":"folders/Limekys/LimeUI/Components/Display.yy",},
     {"name":"Interactive","order":30,"path":"folders/Limekys/LimeUI/Components/Interactive.yy",},
