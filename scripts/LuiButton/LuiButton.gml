@@ -77,9 +77,10 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	static _drawIconAndText = function(_center_x, _center_y, _available_width, _text_color) {
 		if self.text != "" {
 			var _style = self.getStyle();
+			var _alpha = draw_get_alpha();
 			if !is_undefined(_style.font_buttons) draw_set_font(_style.font_buttons);
 			draw_set_color(_text_color);
-			draw_set_alpha(1);
+			draw_set_alpha(_alpha);
 			draw_set_valign(fa_middle);
 			var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
 			if _draw_icon {
@@ -107,6 +108,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		// Calculate colors
 		var _blend_color = self.button_color ?? _style.color_secondary;
 		var _blend_text = _style.color_text;
@@ -126,7 +128,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		
 		// Base
 		if !is_undefined(_style.sprite_button) {
-			draw_sprite_stretched_ext(_style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 			//???// Button animation test
 			//draw_sprite_stretched_ext(_style.sprite_button, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, _blend_color, 1);
 		}
@@ -136,7 +138,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		
 		// Border
 		if !is_undefined(_style.sprite_button_border) {
-			draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 			//???// Button animation test
 			//draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x - self.width_offset/2, self.y - self.height_offset/2, self.width + self.width_offset, self.height + self.height_offset, _style.color_border, 1);
 		}

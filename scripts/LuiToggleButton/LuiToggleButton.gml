@@ -10,6 +10,7 @@ function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		
 		// Calculate colors
 		var _blend_color = self.value == true ? _style.color_accent : (self.button_color ?? _style.color_secondary);
@@ -30,7 +31,7 @@ function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 		
 		// Base
 		if !is_undefined(_style.sprite_button) {
-			draw_sprite_stretched_ext(_style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_button, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 		}
 		
 		// Icon and text
@@ -38,7 +39,7 @@ function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 		
 		// Border
 		if !is_undefined(_style.sprite_button_border) {
-			draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_button_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
 	

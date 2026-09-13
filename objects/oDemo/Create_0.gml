@@ -10,7 +10,7 @@ enable_alpha_test = true; // true makes UI blinking if LUI_FORCE_ALPHA_1 setted 
 // Init demo variables
 demo_login = "";
 demo_password = "";
-long_text = "This is a really long text that probably won't fit in this component!";
+long_text = "This is a really long text that probably won't fit in this element at all, so it will overflow!";
 demo_loading_value = 0;
 demo_loading_state = false;
 demo_surface = -1;
@@ -466,29 +466,6 @@ my_ui.addContent([
 	])
 ]);
 
-// Stress test
-/*
-makeRandomColor = function() {
-	return make_color_hsv(irandom(255), irandom_range(128,255), 255);
-}
-numb = 0;
-_random_element = function(_number) {
-	var _rnd = irandom(7);
-	switch (_rnd) {
-		case 0:	return new LuiButton({height: irandom_range(32, 128), text: "button_" + string(_number)}).setColor(makeRandomColor());
-		case 1:	return new LuiImageButton({height: irandom_range(32, 128), value: sLogoDemo, color: makeRandomColor(), alpha: choose(0.5, 1), maintain_spect: choose(true, false)}).addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeImageButtonColor(_e)});
-		case 2:	return new LuiSlider({height: irandom_range(32, 128), max_value: _number, value: random(_number), rounding: choose(25,10,5,2,1,0.5,0.1,0.01)});
-		case 3:	return new LuiInput({height: irandom_range(32, 128), placeholder: choose("", "input_" + string(_number))}).setIncorrect(choose(true, false));
-		case 4:	return new LuiProgressRing({height: irandom_range(32, 128), max_value: _number, value: random(_number), rounding: choose(25,10,5,2,1,0.5,0.1,0.01), display_value: choose(true, false), color: makeRandomColor()});
-		case 5:	return new LuiCheckbox({height: irandom_range(32, 128), value: choose(true, false), text: choose("checkbox_" + string(_number), "")});
-		case 6:	return new LuiToggleSwitch({height: irandom_range(32, 128), value: choose(true, false), text: choose("switch_" + string(_number), "")});
-		case 7:	return new LuiToggleButton({height: irandom_range(32, 128), value: choose(true, false), text: "toggleButton_" + string(_number)}).setColor(makeRandomColor());
-	}
-}
-repeat (250) {
-	my_ui.getElement("firstScrollPanel").addContent([
-		new LuiRow().addContent([
-			_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++), [random_range(0.1, 0.3), random_range(0.1, 0.3), random_range(0.1, 0.3)]
-		])
-	])
-}
+//demoStressTest();
+
+alarm[0] = 1;

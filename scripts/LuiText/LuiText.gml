@@ -61,6 +61,7 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		//Set font properties
 		if !is_undefined(_style.font_default) {
 			draw_set_font(_style.font_default);
@@ -70,7 +71,7 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 		} else {
 			draw_set_color(merge_color(_style.color_text, c_black, 0.5));
 		}
-		draw_set_alpha(1);
+		draw_set_alpha(_alpha);
 		draw_set_halign(self.text_halign);
 		draw_set_valign(self.text_valign);
 		//Calculate right text align

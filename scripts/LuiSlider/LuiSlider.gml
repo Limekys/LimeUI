@@ -27,6 +27,7 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		// Calculate colors based on state
 		var _blend_back = _style.color_back;
 		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : _style.color_accent;
@@ -51,17 +52,17 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		
 		// Base
 		if !is_undefined(_style.sprite_progress_bar) {
-			draw_sprite_stretched_ext(_style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_back, 1);
+			draw_sprite_stretched_ext(_style.sprite_progress_bar, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_back, _alpha);
 		}
 		
 		// Bar value
 		if !is_undefined(_style.sprite_progress_bar_value) {
-			draw_sprite_stretched_ext(_style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * self.bar_value, _bar_h, _blend_accent, 1);
+			draw_sprite_stretched_ext(_style.sprite_progress_bar_value, 0, _bar_x, _bar_y, _bar_w * self.bar_value, _bar_h, _blend_accent, _alpha);
 		}
 		
 		// Border
 		if !is_undefined(_style.sprite_progress_bar_border) {
-			draw_sprite_stretched_ext(_style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_progress_bar_border, 0, _bar_x, _bar_y, _bar_w, _bar_h, _blend_border, _alpha);
 		}
 		
 		// Text
@@ -69,6 +70,7 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 			draw_set_font(_style.font_default);
 		}
 		draw_set_color(_blend_text);
+		draw_set_alpha(_alpha);
 		draw_set_halign(fa_center);
 		draw_set_valign(self.is_dragging ? fa_bottom : fa_middle);
 		var _text_x = self.is_dragging ? self.x + self.width * self.bar_value : self.x + self.width div 2;
@@ -82,12 +84,12 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		var _spr_w = self.knob_width + self.knob_extender*2;
 		var _spr_h = self.height + self.knob_extender*2;
 		if !is_undefined(_style.sprite_slider_knob) {
-			draw_sprite_stretched_ext(_style.sprite_slider_knob, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_secondary, 1);
+			draw_sprite_stretched_ext(_style.sprite_slider_knob, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_secondary, _alpha);
 		}
 		
 		// Knob border
 		if !is_undefined(_style.sprite_slider_knob_border) {
-			draw_sprite_stretched_ext(_style.sprite_slider_knob_border, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_slider_knob_border, 0, _spr_x1, _spr_y1, _spr_w, _spr_h, _blend_border, _alpha);
 		}
 	}
 	

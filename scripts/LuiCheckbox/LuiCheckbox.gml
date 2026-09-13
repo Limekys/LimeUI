@@ -19,6 +19,7 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		// Base
 		if !is_undefined(_style.sprite_checkbox) {
 			var _blend_color = _style.color_back;
@@ -27,7 +28,7 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(_style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_checkbox, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, _alpha);
 		}
 		// Pin
 		if !is_undefined(_style.sprite_checkbox_pin) {
@@ -41,7 +42,7 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 			}
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(_style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_checkbox_pin, 0, self.x, self.y, _draw_width, _draw_height, _blend_color, _alpha);
 		}
 		// Text
 		if self.text != "" {
@@ -50,7 +51,7 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 			} else {
 				draw_set_color(merge_color(_style.color_text, c_black, 0.5));
 			}
-			draw_set_alpha(1);
+			draw_set_alpha(_alpha);
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
 			if !is_undefined(_style.font_default) {
@@ -64,7 +65,7 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 		if !is_undefined(_style.sprite_checkbox_border) {
 			var _draw_width = min(self.width, self.height);
 			var _draw_height = min(self.width, self.height);
-			draw_sprite_stretched_ext(_style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_checkbox_border, 0, self.x, self.y, _draw_width, _draw_height, _style.color_border, _alpha);
 		}
 	}
 	

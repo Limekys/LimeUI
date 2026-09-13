@@ -51,6 +51,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		//Shadow
 		//var _left = (sprite_get_width(sUI_Square_21r_shadow) - sprite_get_width(_style.sprite_panel)) div 2;
 		//var _right = (sprite_get_width(sUI_Square_21r_shadow) - sprite_get_width(_style.sprite_panel)) div 2;
@@ -63,11 +64,11 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 		}
 		// Border
 		if !is_undefined(_style.sprite_panel_border) {
-			draw_sprite_stretched_ext(_style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
 	

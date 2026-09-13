@@ -66,6 +66,7 @@
     {"id":{"name":"rInit","path":"rooms/rInit/rInit.yy",},},
     {"id":{"name":"rMemTest","path":"rooms/rMemTest/rMemTest.yy",},},
     {"id":{"name":"_LuiPrivate","path":"scripts/_LuiPrivate/_LuiPrivate.yy",},},
+    {"id":{"name":"demoMethods","path":"scripts/demoMethods/demoMethods.yy",},},
     {"id":{"name":"LimekysResolutionManager","path":"scripts/LimekysResolutionManager/LimekysResolutionManager.yy",},},
     {"id":{"name":"LimekysUsefulFunctions","path":"scripts/LimekysUsefulFunctions/LimekysUsefulFunctions.yy",},},
     {"id":{"name":"LuiAdditional","path":"scripts/LuiAdditional/LuiAdditional.yy",},},

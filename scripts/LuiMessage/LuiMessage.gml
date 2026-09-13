@@ -45,6 +45,14 @@ function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 		var _container = new LuiColumn();
 		var _panel = new LuiPanel({width: _panel_width, height: _e.dialog_height});
 		
+		// Panel pop-in animation
+		_panel.visual_alpha = 0;
+		_panel.visual_scale_x = 0;
+		_panel.visual_scale_y = 0;
+		self.main_ui.animate(_panel, "visual_alpha", 1, 0.25);
+		self.main_ui.animate(_panel, "visual_scale_x", 1, 0.45, global.Ease.OutBack);
+		self.main_ui.animate(_panel, "visual_scale_y", 1, 0.45, global.Ease.OutBack);
+		
 		// Text
 		var _txt_message = new LuiText({
 			value: _e.message_text,

@@ -171,6 +171,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
     self.draw = function() {
         var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		//Base
         if !is_undefined(_style.sprite_input) {
             var _blend_color = _style.color_back;
@@ -184,7 +185,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             } else {
                 _blend_color = merge_color(_blend_color, c_black, 0.5);
             }
-            draw_sprite_stretched_ext(_style.sprite_input, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+            draw_sprite_stretched_ext(_style.sprite_input, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
         }
         
         //Set text properties
@@ -197,7 +198,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             draw_set_color(merge_color(_style.color_text, c_black, 0.5));
         }
         var _prev_alpha = draw_get_alpha();
-        draw_set_alpha(1);
+        draw_set_alpha(_alpha);
         draw_set_halign(fa_left);
         draw_set_valign(fa_middle);
         
@@ -215,7 +216,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         //Placeholder
         if self.value == "" && !self.has_focus {
             _display_text = self.placeholder;
-            draw_set_alpha(0.5);
+            draw_set_alpha(_alpha * 0.5);
             if self.is_incorrect {
                 draw_set_color(merge_color(_style.color_text_hint, _style.color_semantic_error, 0.5));
             } else {
@@ -245,7 +246,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
             if self.is_incorrect {
                 _border_color = _style.color_semantic_error;
             }
-            draw_sprite_stretched_ext(_style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, 1);
+            draw_sprite_stretched_ext(_style.sprite_input_border, 0, self.x, self.y, self.width, self.height, _border_color, _alpha);
         }
     }
     

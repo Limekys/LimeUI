@@ -41,6 +41,7 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		
 		// Align slider position
 		var _slider_x = self.x;
@@ -52,7 +53,7 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_toggleswitch, 0, _slider_x, _slider_y, self.draw_width, self.draw_height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_toggleswitch, 0, _slider_x, _slider_y, self.draw_width, self.draw_height, _blend_color, _alpha);
 		}
 		// Knob
 		if !is_undefined(_style.sprite_toggleswitch_slider) {
@@ -64,15 +65,15 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider, 0, _slider_x + self.knob_xoffset, _slider_y, self.knob_size, self.knob_size, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider, 0, _slider_x + self.knob_xoffset, _slider_y, self.knob_size, self.knob_size, _blend_color, _alpha);
 		}
 		// Knob border
 		if !is_undefined(_style.sprite_toggleswitch_slider_border) {
-			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider_border, 0, _slider_x + self.knob_xoffset, _slider_y, self.knob_size, self.knob_size, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider_border, 0, _slider_x + self.knob_xoffset, _slider_y, self.knob_size, self.knob_size, _style.color_border, _alpha);
 		}
 		// Border
 		if !is_undefined(_style.sprite_toggleswitch_border) {
-			draw_sprite_stretched_ext(_style.sprite_toggleswitch_border, 0, _slider_x, _slider_y, self.draw_width, self.draw_height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_toggleswitch_border, 0, _slider_x, _slider_y, self.draw_width, self.draw_height, _style.color_border, _alpha);
 		}
 		// Text
 		if self.text != "" {
@@ -81,7 +82,7 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			} else {
 				draw_set_color(merge_color(_style.color_text, c_black, 0.5));
 			}
-			draw_set_alpha(1);
+			draw_set_alpha(_alpha);
 			draw_set_halign(fa_left);
 			draw_set_valign(fa_middle);
 			if !is_undefined(_style.font_default) {

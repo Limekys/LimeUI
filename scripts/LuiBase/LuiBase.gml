@@ -110,6 +110,71 @@ function LuiBase(_params = {}) constructor {
     self.drag_offset_x = 0;
     self.drag_offset_y = 0;
 	
+	// Visual Transform (Offset Transform) - Does not affect Flex layout or mouse collision
+	self.visual_x = 0;
+	self.visual_y = 0;
+	self.visual_scale_x = 1;
+	self.visual_scale_y = 1;
+	self.visual_angle = 0;
+	self.visual_alpha = 1;
+	self.pivot_x = 0.5; // 0.0 to 1.0
+	self.pivot_y = 0.5; // 0.0 to 1.0
+	
+	// Surface Caching (Render to Texture)
+	self.cache_as_surface = false;
+	self._cached_surface = -1;
+	self._is_cache_dirty = true;
+	
+	///@desc Enables or disables surface caching (flattens children into a single texture)
+	///@arg {bool} _enable
+	static setCacheAsSurface = function(_enable) {
+	    if (self.cache_as_surface == _enable) return self;
+	    self.cache_as_surface = _enable;
+	    self._is_cache_dirty = true;
+	    
+	    if (_enable) {
+	        if (!surface_exists(self._cached_surface)) {
+	            self._cached_surface = surface_create(max(1, ceil(self.width)), max(1, ceil(self.height)));
+	        }
+	    } else {
+	        if (surface_exists(self._cached_surface)) {
+	            surface_free(self._cached_surface);
+	            self._cached_surface = -1;
+	        }
+	    }
+	    
+	    self.updateMainUiSurface();
+	    return self;
+	}
+	
+	///@desc Forces the cached surface to be redrawn on the next frame
+	static invalidateCache = function() {
+	    self._is_cache_dirty = true;
+	    self.updateMainUiSurface();
+	    return self;
+	}
+	
+	///@desc Builds the visual transformation matrix for rendering relative to pivot
+	///@ignore
+	static _buildVisualMatrix = function() {
+	    // Absolute pivot point on the screen
+	    var _abs_pivot_x = self.x + self.width * self.pivot_x;
+	    var _abs_pivot_y = self.y + self.height * self.pivot_y;
+	
+	    // Move pivot to origin
+	    var _m1 = matrix_build(-_abs_pivot_x, -_abs_pivot_y, 0, 0, 0, 0, 1, 1, 1);
+	
+	    // Apply scale and rotation at origin
+	    var _m2 = matrix_build(0, 0, 0, 0, 0, self.visual_angle, self.visual_scale_x, self.visual_scale_y, 1);
+	
+	    // Move back to pivot + visual offset
+	    var _m3 = matrix_build(_abs_pivot_x + self.visual_x, _abs_pivot_y + self.visual_y, 0, 0, 0, 0, 1, 1, 1);
+	
+	    // FIXED: Reversed order for GameMaker's row-vector convention
+	    // Application order: _m1 (to origin) -> _m2 (scale/rotate) -> _m3 (back)
+	    return matrix_multiply(matrix_multiply(_m1, _m2), _m3);
+	}
+	
 	// Processing parameters from the structure
 	if is_struct(_params) {
 		self.x = _params[$ "x"] ?? LUI_AUTO;
@@ -1942,18 +2007,18 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Update main ui surface
 	static updateMainUiSurface = function() {
-		if is_undefined(self.main_ui) return self;
-		
-		// Add dirty rectangle to update
-		if self.is_visible_in_region {
-			var _x1 = min(self.view_region.x1, self.prev_view_region.x1);
-			var _y1 = min(self.view_region.y1, self.prev_view_region.y1);
-			var _x2 = max(self.view_region.x2, self.prev_view_region.x2);
-			var _y2 = max(self.view_region.y2, self.prev_view_region.y2);
-			self.main_ui._addRedrawRect(_x1, _y1, _x2, _y2);
-		}
-		
-		return self;
+	    if is_undefined(self.main_ui) return self;
+	    
+	    // Invalidate cache of all ancestors that have cache_as_surface enabled
+	    var _ancestor = self.parent;
+	    while (!is_undefined(_ancestor)) {
+	        if (_ancestor.cache_as_surface) {
+	            _ancestor._is_cache_dirty = true;
+	        }
+	        _ancestor = _ancestor.parent;
+	    }
+	    
+	    return self;
 	}
 	
 	///@desc Add element to main ui list for update flex
