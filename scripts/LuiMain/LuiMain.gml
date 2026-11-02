@@ -26,6 +26,7 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_y = -1;
 	self._screen_grid = {};
 	self.elements_to_update_flex = [];
+	self._baking = false;
 	
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
@@ -246,21 +247,25 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		// Update animations
-	    if (array_length(self.active_animations) > 0) {
-	        for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
-	            var _tween = self.active_animations[i];
-	            if _tween.target.is_destroyed continue;
-				_tween.target.updateMainUiSurface();
+		if (array_length(self.active_animations) > 0) {
+			for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
+				var _tween = self.active_animations[i];
+				if _tween.target.is_destroyed {
+					array_delete(self.active_animations, i, 1);
+					continue;
+				}
+				// Transform/alpha of the element itself doesn't change its own cached content
+				if (string_starts_with(_tween.property, "visual_") || string_starts_with(_tween.property, "pivot_")) {
+					_tween.target._invalidateAncestorCaches();
+				} else {
+					_tween.target.updateMainUiSurface();
+				}
 				// If update return false, animate end
-	            if (!_tween.update(DT)) {
-	                array_delete(self.active_animations, i, 1);
-	            }
-	        }
-	        // Redraw surface on active animations
-	        //if (array_length(self.active_animations) > 0) {
-	            //self.updateMainUiSurface();
-	        //}
-	    }
+				if (!_tween.update(DT)) {
+					array_delete(self.active_animations, i, 1);
+				}
+			}
+		}
 		
 		// Update debug mode states
 		if self.current_debug_mode != global.lui_debug_mode {
@@ -289,176 +294,110 @@ function LuiMain() : LuiBase() constructor {
 	// RENDER
 	self.base_render = method(self, render);
 	self.render = function() {
-	    var _prev_alpha = draw_get_alpha();
-	    if LUI_FORCE_ALPHA_1 { draw_set_alpha(1); }
-	
-	    // Pre draw events
-	    for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
-	        var _element = self.pre_draw_list[i];
-	        if is_method(_element.preDraw) _element.preDraw();
-	    }
-	
-	    if self.visible {
+		var _prev_alpha = draw_get_alpha();
+		if LUI_FORCE_ALPHA_1 { draw_set_alpha(1); }
+		
+		// Pre draw events
+		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
+			var _element = self.pre_draw_list[i];
+			if is_method(_element.preDraw) _element.preDraw();
+		}
+		
+		if self.visible {
 			
-	        // Force initial layout if it was not calculated yet
-	        if (self.needs_update_flex) {
-	            self.needs_update_flex = false;
-	            self._calculateLayout();
-	            self._updateFlex(self.flex_node);
-	        }
-	        
-	        // Root container is always visible for command collection
-	        self.is_visible_in_region = true;
-	        
-	        // 1. Update cache surfaces for elements that need it (Bottom-Up)
-	        for (var i = 0; i < array_length(self.content); i++) {
-	            self._updateCachedSurfacesRecursive(self.content[i]);
-	        }
-	
-	        // 2. Collect draw commands (Command Buffer)
-	        var _commands = [];
-	        var _identity_matrix = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
-	        for (var i = 0; i < array_length(self.content); i++) {
-	            self._collectDrawCommands(self.content[i], _commands, _identity_matrix, 1.0);
-	        }
-	
-	        // 3. Sort commands by depth
-	        array_sort(_commands, function(a, b) { 
-	            return _compareDepthArrays(a.depth_array, b.depth_array); 
-	        });
-	        
-	        // 4. Execute draw commands
-	        var _gui_w = display_get_gui_width();
-	        var _gui_h = display_get_gui_height();
-	        
-	        // Set proper blend equation for alpha compositing
-	        gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
-	        
-	        for (var i = 0; i < array_length(_commands); i++) {
-	            var _cmd = _commands[i];
-	            
-	            // Save current matrix
-	            var _prev_matrix = matrix_get(matrix_world);
-	            
-	            // Apply element's visual matrix (includes parent hierarchy)
-	            matrix_set(matrix_world, _cmd.matrix);
-	            
-	            // Calculate scissor by walking up the parent hierarchy
-	            var _final_scissor_x = 0;
-	            var _final_scissor_y = 0;
-	            var _final_scissor_w = _gui_w;
-	            var _final_scissor_h = _gui_h;
-	            
-	            var _ancestor = _cmd.element.parent;
-	            while (!is_undefined(_ancestor)) {
-	                if (_ancestor.draw_content_in_cutted_region) {
-	                    var _style = _ancestor.getStyle();
-	                    var _ancestor_x1 = _ancestor.x + _style.render_region_offset.left;
-	                    var _ancestor_y1 = _ancestor.y + _style.render_region_offset.top;
-	                    var _ancestor_x2 = _ancestor.x + _ancestor.width - _style.render_region_offset.right;
-	                    var _ancestor_y2 = _ancestor.y + _ancestor.height - _style.render_region_offset.bottom;
-	                    
-	                    var _new_x1 = max(_final_scissor_x, _ancestor_x1);
-	                    var _new_y1 = max(_final_scissor_y, _ancestor_y1);
-	                    var _new_x2 = min(_final_scissor_x + _final_scissor_w, _ancestor_x2);
-	                    var _new_y2 = min(_final_scissor_y + _final_scissor_h, _ancestor_y2);
-	                    
-	                    _final_scissor_x = _new_x1;
-	                    _final_scissor_y = _new_y1;
-	                    _final_scissor_w = max(0, _new_x2 - _new_x1);
-	                    _final_scissor_h = max(0, _new_y2 - _new_y1);
-	                }
-	                _ancestor = _ancestor.parent;
-	            }
-	            
-	            // Apply scissor
-	            gpu_set_scissor(floor(_final_scissor_x), floor(_final_scissor_y), ceil(_final_scissor_w), ceil(_final_scissor_h));
-	            
-	            // Apply accumulated visual alpha
-	            var _cmd_prev_alpha = draw_get_alpha();
-	            draw_set_alpha(_cmd.alpha);
-	            
-	            if (_cmd.type == "surface") {
-	                // Draw cached surface as a single sprite at element's position
-	                draw_surface_ext(_cmd.surface, _cmd.element.x, _cmd.element.y, 1, 1, 0, c_white, _cmd.alpha);
-	            } else if (_cmd.type == "draw_func") {
-	                // Draw element normally
-	                if (is_method(_cmd.element.draw)) {
-	                    _cmd.element.draw();
-	                }
-	            }
-	            
-	            // Restore alpha and matrix
-	            draw_set_alpha(_cmd_prev_alpha);
-	            matrix_set(matrix_world, _prev_matrix);
-	        }
-	        
-	        // Reset blend equation
-	        gpu_set_blendequation(bm_eq_add);
-	        
-	        // Reset scissor
-	        gpu_set_scissor(0, 0, _gui_w, _gui_h);
-	
-	        // Draw debug rectangles of elements
-	        if global.lui_debug_mode != 0 {
-	            matrix_set(matrix_world, _identity_matrix); // Reset matrix for debug drawing
-	            for (var i = 0, n = array_length(self.content); i < n; i++) {
-	                var _element = self.content[i];
-	                if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
-	                _element._renderDebug(_element.x, _element.y, true);
-	            }
-	        }
-	        
-	        // Draw other stuff (focused element, etc)
-	        if self.display_focused_element {
-	            if !is_undefined(self.element_in_focus) {
-	                var _elm = self.element_in_focus;
-	                draw_rectangle_color(_elm.x - 1, _elm.y - 1, _elm.x + _elm.width, _elm.y + _elm.height, c_white, c_white, c_white, c_white, true);
-	            }
-	        }
-	    }
-	    
-	    // Reset matrix for tooltips and overlays
-	    matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
-	    
-	    // Get topmost element
-	    var _element = self.topmost_hovered_element;
-	    // Draw tooltip text
-	    if !is_undefined(_element) {
-	        if _element.tooltip != "" {
-	            var _style = self.getStyle();
-	            var _padding = _style.padding; 
-	            var _padding_text = _style.padding; 
-	            draw_set_font(_style.font_default);
-	            var _width = string_width(_element.tooltip) + _padding_text*2;
-	            var _height = string_height(_element.tooltip) + _padding_text*2;
-	            var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
-	            var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
-	            
-	            if !is_undefined(_style.sprite_tooltip) {
-	                draw_sprite_stretched_ext(_style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, _style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
-	            }
-	            if !is_undefined(_style.sprite_tooltip_border) {
-	                draw_sprite_stretched_ext(_style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, _style.color_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
-	            }
-	            draw_set_color(_style.color_text);
-	            draw_set_halign(fa_left);
-	            draw_set_valign(fa_top);
-	            draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);
-	        }
-	    }
-	
-	    if global.lui_debug_render_grid {
-	        self._drawScreenGrid();
-	    }
-	
-	    if global.lui_debug_mode != 0 && !is_undefined(_element) {
-	        var _mouse_x = device_mouse_x_to_gui(0) + 32;
-	        var _mouse_y = device_mouse_y_to_gui(0) + 32;
-	        _element._renderDebugInfo(_mouse_x, _mouse_y);
-	    }
-	    
-	    if !LUI_FORCE_ALPHA_1 { draw_set_alpha(_prev_alpha); }
+			// Force initial layout if it was not calculated yet
+			if (self.needs_update_flex) {
+				self.needs_update_flex = false;
+				self._calculateLayout();
+				self._updateFlex(self.flex_node);
+			}
+			
+			// Root container is always visible
+			self.is_visible_in_region = true;
+			
+			// 1. Update cache surfaces (bottom-up)
+			for (var i = 0, n = array_length(self.content); i < n; i++) {
+				self._prepareCaches(self.content[i]);
+			}
+			
+			// 2. Draw the tree directly (children are already in z order)
+			var _gui_w = display_get_gui_width();
+			var _gui_h = display_get_gui_height();
+			var _identity_matrix = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
+			var _root_clip = [0, 0, _gui_w, _gui_h];
+			
+			matrix_set(matrix_world, _identity_matrix);
+			gpu_set_scissor(0, 0, _gui_w, _gui_h);
+			_luiBlendReset();
+			
+			var _kids = self._getDrawChildren();
+			for (var i = 0, n = array_length(_kids); i < n; i++) {
+				self._drawTree(_kids[i], _identity_matrix, 1, _root_clip);
+			}
+			
+			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+			gpu_set_scissor(0, 0, _gui_w, _gui_h);
+			matrix_set(matrix_world, _identity_matrix);
+			
+			// Draw debug rectangles of elements
+			if global.lui_debug_mode != 0 {
+				for (var i = 0, n = array_length(self.content); i < n; i++) {
+					var _element = self.content[i];
+					if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
+					_element._renderDebug(_element.x, _element.y, true);
+				}
+			}
+			
+			// Draw other stuff (focused element, etc)
+			if self.display_focused_element {
+				if !is_undefined(self.element_in_focus) {
+					var _elm = self.element_in_focus;
+					draw_rectangle_color(_elm.x - 1, _elm.y - 1, _elm.x + _elm.width, _elm.y + _elm.height, c_white, c_white, c_white, c_white, true);
+				}
+			}
+		}
+		
+		// Reset matrix for tooltips and overlays
+		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
+		
+		// Get topmost element
+		var _element = self.topmost_hovered_element;
+		// Draw tooltip text
+		if !is_undefined(_element) {
+			if _element.tooltip != "" {
+				var _style = self.getStyle();
+				var _padding = _style.padding; 
+				var _padding_text = _style.padding; 
+				draw_set_font(_style.font_default);
+				var _width = string_width(_element.tooltip) + _padding_text*2;
+				var _height = string_height(_element.tooltip) + _padding_text*2;
+				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
+				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
+				
+				if !is_undefined(_style.sprite_tooltip) {
+					draw_sprite_stretched_ext(_style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, _style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+				}
+				if !is_undefined(_style.sprite_tooltip_border) {
+					draw_sprite_stretched_ext(_style.sprite_tooltip_border, 0, _mouse_x, _mouse_y, _width, _height, _style.color_border, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
+				}
+				draw_set_color(_style.color_text);
+				draw_set_halign(fa_left);
+				draw_set_valign(fa_top);
+				draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);
+			}
+		}
+		
+		if global.lui_debug_render_grid {
+			self._drawScreenGrid();
+		}
+		
+		if global.lui_debug_mode != 0 && !is_undefined(_element) {
+			var _mouse_x = device_mouse_x_to_gui(0) + 32;
+			var _mouse_y = device_mouse_y_to_gui(0) + 32;
+			_element._renderDebugInfo(_mouse_x, _mouse_y);
+		}
+		
+		if !LUI_FORCE_ALPHA_1 { draw_set_alpha(_prev_alpha); }
 	}
 	
 	// DIALOGS
@@ -501,151 +440,153 @@ function LuiMain() : LuiBase() constructor {
 	    return _filtered[0];
 	}
 	
-	///@desc Recursively draws an element and its descendants into the currently targeted surface
+	///@desc Bottom-up: decides which elements use a cache this frame and (re)bakes dirty ones.
+	/// A cache is used for: explicit cache_as_surface, or automatically for an element with
+	/// visual_alpha < 1 and children (true group opacity).
 	///@ignore
-	static _drawElementTreeToSurface = function(_elem, _parent_matrix) {
-	    if (!_elem.visible || _elem.is_destroyed) return;
-	    
-	    // Build this element's visual matrix
-	    var _visual_matrix = _elem._buildVisualMatrix();
-	    
-	    // Combine with parent matrix to get absolute transform within the surface
-	    var _current_matrix = matrix_multiply(_visual_matrix, _parent_matrix);
-	    
-	    // Draw this element's own content (background, borders, text, etc.)
-	    if (is_method(_elem.draw)) {
-	        matrix_set(matrix_world, _current_matrix);
-	        var _prev_alpha = draw_get_alpha();
-	        draw_set_alpha(_elem.visual_alpha);
-	        _elem.draw();
-	        draw_set_alpha(_prev_alpha);
-	    }
-	    
-	    // Recursively draw all children
-	    for (var i = 0; i < array_length(_elem.content); i++) {
-	        self._drawElementTreeToSurface(_elem.content[i], _current_matrix);
-	    }
-	}
-	
-	///@desc Renders the element and all its descendants into its cached surface
-	///@ignore
-	static _updateCachedSurface = function(_element) {
-	    if (!_element.cache_as_surface) return;
-	    
-	    var _w = max(1, ceil(_element.width));
-	    var _h = max(1, ceil(_element.height));
-	    
-	    // Recreate surface if size changed
-	    if (surface_exists(_element._cached_surface)) {
-	        if (surface_get_width(_element._cached_surface) != _w || 
-	            surface_get_height(_element._cached_surface) != _h) {
-	            surface_resize(_element._cached_surface, _w, _h);
-	            _element._is_cache_dirty = true;
-	        }
-	    } else {
-	        _element._cached_surface = surface_create(_w, _h);
-	        _element._is_cache_dirty = true;
-	    }
-	    
-	    // Skip if cache is still valid
-	    if (!_element._is_cache_dirty) return;
-	    
-	    // Render into the cached surface
-	    surface_set_target(_element._cached_surface);
-	    draw_clear_alpha(c_black, 0);
-	    
-	    var _prev_matrix = matrix_get(matrix_world);
-	    
-	    // Offset matrix so element's top-left corner becomes (0, 0) on the surface
-	    var _offset_matrix = matrix_build(-_element.x, -_element.y, 0, 0, 0, 0, 1, 1, 1);
-	    
-	    // Set proper blend equation for alpha compositing inside the surface
-	    gpu_set_blendequation_sepalpha(bm_eq_add, bm_eq_max);
-	    
-	   // Draw the panel's own background/borders first (using offset matrix)
-		// IMPORTANT: Always draw with alpha = 1. The element's visual_alpha is applied
-		// later when the cached surface is drawn to the screen via draw_surface_ext.
-		if (is_method(_element.draw)) {
-		    matrix_set(matrix_world, _offset_matrix);
-		    var _prev_alpha = draw_get_alpha();
-		    draw_set_alpha(1);
-		    _element.draw();
-		    draw_set_alpha(_prev_alpha);
+	static _prepareCaches = function(_el) {
+		if (!_el.visible || _el.is_destroyed || !_el.is_visible_in_region) return;
+		
+		var _has_kids = _el.render_content_enabled && array_length(_el.content) > 0;
+		if (_has_kids) {
+			for (var i = 0, n = array_length(_el.content); i < n; i++) {
+				self._prepareCaches(_el.content[i]);
+			}
 		}
-	    
-	    // Then draw all children recursively using the class method
-	    for (var i = 0; i < array_length(_element.content); i++) {
-	        self._drawElementTreeToSurface(_element.content[i], _offset_matrix);
-	    }
-	    
-	    // Reset blend equation
-	    gpu_set_blendequation(bm_eq_add);
-	    
-	    matrix_set(matrix_world, _prev_matrix);
-	    surface_reset_target();
-	    
-	    _element._is_cache_dirty = false;
+		
+		var _group_alpha = _has_kids && _el.visual_alpha < 0.999 && _el.visual_alpha > 0;
+		if (_el.cache_as_surface || _group_alpha) {
+			_el._cache_active = true;
+			self._bakeCache(_el);
+		} else if (_el._cache_active) {
+			_el._cache_active = false;
+			_el._freeCache();
+		}
 	}
 	
-	///@desc Recursively updates all cached surfaces (bottom-up)
+	///@desc Renders the element (own draw + children) into its cached surface.
+	/// The element's own visual transform and alpha are NOT baked: they are applied when the surface is blitted.
 	///@ignore
-	static _updateCachedSurfacesRecursive = function(_element) {
-	    if (!_element.visible || _element.is_destroyed) return;
-	    
-	    // Update children first (bottom-up)
-	    for (var i = 0; i < array_length(_element.content); i++) {
-	        self._updateCachedSurfacesRecursive(_element.content[i]);
-	    }
-	    
-	    // Then update this element's cache
-	    if (_element.cache_as_surface) {
-	        self._updateCachedSurface(_element);
-	    }
+	static _bakeCache = function(_el) {
+		var _pad = _el.cache_padding;
+		var _ox = floor(_el.x);
+		var _oy = floor(_el.y);
+		var _w = ceil(_el.x + _el.width) - _ox + _pad * 2;
+		var _h = ceil(_el.y + _el.height) - _oy + _pad * 2;
+		
+		// Too big / empty: fall back to direct drawing
+		if (_w < 1 || _h < 1 || _w > LUI_CACHE_MAX_SIZE || _h > LUI_CACHE_MAX_SIZE) {
+			_el._cache_active = false;
+			_el._freeCache();
+			return;
+		}
+		
+		// (Re)create surface
+		if (surface_exists(_el._cached_surface)) {
+			if (surface_get_width(_el._cached_surface) != _w || surface_get_height(_el._cached_surface) != _h) {
+				surface_resize(_el._cached_surface, _w, _h);
+				_el._is_cache_dirty = true;
+			}
+		} else {
+			_el._cached_surface = surface_create(_w, _h);
+			_el._is_cache_dirty = true;
+		}
+		
+		if (!_el._is_cache_dirty) return;
+		
+		var _prev_matrix = matrix_get(matrix_world);
+		var _prev_scissor = gpu_get_scissor();
+		var _prev_alpha = draw_get_alpha();
+		
+		surface_set_target(_el._cached_surface);
+		draw_clear_alpha(c_black, 0);
+		
+		self._baking = true;
+		_luiBlendBake();
+		
+		// Element's top-left (+ padding) becomes (pad, pad) on the surface
+		var _m = matrix_build(_pad - _ox, _pad - _oy, 0, 0, 0, 0, 1, 1, 1);
+		var _clip = [0, 0, _w, _h];
+		matrix_set(matrix_world, _m);
+		gpu_set_scissor(0, 0, _w, _h);
+		
+		// Always alpha 1 here: element's visual_alpha is applied on blit
+		self._drawSelfAndChildren(_el, _m, 1, _clip);
+		
+		_luiBlendReset();
+		self._baking = false;
+		
+		surface_reset_target();
+		gpu_set_scissor(_prev_scissor);
+		matrix_set(matrix_world, _prev_matrix);
+		draw_set_alpha(_prev_alpha);
+		
+		_el._is_cache_dirty = false;
 	}
 	
-	///@desc Recursively collects draw commands into the command buffer
+	///@desc Draws a cached surface (premultiplied) with group alpha
 	///@ignore
-	static _collectDrawCommands = function(_element, _commands, _parent_matrix, _parent_alpha) {
-	    if (!_element.visible || _element.is_destroyed) return;
-	    
-	    // Calculate visual matrix for this element
-	    var _visual_matrix = _element._buildVisualMatrix();
-	    
-	    // Combine with parent matrix (parent transforms affect children)
-	    var _current_matrix = matrix_multiply(_visual_matrix, _parent_matrix);
-	    
-	    // Accumulate alpha from parent
-	    var _current_alpha = _parent_alpha * _element.visual_alpha;
-	    
-	    // If element is cached as surface, draw it as a single texture
-	    if (_element.cache_as_surface && surface_exists(_element._cached_surface)) {
-	        array_push(_commands, {
-	            type: "surface",
-	            element: _element,
-	            surface: _element._cached_surface,
-	            matrix: _current_matrix,
-	            alpha: _current_alpha,
-	            depth_array: _element.depth_array,
-	        });
-	        // Do NOT recurse into children - they are baked into the surface
-	        return;
-	    }
-	    
-	    // Normal element - draw its own draw method
-	    if (is_method(_element.draw)) {
-	        array_push(_commands, {
-	            type: "draw_func",
-	            element: _element,
-	            matrix: _current_matrix,
-	            alpha: _current_alpha,
-	            depth_array: _element.depth_array,
-	        });
-	    }
-	    
-	    // Recurse into children with current matrix and alpha
-	    for (var i = 0; i < array_length(_element.content); i++) {
-	        self._collectDrawCommands(_element.content[i], _commands, _current_matrix, _current_alpha);
-	    }
+	static _blitCache = function(_el, _a) {
+		var _v = floor(255 * _a);
+		_luiBlendBlit();
+		draw_surface_ext(_el._cached_surface,
+			floor(_el.x) - _el.cache_padding, floor(_el.y) - _el.cache_padding,
+			1, 1, 0, make_colour_rgb(_v, _v, _v), _a);
+		if (self._baking) _luiBlendBake(); else _luiBlendReset();
+	}
+	
+	///@desc Draws element with its subtree.
+	/// Invariant on entry: matrix_world == _pm, scissor == _clip. Restored on exit.
+	///@ignore
+	static _drawTree = function(_el, _pm, _pa, _clip) {
+		if (!_el.visible || _el.is_destroyed || !_el.is_visible_in_region) return;
+		
+		var _a = _pa * _el.visual_alpha;
+		if (_a <= 0) return;
+		
+		var _has_t = _el._hasVisualTransform();
+		var _m = _has_t ? matrix_multiply(_el._buildVisualMatrix(), _pm) : _pm;
+		if (_has_t) matrix_set(matrix_world, _m);
+		
+		if (_el._cache_active && surface_exists(_el._cached_surface)) {
+			// Children are baked into the surface
+			self._blitCache(_el, _a);
+		} else {
+			self._drawSelfAndChildren(_el, _m, _a, _clip);
+		}
+		
+		if (_has_t) matrix_set(matrix_world, _pm);
+	}
+	
+	///@desc Own draw + children (with clipping if the element clips its content).
+	/// Invariant on entry: matrix_world == _m, scissor == _clip. Restored on exit.
+	///@ignore
+	static _drawSelfAndChildren = function(_el, _m, _a, _clip) {
+		if (is_method(_el.draw)) {
+			draw_set_alpha(_a);
+			_el.draw();
+		}
+		
+		if (!_el.render_content_enabled) return;
+		
+		var _kids = _el._getDrawChildren();
+		var _n = array_length(_kids);
+		if (_n == 0) return;
+		
+		var _child_clip = _clip;
+		var _clipping = _el.draw_content_in_cutted_region;
+		if (_clipping) {
+			_child_clip = _luiClipIntersect(_clip, _luiElementClipRect(_el, _m));
+			// Nothing of the children can be visible
+			if (_child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1]) return;
+			_luiApplyClip(_child_clip);
+		}
+		
+		for (var i = 0; i < _n; i++) {
+			self._drawTree(_kids[i], _m, _a, _child_clip);
+		}
+		
+		if (_clipping) _luiApplyClip(_clip);
 	}
 	
 	///@desc Add element to list for update flex node
@@ -703,7 +644,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		_e.pre_draw_list = -1;
 		_e.element_in_focus = undefined;
-		_e.dragging_e = undefined;
+		_e.dragging_element = undefined;
 		_e.active_animations = -1;
 		delete _e._screen_grid;
 		delete _e.element_names;

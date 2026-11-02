@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"LuiRenderUtils",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"LuiRenderUtils",
+  "parent":{
+    "name":"Core",
+    "path":"folders/Limekys/LimeUI/Core.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

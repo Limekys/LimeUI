@@ -86,7 +86,7 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 										floor(self.x + self.width/2 - _width/2), 
 										floor(self.y + self.height/2 - _height/2), 
 										_width, _height, 
-										_blend_color, self.alpha);
+										_blend_color, self.alpha * draw_get_alpha());
 		}
 	}
 	

@@ -66,10 +66,9 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	///@ignore
 	static _drawIcon = function(_x, _y) {
 		if sprite_exists(self.icon.sprite) {
-			draw_sprite_stretched_ext(self.icon.sprite, 0, _x, _y, self.icon.width, self.icon.height, self.icon.color, self.icon.alpha);
+			draw_sprite_stretched_ext(self.icon.sprite, 0, _x, _y, self.icon.width, self.icon.height, self.icon.color, self.icon.alpha * draw_get_alpha());
 		}
 	}
 	

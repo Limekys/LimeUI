@@ -85,6 +85,7 @@
     {"id":{"name":"LuiPanel","path":"scripts/LuiPanel/LuiPanel.yy",},},
     {"id":{"name":"LuiProgressBar","path":"scripts/LuiProgressBar/LuiProgressBar.yy",},},
     {"id":{"name":"LuiProgressRing","path":"scripts/LuiProgressRing/LuiProgressRing.yy",},},
+    {"id":{"name":"LuiRenderUtils","path":"scripts/LuiRenderUtils/LuiRenderUtils.yy",},},
     {"id":{"name":"LuiScrollPanel","path":"scripts/LuiScrollPanel/LuiScrollPanel.yy",},},
     {"id":{"name":"LuiSettings","path":"scripts/LuiSettings/LuiSettings.yy",},},
     {"id":{"name":"LuiSlider","path":"scripts/LuiSlider/LuiSlider.yy",},},

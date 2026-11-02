@@ -116,8 +116,8 @@ btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_b
 createNewLoginWindow = function () {
 	// Create draggable panel (window) with some content
 	my_ui.addContent([
-		new LuiWindow({x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300, min_width: 300, min_height: 300, title: "Secret database", allow_resize: true}).centerContent().addContent([
-			new LuiImage({value: sIconKey, width: 64, height: 64}),
+		new LuiWindow({name: "window_test", x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300, min_width: 300, min_height: 300, title: "Secret database", allow_resize: true}).centerContent().addContent([
+			new LuiImage({name: "test_image", value: sIconKey, width: 64, height: 64}),
 			new LuiRow().addContent([
 				new LuiInput({placeholder: "login"})
 			]),
@@ -129,6 +129,11 @@ createNewLoginWindow = function () {
 			})
 		])
 	])
+	
+	my_ui.getElement("window_test").setCacheAsSurface(true);
+	my_ui.getElement("window_test").visual_alpha = 0.9;
+	my_ui.getElement("test_image").visual_scale_y = 8;
+	my_ui.getElement("test_image").visual_scale_x = 8;
 }
 
 // Add elements to first panel and init some new here
@@ -467,5 +472,8 @@ my_ui.addContent([
 ]);
 
 //demoStressTest();
+
+my_ui.getElement("firstScrollPanel").visual_alpha = 0.5;
+tabs.visual_alpha = 0.75;
 
 alarm[0] = 1;

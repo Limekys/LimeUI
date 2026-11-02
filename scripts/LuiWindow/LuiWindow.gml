@@ -84,17 +84,18 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
     self.draw = function() {
 		if self.window_container.visible {
 			var _style = self.getStyle();
+			var _alpha = draw_get_alpha();
 			// Window
 			if !is_undefined(_style.sprite_tabs) {
 				var _blend_color = _style.color_primary;
 				if self.deactivated {
 					_blend_color = merge_color(_blend_color, c_black, 0.5);
 				}
-				draw_sprite_stretched_ext(_style.sprite_tabs, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, _blend_color, 1);
+				draw_sprite_stretched_ext(_style.sprite_tabs, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, _blend_color, _alpha);
 			}
 			// Border
 			if !is_undefined(_style.sprite_tabs_border) {
-				draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, _style.color_border, 1);
+				draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, _style.color_border, _alpha);
 			}
 		}
     }
@@ -148,18 +149,17 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 		self.addContentOriginal([_minimize_button, _close_button]);
 	}
 	
-    // Draw method
-    self.draw = function() {
+	self.draw = function() {
         var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		// Header
 		if !is_undefined(_style.sprite_tab) {
             var _blend_color = merge_color(_style.color_primary, c_black, 0.25);
-			//var _color = isMouseHovered() ? merge_color(_blend_color, _style.color_hover, 0.5) : _blend_color;
-            draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+            draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
         }
 		// Border
 		if !is_undefined(_style.sprite_tab_border) {
-			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
     }
 	

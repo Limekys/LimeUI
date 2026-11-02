@@ -100,6 +100,8 @@ function LuiBase(_params = {}) constructor {
 		x2: 10000,
 		y2: 10000
 	};
+	// Region to which children are cropped (differs from view_region only for non-clipping parents)
+	self.child_region = { x1: 0, y1: 0, x2: 10000, y2: 10000 };
 	self.is_visible_in_region = false;
 	// Depth system
 	self.nesting_level = 0;
@@ -120,38 +122,72 @@ function LuiBase(_params = {}) constructor {
 	self.pivot_x = 0.5; // 0.0 to 1.0
 	self.pivot_y = 0.5; // 0.0 to 1.0
 	
-	// Surface Caching (Render to Texture)
-	self.cache_as_surface = false;
+		// Surface Caching (Render to Texture)
+	self.cache_as_surface = false;		// явный кеш, включённый пользователем
+	self.cache_padding = 0;				// запас вокруг элемента для теней/свечения/детей за границей
+	self._cache_active = false;			// кеш реально используется в этом кадре (явный или авто для группы alpha)
 	self._cached_surface = -1;
 	self._is_cache_dirty = true;
-	
+
+	// Порядок отрисовки детей (отсортированы по z, пересобираются лениво)
+	self._draw_children = [];
+	self._draw_order_dirty = true;
+
 	///@desc Enables or disables surface caching (flattens children into a single texture)
 	///@arg {bool} _enable
 	static setCacheAsSurface = function(_enable) {
-	    if (self.cache_as_surface == _enable) return self;
-	    self.cache_as_surface = _enable;
-	    self._is_cache_dirty = true;
-	    
-	    if (_enable) {
-	        if (!surface_exists(self._cached_surface)) {
-	            self._cached_surface = surface_create(max(1, ceil(self.width)), max(1, ceil(self.height)));
-	        }
-	    } else {
-	        if (surface_exists(self._cached_surface)) {
-	            surface_free(self._cached_surface);
-	            self._cached_surface = -1;
-	        }
-	    }
-	    
-	    self.updateMainUiSurface();
-	    return self;
+		if (self.cache_as_surface == _enable) return self;
+		self.cache_as_surface = _enable;
+		self._is_cache_dirty = true;
+		if (!_enable) {
+			self._cache_active = false;
+			self._freeCache();
+		}
+		self.updateMainUiSurface();
+		return self;
 	}
-	
+
+	///@desc Extra pixels around the element inside cached surface (for shadows, glow, overflowing children)
+	///@arg {real} _padding
+	static setCachePadding = function(_padding) {
+		self.cache_padding = max(0, _padding);
+		self._is_cache_dirty = true;
+		return self;
+	}
+
 	///@desc Forces the cached surface to be redrawn on the next frame
 	static invalidateCache = function() {
-	    self._is_cache_dirty = true;
-	    self.updateMainUiSurface();
-	    return self;
+		self._is_cache_dirty = true;
+		self.updateMainUiSurface();
+		return self;
+	}
+
+	///@ignore
+	static _freeCache = function() {
+		if (surface_exists(self._cached_surface)) surface_free(self._cached_surface);
+		self._cached_surface = -1;
+		self._is_cache_dirty = true;
+	}
+
+	///@desc True if element has non-identity visual transform
+	///@ignore
+	static _hasVisualTransform = function() {
+		return self.visual_x != 0 || self.visual_y != 0 || self.visual_angle != 0
+			|| self.visual_scale_x != 1 || self.visual_scale_y != 1;
+	}
+
+	///@desc Children sorted by z (rebuilt only when order changed)
+	///@ignore
+	static _getDrawChildren = function() {
+		var _n = array_length(self.content);
+		if (self._draw_order_dirty || array_length(self._draw_children) != _n) {
+			var _arr = array_create(_n);
+			array_copy(_arr, 0, self.content, 0, _n);
+			array_sort(_arr, function(a, b) { return a.z - b.z; });
+			self._draw_children = _arr;
+			self._draw_order_dirty = false;
+		}
+		return self._draw_children;
 	}
 	
 	///@desc Builds the visual transformation matrix for rendering relative to pivot
@@ -945,28 +981,11 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Sets a new depth value for the element and recalculates depth_array for itself and its children
 	static setDepth = function(_new_z) {
-	    // Update the element's z value
-	    self.z = _new_z;
-	    
-	    // Rebuild depth_array: parent's depth_array + new z
-	    if (self.parent != undefined) {
-	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
-	    } else {
-	        self.depth_array = [self.z];
-	    }
-	    
-	    // Update main UI surface
-	    self.updateMainUiSurface();
-	    
-	    // Recursively update depth_array for all children
-	    for (var i = 0, n = array_length(self.content); i < n; i++) {
-	        var _element = self.content[i];
-	        _element.depth_array = array_concat(self.depth_array, [_element.z]);
-	        // Recursively update children's children
-	        _element.setDepth(_element.z); // Reuse setDepth to update children
-	    }
-	    
-	    return self;
+		self.z = _new_z;
+		if (!is_undefined(self.parent)) self.parent._draw_order_dirty = true;
+		self._rebuildDepthArrayRec();
+		self.updateMainUiSurface();
+		return self;
 	}
 	
 	///@desc Brings the element to the front by setting a new maximum z value
@@ -1546,38 +1565,46 @@ function LuiBase(_params = {}) constructor {
 	
 	///@ignore
 	static _updateViewRegion = function() {
-    	
+		
 		// Prevent this element from being updated if it has just been added
 		if self.start_x == -1 || self.start_y == -1 return false;
 		
-		// Store previous visibility state
-		var _was_visible = self.is_visible_in_region;
+		self.view_region.x1 = self.x;
+		self.view_region.y1 = self.y;
+		self.view_region.x2 = self.x + self.width;
+		self.view_region.y2 = self.y + self.height;
 		
-		// Set the initial dimensions of the visible region based on the current coordinates and dimensions of the element
-	    self.view_region.x1 = self.x;
-	    self.view_region.y1 = self.y;
-	    self.view_region.x2 = self.x + self.width;
-	    self.view_region.y2 = self.y + self.height;
-	    
-	    // If there is no parent or it has no view_region, the element is considered visible, exit
-	    if (self.parent == undefined) {
-	        self.is_visible_in_region = true;
-	        return;
-	    }
-	    
-	    // Crop the view_region to the boundaries of the parent region
-	    var _parent_region = self.parent.view_region;
-	    self.view_region.x1 = max(_parent_region.x1, self.view_region.x1);
-	    self.view_region.y1 = max(_parent_region.y1, self.view_region.y1);
-	    self.view_region.x2 = min(_parent_region.x2, self.view_region.x2);
-	    self.view_region.y2 = min(_parent_region.y2, self.view_region.y2);
-	    
-	    // Check if the element falls into the visible region of the parent
-	    var _region_width = self.view_region.x2 - self.view_region.x1;
-	    var _region_height = self.view_region.y2 - self.view_region.y1;
-	    self.is_visible_in_region = (_region_width > 0 && _region_height > 0) &&
-	                                !(self.x + self.width < _parent_region.x1 || self.x > _parent_region.x2 ||
-	                                  self.y + self.height < _parent_region.y1 || self.y > _parent_region.y2);
+		var _cr = self.child_region;
+		
+		// Root
+		if (self.parent == undefined) {
+			self.is_visible_in_region = true;
+			_cr.x1 = self.view_region.x1; _cr.y1 = self.view_region.y1;
+			_cr.x2 = self.view_region.x2; _cr.y2 = self.view_region.y2;
+			return;
+		}
+		
+		// Crop to the region the parent allows for its children
+		var _pr = self.parent.child_region;
+		self.view_region.x1 = max(_pr.x1, self.view_region.x1);
+		self.view_region.y1 = max(_pr.y1, self.view_region.y1);
+		self.view_region.x2 = min(_pr.x2, self.view_region.x2);
+		self.view_region.y2 = min(_pr.y2, self.view_region.y2);
+		
+		self.is_visible_in_region = (self.view_region.x2 - self.view_region.x1 > 0)
+								 && (self.view_region.y2 - self.view_region.y1 > 0);
+		
+		// Region for own children
+		if (self.draw_content_in_cutted_region) {
+			var _style = self.getStyle();
+			var _o = is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
+			_cr.x1 = max(_pr.x1, self.x + _o.left);
+			_cr.y1 = max(_pr.y1, self.y + _o.top);
+			_cr.x2 = min(_pr.x2, self.x + self.width - _o.right);
+			_cr.y2 = min(_pr.y2, self.y + self.height - _o.bottom);
+		} else {
+			_cr.x1 = _pr.x1; _cr.y1 = _pr.y1; _cr.x2 = _pr.x2; _cr.y2 = _pr.y2;
+		}
 	}
 	
 	///@desc Applies the effective style to the flex node. Class rules and local overrides
@@ -1718,22 +1745,22 @@ function LuiBase(_params = {}) constructor {
 	///@desc Recalculates depth_array for the element and all its children
 	///@ignore
 	static _recalculateDepthArray = function() {
-	    // Rebuild depth_array: parent's depth_array + current z
-	    if (self.parent != undefined) {
-	        self.depth_array = array_concat(self.parent.depth_array, [self.z]);
-	    } else {
-	        self.depth_array = [self.z];
-	    }
-	    
-	    // Update main UI surface
-	    self.updateMainUiSurface();
-	    
-	    // Recursively update depth_array for all children
-	    for (var i = 0, n = array_length(self.content); i < n; i++) {
-	        self.content[i]._recalculateDepthArray();
-	    }
-	    
-	    return self;
+		self._rebuildDepthArrayRec();
+		self.updateMainUiSurface();
+		return self;
+	}
+	
+	///@ignore
+	static _rebuildDepthArrayRec = function() {
+		if (self.parent != undefined) {
+			self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+		} else {
+			self.depth_array = [self.z];
+		}
+		if (!is_array(self.content)) return;
+		for (var i = 0, n = array_length(self.content); i < n; i++) {
+			self.content[i]._rebuildDepthArrayRec();
+		}
 	}
 	
 	// SYSTEM
@@ -1859,6 +1886,7 @@ function LuiBase(_params = {}) constructor {
 			// Add to content array
 			if !is_array(self.content) self.content = [];
 			array_push(self.content, _element);
+			self._draw_order_dirty = true;
 	        _element._addDelayedContent();
 	        
 			// Call create event
@@ -1893,6 +1921,7 @@ function LuiBase(_params = {}) constructor {
 			// Delete destroyed elements
 			if _element.is_destroyed {
 				array_delete(_elements, i, 1);
+				self._draw_order_dirty = true;
 				continue;
 			}
 			
@@ -2005,20 +2034,26 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 	
-	///@desc Update main ui surface
+	///@desc Content of this element (or its subtree) changed: invalidate own and all ancestor caches
 	static updateMainUiSurface = function() {
-	    if is_undefined(self.main_ui) return self;
-	    
-	    // Invalidate cache of all ancestors that have cache_as_surface enabled
-	    var _ancestor = self.parent;
-	    while (!is_undefined(_ancestor)) {
-	        if (_ancestor.cache_as_surface) {
-	            _ancestor._is_cache_dirty = true;
-	        }
-	        _ancestor = _ancestor.parent;
-	    }
-	    
-	    return self;
+		if is_undefined(self.main_ui) return self;
+		var _n = self;
+		while (!is_undefined(_n)) {
+			_n._is_cache_dirty = true;
+			_n = _n.parent;
+		}
+		return self;
+	}
+	
+	///@desc Only visual transform/alpha of this element changed: its own cache stays valid, ancestors must be rebaked
+	static _invalidateAncestorCaches = function() {
+		if is_undefined(self.main_ui) return self;
+		var _n = self.parent;
+		while (!is_undefined(_n)) {
+			_n._is_cache_dirty = true;
+			_n = _n.parent;
+		}
+		return self;
 	}
 	
 	///@desc Add element to main ui list for update flex
@@ -2053,14 +2088,15 @@ function LuiBase(_params = {}) constructor {
 		return _on_this;
 	}
 	
-	///@desc Returns true if the mouse is hovered over this element and its parent
+	///@desc Returns true if the mouse is hovered over this element and every clipping ancestor
 	static isMouseHoveredParents = function() {
-		if is_undefined(self.parent) return true;
-		if self.isMouseHoveredExc() {
-			return self.parent.isMouseHoveredParents();
-		} else {
-			return false;
+		if (!self.isMouseHoveredExc()) return false;
+		var _p = self.parent;
+		while (!is_undefined(_p)) {
+			if (_p.draw_content_in_cutted_region && !_p.isMouseHoveredExc()) return false;
+			_p = _p.parent;
 		}
+		return true;
 	}
 	
 	///@desc Returns true if the mouse is hovered over the descendants of this element
@@ -2120,6 +2156,8 @@ function LuiBase(_params = {}) constructor {
 		}
 		// Double-Destroy protection
 		self.is_destroyed = true;
+		
+		self._freeCache();
 		// Destroy all content
 		self._destroyAllNestedElements();
 		// Remove focus from main ui
@@ -2150,6 +2188,8 @@ function LuiBase(_params = {}) constructor {
 		self._style_delta = undefined;
 		delete self.render_region_offset; self.render_region_offset = undefined;
 		delete self.view_region; self.view_region = undefined;
+		delete self.child_region; self.child_region = undefined;
+		self._draw_children = [];
 		delete self.prev_view_region; self.prev_view_region = undefined;
 		delete self.binded_variable; self.binded_variable = undefined;
 		delete self.data; self.data = undefined;
