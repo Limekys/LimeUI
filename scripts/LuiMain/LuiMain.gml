@@ -9,8 +9,6 @@ function LuiMain() : LuiBase() constructor {
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
 	self.is_visible_in_region = true;
-	self.ui_screen_surface = -1;
-	self.needs_redraw_surface = true;
 	self.pre_draw_list = [];
 	self.element_names = {};
 	self.main_ui = self;
@@ -24,7 +22,7 @@ function LuiMain() : LuiBase() constructor {
 	self.active_animations = [];
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
-	self._screen_grid = {};
+	self._screen_grid = [];
 	self.elements_to_update_flex = [];
 	self._baking = false;
 	
@@ -35,12 +33,13 @@ function LuiMain() : LuiBase() constructor {
 	// Init Screen grid
 	///@ignore
 	static _recalculateScreenGrid = function() {
-		for (var _x = 0, _width = ceil(display_get_gui_width() / LUI_GRID_SIZE); _x < _width; ++_x) {
-			for (var _y = 0, _height = ceil(display_get_gui_height() / LUI_GRID_SIZE); _y < _height; ++_y) {
-				var _key = string(_x) + "_" + string(_y);
-				if !is_array(self._screen_grid[$ _key]) {
-					self._screen_grid[$ _key] = array_create(0);
-				}
+		var _cols = ceil(display_get_gui_width() / LUI_GRID_SIZE);
+		var _rows = ceil(display_get_gui_height() / LUI_GRID_SIZE);
+		for (var _x = 0; _x < _cols; ++_x) {
+			if (_x >= array_length(self._screen_grid)) array_push(self._screen_grid, []);
+			var _col = self._screen_grid[_x];
+			for (var _y = array_length(_col); _y < _rows; ++_y) {
+				array_push(_col, []);
 			}
 		}
 		return self;
@@ -292,7 +291,6 @@ function LuiMain() : LuiBase() constructor {
 	}
 	
 	// RENDER
-	self.base_render = method(self, render);
 	self.render = function() {
 		var _prev_alpha = draw_get_alpha();
 		if LUI_FORCE_ALPHA_1 { draw_set_alpha(1); }
@@ -415,39 +413,31 @@ function LuiMain() : LuiBase() constructor {
 	///@desc Returns topmost element on UI
 	///@ignore
 	static _getTopmostElement = function(_mouse_x, _mouse_y) {
-	    var _key = string(floor(_mouse_x / LUI_GRID_SIZE)) + "_" + string(floor(_mouse_y / LUI_GRID_SIZE));
-	    var _array = self.main_ui._screen_grid[$ _key];
+		var _grid = self.main_ui._screen_grid;
+		var _cx = floor(_mouse_x / LUI_GRID_SIZE);
+		var _cy = floor(_mouse_y / LUI_GRID_SIZE);
+		if (_cx < 0 || _cx >= array_length(_grid)) return undefined;
+		var _col = _grid[_cx];
+		if (_cy < 0 || _cy >= array_length(_col)) return undefined;
+		var _cell = _col[_cy];
 		
-	    if (is_undefined(_array) || array_length(_array) == 0) {
-	        return undefined;
-	    }
-		
-	    // Filter elements under cursor
-	    var _filtered = array_filter(_array, function(_elm, _ind) {
-	        return _elm.visible && !_elm.ignore_mouse && _elm.isMouseHoveredExc() && _elm.isMouseHoveredParents();
-	    });
-		
-	    if (array_length(_filtered) == 0) {
-	        return undefined;
-	    }
-		
-	    // Sort by depth_array
-	    array_sort(_filtered, function(elm1, elm2) {
-	        return _compareDepthArrays(elm2.depth_array, elm1.depth_array);
-	    });
-		
-		// Return top front element
-	    return _filtered[0];
+		var _best = undefined;
+		for (var i = array_length(_cell) - 1; i >= 0; --i) {
+			var _e = _cell[i];
+			if (!_e.visible || _e.ignore_mouse) continue;
+			// Not above the current best: skip without the expensive hover checks
+			if (!is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0) continue;
+			if (!_e.isMouseHoveredExc() || !_e.isMouseHoveredParents()) continue;
+			_best = _e;
+		}
+		return _best;
 	}
 	
-	///@desc Bottom-up: decides which elements use a cache this frame and (re)bakes dirty ones.
-	/// A cache is used for: explicit cache_as_surface, or automatically for an element with
-	/// visual_alpha < 1 and children (true group opacity).
 	///@ignore
 	static _prepareCaches = function(_el) {
 		if (!_el.visible || _el.is_destroyed || !_el.is_visible_in_region) return;
 		
-		var _has_kids = _el.render_content_enabled && array_length(_el.content) > 0;
+		var _has_kids = array_length(_el.content) > 0;
 		if (_has_kids) {
 			for (var i = 0, n = array_length(_el.content); i < n; i++) {
 				self._prepareCaches(_el.content[i]);
@@ -558,16 +548,12 @@ function LuiMain() : LuiBase() constructor {
 		if (_has_t) matrix_set(matrix_world, _pm);
 	}
 	
-	///@desc Own draw + children (with clipping if the element clips its content).
-	/// Invariant on entry: matrix_world == _m, scissor == _clip. Restored on exit.
 	///@ignore
 	static _drawSelfAndChildren = function(_el, _m, _a, _clip) {
 		if (is_method(_el.draw)) {
 			draw_set_alpha(_a);
 			_el.draw();
 		}
-		
-		if (!_el.render_content_enabled) return;
 		
 		var _kids = _el._getDrawChildren();
 		var _n = array_length(_kids);
@@ -577,7 +563,6 @@ function LuiMain() : LuiBase() constructor {
 		var _clipping = _el.draw_content_in_cutted_region;
 		if (_clipping) {
 			_child_clip = _luiClipIntersect(_clip, _luiElementClipRect(_el, _m));
-			// Nothing of the children can be visible
 			if (_child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1]) return;
 			_luiApplyClip(_child_clip);
 		}
@@ -620,9 +605,11 @@ function LuiMain() : LuiBase() constructor {
 				
 				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
 				
-				var _key = string(_x) + "_" + string(_y);
-				var _array = self._screen_grid[$ _key];
-				draw_text(x_pos + 2, y_pos + 1, string(_key));
+				var _array = [];
+				if (_x < array_length(self._screen_grid) && _y < array_length(self._screen_grid[_x])) {
+					_array = self._screen_grid[_x][_y];
+				}
+				draw_text(x_pos + 2, y_pos + 1, $"{_x}_{_y}");
 				
 				var _elements_in_cell = array_length(_array);
 				for (var i = 0, n = min(18, _elements_in_cell); i < n; ++i) {
@@ -631,7 +618,7 @@ function LuiMain() : LuiBase() constructor {
 				}
 				draw_set_color(c_red);
 				if _elements_in_cell > 18 {
-					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * 18, $"and {array_length(_array) - 18} elements...");
+					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * 18, $"and {_elements_in_cell - 18} elements...");
 				}
 			}
 		}
@@ -639,14 +626,11 @@ function LuiMain() : LuiBase() constructor {
 	
 	// Cleanup
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
-		if surface_exists(_e.ui_screen_surface) {
-			surface_free(_e.ui_screen_surface);
-		}
 		_e.pre_draw_list = -1;
 		_e.element_in_focus = undefined;
 		_e.dragging_element = undefined;
 		_e.active_animations = -1;
-		delete _e._screen_grid;
+		_e._screen_grid = undefined;
 		delete _e.element_names;
 		global.lui_element_count = 0;
 		global.lui_id_count = 0;

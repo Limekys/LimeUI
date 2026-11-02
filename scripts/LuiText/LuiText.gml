@@ -23,6 +23,14 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 	
 	self.scale_to_fit = _params[$ "scale_to_fit"] ?? false; // deprecated variable
 	
+	// Layout cache for Scale / WrapScale
+	self._lc_value = "";
+	self._lc_w = -1;
+	self._lc_h = -1;
+	self._lc_font = -1;
+	self._lc_overflow = -1;
+	self._lc_scale = 1;
+	
 	///@desc Set text
 	///@arg {string} _text
 	static setText = function(_text) {
@@ -57,6 +65,47 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 	static setOverflow = function(_mode) {
 		self.overflow = _mode;
 		return self;
+	}
+	
+	///@desc Recalculates text scale only if text, size, font or overflow mode changed
+	///@ignore
+	static _updateScaleCache = function() {
+		var _font = draw_get_font();
+		if (self._lc_value == self.value && self._lc_w == self.width && self._lc_h == self.height
+			&& self._lc_font == _font && self._lc_overflow == self.overflow) {
+			return;
+		}
+		self._lc_value = self.value;
+		self._lc_w = self.width;
+		self._lc_h = self.height;
+		self._lc_font = _font;
+		self._lc_overflow = self.overflow;
+		
+		var _text = self.value;
+		var _scale = 1.0;
+		if (_text != "") {
+			if (self.overflow == LUI_TEXT_OVERFLOW.Scale) {
+				_scale = min(1.0, self.width / string_width(_text), self.height / string_height(_text));
+			} else if (self.overflow == LUI_TEXT_OVERFLOW.WrapScale) {
+				var _target_w = self.width;
+				var _target_h = self.height;
+				if (string_height_ext(_text, -1, _target_w) > _target_h) {
+					var _low = 0.1;
+					var _high = 1.0;
+					for (var i = 0; i < 10; i++) {
+						var _mid = (_low + _high) / 2;
+						var _scaled_h = string_height_ext(_text, -1, _target_w / _mid) * _mid;
+						if (_scaled_h <= _target_h) {
+							_scale = _mid;
+							_low = _mid;
+						} else {
+							_high = _mid;
+						}
+					}
+				}
+			}
+		}
+		self._lc_scale = _scale;
 	}
 	
 	self.draw = function() {
@@ -111,58 +160,14 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 					break;
 					
 				case LUI_TEXT_OVERFLOW.Scale:
-					var _text = self.value;
-					var _xscale = self.width / string_width(_text);
-					var _yscale = self.height / string_height(_text);
-					var _scale = min(_xscale, _yscale);
-					
-					// Limit scaling to zoom out only (optional, but recommended for UI)
-					_scale = min(_scale, 1.0); 
-					
-					draw_text_transformed(_txt_x, _txt_y, _text, _scale, _scale, 0);
+					self._updateScaleCache();
+					draw_text_transformed(_txt_x, _txt_y, self.value, self._lc_scale, self._lc_scale, 0);
 					break; 
 				
 				case LUI_TEXT_OVERFLOW.WrapScale:
-					var _text = self.value;
-					var _target_w = self.width;
-					var _target_h = self.height;
-					
-					// 1. Check if text fits at scale 1.0
-					var _h_at_1 = string_height_ext(_text, -1, _target_w);
-					var _scale = 1.0;
-					
-					if (_h_at_1 > _target_h) {
-						// 2. Binary search for the optimal scale
-						var _low = 0.1;  // Minimum scale (10%, to prevent text from disappearing completely)
-						var _high = 1.0; // Maximum scale (100%)
-						
-						// 10 iterations give ~0.1% precision, which is more than enough for UI
-						for (var i = 0; i < 10; i++) {
-							var _mid = (_low + _high) / 2;
-							
-							// Effective width in "unscaled" pixels
-							var _eff_w = _target_w / _mid;
-							
-							// Text height at this effective width (without scale applied)
-							var _unscaled_h = string_height_ext(_text, -1, _eff_w);
-							
-							// Actual height after applying scale
-							var _scaled_h = _unscaled_h * _mid;
-							
-							if (_scaled_h <= _target_h) {
-								_scale = _mid; // Fits within height, try to increase scale
-								_low = _mid;
-							} else {
-								_high = _mid; // Too tall, decrease scale
-							}
-						}
-					}
-					
-					// 3. Draw text with wrapping and scaling
-					// IMPORTANT: the width parameter (w) in draw_text_ext_transformed is specified 
-					// in "unscaled" coordinates, so we divide the target width by the scale
-					var _draw_w = _target_w / _scale;
-					draw_text_ext_transformed(_txt_x, _txt_y, _text, -1, _draw_w, _scale, _scale, 0);
+					self._updateScaleCache();
+					// width in draw_text_ext_transformed is in "unscaled" coordinates
+					draw_text_ext_transformed(_txt_x, _txt_y, self.value, -1, self.width / self._lc_scale, self._lc_scale, self._lc_scale, 0);
 					break;
 			}
 		}

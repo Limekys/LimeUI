@@ -81,17 +81,18 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 			draw_set_color(_text_color);
 			draw_set_alpha(_alpha);
 			draw_set_valign(fa_middle);
-			var _draw_icon = sprite_exists(self.icon.sprite) && self.text != "";
-			if _draw_icon {
-				if !is_undefined(_style.font_buttons) draw_set_font(_style.font_buttons);
-				var _space_width = string_width(" ");
-				var _text_width = string_width(self.text);
+			
+			var _draw_icon = false;
+			var _space_width = 0;
+			var _text_width = 0;
+			if sprite_exists(self.icon.sprite) {
+				_space_width = string_width(" ");
+				_text_width = string_width(self.text);
 				_draw_icon = self.icon.width + _space_width + _text_width <= _available_width;
 			}
+			
 			if _draw_icon {
 				draw_set_halign(fa_left);
-				var _space_width = string_width(" ");
-				var _text_width = string_width(self.text);
 				var _total_width = self.icon.width + _space_width + _text_width;
 				var _icon_x = floor(_center_x - _total_width / 2);
 				var _icon_y = floor(_center_y - self.icon.height / 2);

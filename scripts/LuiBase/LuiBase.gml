@@ -61,7 +61,6 @@ function LuiBase(_params = {}) constructor {
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.ignore_mouse_all = undefined;
-	self.render_content_enabled = true;
 	self.need_to_update_content = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
@@ -81,6 +80,13 @@ function LuiBase(_params = {}) constructor {
 	self.flex_node = flexpanel_create_node({ name: self.name, data: {} });
 	var _data = flexpanel_node_get_data(self.flex_node);
 	_data.element = self;
+	
+	// Memo for _drawTruncatedText
+	self._tc_string = "";
+	self._tc_width = -1;
+	self._tc_font = -1;
+	self._tc_result = "";
+	
 	// Screen grid system
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
 	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
@@ -1421,46 +1427,17 @@ function LuiBase(_params = {}) constructor {
 		return _str_to_draw;
 	};
 	
-	///@desc Draw text fit to width
+	///@desc Draw text fit to width (the truncated string is memoized)
 	///@ignore
 	static _drawTruncatedText = function(_x, _y, _string, _width = infinity) {
-		// Calculate initial text width
-		var _str_to_draw = _string;
-		var _str_width = string_width(_str_to_draw);
-		
-		// Check if the text needs to be truncated
-		if (_str_width > _width) {
-			// Calculate the width of "..." once, to use in our calculations
-			var _ellipsis = "...";
-			var _ellipsis_width = string_width(_ellipsis);
-			
-			// Calculate the width available for the main part of the string
-			var _available_width = _width - _ellipsis_width;
-			
-			// Initialize binary search bounds
-			var _low = 1;
-			var _high = string_length(_string);
-			var _mid;
-			
-			// Perform binary search to find the cutoff point
-			while (_low < _high) {
-				_mid = floor((_low + _high) / 2);
-				_str_to_draw = string_copy(_string, 1, _mid);
-				_str_width = string_width(_str_to_draw);
-				
-				if (_str_width < _available_width) {
-					_low = _mid + 1;
-				} else {
-					_high = _mid;
-				}
-			}
-			
-			// The final string should be within the bounds
-			_str_to_draw = string_copy(_string, 1, _high - 1) + _ellipsis;
+		var _font = draw_get_font();
+		if (self._tc_string != _string || self._tc_width != _width || self._tc_font != _font) {
+			self._tc_result = self._truncateTextToFitWidth(_string, _width);
+			self._tc_string = _string;
+			self._tc_width = _width;
+			self._tc_font = _font;
 		}
-		
-		// Draw the final text
-		draw_text(_x, _y, _str_to_draw);
+		draw_text(_x, _y, self._tc_result);
 	};
 	
 	///@ignore
@@ -1497,23 +1474,23 @@ function LuiBase(_params = {}) constructor {
 		if (!self.is_visible_in_region || !self.visible) {
 			return;
 		}
-	
-		// Calculate the start and end cells that the element intersects
-		var _elm_x_start = floor(self.view_region.x1 / LUI_GRID_SIZE);
-		var _elm_y_start = floor(self.view_region.y1 / LUI_GRID_SIZE);
-		var _elm_x_end = floor(self.view_region.x2 / LUI_GRID_SIZE);
-		var _elm_y_end = floor(self.view_region.y2 / LUI_GRID_SIZE);
-	
-		// Restrict grid pass to only the required cells
-		for (var _x = _elm_x_start; _x <= _elm_x_end; ++_x) {
-			for (var _y = _elm_y_start; _y <= _elm_y_end; ++_y) {
-				var _key = string(_x) + "_" + string(_y);
-				
-				if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
-					var _array = self.main_ui._screen_grid[$ _key];
-					_array[array_length(_array)] = self;
-					self._grid_location[array_length(self._grid_location)] = _key;
-				}
+		
+		var _grid = self.main_ui._screen_grid;
+		var _cols = array_length(_grid);
+		
+		// Cells that the element intersects, restricted to the existing grid
+		var _x_start = max(0, floor(self.view_region.x1 / LUI_GRID_SIZE));
+		var _y_start = max(0, floor(self.view_region.y1 / LUI_GRID_SIZE));
+		var _x_end = min(_cols - 1, floor(self.view_region.x2 / LUI_GRID_SIZE));
+		var _y_end = floor(self.view_region.y2 / LUI_GRID_SIZE);
+		
+		for (var _x = _x_start; _x <= _x_end; ++_x) {
+			var _col = _grid[_x];
+			var _y_last = min(array_length(_col) - 1, _y_end);
+			for (var _y = _y_start; _y <= _y_last; ++_y) {
+				var _cell = _col[_y];
+				array_push(_cell, self);
+				array_push(self._grid_location, _x * LUI_GRID_STRIDE + _y);
 			}
 		}
 	};
@@ -1521,18 +1498,23 @@ function LuiBase(_params = {}) constructor {
 	///@desc Delete element from system ui grid
 	///@ignore
 	static _deleteFromScreenGrid = function() {
-	    var _grid_location_length = array_length(self._grid_location);
-	    for (var i = 0; i < _grid_location_length; i++) {
-	        var _key = self._grid_location[i];
-	        if (variable_struct_exists(self.main_ui._screen_grid, _key)) {
-	            var _array = self.main_ui._screen_grid[$ _key];
-	            var _index = array_get_index(_array, self);
-	            if (_index != -1) {
-	                array_delete(_array, _index, 1);
-	            }
-	        }
-	    }
-	    self._grid_location = [];
+		if (is_undefined(self.main_ui) || !is_array(self.main_ui._screen_grid)) { self._grid_location = []; return; }
+		var _grid = self.main_ui._screen_grid;
+		for (var i = 0, n = array_length(self._grid_location); i < n; i++) {
+			var _loc = self._grid_location[i];
+			var _cx = _loc div LUI_GRID_STRIDE;
+			var _cy = _loc mod LUI_GRID_STRIDE;
+			if (_cx < array_length(_grid) && _cy < array_length(_grid[_cx])) {
+				var _cell = _grid[_cx][_cy];
+				var _index = array_get_index(_cell, self);
+				if (_index != -1) {
+					var _last = array_length(_cell) - 1;
+					_cell[_index] = _cell[_last];
+					array_pop(_cell);
+				}
+			}
+		}
+		self._grid_location = [];
 	}
 	
 	///@desc Update element in system ui grid
@@ -1945,53 +1927,6 @@ function LuiBase(_params = {}) constructor {
 			// Call update for nested elements
 			_element.update();
 	    }
-	}
-	
-	///@desc This function draws all nested elements //???// not used now because of new dirty rects render system
-	static render = function() {
-		
-		if !is_array(self.content) return;
-		
-		// Sort by depth
-		array_sort(self.content, function(a, b) { return a.z - b.z; });
-		
-		// Draw all elements
-		for (var i = 0, n = array_length(self.content); i < n; i++) {
-			// Get element
-			var _element = self.content[i];
-			// Restriction
-			if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
-			// Draw self
-			if is_method(_element.draw) _element.draw();
-			// Draw content
-			if _element.render_content_enabled {
-				if self.draw_content_in_cutted_region {
-					var _gpu_scissor = gpu_get_scissor();
-					var _style = self.getStyle();
-					var _region_offset = is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
-					var _x = self.x + _region_offset.left;
-					var _y = self.y + _region_offset.top;
-					var _w = self.width - _region_offset.left - _region_offset.right;
-					var _h = self.height - _region_offset.top - _region_offset.bottom;
-					gpu_set_scissor(_x, _y, _w, _h);
-				}
-				_element.render();
-				if self.draw_content_in_cutted_region {
-					gpu_set_scissor(_gpu_scissor);
-				}
-			}
-		}
-		if global.lui_debug_mode != 0 {
-			for (var i = 0, n = array_length(self.content); i < n; i++) {
-				//Get element
-				var _element = self.content[i];
-				// Restriction
-				if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
-				// Draw debug
-				if !_element.visible || !_element.is_visible_in_region continue;
-				_element._renderDebug(_element.x, _element.y);
-			}
-		}
 	}
 	 
 	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering

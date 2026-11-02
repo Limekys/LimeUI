@@ -47,13 +47,14 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		//Panel
 		if !is_undefined(_style.sprite_panel) {
-			var _blend_color = _style.color_primary;//self.nesting_level == 0 ? _style.color_primary : merge_color(_style.color_primary, _style.color_secondary, 0.25);
+			var _blend_color = _style.color_primary;
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 		}
 		//Scroll slider
 		if array_length(self.getContainer().content) > 0 {
@@ -61,20 +62,20 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 			var _scroll_pin_y_offset = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), self.scroll_pin_edge_offset, self.height - _style.scroll_slider_width - self.scroll_pin_edge_offset);
 			// Slider back
 			if !is_undefined(_style.sprite_scroll_slider) {
-				draw_sprite_stretched_ext(_style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, _style.scroll_slider_width, self.height - self.scroll_pin_edge_offset*2, _style.color_back, 1);
+				draw_sprite_stretched_ext(_style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, _style.scroll_slider_width, self.height - self.scroll_pin_edge_offset*2, _style.color_back, _alpha);
 			}
 			// Scroll pin
 			if !is_undefined(_style.sprite_scroll_pin) {
-				draw_sprite_stretched_ext(_style.sprite_scroll_pin, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_secondary, 1);
+				draw_sprite_stretched_ext(_style.sprite_scroll_pin, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_secondary, _alpha);
 			}
 			// Scroll pin border
 			if !is_undefined(_style.sprite_scroll_pin_border) {
-				draw_sprite_stretched_ext(_style.sprite_scroll_pin_border, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_border, 1);
+				draw_sprite_stretched_ext(_style.sprite_scroll_pin_border, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_border, _alpha);
 			}
 		}
 		//Panel border
 		if !is_undefined(_style.sprite_panel_border) {
-			draw_sprite_stretched_ext(_style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
 	

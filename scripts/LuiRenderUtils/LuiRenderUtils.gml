@@ -1,4 +1,5 @@
 #macro LUI_CACHE_MAX_SIZE 8192
+#macro LUI_GRID_STRIDE 65536
 
 /// Блендинг для РИСОВАНИЯ В кеш-поверхность (результат — premultiplied alpha)
 function _luiBlendBake() {
