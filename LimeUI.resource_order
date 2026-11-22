@@ -36,6 +36,7 @@
     {"name":"rInit","order":4,"path":"rooms/rInit/rInit.yy",},
     {"name":"rMemTest","order":5,"path":"rooms/rMemTest/rMemTest.yy",},
     {"name":"demoMethods","order":8,"path":"scripts/demoMethods/demoMethods.yy",},
+    {"name":"helpersss","order":9,"path":"scripts/helpersss/helpersss.yy",},
     {"name":"LimekysResolutionManager","order":1,"path":"scripts/LimekysResolutionManager/LimekysResolutionManager.yy",},
     {"name":"LuiAdditional","order":1,"path":"scripts/LuiAdditional/LuiAdditional.yy",},
     {"name":"LuiBase","order":21,"path":"scripts/LuiBase/LuiBase.yy",},

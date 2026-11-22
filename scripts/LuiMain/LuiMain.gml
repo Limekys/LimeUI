@@ -118,13 +118,17 @@ function LuiMain() : LuiBase() constructor {
 	self.base_update = method(self, update);
 	self.update = function() {
 		
+		//var _t = get_timer();
 		// Update all elements
 		self.base_update();
+		//luiProf("1_base_update", _t);
 			
 		// Mouse position
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
 			
+		//_t = get_timer();
+		
 		// Mouse events
 		if self.visible && !self.deactivated && (_mouse_x >= 0 && _mouse_x < self.width && _mouse_y >= 0 && _mouse_y < self.height) {
 			var _previous_hovered_element = self.topmost_hovered_element;
@@ -231,6 +235,8 @@ function LuiMain() : LuiBase() constructor {
             }
 		}
 		
+		//luiProf("2_mouse", _t);
+		
 		// Keyboard events
 		if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) {
 			if keyboard_check(vk_anykey) {
@@ -244,6 +250,8 @@ function LuiMain() : LuiBase() constructor {
 				self.element_in_focus = undefined;
 			}
 		}
+		
+		//_t = get_timer();
 		
 		// Update animations
 		if (array_length(self.active_animations) > 0) {
@@ -266,11 +274,15 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
+		//luiProf("3_anim", _t);
+		
 		// Update debug mode states
 		if self.current_debug_mode != global.lui_debug_mode {
 			self.updateMainUiSurface();
 			self.current_debug_mode = global.lui_debug_mode;
 		}
+		
+		//_t = get_timer();
 		
 		// Update layout and all flex data
 		if self.needs_update_flex {
@@ -288,6 +300,8 @@ function LuiMain() : LuiBase() constructor {
 				_e._updateFlex(_e.flex_node);
 			}
 		}
+		
+		//luiProf("4_flex", _t);
 	}
 	
 	// RENDER
@@ -313,10 +327,16 @@ function LuiMain() : LuiBase() constructor {
 			// Root container is always visible
 			self.is_visible_in_region = true;
 			
+			//var _t = get_timer();
+			
 			// 1. Update cache surfaces (bottom-up)
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				self._prepareCaches(self.content[i]);
 			}
+			
+			//luiProf("5_caches", _t);
+			
+			//_t = get_timer();
 			
 			// 2. Draw the tree directly (children are already in z order)
 			var _gui_w = display_get_gui_width();
@@ -336,6 +356,8 @@ function LuiMain() : LuiBase() constructor {
 			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 			gpu_set_scissor(0, 0, _gui_w, _gui_h);
 			matrix_set(matrix_world, _identity_matrix);
+			
+			//luiProf("6_draw", _t);
 			
 			// Draw debug rectangles of elements
 			if global.lui_debug_mode != 0 {
@@ -395,6 +417,17 @@ function LuiMain() : LuiBase() constructor {
 			_element._renderDebugInfo(_mouse_x, _mouse_y);
 		}
 		
+		//luiProfFrameEnd(is_undefined(self.topmost_hovered_element) ? "-" : self.topmost_hovered_element.name);
+		//
+		//if keyboard_check_pressed(vk_f10) {
+			//clipboard_set_text(global.lui_spike_log);
+			//show_debug_message("Spike log copied");
+		//}
+		//if keyboard_check_pressed(vk_f9) {
+			//global.lui_prof = {};
+			//global.lui_spike_log = "";
+		//}
+		
 		if !LUI_FORCE_ALPHA_1 { draw_set_alpha(_prev_alpha); }
 	}
 	
@@ -445,7 +478,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		var _group_alpha = _has_kids && _el.visual_alpha < 0.999 && _el.visual_alpha > 0;
-		if (_el.cache_as_surface || _group_alpha) {
+		if ((_el.cache_as_surface || _group_alpha)) {
 			_el._cache_active = true;
 			self._bakeCache(_el);
 		} else if (_el._cache_active) {
@@ -483,6 +516,8 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		if (!_el._is_cache_dirty) return;
+		
+		//global.lui_bakes_frame++;
 		
 		var _prev_matrix = matrix_get(matrix_world);
 		var _prev_scissor = gpu_get_scissor();

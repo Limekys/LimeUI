@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"helpersss",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"helpersss",
+  "parent":{
+    "name":"LimeUI",
+    "path":"LimeUI.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
