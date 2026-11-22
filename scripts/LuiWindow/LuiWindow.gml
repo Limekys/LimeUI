@@ -101,6 +101,16 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
     }
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
+		
+		// pop-in animation
+		_e.visual_alpha = 0;
+		_e.visual_scale_x = 0.75;
+		_e.visual_scale_y = 0.75;
+		self.main_ui.animate(_e, "visual_alpha", 1, 0.25);
+		self.main_ui.animate(_e, "visual_scale_x", 1, 0.25, global.Ease.OutBack);
+		self.main_ui.animate(_e, "visual_scale_y", 1, 0.25, global.Ease.OutBack);
+		
+		// Window settings
 		if _e.auto_width {
 			_e.setWidth(256);
 		}
