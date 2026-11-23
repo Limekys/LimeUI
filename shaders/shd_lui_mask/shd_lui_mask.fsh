@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 uniform sampler2D u_mask;
-uniform vec4 u_mask_uvs;   // left, top, right, bottom текстурной страницы маски
+uniform vec4 u_mask_uvs;   // Mask bounds on the texture page: left, top, right, bottom
 
 void main()
 {

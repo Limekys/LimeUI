@@ -99,6 +99,7 @@
     {"id":{"name":"LuiToggleSwitch","path":"scripts/LuiToggleSwitch/LuiToggleSwitch.yy",},},
     {"id":{"name":"LuiTween","path":"scripts/LuiTween/LuiTween.yy",},},
     {"id":{"name":"LuiWindow","path":"scripts/LuiWindow/LuiWindow.yy",},},
+    {"id":{"name":"shd_lui_backdrop_blur","path":"shaders/shd_lui_backdrop_blur/shd_lui_backdrop_blur.yy",},},
     {"id":{"name":"shd_lui_grayscale","path":"shaders/shd_lui_grayscale/shd_lui_grayscale.yy",},},
     {"id":{"name":"shd_lui_mask","path":"shaders/shd_lui_mask/shd_lui_mask.yy",},},
     {"id":{"name":"sndBasicClick","path":"sounds/sndBasicClick/sndBasicClick.yy",},},

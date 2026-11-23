@@ -25,6 +25,8 @@ function LuiMain() : LuiBase() constructor {
 	self._screen_grid = [];
 	self.elements_to_update_flex = [];
 	self._baking = false;
+	self._backdrop_surface = -1;
+	self._backdrop_blur_surface = -1;
 	self._cache_bakes = 0;
 	self._clip_stack = [];     // Reusable clip rectangles, one per clipping depth
 	self._clip_depth = -1;
@@ -362,7 +364,8 @@ function LuiMain() : LuiBase() constructor {
 			_luiBlendReset();
 			
 			var _kids = self._getDrawChildren();
-			for (var i = 0, n = array_length(_kids); i < n; i++) {
+			var _first = self._drawBackdrop(_kids, _identity_matrix, _root_clip);
+			for (var i = _first, n = array_length(_kids); i < n; i++) {
 				self._drawTree(_kids[i], _identity_matrix, 1, _root_clip);
 			}
 			
@@ -449,7 +452,7 @@ function LuiMain() : LuiBase() constructor {
 	// DIALOGS
 	
 	///@desc Show a modal message dialog (convenience wrapper for LuiMessage widget)
-	///@arg {Struct} [_params] Parameters: text, button_text, width, height
+	///@arg {Struct} [_params] Message options: text, content, button_text, width, height, backdrop_blur
 	static alert = function(_params = {}) {
 		var _message = new LuiMessage(_params);
 		self.addContent(_message);
@@ -457,6 +460,114 @@ function LuiMain() : LuiBase() constructor {
 	}
 	
 	// PRIVATE
+
+	///@desc Composites the root children behind the first blurred modal and returns the remaining start index.
+	///@ignore
+	static _drawBackdrop = function(_children, _matrix, _clip) {
+		var _index = 0;
+		var _radius = 0;
+		for (var i = 1, n = array_length(_children); i < n; i++) {
+			var _child = _children[i];
+			if !_child.visible || _child.is_destroyed || !_child.is_visible_in_region || _child.visual_alpha <= 0 continue;
+			if variable_struct_exists(_child, "backdrop_blur") && _child.backdrop_blur > 0 {
+				_index = i;
+				_radius = _child.backdrop_blur;
+				break;
+			}
+		}
+
+		var _width = ceil(_clip[2]);
+		var _height = ceil(_clip[3]);
+		if _index == 0 || !shader_is_compiled(shd_lui_backdrop_blur)
+			|| _width < 1 || _height < 1 || _width > LUI_CACHE_MAX_SIZE || _height > LUI_CACHE_MAX_SIZE {
+			self._freeBackdrop();
+			return 0;
+		}
+		var _step_uniform = shader_get_uniform(shd_lui_backdrop_blur, "u_blur_step");
+		if _step_uniform < 0 {
+			self._freeBackdrop();
+			return 0;
+		}
+
+		if surface_exists(self._backdrop_surface) {
+			if surface_get_width(self._backdrop_surface) != _width || surface_get_height(self._backdrop_surface) != _height {
+				self._freeBackdrop();
+			}
+		}
+		if !surface_exists(self._backdrop_surface) {
+			self._backdrop_surface = surface_create(_width, _height);
+		}
+		if !surface_exists(self._backdrop_surface) return 0;
+		if !surface_exists(self._backdrop_blur_surface) {
+			self._backdrop_blur_surface = surface_create(_width, _height);
+		}
+		if !surface_exists(self._backdrop_blur_surface) {
+			self._freeBackdrop();
+			return 0;
+		}
+		if !surface_set_target(self._backdrop_surface) {
+			self._freeBackdrop();
+			return 0;
+		}
+
+		matrix_set(matrix_world, _matrix);
+		_luiApplyClip(_clip);
+		draw_clear_alpha(c_black, 0);
+		self._baking = true;
+		_luiBlendBake();
+		for (var i = 0; i < _index; i++) {
+			self._drawTree(_children[i], _matrix, 1, _clip);
+		}
+		self._baking = false;
+		surface_reset_target();
+		matrix_set(matrix_world, _matrix);
+		_luiApplyClip(_clip);
+
+		if surface_set_target(self._backdrop_blur_surface) {
+			matrix_set(matrix_world, _matrix);
+			gpu_set_scissor(0, 0, _width, _height);
+			draw_clear_alpha(c_black, 0);
+
+			var _filter = gpu_get_texfilter_ext(0);
+			gpu_set_texfilter_ext(0, true);
+			var _spacing = _radius / 5;
+			var _source_texture = surface_get_texture(self._backdrop_surface);
+			shader_set(shd_lui_backdrop_blur);
+			shader_set_uniform_f(_step_uniform, _spacing * texture_get_texel_width(_source_texture), 0);
+			gpu_set_blendmode_ext(bm_one, bm_zero);
+			draw_surface_ext(self._backdrop_surface, 0, 0, 1, 1, 0, c_white, 1);
+			shader_reset();
+
+			surface_reset_target();
+			matrix_set(matrix_world, _matrix);
+			_luiApplyClip(_clip);
+			var _blur_texture = surface_get_texture(self._backdrop_blur_surface);
+			shader_set(shd_lui_backdrop_blur);
+			shader_set_uniform_f(_step_uniform, 0, _spacing * texture_get_texel_height(_blur_texture));
+			_luiBlendBlit();
+			draw_surface_ext(self._backdrop_blur_surface, 0, 0, 1, 1, 0, c_white, 1);
+			shader_reset();
+			gpu_set_texfilter_ext(0, _filter);
+		} else {
+			_luiBlendBlit();
+			draw_surface_ext(self._backdrop_surface, 0, 0, 1, 1, 0, c_white, 1);
+			self._freeBackdrop();
+		}
+		_luiBlendReset();
+		return _index;
+	}
+
+	///@ignore
+	static _freeBackdrop = function() {
+		if surface_exists(self._backdrop_surface) {
+			surface_free(self._backdrop_surface);
+		}
+		self._backdrop_surface = -1;
+		if surface_exists(self._backdrop_blur_surface) {
+			surface_free(self._backdrop_blur_surface);
+		}
+		self._backdrop_blur_surface = -1;
+	}
 	
 	///@desc Returns topmost element on UI
 	///@ignore
@@ -722,6 +833,7 @@ function LuiMain() : LuiBase() constructor {
 	
 	// Cleanup
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		_e._freeBackdrop();
 		_e.pre_draw_list = -1;
 		_e.element_in_focus = undefined;
 		_e.dragging_element = undefined;

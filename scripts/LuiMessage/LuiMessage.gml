@@ -1,6 +1,8 @@
 ///@desc Modal message dialog widget.
 /// Available parameters:
 /// text - message text (default: "")
+/// content - custom element or array of elements displayed in place of the message text
+/// backdrop_blur - Gaussian blur strength for the LimeUI content behind the dialog (default: 0)
 /// button_text - button label (default: "OK")
 /// width - dialog panel width (default: LUI_AUTO)
 /// height - dialog panel height (default: LUI_AUTO)
@@ -8,6 +10,8 @@
 function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 	
 	self.message_text = _params[$ "text"] ?? "";
+	self.dialog_content = _params[$ "content"] ?? undefined;
+	self.backdrop_blur = max(0, _params[$ "backdrop_blur"] ?? 0);
 	self.button_text = _params[$ "button_text"] ?? "OK";
 	self.dialog_width = _params[$ "width"] ?? LUI_AUTO;
 	self.dialog_height = _params[$ "height"] ?? LUI_AUTO;
@@ -53,14 +57,17 @@ function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 		self.main_ui.animate(_panel, "visual_scale_x", 1, 0.25, global.Ease.OutBack);
 		self.main_ui.animate(_panel, "visual_scale_y", 1, 0.25, global.Ease.OutBack);
 		
-		// Text
-		var _txt_message = new LuiText({
-			value: _e.message_text,
-			overflow: LUI_TEXT_OVERFLOW.WrapScale
-		}).setTextHalign(fa_center);
-		
-		if _e.dialog_height != LUI_AUTO {
-			_txt_message.setFullSize();
+		if is_undefined(_e.dialog_content) {
+			var _txt_message = new LuiText({
+				value: _e.message_text,
+				overflow: LUI_TEXT_OVERFLOW.WrapScale
+			}).setTextHalign(fa_center);
+			if _e.dialog_height != LUI_AUTO {
+				_txt_message.setFullSize();
+			}
+			_container.addContent(_txt_message);
+		} else {
+			_container.addContent(_e.dialog_content);
 		}
 		
 		// Button
@@ -72,9 +79,7 @@ function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 		
 		// Assemble
 		_panel.addContent([
-			_container.addContent([
-				_txt_message
-			]),
+			_container,
 			new LuiColumn()
 				.setFlexGrow(1)
 				.setFlexJustifyContent(flexpanel_justify.flex_end)

@@ -63,6 +63,7 @@
     {"name":"LuiToggleSwitch","order":6,"path":"scripts/LuiToggleSwitch/LuiToggleSwitch.yy",},
     {"name":"LuiTween","order":5,"path":"scripts/LuiTween/LuiTween.yy",},
     {"name":"LuiWindow","order":3,"path":"scripts/LuiWindow/LuiWindow.yy",},
+    {"name":"shd_lui_backdrop_blur","order":13,"path":"shaders/shd_lui_backdrop_blur/shd_lui_backdrop_blur.yy",},
     {"name":"shd_lui_grayscale","order":7,"path":"shaders/shd_lui_grayscale/shd_lui_grayscale.yy",},
     {"name":"shd_lui_mask","order":8,"path":"shaders/shd_lui_mask/shd_lui_mask.yy",},
     {"name":"sndDeniedClick","order":1,"path":"sounds/sndDeniedClick/sndDeniedClick.yy",},

@@ -17,17 +17,57 @@ function demoBuildInventory(_tab) {
 		{name: "Rare", color: #77A4EB},
 		{name: "Epic", color: #C29AE8}
 	];
+	var _locked_material = undefined;
+	if shader_is_compiled(shd_lui_grayscale) {
+		var _amount_uniform = shader_get_uniform(shd_lui_grayscale, "u_amount");
+		if _amount_uniform >= 0 {
+			_locked_material = luiMaterial(shd_lui_grayscale, function(_element, _material) {
+				shader_set_uniform_f(_material.amount_uniform, 1);
+			}, true);
+			_locked_material.amount_uniform = _amount_uniform;
+		}
+	}
+
+	var _portrait = new LuiBox({width: 72, height: 72, color: #47637D, alpha: 1})
+		.setPadding(8).setFlexShrink(0).setMouseIgnore();
+	var _portrait_material = luiMaskMaterial(shd_lui_mask, spr_mask_circle);
+	_portrait.setMaterial(_portrait_material);
+
 	var _grid = new LuiScrollPanel().setGap(8);
 	var _details_panel = new LuiPanel().setPadding(12).setGap(6).setCacheAsSurface(true);
 	var _details = {
 		selected: undefined,
-		icon: new LuiImage({height: 72}).setMouseIgnore(),
+		icon: new LuiImage({height: 56}).setMouseIgnore(),
 		title: new LuiText({height: 28, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore(),
 		summary: new LuiText({height: 24}).setMouseIgnore(),
 		description: new LuiText({height: 56, text_valign: fa_top, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setMouseIgnore()
 	};
-	_details_panel.addContent([_details.title, _details.summary, _details.icon, _details.description]);
+	_portrait.addContent(_details.icon);
+	var _portrait_row = new LuiRow({height: 72}).setFlexJustifyContent(flexpanel_justify.center).addContent(_portrait);
+	var _inspect = new LuiButton({text: "Inspect", height: 40}).setData("details", _details);
+	_inspect.addEvent(LUI_EV_CLICK, function(_e) {
+		var _selected = _e.getData("details").selected;
+		if is_undefined(_selected) return;
 
+		var _item = _selected.getData("item");
+		var _status = _item.locked ? "Locked" : $"Qty {_item.quantity}";
+		oDemo.inventory_inspect_message = _e.main_ui.alert({
+			width: 360,
+			alpha: 0.65,
+			backdrop_blur: 5,
+			button_text: "Close",
+			content: [
+				new LuiText({value: _item.name, height: 36, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore(),
+				new LuiImage({value: _item.sprite, height: 120}).setMouseIgnore(),
+				new LuiText({value: $"{_item.tier}  |  {_status}", height: 28, text_halign: fa_center})
+					.setLocalStyle({color_text: _item.color}).setMouseIgnore(),
+				new LuiText({value: _item.description, height: 56, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setMouseIgnore()
+			]
+		});
+	});
+	_details_panel.addContent([_details.title, _details.summary, _inspect, _portrait_row, _details.description]);
+
+	var _card_height = 116;
 	for (var i = 0; i < array_length(_tiers); i++) {
 		var _tier = _tiers[i];
 		for (var _start = 0; _start < array_length(_catalog); _start += 4) {
@@ -40,26 +80,31 @@ function demoBuildInventory(_tab) {
 					description: _entry.description,
 					tier: _tier.name,
 					color: _tier.color,
+					locked: _column == 3,
 					quantity: 1 + ((_start + _column + i * 3) mod 9)
 				};
-				var _card = new LuiPanel({height: 92}).setPadding(5).setGap(3).setFlexGrow(1)
+				var _card_status = _item.locked ? "Locked" : $"x{_item.quantity}";
+				var _card = new LuiPanel({height: _card_height}).setPadding(5).setGap(3).setFlexGrow(1)
 					.setLocalStyle({color_primary: #24374A, color_border: _item.color, color_text: #E6EFF8, sprite_panel_border: sUI_panel_border})
 					.setData("item", _item).setData("details", _details)
 					.addContent([
 						new LuiImage({value: _item.sprite, height: 42}).setMouseIgnore(),
 						new LuiText({value: _item.name, height: 18, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore(),
-						new LuiText({value: $"x{_item.quantity}", height: 15, text_halign: fa_center}).setMouseIgnore()
+						new LuiText({value: _card_status, height: 30, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore()
 							.setLocalStyle({color_text: _item.color})
 					])
 					.addEvent(LUI_EV_CLICK, function(_e) {
 						demoSelectInventoryItem(_e);
 					});
+				if _item.locked && !is_undefined(_locked_material) {
+					_card.setMaterial(_locked_material);
+				}
 				if is_undefined(_details.selected) {
 					demoSelectInventoryItem(_card);
 				}
 				array_push(_cards, _card);
 			}
-			_grid.addContent(new LuiRow({height: 92}).setGap(8).setFlexShrink(0).addContent(_cards));
+			_grid.addContent(new LuiRow({height: _card_height}).setGap(8).setFlexShrink(0).addContent(_cards));
 		}
 	}
 
@@ -90,7 +135,8 @@ function demoSelectInventoryItem(_card) {
 	_card.setLocalStyle({color_primary: #47637D, color_border: #F5D594});
 	_details.icon.setSprite(_item.sprite);
 	_details.title.setText(_item.name);
-	_details.summary.setText($"{_item.tier}  |  Qty {_item.quantity}").setLocalStyle({color_text: _item.color});
+	var _status = _item.locked ? "Locked" : $"Qty {_item.quantity}";
+	_details.summary.setText($"{_item.tier}  |  {_status}").setLocalStyle({color_text: _item.color});
 	_details.description.setText(_item.description);
 }
 

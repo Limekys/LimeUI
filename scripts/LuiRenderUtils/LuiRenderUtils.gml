@@ -72,24 +72,33 @@ function _luiClipChildrenInto(_dst, _clip, _el, _m) {
 	_dst[3] = min(_clip[3], max(_ay, _by, _cy, _dy));
 }
 
-/// _shader: ассет шейдера
-/// _apply: function(_element, _material) — выставляет uniform'ы/текстуры (можно undefined)
-/// _group: true = применять шейдер ко всему поддереву при выводе кеша
+///@desc Creates a material for an element or its composed subtree.
+///@arg {Asset.GMShader} _shader Material shader
+///@arg {Function} [_apply] Callback that sets uniforms and textures
+///@arg {Bool} [_group] Apply the shader when compositing the subtree surface
 function luiMaterial(_shader, _apply = undefined, _group = false) {
 	return { shader: _shader, apply: _apply, group: _group };
 }
 
-/// Материал-маска: альфа спрайта-маски умножается на всю группу (скруглённые карточки, круглые портреты).
-/// Маска растягивается на весь элемент: используйте cache_padding = 0 и спрайт без обрезки (Crop выключен).
+///@desc Creates a group material that multiplies premultiplied color and alpha by a sprite mask.
+/// Use an uncropped bitmap sprite and zero cache padding to map the mask to the element bounds.
+///@arg {Asset.GMShader} _shader Mask shader
+///@arg {Asset.GMSprite} _mask_sprite Sprite whose first frame supplies the alpha mask
+///@return {Struct|Undefined} Mask material when the shader and mask are available
 function luiMaskMaterial(_shader, _mask_sprite) {
-	var _uvs = sprite_get_uvs(_mask_sprite, 0);   // [left, top, right, bottom, ...]
+	if !shader_is_compiled(_shader) || !sprite_exists(_mask_sprite) return undefined;
+	var _mask_sampler = shader_get_sampler_index(_shader, "u_mask");
+	var _mask_uv_uniform = shader_get_uniform(_shader, "u_mask_uvs");
+	if _mask_sampler < 0 || _mask_uv_uniform < 0 return undefined;
+
+	var _uvs = sprite_get_uvs(_mask_sprite, 0);
 	var _mat = luiMaterial(_shader, function(_e, _mat) {
 		texture_set_stage(_mat.s_mask, sprite_get_texture(_mat.sprite, 0));
 		shader_set_uniform_f(_mat.u_uvs, _mat.uv_l, _mat.uv_t, _mat.uv_r, _mat.uv_b);
 	}, true);
 	_mat.sprite = _mask_sprite;
-	_mat.s_mask = shader_get_sampler_index(_shader, "u_mask");
-	_mat.u_uvs = shader_get_uniform(_shader, "u_mask_uvs");
+	_mat.s_mask = _mask_sampler;
+	_mat.u_uvs = _mask_uv_uniform;
 	_mat.uv_l = _uvs[0];
 	_mat.uv_t = _uvs[1];
 	_mat.uv_r = _uvs[2];
