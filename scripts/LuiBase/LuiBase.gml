@@ -60,6 +60,11 @@ function LuiBase(_params = {}) constructor {
 	self.max_width = LUI_AUTO;
 	self.max_height = LUI_AUTO;
 	self.auto_x = false;
+	self._position_type = flexpanel_position_type.relative;
+	self._position_edges = {x: undefined, y: undefined, r: undefined, b: undefined};
+	self._keep_in_viewport = false;
+	self._viewport_align_right = false;
+	self._viewport_clamp_revision = -1;
 	self.auto_y = false;
 	self.auto_width = false;
 	self.auto_height = false;
@@ -582,7 +587,11 @@ function LuiBase(_params = {}) constructor {
 	///@arg {constant.flexpanel_position_type} [_type]
 	static setPositionType = function(_type = flexpanel_position_type.relative) {
 		var _flex_node = self.flex_node;
+		self._position_type = _type;
 		flexpanel_node_style_set_position_type(_flex_node, _type);
+		if self.is_initialized && _type == flexpanel_position_type.absolute {
+			self._applyAbsoluteDefaults();
+		}
 		self.updateMainUiFlex();
 		return self;
 	}
@@ -596,122 +605,58 @@ function LuiBase(_params = {}) constructor {
 	///@desc Set flexpanel(element) X position
 	///@arg {real} [_x] left = X
 	static setPosX = function(_x = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _x != LUI_AUTO && self.x != _x {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.x = _x;
-			}
-			self.auto_x = false;
-			_update_flex = true;
-		}
-		if _update_flex {
-			self.updateMainUiFlex();
-		}
-		return self;
+		return self.setPosition(_x);
 	}
 
-	///@desc Set flexpanel(element) Y position
-	///@arg {real} [_y] top = Y
+	///@desc Sets the requested top position.
+	///@arg {Real} [_y] Top position
 	static setPosY = function(_y = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _y != LUI_AUTO && self.y != _y {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.y = _y;
-			}
-			self.auto_y = false;
-			_update_flex = true;
-		}
-		if _update_flex {
-			self.updateMainUiFlex();
-		}
-		return self;
+		return self.setPosition(, _y);
 	}
 
-	///@desc Set flexpanel(element) right position
-	///@arg {real} [_r] right
+	///@desc Sets the requested right position.
+	///@arg {Real} [_r] Right position
 	static setPosR = function(_r = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _r != LUI_AUTO {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.r = _r;
-			}
-			self.auto_x = false;
-			_update_flex = true;
-		}
-		if _update_flex {
-			self.updateMainUiFlex();
-		}
-		return self;
+		return self.setPosition(, , _r);
 	}
 
-	///@desc Set flexpanel(element) bottom position
-	///@arg {real} [_b] bottom
+	///@desc Sets the requested bottom position.
+	///@arg {Real} [_b] Bottom position
 	static setPosB = function(_b = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _b != LUI_AUTO {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.bottom, _b, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.b = _b;
-			}
-			self.auto_y = false;
-			_update_flex = true;
+		return self.setPosition(, , , _b);
+	}
+
+	///@desc Sets the requested Flex offsets. Omit an offset to keep its current value.
+	///@arg {Real} [_x] Left position
+	///@arg {Real} [_y] Top position
+	///@arg {Real} [_r] Right position
+	///@arg {Real} [_b] Bottom position
+	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO, _r = LUI_AUTO, _b = LUI_AUTO) {
+		var _changed = false;
+		if _x != LUI_AUTO {
+			_changed = self._setPositionEdge(flexpanel_edge.left, "x", _x) || _changed;
 		}
-		if _update_flex {
+		if _y != LUI_AUTO {
+			_changed = self._setPositionEdge(flexpanel_edge.top, "y", _y) || _changed;
+		}
+		if _r != LUI_AUTO {
+			_changed = self._setPositionEdge(flexpanel_edge.right, "r", _r) || _changed;
+		}
+		if _b != LUI_AUTO {
+			_changed = self._setPositionEdge(flexpanel_edge.bottom, "b", _b) || _changed;
+		}
+		if _changed {
 			self.updateMainUiFlex();
 		}
 		return self;
 	}
 
-	///@desc Set flexpanel(element) position
-	///@arg {real} [_x] left = X
-	///@arg {real} [_y] top = Y
-	///@arg {real} [_r] right
-	///@arg {real} [_b] bottom
-	static setPosition = function(_x = LUI_AUTO, _y = LUI_AUTO, _r = LUI_AUTO, _b = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _x != LUI_AUTO && self.x != _x {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.left, _x, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.x = _x;
-			}
-			self.auto_x = false;
-			_update_flex = true;
-		}
-		if _y != LUI_AUTO && self.y != _y {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.top, _y, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.y = _y;
-			}
-			self.auto_y = false;
-			_update_flex = true;
-		}
-		if _r != LUI_AUTO {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.right, _r, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.r = _r;
-			}
-			self.auto_x = false;
-			_update_flex = true;
-		}
-		if _b != LUI_AUTO {
-			flexpanel_node_style_set_position(_flex_node, flexpanel_edge.bottom, _b, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.b = _b;
-			}
-			self.auto_y = false;
-			_update_flex = true;
-		}
-		if _update_flex {
-			self.updateMainUiFlex();
-		}
+	///@desc Keeps an absolute element within the GUI viewport after layout.
+	///@arg {Bool} [_enabled] Enable viewport clamping
+	///@return {Struct} This element
+	static setKeepInViewport = function(_enabled = true) {
+		self._keep_in_viewport = _enabled;
+		self.updateMainUiFlex();
 		return self;
 	}
 
@@ -1728,24 +1673,20 @@ function LuiBase(_params = {}) constructor {
 	///@desc Initialize flex node
 	///@ignore
 	static _initFlexNode = function() {
-		// Position X
-		if !self.auto_x {
-			if self.x != LUI_AUTO {
-				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, self.x, flexpanel_unit.point);
-			}
-			if self.r != LUI_AUTO {
-				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.right, self.r, flexpanel_unit.point);
-			}
+		if self.x != LUI_AUTO {
+			self._setPositionEdge(flexpanel_edge.left, "x", self.x);
 		}
-
-		// Position Y
-		if !self.auto_y {
-			if self.y != LUI_AUTO {
-				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, self.y, flexpanel_unit.point);
-			}
-			if self.b != LUI_AUTO {
-				flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.bottom, self.b, flexpanel_unit.point);
-			}
+		if self.r != LUI_AUTO {
+			self._setPositionEdge(flexpanel_edge.right, "r", self.r);
+		}
+		if self.y != LUI_AUTO {
+			self._setPositionEdge(flexpanel_edge.top, "y", self.y);
+		}
+		if self.b != LUI_AUTO {
+			self._setPositionEdge(flexpanel_edge.bottom, "b", self.b);
+		}
+		if self._position_type == flexpanel_position_type.absolute {
+			self._applyAbsoluteDefaults();
 		}
 
 		// Width
@@ -1759,6 +1700,64 @@ function LuiBase(_params = {}) constructor {
 		// Height
 		if !self.auto_height {
 			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
+		}
+	}
+
+	///@ignore
+	static _setPositionEdge = function(_edge, _key, _value) {
+		if self._position_edges[$ _key] == _value return false;
+		self._position_edges[$ _key] = _value;
+		flexpanel_node_style_set_position(self.flex_node, _edge, _value, flexpanel_unit.point);
+		// Keep the requested value available until the first layout.
+		if !self.is_initialized {
+			self[$ _key] = _value;
+		}
+		if _edge == flexpanel_edge.left || _edge == flexpanel_edge.right {
+			self.auto_x = false;
+		} else {
+			self.auto_y = false;
+		}
+		return true;
+	}
+
+	///@ignore
+	static _applyAbsoluteDefaults = function() {
+		if self.auto_x {
+			self._setPositionEdge(flexpanel_edge.left, "x", 0);
+		}
+		if self.auto_y {
+			self._setPositionEdge(flexpanel_edge.top, "y", 0);
+		}
+	}
+
+	///@ignore
+	static _moveAbsoluteInViewport = function(_left, _top, _width, _height, _target_x, _target_y) {
+		var _ui = self.main_ui;
+		if _ui.width <= 0 || _ui.height <= 0 || _width <= 0 || _height <= 0 return;
+		var _max_x = _ui.width - _width;
+		var _x = self._viewport_align_right && _max_x < 0 ? _max_x : clamp(_target_x, 0, max(0, _max_x));
+		var _dx = _x - _left;
+		var _dy = clamp(_target_y, 0, max(0, _ui.height - _height)) - _top;
+		var _edges = self._position_edges;
+		var _changed = false;
+		if abs(_dx) >= 0.5 {
+			if !is_undefined(_edges.x) {
+				_changed = self._setPositionEdge(flexpanel_edge.left, "x", _edges.x + _dx) || _changed;
+			}
+			if !is_undefined(_edges.r) {
+				_changed = self._setPositionEdge(flexpanel_edge.right, "r", _edges.r - _dx) || _changed;
+			}
+		}
+		if abs(_dy) >= 0.5 {
+			if !is_undefined(_edges.y) {
+				_changed = self._setPositionEdge(flexpanel_edge.top, "y", _edges.y + _dy) || _changed;
+			}
+			if !is_undefined(_edges.b) {
+				_changed = self._setPositionEdge(flexpanel_edge.bottom, "b", _edges.b - _dy) || _changed;
+			}
+		}
+		if _changed {
+			self.updateMainUiFlex();
 		}
 	}
 
@@ -1817,6 +1816,11 @@ function LuiBase(_params = {}) constructor {
 		var _pos = self._flex_bounds;
 		var _left = _pos.left + _offset_x;
 		var _top = _pos.top + _offset_y;
+		if !_scroll_only && self.visible && self._keep_in_viewport && self._position_type == flexpanel_position_type.absolute
+			&& self._viewport_clamp_revision != self.main_ui._layout_revision {
+			self._viewport_clamp_revision = self.main_ui._layout_revision;
+			self._moveAbsoluteInViewport(_left, _top, _pos.width, _pos.height, _left, _top);
+		}
 		if is_method(self._overlay_bounds) {
 			_pos = self._overlay_bounds();
 			_left = _pos.left;
