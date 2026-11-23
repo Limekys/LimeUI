@@ -19,3 +19,5 @@ global.lui_debug_render_grid = false;			// Enable/Disable render of debug grid
 #macro LUI_FORCE_ALPHA_1				true	// Determines whether to set alpha to 1 before rendering the UI or not
 #macro LUI_ALLOW_CHANGE_CURSOR			true	// Change windows cursor on panels resizing
 #macro LUI_DEFAULT_ALERT_BLUR			5		// Default backdrop blur strength for alert dialogs
+#macro LUI_INVERT_SCROLL_X				false	// Reverse horizontal mouse wheel scrolling
+#macro LUI_INVERT_SCROLL_Y				false	// Reverse vertical mouse wheel scrolling

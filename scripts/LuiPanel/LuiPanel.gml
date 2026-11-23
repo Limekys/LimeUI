@@ -327,9 +327,9 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 					var _style = self.getStyle();
 					var _step = _style.scroll_step * _wheel;
 					if self.scroll_x && (!self.scroll_y || keyboard_check(vk_shift)) {
-						self.scroll_target_offset_x += _step;
+						self.scroll_target_offset_x -= LUI_INVERT_SCROLL_X ? -_step : _step;
 					} else {
-						self.scroll_target_offset_y += _step;
+						self.scroll_target_offset_y += LUI_INVERT_SCROLL_Y ? -_step : _step;
 					}
 					if _pressed && !_hit_can_drag {
 						var _bar_pressed = (self.scroll_x && self._pageScrollBar(true, _mx, _my, _style))
