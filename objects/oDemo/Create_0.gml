@@ -75,6 +75,11 @@ demo_style_modern = new LuiStyle()
 
 // Create the main ui container
 my_ui = new LuiMain().setStyle(demo_style_dark);
+my_ui.addEvent(LUI_EV_POINTER_CLICK, function(_e, _data) {
+	if _data.button == mb_right {
+		audio_play_sound(sndBasicClick, 1, false);
+	}
+});
 
 //Create some panels
 my_panel = new LuiPanel();

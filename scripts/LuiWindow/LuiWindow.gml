@@ -131,6 +131,13 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		]);
 		_e.bringToFront();
 	});
+
+	self.addEvent(LUI_EV_POINTER_DOWN, function(_e, _data) {
+		if _data.button == mb_left {
+			_e.bringToFront();
+			_e.main_ui._raiseOwnedPopups(_e);
+		}
+	});
 }
 
 ///@desc Header for LuiWindow, handles dragging and contains title/buttons
@@ -194,10 +201,6 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 		if _e.show_controls {
 			_e._initControlButtons();
 		}
-	});
-
-	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
-		_e.parent_window.bringToFront();
 	});
 
 	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {

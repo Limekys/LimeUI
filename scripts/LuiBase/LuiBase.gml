@@ -1472,9 +1472,11 @@ function LuiBase(_params = {}) constructor {
 	/// autonomous style; delta-based styles are rebuilt on top of the new inherited style.
 	///@ignore
 	static _propagateStyleToChildren = function() {
-		var _content = self.getContent();
+		// Composite widgets can redirect getContent to an inner container.
+		var _content = self.content;
 		for (var i = array_length(_content) - 1; i >= 0; --i) {
 			var _child = _content[i];
+			if _child.is_destroyed continue;
 			if !_child._has_own_style || is_struct(_child._style_delta) {
 				_child._applyInheritedStyle(self.style);
 			}

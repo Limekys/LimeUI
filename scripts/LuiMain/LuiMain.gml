@@ -28,6 +28,8 @@ function LuiMain() : LuiBase() constructor {
 	self._backdrop_surface = -1;
 	self._backdrop_blur_surface = -1;
 	self._modal_stack = [];
+	self._open_popups = [];
+	self._right_pressed_element = undefined;
 	self._cache_bakes = 0;
 	self._clip_stack = [];     // Reusable clip rectangles, one per clipping depth
 	self._clip_depth = -1;
@@ -150,6 +152,7 @@ function LuiMain() : LuiBase() constructor {
 		//var _t = get_timer();
 		// Update all elements
 		self.base_update();
+		self._updatePopups();
 		//luiProf("1_base_update", _t);
 
 		// Mouse position
@@ -168,6 +171,10 @@ function LuiMain() : LuiBase() constructor {
 			} else {
 				self.topmost_hovered_element = self._getTopmostElement(_mouse_x, _mouse_y);
 			}
+			if mouse_check_button_pressed(mb_left) {
+				self._closePopupsOutside(self.topmost_hovered_element);
+			}
+			self._updateRightPointer(_mouse_x, _mouse_y);
 
 			// Update mouse hover state
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
@@ -187,6 +194,7 @@ function LuiMain() : LuiBase() constructor {
 					var _pressed_element = self.topmost_hovered_element;
 					_pressed_element.is_pressed = true;
 					_pressed_element._dispatchEvent(LUI_EV_MOUSE_LEFT_PRESSED);
+					self._dispatchPointer(_pressed_element, LUI_EV_POINTER_DOWN, mb_left);
 					// Set focus on element
 					if self.isInputAllowed(_pressed_element) && self.element_in_focus != _pressed_element {
 						// Remove focus from previous element
@@ -243,7 +251,10 @@ function LuiMain() : LuiBase() constructor {
 						self.element_in_focus = undefined;
 					}
 					if _click && self.isInputAllowed(_released_element) {
-						_released_element._dispatchEvent(LUI_EV_CLICK);
+						self._dispatchPointer(_released_element, LUI_EV_POINTER_CLICK, mb_left);
+						if self.isInputAllowed(_released_element) {
+							_released_element._dispatchEvent(LUI_EV_CLICK);
+						}
 					}
 				}
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && (mouse_wheel_down() || mouse_wheel_up()) {
@@ -261,6 +272,12 @@ function LuiMain() : LuiBase() constructor {
 				}
 			}
 		} else {
+			if mouse_check_button_pressed(mb_left) || mouse_check_button_pressed(mb_right) {
+				self._closePopupsOutside(undefined);
+			}
+			if mouse_check_button_released(mb_right) {
+				self._right_pressed_element = undefined;
+			}
 			// Clear dragging element if mouse is outside UI
 			self.dragging_element = undefined;
 			// Reset is_pressed state
@@ -273,7 +290,10 @@ function LuiMain() : LuiBase() constructor {
 
 		// Keyboard events
 		var _modal = self._activeModal();
-		if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
+		if self.visible && !self.deactivated && keyboard_check_pressed(vk_escape) && array_length(self._open_popups) > 0 {
+			var _popup = self._open_popups[array_length(self._open_popups) - 1];
+			_popup.close();
+		} else if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
 			_modal.close();
 		} else if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) && self.isInputAllowed(self.element_in_focus) {
 			var _focused = self.element_in_focus;
@@ -507,6 +527,108 @@ function LuiMain() : LuiBase() constructor {
 
 	// INPUT AND MODALS
 
+	///@ignore
+	static _registerPopup = function(_owner, _panel, _close, _place) {
+		self._unregisterPopup(_panel);
+		array_push(self._open_popups, {owner: _owner, panel: _panel, close: _close, place: _place});
+	}
+
+	///@ignore
+	static _unregisterPopup = function(_panel) {
+		for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
+			if self._open_popups[i].panel == _panel {
+				array_delete(self._open_popups, i, 1);
+				return;
+			}
+		}
+	}
+
+	///@ignore
+	static _closePopupsOutside = function(_target) {
+		for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
+			var _popup = self._open_popups[i];
+			if !self._isInModal(_target, _popup.owner) && !self._isInModal(_target, _popup.panel) {
+				_popup.close();
+			}
+		}
+	}
+
+	///@ignore
+	static _updatePopups = function() {
+		for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
+			var _popup = self._open_popups[i];
+			if _popup.panel.is_destroyed || !self.isInputAllowed(_popup.owner) || !_popup.owner.is_visible_in_region {
+				_popup.close();
+			} else {
+				_popup.place();
+			}
+		}
+	}
+
+	///@ignore
+	static _raiseOwnedPopups = function(_ancestor) {
+		for (var i = 0; i < array_length(self._open_popups); i++) {
+			var _popup = self._open_popups[i];
+			if self._isInModal(_popup.owner, _ancestor) {
+				_popup.panel.bringToFront();
+			}
+		}
+	}
+
+	///@ignore
+	static _updateRightPointer = function(_mouse_x, _mouse_y) {
+		var _pressed = mouse_check_button_pressed(mb_right);
+		var _released = mouse_check_button_released(mb_right);
+		if !_pressed && !_released return;
+
+		var _target = self._getTopmostElement(_mouse_x, _mouse_y);
+		if _pressed {
+			self._closePopupsOutside(_target);
+			self._right_pressed_element = undefined;
+			if !is_undefined(_target) && self.isInputAllowed(_target) {
+				self._right_pressed_element = _target;
+				_target._dispatchEvent(LUI_EV_MOUSE_RIGHT_PRESSED);
+				self._dispatchPointer(_target, LUI_EV_POINTER_DOWN, mb_right);
+			}
+		}
+		if _released {
+			var _origin = self._right_pressed_element;
+			self._right_pressed_element = undefined;
+			if is_undefined(_target) || !self.isInputAllowed(_target) return;
+
+			_target._dispatchEvent(LUI_EV_MOUSE_RIGHT_RELEASED);
+			if _origin == _target && self.isInputAllowed(_target) {
+				self._dispatchPointer(_target, LUI_EV_POINTER_CLICK, mb_right);
+				if self.isInputAllowed(_target) {
+					_target._dispatchEvent(LUI_EV_RIGHT_CLICK);
+				}
+			}
+		}
+	}
+
+	///@ignore
+	static _dispatchPointer = function(_target, _event, _button) {
+		if !self.isInputAllowed(_target) return;
+		var _data = {target: _target, button: _button, stop_propagation: false};
+		var _modal = self._activeModal();
+		var _current = _target;
+		while !is_undefined(_current) {
+			var _next = _current.parent;
+			for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
+				var _popup = self._open_popups[i];
+				if _popup.panel == _current {
+					_next = _popup.owner;
+					break;
+				}
+			}
+			if !_current.is_destroyed {
+				_current._dispatchEvent(_event, _data);
+			}
+			if _data.stop_propagation || self._activeModal() != _modal || _target.is_destroyed return;
+			_current = _next;
+		}
+	}
+
 	///@desc Returns topmost element on UI
 	///@ignore
 	static _getTopmostElement = function(_mouse_x, _mouse_y) {
@@ -555,6 +677,8 @@ function LuiMain() : LuiBase() constructor {
 		var _previous_focus = self.element_in_focus;
 		_dialog._is_modal = true;
 		array_push(self._modal_stack, {dialog: _dialog, previous_focus: _previous_focus});
+		self._updatePopups();
+		self._right_pressed_element = undefined;
 		if !is_undefined(_previous_focus) {
 			_previous_focus.removeFocus();
 		}

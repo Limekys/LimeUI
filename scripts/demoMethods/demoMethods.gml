@@ -51,6 +51,12 @@ function demoBuildInventory(_tab) {
 
 		var _item = _selected.getData("item");
 		var _status = _item.locked ? "Locked" : $"Qty {_item.quantity}";
+		var _slots = [];
+		for (var i = 1; i <= 24; i++) {
+			array_push(_slots, new LuiComboBoxItem({text: $"Slot {i}"}));
+		}
+		var _slot_picker = new LuiComboBox({placeholder: "Preview storage slot...", height: 36})
+			.setCacheAsSurface(true).addItems(_slots);
 		oDemo.inventory_inspect_message = _e.main_ui.alert({
 			width: 360,
 			alpha: 0.65,
@@ -61,6 +67,7 @@ function demoBuildInventory(_tab) {
 				new LuiText({value: $"{_item.tier}  |  {_status}", height: 28, text_halign: fa_center})
 					.setLocalStyle({color_text: _item.color}).setMouseIgnore(),
 				new LuiText({value: _item.description, height: 56, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setMouseIgnore(),
+				_slot_picker,
 				new LuiButton({text: "About rarity", height: 36}).addEvent(LUI_EV_CLICK, function(_button) {
 					_button.main_ui.alert({
 						text: "A colored border indicates item rarity. Locked items can still be inspected.",

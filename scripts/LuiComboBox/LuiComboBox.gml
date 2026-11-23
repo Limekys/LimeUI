@@ -23,25 +23,25 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 
 	///@desc Toggle combobox open/close
 	static toggle = function() {
+		if self.is_open {
+			self._closePopup();
+			return self;
+		}
+		if is_undefined(self.items) || is_undefined(self.main_ui) || !self.main_ui.isInputAllowed(self) return self;
+
 		if is_undefined(self.combobox_panel) {
 			self._initComboBoxPanel();
 			self._initItems();
 		}
-		// Change state
-		self.is_open = !self.is_open;
-		self.combobox_panel.setVisibilitySwitching(true);
-		if self.is_open {
-			// Set position and size of panel
-			var _x = self.x;
-			var _y = self.y + self.height;
-			self.combobox_panel.setPosition(_x, _y).setWidth(self.width);
-			// Show and bring to front
-			self.combobox_panel.show().bringToFront();
-		} else {
-			// Hide
-			self.combobox_panel.hide();
-		}
-		self.combobox_panel.setVisibilitySwitching(false);
+		if array_length(self.items) == 0 return self;
+
+		self.is_open = true;
+		self._placePopup();
+		if !self.is_open return self;
+
+		self.combobox_panel.setVisibilitySwitching(true).show().bringToFront().setVisibilitySwitching(false);
+		self.main_ui._registerPopup(self, self.combobox_panel, method(self, self._closePopup), method(self, self._placePopup));
+		self.updateMainUiSurface();
 		return self;
 	}
 
@@ -64,30 +64,72 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 
 	///@ignore
 	static _initComboBoxPanel = function() {
-		var _item_count = array_length(self.items);
-		// Calculate panel sizes
-		var _style = self.getStyle();
-		var _width = self.width;
-		var _height = (self.height + _style.padding) * _item_count + _style.padding;
-		// Create panel
-		self.combobox_panel = new LuiPanel({x: 0, y: 0, width: _width}).hide().setVisibilitySwitching(false).setPositionAbsolute();
-		self.main_ui.addContent([self.combobox_panel]);
+		var _host = self.main_ui._activeModal() ?? self.main_ui;
+		self.combobox_panel = new LuiScrollPanel({x: 0, y: 0, width: 1, height: 1, min_width: 1, min_height: 1})
+			.setPositionAbsolute().setPadding(4).setGap(0).hide().setVisibilitySwitching(false);
+		_host.addContentOriginal(self.combobox_panel);
 	}
 
 	///@ignore
 	static _initItems = function() {
-		var _item_count = array_length(self.items);
-		//Add items to this panel
 		if !is_array(self.items) {
 			self.items = [self.items];
 		}
-		for (var i = 0; i < _item_count; ++i) {
+		for (var i = 0; i < array_length(self.items); i++) {
 			var _item = self.items[i];
 			_item.combobox_parent = self;
-			_item.height = self.height;
-			_item.auto_height = false;
+			_item.setHeight(max(24, self.height)).setFlexShrink(0);
 		}
 		self.combobox_panel.addContent(self.items);
+	}
+
+	///@ignore
+	static _placePopup = function() {
+		var _ui = self.main_ui;
+		var _panel = self.combobox_panel;
+		var _width = min(_ui.width, max(1, self.width));
+		var _top = clamp(self.y, 0, _ui.height);
+		var _bottom = clamp(self.y + self.height, 0, _ui.height);
+		var _below = _ui.height - _bottom;
+		var _desired_height = array_length(self.items) * max(24, self.height) + 8;
+		var _open_above = _desired_height > _below && _top > _below;
+		var _height = min(_desired_height, _open_above ? _top : _below);
+		if _width < 1 || _height < 1 {
+			self._closePopup();
+			return;
+		}
+
+		var _style = self.getMainStyle();
+		if _panel.getMainStyle() != _style {
+			_panel.setStyle(_style);
+		}
+		var _host = _panel.parent;
+		var _x = clamp(self.x, 0, _ui.width - _width);
+		var _y = _open_above ? _top - _height : _bottom;
+		_panel.setSize(_width, _height).setPosition(_x - _host.x, _y - _host.y);
+	}
+
+	///@ignore
+	static _closePopup = function() {
+		if !self.is_open return;
+		self.is_open = false;
+		var _ui = self.main_ui;
+		_ui._unregisterPopup(self.combobox_panel);
+		var _focused = _ui.element_in_focus;
+		if _ui._isInModal(_focused, self.combobox_panel) {
+			_ui.element_in_focus = undefined;
+			if !_focused.is_destroyed {
+				_focused.removeFocus();
+			}
+			if _ui.isInputAllowed(self) && self.is_visible_in_region {
+				_ui.element_in_focus = self;
+				self.setFocus();
+			}
+		}
+		if !self.combobox_panel.is_destroyed {
+			self.combobox_panel.setVisibilitySwitching(true).hide().setVisibilitySwitching(false);
+		}
+		self.updateMainUiSurface();
 	}
 
 	///@ignore
@@ -104,6 +146,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		//Base
 		if !is_undefined(_style.sprite_combobox) {
 			var _blend_color = _style.color_secondary;
@@ -117,7 +160,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_combobox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_combobox, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 		}
 
 		//Arrow
@@ -127,7 +170,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_ext(_style.sprite_combobox_arrow, 0, self.x + self.width - _x_offset, self.y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
+			draw_sprite_ext(_style.sprite_combobox_arrow, 0, self.x + self.width - _x_offset, self.y + self.height div 2, 1, self.is_open ? -1 : 1, 0, _blend_color, _alpha);
 		}
 
 		//Text
@@ -145,19 +188,20 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		}
 		var _txt_x = self.x + self.width / 2;
 		var _txt_y = self.y + self.height / 2;
-		draw_set_alpha(1);
+		draw_set_alpha(_alpha);
 		draw_set_halign(fa_center);
 		draw_set_valign(fa_middle);
 		if is_undefined(self.text) || self.text == "" {
-			draw_set_alpha(0.5);
+			draw_set_alpha(_alpha * 0.5);
 			self._drawTruncatedText(_txt_x, _txt_y, self.placeholder, _text_draw_width);
+			draw_set_alpha(_alpha);
 		} else {
 			self._drawTruncatedText(_txt_x, _txt_y, string(self.text), _text_draw_width);
 		}
 
 		//Border
 		if !is_undefined(_style.sprite_combobox_border) {
-			draw_sprite_stretched_ext(_style.sprite_combobox_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_combobox_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
 
@@ -165,10 +209,6 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._calculateTextWidth();
-		if is_undefined(_e.combobox_panel) {
-			_e._initComboBoxPanel();
-			_e._initItems();
-		}
 	});
 
 	self.addEvent(LUI_EV_CLICK, function(_e) {
@@ -180,20 +220,21 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	});
 
 	self.addEvent(LUI_EV_HIDE, function(_e) {
-		if _e.is_open {
-			_e.toggle();
-		}
-	});
-
-	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_e) {
-		if _e.is_open && !_e.combobox_panel.isMouseHoveredExc() {
-			_e.toggle();
-		}
+		_e._closePopup();
 	});
 
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		_e._closePopup();
 		if !is_undefined(_e.combobox_panel) {
 			_e.combobox_panel.destroy();
+		} else if !is_undefined(_e.items) {
+			var _items = is_array(_e.items) ? _e.items : [_e.items];
+			for (var i = 0; i < array_length(_items); i++) {
+				var _item = _items[i];
+				if !_item.is_destroyed && is_undefined(_item.parent) {
+					_item.destroy();
+				}
+			}
 		}
 		_e.items = -1;
 	});
@@ -213,14 +254,16 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 
 	///@desc Set new combobox text and close combobox
 	static chooseItem = function() {
+		if is_undefined(self.combobox_parent) || self.combobox_parent.is_destroyed return;
 		self.combobox_parent.setText(self.text);
-		self.combobox_parent.toggle();
+		self.combobox_parent._closePopup();
 	}
 
 	// DRAW
 
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 
 		// Calculate positions
 		var _center_x = self.x + self.width / 2;
@@ -235,7 +278,7 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 					_blend_color = merge_color(_style.color_secondary, c_black, 0.5);
 				}
 			}
-			draw_sprite_stretched_ext(_style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 		}
 
 		// Icon and text
@@ -243,7 +286,7 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 
 		//Border
 		if !is_undefined(_style.sprite_combobox_item_border) {
-			draw_sprite_stretched_ext(_style.sprite_combobox_item_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_combobox_item_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
 

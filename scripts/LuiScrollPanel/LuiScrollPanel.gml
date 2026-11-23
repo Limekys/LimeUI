@@ -50,6 +50,11 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		self.scroll_container.setPosition(, self.scroll_offset_y);
 	}
 
+	///@ignore
+	static _getMinScrollOffset = function() {
+		return min(0, self.height - self.scroll_container.height);
+	}
+
 	// UPDATE AND DRAW
 
 	self.step = function() {
@@ -82,10 +87,13 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 				self.drag_start_y = -1;
 			}
 		}
-		// Scrolling
-		if self.scroll_offset_y != self.scroll_target_offset_y {
-			self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, -(self.scroll_container.height - self.height), 0);
-			self.scroll_offset_y = SmoothApproachDelta(self.scroll_offset_y, self.scroll_target_offset_y, self.scroll_smoothness, 0.1);
+		// The viewport or content can resize without any scroll input.
+		var _min_offset = self._getMinScrollOffset();
+		self.scroll_target_offset_y = clamp(self.scroll_target_offset_y, _min_offset, 0);
+		var _offset = clamp(self.scroll_offset_y, _min_offset, 0);
+		_offset = SmoothApproachDelta(_offset, self.scroll_target_offset_y, self.scroll_smoothness, 0.1);
+		if _offset != self.scroll_offset_y {
+			self.scroll_offset_y = _offset;
 			self._applyScroll();
 		}
 	}
@@ -104,7 +112,13 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		//Scroll slider
 		if array_length(self.getContainer().content) > 0 {
 			var _scroll_slider_x = self.x + self.width - _style.scroll_slider_width - self.scroll_pin_edge_offset;
-			var _scroll_pin_y_offset = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), self.scroll_pin_edge_offset, self.height - _style.scroll_slider_width - self.scroll_pin_edge_offset);
+			var _min_offset = self._getMinScrollOffset();
+			var _scroll_pin_y_offset = self.scroll_pin_edge_offset;
+			if _min_offset < 0 {
+				var _offset = clamp(self.scroll_offset_y, _min_offset, 0);
+				var _pin_end = self.height - _style.scroll_slider_width - self.scroll_pin_edge_offset;
+				_scroll_pin_y_offset = lerp(self.scroll_pin_edge_offset, _pin_end, _offset / _min_offset);
+			}
 			// Slider back
 			if !is_undefined(_style.sprite_scroll_slider) {
 				draw_sprite_stretched_ext(_style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, _style.scroll_slider_width, self.height - self.scroll_pin_edge_offset*2, _style.color_back, _alpha);
@@ -133,11 +147,6 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 			flexpanel_node_style_set_flex(_e.flex_node, 1); //???//
 		}
 		flexpanel_node_style_set_border(_e.flex_node, flexpanel_edge.right, _e.getStyle().scroll_slider_width + _e.scroll_pin_edge_offset); //???//
-	});
-
-	self.addEvent(LUI_EV_CONTENT_UPDATE, function(_e) {
-		_e.scroll_target_offset_y = clamp(_e.scroll_target_offset_y, -(_e.scroll_container.height - _e.height), 0);
-		_e._applyScroll();
 	});
 
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
