@@ -306,32 +306,47 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 
+	///@ignore
+	static _handlePointerWheel = function(_data) {
+		if !self.scroll_x && !self.scroll_y return;
+		var _horizontal = self.scroll_x && (!self.scroll_y || _data.shift);
+		var _step = self.getStyle().scroll_step * _data.delta;
+		var _limit = self._getMinScrollOffset(_horizontal);
+		var _previous = _horizontal ? self.scroll_target_offset_x : self.scroll_target_offset_y;
+		_previous = clamp(_previous, _limit, 0);
+		var _delta = _horizontal
+			? (LUI_INVERT_SCROLL_X ? _step : -_step)
+			: (LUI_INVERT_SCROLL_Y ? -_step : _step);
+		var _next = clamp(_previous + _delta, _limit, 0);
+		if _next == _previous return;
+
+		if _horizontal {
+			self.scroll_target_offset_x = _next;
+		} else {
+			self.scroll_target_offset_y = _next;
+		}
+		_data.stop_propagation = true;
+	}
+
 	// UPDATE AND DRAW
 
 	///@ignore
 	static _stepScroll = function() {
 		var _allowed = self.main_ui.isInputAllowed(self);
-		var _wheel = mouse_wheel_up() - mouse_wheel_down();
 		var _pressed = mouse_check_button_pressed(mb_left);
 		var _held = mouse_check_button(mb_left);
 		if _pressed {
 			self._drag_origin = undefined;
 		}
-		if _allowed && (_wheel != 0 || _pressed) {
+		if _allowed && _pressed {
 			var _mx = device_mouse_x_to_gui(0);
 			var _my = device_mouse_y_to_gui(0);
 			var _hit = self.main_ui._getTopmostElement(_mx, _my);
 			var _hit_can_drag = !is_undefined(_hit) && _hit.can_drag;
 			while !is_undefined(_hit) {
 				if _hit == self {
-					var _style = self.getStyle();
-					var _step = _style.scroll_step * _wheel;
-					if self.scroll_x && (!self.scroll_y || keyboard_check(vk_shift)) {
-						self.scroll_target_offset_x -= LUI_INVERT_SCROLL_X ? -_step : _step;
-					} else {
-						self.scroll_target_offset_y += LUI_INVERT_SCROLL_Y ? -_step : _step;
-					}
-					if _pressed && !_hit_can_drag {
+					if !_hit_can_drag {
+						var _style = self.getStyle();
 						var _bar_pressed = (self.scroll_x && self._pageScrollBar(true, _mx, _my, _style))
 							|| (self.scroll_y && self._pageScrollBar(false, _mx, _my, _style));
 						if !_bar_pressed {

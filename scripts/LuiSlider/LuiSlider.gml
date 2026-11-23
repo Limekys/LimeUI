@@ -104,12 +104,11 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		_e._initKnobWidth();
 	});
 	
-	self.addEvent(LUI_EV_MOUSE_WHEEL, function(_e) {
+	self.addEvent(LUI_EV_POINTER_WHEEL, function(_e, _data) {
+		_data.stop_propagation = true;
+		if !_e.main_ui.isInputAllowed(_e) return;
 		var _wheel_step = max(_e.rounding, (_e.max_value - _e.min_value) * 0.02);
-		var _wheel_up = mouse_wheel_up() ? 1 : 0;
-		var _wheel_down = mouse_wheel_down() ? 1 : 0;
-		var _wheel = _wheel_up - _wheel_down;
-		var _new_value = clamp(_e.value + _wheel * _wheel_step, _e.min_value, _e.max_value);
+		var _new_value = clamp(_e.value + _data.delta * _wheel_step, _e.min_value, _e.max_value);
 		_new_value = _e._calculateValue(_new_value);
 		_e.set(_new_value);
 	});

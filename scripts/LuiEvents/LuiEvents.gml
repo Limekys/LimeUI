@@ -11,6 +11,7 @@
 #macro LUI_EV_POINTER_DOWN "pointer_down" // Bubbles after a left or right press
 #macro LUI_EV_POINTER_CLICK "pointer_click" // Bubbles after a completed left or right click
 #macro LUI_EV_MOUSE_WHEEL "mouse_wheel" // Triggered when the mouse wheel is scrolled
+#macro LUI_EV_POINTER_WHEEL "pointer_wheel" // Bubbles with target, delta, shift, and stop_propagation
 #macro LUI_EV_MOUSE_ENTER "mouse_enter" // Triggered once when the mouse enters the element
 #macro LUI_EV_MOUSE_LEAVE "mouse_leave" // Triggered once when the mouse leaves the element
 #macro LUI_EV_KEYBOARD_INPUT "keyboard_input" // Triggered during keyboard input when the element is focused

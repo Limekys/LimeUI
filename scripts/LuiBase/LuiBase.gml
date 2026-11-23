@@ -1468,6 +1468,10 @@ function LuiBase(_params = {}) constructor {
 
 	// Event dispatch and registration
 
+	///@ignore
+	static _handlePointerWheel = function(_data) {
+	}
+
 	///@desc Call events from event listener
 	///@ignore
 	static _dispatchEvent = function(_eventType, _data = undefined) {

@@ -329,8 +329,18 @@ function LuiMain() : LuiBase() constructor {
 						self._dispatchPointerClick(_released_element, mb_left);
 					}
 				}
-				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && (mouse_wheel_down() || mouse_wheel_up()) {
-					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_WHEEL);
+				var _wheel = mouse_wheel_up() - mouse_wheel_down();
+				if _wheel != 0 {
+					var _wheel_target = self._getTopmostElement(_mouse_x, _mouse_y);
+					if !is_undefined(_wheel_target) && self.isInputAllowed(_wheel_target) {
+						_wheel_target._dispatchEvent(LUI_EV_MOUSE_WHEEL);
+						self._dispatchBubbledInput(_wheel_target, LUI_EV_POINTER_WHEEL, {
+							target: _wheel_target,
+							delta: _wheel,
+							shift: keyboard_check(vk_shift),
+							stop_propagation: false
+						});
+					}
 				}
 			} else {
 				// Remove focus from element
@@ -965,8 +975,13 @@ function LuiMain() : LuiBase() constructor {
 
 	///@ignore
 	static _dispatchPointer = function(_target, _event, _button) {
+		self._dispatchBubbledInput(_target, _event, {target: _target, button: _button, stop_propagation: false});
+	}
+
+	///@ignore
+	static _dispatchBubbledInput = function(_target, _event, _data) {
 		if !self.isInputAllowed(_target) return;
-		var _data = {target: _target, button: _button, stop_propagation: false};
+		var _wheel = _event == LUI_EV_POINTER_WHEEL;
 		var _modal = self._activeModal();
 		var _current = _target;
 		while !is_undefined(_current) {
@@ -974,7 +989,7 @@ function LuiMain() : LuiBase() constructor {
 			for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
 				var _popup = self._open_popups[i];
 				if _popup.panel == _current {
-					_next = _popup.owner;
+					_next = _wheel ? undefined : _popup.owner;
 					break;
 				}
 			}
@@ -982,6 +997,10 @@ function LuiMain() : LuiBase() constructor {
 				_current._dispatchEvent(_event, _data);
 			}
 			if _data.stop_propagation || self._activeModal() != _modal || _target.is_destroyed return;
+			if _wheel && self.isInputAllowed(_current) {
+				_current._handlePointerWheel(_data);
+				if _data.stop_propagation || _current == _modal return;
+			}
 			_current = _next;
 		}
 	}
