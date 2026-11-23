@@ -14,6 +14,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	self.is_minimized = false;
 	self.window_header = undefined;
 	self.window_container = undefined;
+	self._viewport_resize_handler = undefined;
 
 	// PUBLIC API
 
@@ -86,6 +87,32 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		}
 	}
 
+	///@desc Moves the window in GUI coordinates while keeping its header accessible.
+	///@ignore
+	static _moveInViewport = function(_x, _y) {
+		var _ui = self.main_ui;
+		var _bounds = flexpanel_node_layout_get_position(self.flex_node, false);
+		if _ui.width <= 0 || _ui.height <= 0 || _bounds.width <= 0 || _bounds.height <= 0 return;
+
+		var _max_x = _ui.width - _bounds.width;
+		var _target_x = _max_x < 0 ? _max_x : clamp(_x, 0, _max_x);
+		var _target_y = clamp(_y, 0, max(0, _ui.height - _bounds.height));
+		if _target_x == _bounds.left && _target_y == _bounds.top return;
+
+		var _relative = flexpanel_node_layout_get_position(self.flex_node);
+		if _target_x != _bounds.left {
+			var _left = _relative.left + _target_x - _bounds.left;
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, _left, flexpanel_unit.point);
+			self.auto_x = false;
+		}
+		if _target_y != _bounds.top {
+			var _top = _relative.top + _target_y - _bounds.top;
+			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.top, _top, flexpanel_unit.point);
+			self.auto_y = false;
+		}
+		self.updateMainUiFlex();
+	}
+
 	// DRAW
 
 	self.draw = function() {
@@ -130,12 +157,26 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 			_e.window_container
 		]);
 		_e.bringToFront();
+		_e._viewport_resize_handler = method(_e, function(_ui) {
+			if self.is_destroyed || !self.visible return;
+
+			var _bounds = flexpanel_node_layout_get_position(self.flex_node, false);
+			self._moveInViewport(_bounds.left, _bounds.top);
+		});
+		_e.main_ui.addEvent(LUI_EV_SIZE_UPDATE, _e._viewport_resize_handler);
 	});
 
 	self.addEvent(LUI_EV_POINTER_DOWN, function(_e, _data) {
 		if _data.button == mb_left {
 			_e.bringToFront();
 			_e.main_ui._raiseOwnedPopups(_e);
+		}
+	});
+
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if !is_undefined(_e._viewport_resize_handler) {
+			_e.main_ui.removeEvent(LUI_EV_SIZE_UPDATE, _e._viewport_resize_handler);
+			_e._viewport_resize_handler = undefined;
 		}
 	});
 }
@@ -205,9 +246,8 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 
 	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
 		if !is_undefined(_e.parent_window) {
-			var _new_pos_x = clamp(_data.new_x, 0, self.main_ui.width - self.width);
-			var _new_pos_y = clamp(_data.new_y, 0, self.main_ui.height - self.height);
-			_e.parent_window.setPosition(_new_pos_x, _new_pos_y);
+			var _window = _e.parent_window;
+			_window._moveInViewport(_window.x + _data.new_x - _e.x, _window.y + _data.new_y - _e.y);
 		}
 	});
 }

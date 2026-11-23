@@ -122,8 +122,8 @@ btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_b
 // Create a cached draggable window for the render demo.
 createNewLoginWindow = function() {
 	var _image = new LuiImage({value: sIconKey, width: 64, height: 64});
-	_image.visual_scale_x = 8;
-	_image.visual_scale_y = 8;
+	//_image.visual_scale_x = 6;
+	//_image.visual_scale_y = 6;
 
 	my_ui.addContent([
 		new LuiWindow({x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300, min_width: 300, min_height: 300, title: "Secret database", allow_resize: true}).setCacheAsSurface(true).centerContent().addContent([

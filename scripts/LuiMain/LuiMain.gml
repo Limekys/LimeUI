@@ -367,12 +367,15 @@ function LuiMain() : LuiBase() constructor {
 			self._updateFlex(self.flex_node);
 		}
 
-		// Update list of elements to update flex
-		if array_length(self.elements_to_update_flex) > 0 {
+		// Apply callback-generated requests only after recalculating their layout.
+		// Allow one follow-up pass in the same frame and keep any remaining requests queued.
+		for (var _pass = 0; _pass < 2 && array_length(self.elements_to_update_flex) > 0; _pass++) {
+			var _pending = self.elements_to_update_flex;
+			self.elements_to_update_flex = [];
 			self._calculateLayout();
-			while (array_length(self.elements_to_update_flex) > 0) {
-				var _e = array_pop(self.elements_to_update_flex);
-				if is_undefined(_e) continue;
+			while array_length(_pending) > 0 {
+				var _e = array_pop(_pending);
+				if is_undefined(_e) || _e.is_destroyed continue;
 				_e._updateFlex(_e.flex_node);
 			}
 		}
