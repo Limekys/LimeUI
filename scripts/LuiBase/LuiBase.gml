@@ -81,6 +81,7 @@ function LuiBase(_params = {}) constructor {
 	self.visibility_switching = true;
 	self.has_focus = false;
 	self._keyboard_focusable = undefined;
+	self._shortcut_key = undefined;
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.ignore_mouse_all = undefined;
@@ -423,6 +424,9 @@ function LuiBase(_params = {}) constructor {
 
 			// Register element name
 			_element._registerElementName();
+			if !is_undefined(_element._shortcut_key) {
+				_element._syncShortcutRegistration();
+			}
 
 			// Add to content array
 			if !is_array(self.content) {
@@ -1118,6 +1122,15 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 
+	///@desc Binds a key to this element's click action. Omit the key to clear the binding.
+	///@arg {Real|Undefined} [_key] GameMaker keyboard key code
+	///@return {Struct} This element
+	static setShortcut = function(_key = undefined) {
+		self._shortcut_key = _key;
+		self._syncShortcutRegistration();
+		return self;
+	}
+
 	///@desc Enables/Disables mouse ignore mode
 	static setMouseIgnore = function(_ignore = true) {
 		self.ignore_mouse = _ignore;
@@ -1312,6 +1325,20 @@ function LuiBase(_params = {}) constructor {
 		self.is_initialized = true;
 	}
 
+	///@ignore
+	static _syncShortcutRegistration = function() {
+		if is_undefined(self.main_ui) return;
+		var _ui = self.main_ui;
+		var _index = array_get_index(_ui._shortcut_elements, self);
+		if self.is_destroyed || is_undefined(self._shortcut_key) {
+			if _index >= 0 {
+				array_delete(_ui._shortcut_elements, _index, 1);
+			}
+		} else if _index < 0 {
+			array_push(_ui._shortcut_elements, self);
+		}
+	}
+
 	///@desc Adds elements from a delayed array
 	///@ignore
 	static _addDelayedContent = function() {
@@ -1371,6 +1398,9 @@ function LuiBase(_params = {}) constructor {
 		}
 		// Double-Destroy protection
 		self.is_destroyed = true;
+		if !is_undefined(self._shortcut_key) {
+			self._syncShortcutRegistration();
+		}
 
 		self._freeCache();
 		// Destroy all content

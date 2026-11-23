@@ -110,12 +110,16 @@ tab_about = new LuiTab({text: "About"});
 // Add tab's to Tabs
 tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_inventory, tab_list_benchmark, tab_about]);
 demoBuildInventory(tab_inventory);
+my_ui.bindShortcut(ord("I"), function(_ui) {
+	oDemo.tabs.switchTab(oDemo.tab_inventory);
+});
 
 // Create some elements
 demo_loading = new LuiProgressBar({value: demo_loading_value, rounding: 1}).bindVariable(self, "demo_loading_value");
 btn_show_msg = new LuiButton({text: "Show message"}).setColor(merge_color(#FFFF77, c_black, 0.5)).setIcon(sIconInfo, 1).addEvent(LUI_EV_CLICK, function(_e) {
 	oDemo.my_ui.alert({text: "Login: " + oDemo.demo_login + "\n" + "Password: " + oDemo.demo_password, button_text: "Got it!", height: 150});
 });
+btn_show_msg.setShortcut(ord("M"));
 btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_black, 0.5)).addEvent(LUI_EV_CLICK, function() {
 	game_restart();
 });

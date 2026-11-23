@@ -18,6 +18,8 @@ function LuiMain() : LuiBase() constructor {
 	self.display_focused_element = false;
 	self._keyboard_navigation_active = false;
 	self._keyboard_edit_target = undefined;
+	self._keyboard_shortcuts = [];
+	self._shortcut_elements = [];
 	self._focus_frame_bounds = undefined;
 	self.waiting_for_keyboard_input = false;
 	self.needs_update_flex = true;
@@ -77,6 +79,29 @@ function LuiMain() : LuiBase() constructor {
 	_luiInitEaseFunctions();
 
 	// PUBLIC API
+
+	///@desc Registers or replaces a global shortcut for a key press.
+	///@arg {Real} _key GameMaker keyboard key code
+	///@arg {Function} _callback Callback receiving this LuiMain instance
+	///@return {Struct} This LuiMain instance
+	static bindShortcut = function(_key, _callback) {
+		self.unbindShortcut(_key);
+		array_push(self._keyboard_shortcuts, {key: _key, callback: _callback});
+		return self;
+	}
+
+	///@desc Removes the shortcut registered for a key.
+	///@arg {Real} _key GameMaker keyboard key code
+	///@return {Struct} This LuiMain instance
+	static unbindShortcut = function(_key) {
+		for (var i = 0, n = array_length(self._keyboard_shortcuts); i < n; i++) {
+			if self._keyboard_shortcuts[i].key == _key {
+				array_delete(self._keyboard_shortcuts, i, 1);
+				return self;
+			}
+		}
+		return self;
+	}
 
 	///@desc Get element by name
 	///@return {Struct}
@@ -333,6 +358,8 @@ function LuiMain() : LuiBase() constructor {
 			_modal.close();
 		} else if !_mouse_pressed && self.visible && !self.deactivated && self._updateKeyboardNavigation() {
 			// Navigation keys have already been handled.
+		} else if self.visible && !self.deactivated && self._updateKeyboardShortcuts() {
+			// The shortcut consumed this key press.
 		} else if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) && self.isInputAllowed(self.element_in_focus) {
 			var _focused = self.element_in_focus;
 			if keyboard_check(vk_anykey) {
@@ -590,6 +617,59 @@ function LuiMain() : LuiBase() constructor {
 	}
 
 	// KEYBOARD NAVIGATION
+
+	///@ignore
+	static _updateKeyboardShortcuts = function() {
+		var _focused = self.element_in_focus;
+		if !is_undefined(_focused) && self.isInputAllowed(_focused) && is_instanceof(_focused, LuiInput) return false;
+		var _root = self._keyboardFocusRoot();
+		var _element = self._findShortcutElement(_root);
+		if !is_undefined(_element) {
+			self._activateElement(_element);
+			return true;
+		}
+		if _root != self || array_length(self._open_popups) > 0 return false;
+		if !is_undefined(_focused) && self.isInputAllowed(_focused) {
+			if keyboard_check_pressed(vk_escape) {
+				var _window = _focused;
+				while !is_undefined(_window) {
+					if is_instanceof(_window, LuiWindow) && self.isInputAllowed(_window) {
+						_window.closeWindow();
+						return true;
+					}
+					_window = _window.parent;
+				}
+			}
+		}
+		for (var i = 0, n = array_length(self._keyboard_shortcuts); i < n; i++) {
+			var _shortcut = self._keyboard_shortcuts[i];
+			if keyboard_check_pressed(_shortcut.key) {
+				_shortcut.callback(self);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	///@ignore
+	static _findShortcutElement = function(_root) {
+		var _best = undefined;
+		for (var i = array_length(self._shortcut_elements) - 1; i >= 0; i--) {
+			var _element = self._shortcut_elements[i];
+			if !keyboard_check_pressed(_element._shortcut_key) || !_element.is_visible_in_region
+				|| !self.isInputAllowed(_element) || !self._isInModal(_element, _root)
+				|| !self._hasFocusListener(_element, LUI_EV_CLICK) continue;
+			var _parent = _element.parent;
+			while !is_undefined(_parent) && _parent.visible && !_parent.deactivated && !_parent.is_destroyed {
+				_parent = _parent.parent;
+			}
+			if !is_undefined(_parent) continue;
+			if is_undefined(_best) || _compareDepthArrays(_element.depth_array, _best.depth_array) > 0 {
+				_best = _element;
+			}
+		}
+		return _best;
+	}
 
 	///@ignore
 	static _updateKeyboardNavigation = function() {
@@ -1377,6 +1457,8 @@ function LuiMain() : LuiBase() constructor {
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		_e._freeBackdrop();
 		_e.pre_draw_list = -1;
+		_e._keyboard_shortcuts = [];
+		_e._shortcut_elements = [];
 		_e.element_in_focus = undefined;
 		_e.dragging_element = undefined;
 		_e.active_animations = -1;
