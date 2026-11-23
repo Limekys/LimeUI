@@ -104,10 +104,11 @@ tab_panels = new LuiTab({text: "Home"});
 tab_search = new LuiTab({text: "Search"});
 tab_sprites = new LuiTab({text: "Sprites"});
 tab_inventory = new LuiTab({text: "Inventory"});
+tab_list_benchmark = new LuiTab({text: "Benchmark"});
 tab_about = new LuiTab({text: "About"});
 
 // Add tab's to Tabs
-tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_inventory, tab_about]);
+tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_inventory, tab_list_benchmark, tab_about]);
 demoBuildInventory(tab_inventory);
 
 // Create some elements
@@ -141,6 +142,33 @@ createNewLoginWindow = function() {
 	]);
 }
 
+// Open a window with content that overflows the viewport on both axes.
+createNewScrollWindow = function() {
+	var _content = new LuiColumn({width: 600}).setGap(12).setFlexShrink(0).addContent([
+		new LuiText({value: "Scroll down with the wheel, or hold Shift to scroll across.", height: 32}),
+		new LuiRow({height: 64}).setFlexShrink(0).addContent([
+			new LuiImage({value: sIconKey, width: 64, height: 64}),
+			new LuiInput({placeholder: "Type here"}),
+			new LuiCheckbox({text: "Enable option"}),
+			new LuiToggleButton({text: "Top right"})
+		]),
+		new LuiSlider({value: 40, height: 40}).setFlexShrink(0),
+		new LuiProgressBar({value: 65, height: 32}).setFlexShrink(0),
+		new LuiBox({height: 120, color: #304A64, alpha: 1}).setFlexShrink(0),
+		new LuiText({value: "Bottom row", height: 32}).setFlexShrink(0),
+		new LuiRow({height: 48}).setFlexShrink(0).addContent([
+			new LuiCheckbox({text: "Bottom left"}),
+			new LuiToggleSwitch({text: "Bottom right"})
+		])
+	]);
+	var _panel = new LuiPanel({scroll_x: true, scroll_y: true}).setPadding(8).addContent(_content);
+	my_ui.addContent(
+		new LuiWindow({x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300,
+			min_width: 300, min_height: 300, title: "Two-axis scrolling", allow_resize: true})
+			.setCacheAsSurface(true).addContent(_panel)
+	);
+}
+
 // Add elements to first panel and init some new here
 my_panel.addContent([
 	new LuiText({value: "First panel", text_halign: fa_center, scale_to_fit: true}),
@@ -162,9 +190,14 @@ my_panel.addContent([
 	new LuiRow().addContent([
 		new LuiCheckbox({text: "Checkbox"}), new LuiToggleSwitch({text: "ToggleSwitch"}).bindVariable(self, "demo_loading_state"), new LuiToggleButton({text: "ToggleButton"})
 	]),
-	new LuiButton({text: "Create login window"}).addEvent(LUI_EV_CLICK, function () {
-		oDemo.createNewLoginWindow();
-	}),
+	new LuiRow().addContent([
+		new LuiButton({text: "Create login window"}).addEvent(LUI_EV_CLICK, function() {
+			oDemo.createNewLoginWindow();
+		}),
+		new LuiButton({text: "Create scroll window"}).addEvent(LUI_EV_CLICK, function() {
+			oDemo.createNewScrollWindow();
+		})
+	]),
 	new LuiRow().setFlexGrow(1).setFlexAlignItems(flexpanel_align.flex_end).addContent([
 		btn_show_msg, btn_restart
 	])
@@ -494,10 +527,16 @@ render_benchmark_mode = 0;
 render_benchmark_label = "";
 inventory_inspect_message = undefined;
 render_benchmark_metrics = {};
+render_benchmark_tree_us = 0;
+render_benchmark_layout_us = 0;
 render_benchmark_frames = 0;
 render_benchmark_cache_us = 0;
 render_benchmark_draw_us = 0;
 render_benchmark_bakes = 0;
 render_benchmark_result = "";
+list_benchmark_panel = undefined;
+list_benchmark_scroll = false;
+list_benchmark_direction = -1;
+list_benchmark_saved_alpha = undefined;
 
 alarm[0] = 1;

@@ -43,8 +43,7 @@ function _luiTransformRect(_m, _x1, _y1, _x2, _y2) {
 
 /// Return the element's child clip in the coordinates transformed by _m.
 function _luiElementClipRect(_el, _m) {
-	var _style = _el.getStyle();
-	var _o = is_undefined(_style) ? _el.render_region_offset : _style.render_region_offset;
+	var _o = _el._getClipInsets();
 	return _luiTransformRect(_m,
 		_el.x + _o.left, _el.y + _o.top,
 		_el.x + _el.width - _o.right, _el.y + _el.height - _o.bottom);
@@ -52,8 +51,7 @@ function _luiElementClipRect(_el, _m) {
 
 /// Writes the intersection of the parent clip and the transformed child clip into an existing array.
 function _luiClipChildrenInto(_dst, _clip, _el, _m) {
-	var _style = _el.getStyle();
-	var _o = is_undefined(_style) ? _el.render_region_offset : _style.render_region_offset;
+	var _o = _el._getClipInsets();
 	var _x1 = _el.x + _o.left;
 	var _y1 = _el.y + _o.top;
 	var _x2 = _el.x + _el.width - _o.right;

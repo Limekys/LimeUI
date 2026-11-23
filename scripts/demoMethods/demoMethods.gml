@@ -153,6 +153,19 @@ function demoSelectInventoryItem(_card) {
 	_details.description.setText(_item.description);
 }
 
+///@desc Adds a fixed workload to the benchmark tab and returns its scroll panel.
+///@arg {Struct} _tab Benchmark tab
+///@return {Struct} Panel containing the benchmark rows
+function demoBuildListBenchmark(_tab) {
+	var _rows = array_create(1000);
+	for (var i = 0; i < array_length(_rows); i++) {
+		_rows[i] = new LuiButton({text: "Benchmark row", height: 32}).setFlexShrink(0);
+	}
+	var _panel = new LuiPanel({scroll_y: true}).setGap(0).addContent(_rows);
+	_tab.addContent(_panel);
+	return _panel;
+}
+
 function demoStressTest() {
 	makeRandomColor = function() {
 		return make_color_hsv(irandom(255), irandom_range(128,255), 255);

@@ -27,6 +27,8 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_y = -1;
 	self._screen_grid = [];
 	self.elements_to_update_flex = [];
+	self._scroll_updates = [];
+	self._layout_revision = 0;
 	self._baking = false;
 	self._backdrop_surface = -1;
 	self._backdrop_blur_surface = -1;
@@ -155,11 +157,17 @@ function LuiMain() : LuiBase() constructor {
 	// FRAME UPDATE
 
 	self.base_update = method(self, update);
-	self.update = function() {
+	///@arg {Struct} [_metrics] Optional output for tree and layout CPU timings in microseconds
+	self.update = function(_metrics = undefined) {
+		var _measure = is_struct(_metrics);
+		var _tree_start = _measure ? get_timer() : 0;
 
 		//var _t = get_timer();
 		// Update all elements
 		self.base_update();
+		if _measure {
+			_metrics.tree_us = get_timer() - _tree_start;
+		}
 		self._updatePopups();
 		var _mouse_pressed = mouse_check_button_pressed(mb_left) || mouse_check_button_pressed(mb_right)
 			|| mouse_check_button_pressed(mb_middle);
@@ -360,11 +368,13 @@ function LuiMain() : LuiBase() constructor {
 
 		//_t = get_timer();
 
+		var _layout_start = _measure ? get_timer() : 0;
+
 		// Update layout and all flex data
 		if self.needs_update_flex {
 			self.needs_update_flex = false;
 			self._calculateLayout();
-			self._updateFlex(self.flex_node);
+			self._updateFlex();
 		}
 
 		// Apply callback-generated requests only after recalculating their layout.
@@ -376,11 +386,23 @@ function LuiMain() : LuiBase() constructor {
 			while array_length(_pending) > 0 {
 				var _e = array_pop(_pending);
 				if is_undefined(_e) || _e.is_destroyed continue;
-				_e._updateFlex(_e.flex_node);
+				_e._updateFlex();
 			}
 		}
 
-		//luiProf("4_flex", _t);
+		var _scrolled = self._scroll_updates;
+		self._scroll_updates = [];
+		for (var i = 0; i < array_length(_scrolled); i++) {
+			var _container = _scrolled[i];
+			if !_container.is_destroyed {
+				_container.updateMainUiSurface();
+				_container._updateFlex(true);
+			}
+		}
+
+		if _measure {
+			_metrics.layout_us = get_timer() - _layout_start;
+		}
 	}
 
 	// FRAME RENDER
@@ -413,7 +435,7 @@ function LuiMain() : LuiBase() constructor {
 			if self.needs_update_flex {
 				self.needs_update_flex = false;
 				self._calculateLayout();
-				self._updateFlex(self.flex_node);
+				self._updateFlex();
 			}
 
 			// Root container is always visible
@@ -663,7 +685,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		if is_undefined(_search.origin) && !is_undefined(_search.best) return;
 
-		var _can_reveal = _inside_scroll || is_instanceof(_element, LuiScrollPanel);
+		var _can_reveal = _inside_scroll || !is_undefined(_element._scroll_owner);
 		var _children = _element.content;
 		for (var i = 0; i < array_length(_children); i++) {
 			// Root contains registered modals, which are searched separately.
@@ -701,16 +723,12 @@ function LuiMain() : LuiBase() constructor {
 	///@ignore
 	static _revealKeyboardFocus = function(_element) {
 		var _bounds = _element.getLayoutBounds();
-		var _top = _bounds.top;
-		var _bottom = _top + _bounds.height;
-		var _parent = _element.parent;
-		while !is_undefined(_parent) && _parent != self {
-			if is_instanceof(_parent, LuiScrollPanel) {
-				var _shift = _parent._revealFocusBounds(_top, _bottom);
-				_top += _shift;
-				_bottom += _shift;
+		var _node = _element;
+		while !is_undefined(_node) {
+			if !is_undefined(_node._scroll_owner) {
+				_node._scroll_owner._revealFocusBounds(_bounds);
 			}
-			_parent = _parent.parent;
+			_node = _node.parent;
 		}
 	}
 
@@ -870,6 +888,8 @@ function LuiMain() : LuiBase() constructor {
 		for (var i = array_length(_cell) - 1; i >= 0; --i) {
 			var _e = _cell[i];
 			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
+			var _region = _e.view_region;
+			if _mouse_x < _region.x1 || _mouse_x >= _region.x2 || _mouse_y < _region.y1 || _mouse_y >= _region.y2 continue;
 			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
 			// Not above the current best: skip without the expensive hover checks
 			if !is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0 continue;

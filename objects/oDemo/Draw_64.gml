@@ -7,6 +7,8 @@ if enable_alpha_test {
 
 if render_benchmark_frames > 0 {
 	my_ui.render(render_benchmark_metrics);
+	render_benchmark_tree_us += render_benchmark_metrics.tree_us;
+	render_benchmark_layout_us += render_benchmark_metrics.layout_us;
 	render_benchmark_cache_us += render_benchmark_metrics.cache_us;
 	render_benchmark_draw_us += render_benchmark_metrics.draw_us;
 	render_benchmark_bakes += render_benchmark_metrics.bakes;
@@ -15,7 +17,9 @@ if render_benchmark_frames > 0 {
 	if render_benchmark_frames == 0 {
 		var _cache_ms = render_benchmark_cache_us / 180000;
 		var _draw_ms = render_benchmark_draw_us / 180000;
-		render_benchmark_result = $"[{render_benchmark_label}] 180 frames | cache {string_format(_cache_ms, 1, 3)} ms | draw {string_format(_draw_ms, 1, 3)} ms | total {string_format(_cache_ms + _draw_ms, 1, 3)} ms | bakes {render_benchmark_bakes}";
+		var _tree_ms = render_benchmark_tree_us / 180000;
+		var _layout_ms = render_benchmark_layout_us / 180000;
+		render_benchmark_result = $"[{render_benchmark_label}] 180 frames | tree {string_format(_tree_ms, 1, 3)} ms | layout {string_format(_layout_ms, 1, 3)} ms | cache {string_format(_cache_ms, 1, 3)} ms | draw {string_format(_draw_ms, 1, 3)} ms | render {string_format(_cache_ms + _draw_ms, 1, 3)} ms | bakes {render_benchmark_bakes}";
 		show_debug_message(render_benchmark_result);
 	}
 } else {
@@ -24,6 +28,9 @@ if render_benchmark_frames > 0 {
 
 if render_benchmark_label != "" {
 	var _switch_hint = is_undefined(inventory_inspect_message) ? "F6: Switch cache mode" : "F8: Toggle blur";
+	if tabs.active_tab == tab_list_benchmark {
+		_switch_hint = "F8: Toggle scrolling";
+	}
 	DrawSetText(c_yellow, fDebug, fa_left, fa_bottom, 1);
 	draw_text(4, display_get_gui_height() - 46, $"{render_benchmark_label} | {_switch_hint} | F7: Record 180 frames");
 	var _status = render_benchmark_frames > 0 ? $"Recording: {render_benchmark_frames} frames left" : render_benchmark_result;

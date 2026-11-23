@@ -64,6 +64,9 @@ function LuiBase(_params = {}) constructor {
 
 	// Element tree
 	self.parent = undefined;
+	self._scroll_owner = undefined;
+	self._flex_bounds = undefined;
+	self._child_bounds_stale = true;
 	self.content = [];
 	self.delayed_content = [];
 	self.container = self; 								//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
@@ -476,7 +479,17 @@ function LuiBase(_params = {}) constructor {
 		if self.is_destroyed || is_undefined(self.flex_node) {
 			return {left: 0, top: 0, width: 0, height: 0};
 		}
-		return flexpanel_node_layout_get_position(self.flex_node, _relative);
+		var _bounds = flexpanel_node_layout_get_position(self.flex_node, _relative);
+		var _node = self;
+		while !is_undefined(_node) {
+			if !is_undefined(_node._scroll_owner) {
+				_bounds.left += _node._scroll_owner.scroll_offset_x;
+				_bounds.top += _node._scroll_owner.scroll_offset_y;
+			}
+			if _relative return _bounds;
+			_node = _node.parent;
+		}
+		return _bounds;
 	}
 
 	///@desc Returns the width from the last Flex layout in GUI units.
@@ -1614,6 +1627,7 @@ function LuiBase(_params = {}) constructor {
 	static _calculateLayout = function() {
 		if !is_undefined(self.main_ui) {
 			flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+			self.main_ui._layout_revision++;
 			return true;
 		}
 		return false;
@@ -1621,78 +1635,116 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Update position, size and z depth for specified flex node
 	///@ignore
-	static _updateFlex = function(_node) {
-
-		if is_undefined(_node) return;
-
-		var _pos = flexpanel_node_layout_get_position(_node, false);
-		var _data = flexpanel_node_get_data(_node);
-		var _element = _data.element;
+	static _updateFlex = function(_scroll_only = false, _offset_x = undefined, _offset_y = 0) {
+		if is_undefined(self.flex_node) return;
+		if is_undefined(_offset_x) {
+			_offset_x = 0;
+			var _ancestor = self.parent;
+			while !is_undefined(_ancestor) {
+				if !is_undefined(_ancestor._scroll_owner) {
+					_offset_x += _ancestor._scroll_owner.scroll_offset_x;
+					_offset_y += _ancestor._scroll_owner.scroll_offset_y;
+				}
+				_ancestor = _ancestor.parent;
+			}
+		}
+		if !is_undefined(self._scroll_owner) {
+			_offset_x += self._scroll_owner.scroll_offset_x;
+			_offset_y += self._scroll_owner.scroll_offset_y;
+		}
+		var _scroll_owner = self._scroll_owner;
+		var _vertical_scroll = !is_undefined(_scroll_owner) && _scroll_owner.scroll_y && !_scroll_owner.scroll_x;
+		if !_scroll_only || is_undefined(self._flex_bounds)
+			|| (_vertical_scroll && _scroll_owner._scroll_layout_revision != self.main_ui._layout_revision) {
+			self._flex_bounds = flexpanel_node_layout_get_position(self.flex_node, false);
+		}
+		var _pos = self._flex_bounds;
+		var _left = _pos.left + _offset_x;
+		var _top = _pos.top + _offset_y;
 
 		// Check position change
-		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
+		var _position_changed = (self.x != _left || self.y != _top);
 		// Check size change
-		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
+		var _size_changed = (self.width != _pos.width || self.height != _pos.height);
 
-		_element.x = _pos.left;
-		_element.y = _pos.top;
-		_element.width = _pos.width;
-		_element.height = _pos.height;
-		if _element.start_x == -1 {
-			_element.start_x = _element.x;
+		self.x = _left;
+		self.y = _top;
+		self.width = _pos.width;
+		self.height = _pos.height;
+		if self.start_x == -1 {
+			self.start_x = self.x;
 		}
-		if _element.start_y == -1 {
-			_element.start_y = _element.y;
+		if self.start_y == -1 {
+			self.start_y = self.y;
 		}
 
-		_element._updateViewRegion();
+		var _was_visible = self.is_visible_in_region;
+		self._updateViewRegion();
 
-		_element._updateScreenGrid();
+		if _was_visible || self.is_visible_in_region {
+			self._updateScreenGrid();
+		}
 
 		// On position change
 		if _position_changed {
-			_element._dispatchEvent(LUI_EV_POSITION_UPDATE);
-			_element.updateMainUiSurface();
-			_element.prev_x = _element.x;
-			_element.prev_y = _element.y;
+			self._dispatchEvent(LUI_EV_POSITION_UPDATE);
+			if _scroll_only {
+				self._is_cache_dirty = true;
+			} else {
+				self.updateMainUiSurface();
+			}
+			self.prev_x = self.x;
+			self.prev_y = self.y;
 		}
 
 		// On size change
 		if _size_changed {
-			_element._dispatchEvent(LUI_EV_SIZE_UPDATE);
-			_element.updateMainUiSurface();
-			_element.prev_w = _element.width;
-			_element.prev_h = _element.height;
+			self._dispatchEvent(LUI_EV_SIZE_UPDATE);
+			self.updateMainUiSurface();
+			self.prev_w = self.width;
+			self.prev_h = self.height;
 		}
 
 		// Update previous view region
-		_element.prev_view_region.x1 = _element.view_region.x1;
-		_element.prev_view_region.x2 = _element.view_region.x2;
-		_element.prev_view_region.y1 = _element.view_region.y1;
-		_element.prev_view_region.y2 = _element.view_region.y2;
+		self.prev_view_region.x1 = self.view_region.x1;
+		self.prev_view_region.x2 = self.view_region.x2;
+		self.prev_view_region.y1 = self.view_region.y1;
+		self.prev_view_region.y2 = self.view_region.y2;
 
-		if _element.is_visible_in_region == false {
-			for (var i = 0, n = array_length(_element.content); i < n; i++) {
-				_element.content[i]._propagateVisibleRegionState();
+		if !self.is_visible_in_region {
+			if !_scroll_only {
+				self._child_bounds_stale = true;
+			}
+			for (var i = 0, n = array_length(self.content); i < n; i++) {
+				self.content[i]._propagateVisibleRegionState();
 			}
 			return;
 		}
 
-		// Update childrens
-		var _children_count = flexpanel_node_get_num_children(_node);
-		for (var i = 0; i < _children_count; i++) {
-			var _child = flexpanel_node_get_child(_node, i);
-			_element._updateFlex(_child);
+		var _reuse_children = _scroll_only && !self._child_bounds_stale;
+		self._child_bounds_stale = false;
+		if _vertical_scroll {
+			_scroll_owner._updateScrollRows(_reuse_children, _offset_x, _offset_y);
+			return;
+		}
+		for (var i = 0, n = array_length(self.content); i < n; i++) {
+			self.content[i]._updateFlex(_reuse_children, _offset_x, _offset_y);
 		}
 	}
 
 	// Visible regions and screen grid
 
 	///@ignore
+	static _getClipInsets = function() {
+		var _style = self.getStyle();
+		return is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
+	}
+
+	///@ignore
 	static _updateViewRegion = function() {
 
 		// Prevent this element from being updated if it has just been added
-		if self.start_x == -1 || self.start_y == -1 return false;
+		if is_undefined(self._flex_bounds) return false;
 
 		self.view_region.x1 = self.x;
 		self.view_region.y1 = self.y;
@@ -1721,8 +1773,7 @@ function LuiBase(_params = {}) constructor {
 
 		// Region for own children
 		if self.draw_content_in_cutted_region {
-			var _style = self.getStyle();
-			var _o = is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
+			var _o = self._getClipInsets();
 			_cr.x1 = max(_pr.x1, self.x + _o.left);
 			_cr.y1 = max(_pr.y1, self.y + _o.top);
 			_cr.x2 = min(_pr.x2, self.x + self.width - _o.right);
@@ -1735,7 +1786,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Recursively forces an invisible state onto itself and all descendants
 	///@ignore
 	static _propagateVisibleRegionState = function() {
-		if !self.is_visible_in_region return;
+		if self.is_destroyed || !self.is_visible_in_region return;
 
 		self.is_visible_in_region = false;
 
