@@ -98,10 +98,12 @@ my_ui.addContent([
 tab_panels = new LuiTab({text: "Home"});
 tab_search = new LuiTab({text: "Search"});
 tab_sprites = new LuiTab({text: "Sprites"});
+tab_inventory = new LuiTab({text: "Inventory"});
 tab_about = new LuiTab({text: "About"});
 
 // Add tab's to Tabs
-tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_about]);
+tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_inventory, tab_about]);
+demoBuildInventory(tab_inventory);
 
 // Create some elements
 demo_loading = new LuiProgressBar({value: demo_loading_value, rounding: 1}).bindVariable(self, "demo_loading_value");
@@ -112,12 +114,15 @@ btn_restart = new LuiButton({text: "Restart"}).setColor(merge_color(#FF7777, c_b
 	game_restart();
 });
 
-// Function to create a draggable windows
-createNewLoginWindow = function () {
-	// Create draggable panel (window) with some content
+// Create a cached draggable window for the render demo.
+createNewLoginWindow = function() {
+	var _image = new LuiImage({value: sIconKey, width: 64, height: 64});
+	_image.visual_scale_x = 8;
+	_image.visual_scale_y = 8;
+
 	my_ui.addContent([
-		new LuiWindow({name: "window_test", x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300, min_width: 300, min_height: 300, title: "Secret database", allow_resize: true}).centerContent().addContent([
-			new LuiImage({name: "test_image", value: sIconKey, width: 64, height: 64}),
+		new LuiWindow({x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300, min_width: 300, min_height: 300, title: "Secret database", allow_resize: true}).setCacheAsSurface(true).centerContent().addContent([
+			_image,
 			new LuiRow().addContent([
 				new LuiInput({placeholder: "login"})
 			]),
@@ -128,12 +133,7 @@ createNewLoginWindow = function () {
 				oDemo.my_ui.alert({text: "Wrong password!"});
 			})
 		])
-	])
-	
-	my_ui.getElement("window_test").setCacheAsSurface(true);
-	my_ui.getElement("window_test").visual_alpha = 0.9;
-	my_ui.getElement("test_image").visual_scale_y = 8;
-	my_ui.getElement("test_image").visual_scale_x = 8;
+	]);
 }
 
 // Add elements to first panel and init some new here
@@ -310,7 +310,7 @@ my_panel_3.addContent([
 
 		tab_panels.addContent([
 			new LuiText({value: "Scroll panel with different elements", scale_to_fit: true}).setTextHalign(fa_center),
-			new LuiScrollPanel({name: "firstScrollPanel"}).addContent([
+			new LuiScrollPanel({name: "firstScrollPanel"}).setCacheAsSurface(true).addContent([
 				
 				new LuiInput({placeholder: "only numbers allowed", input_mode: LUI_INPUT_MODE.numbers, allowed_chars: "-."}).addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
 					if _e.get() == "" _e.setIncorrect(true) else _e.setIncorrect(false);
@@ -334,7 +334,9 @@ my_panel_3.addContent([
 					]),
 					new LuiPanel().addContent([
 						new LuiText({value: "Nested panel 2.2"}),
-						new LuiButton({text: "Press me!"}),
+						new LuiButton({text: "Change cached text"}).addEvent(LUI_EV_CLICK, function(_e) {
+							_e.setText(_e.text == "Change cached text" ? "Cached text changed" : "Change cached text");
+						}),
 						new LuiPanel().addContent([
 							new LuiText({value: "Nested panel 3.2"}),
 							new LuiRow().addContent([
@@ -423,15 +425,25 @@ my_panel_3.addContent([
 
 	#region Add some sprites in tab_sprites
 	
-		spr_car_1 = new LuiImage({value: sCar, name: "sCar"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
-		spr_car_2 = new LuiImage({value: sCar, maintain_aspect: false, name: "sCar_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
-		spr_car_3 = new LuiImage({value: sHamburger, name: "sHamburger"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
-		spr_car_4 = new LuiImage({value: sHamburger, maintain_aspect: false, name: "sHamburger_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_test_1 = new LuiImage({value: sCar, name: "sCar"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_test_2 = new LuiImage({value: sCar, maintain_aspect: false, name: "sCar_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_test_3 = new LuiImage({value: sHamburger, name: "sHamburger"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
+		spr_test_4 = new LuiImage({value: sHamburger, maintain_aspect: false, name: "sHamburger_stretched"}).addEvent(LUI_EV_CLICK, function(_e) {print($"Clicked on image {_e.name}!")});
 		tab_sprites.addContent([
 			new LuiRow().setFlexGrow(1).addContent([
-				spr_car_1, spr_car_2, spr_car_3, spr_car_4
+				spr_test_1, spr_test_2, spr_test_3, spr_test_4
 			])
 		]);
+
+		// Серый заблокированный предмет (вся карточка целиком)
+		//var _mat_gray = luiMaterial(shd_lui_grayscale, function(_e, _m) {
+			//shader_set_uniform_f(_m.u_amount, _e.getData("gray_amount") ?? 1);
+		//}, true);
+		//_mat_gray.u_amount = shader_get_uniform(shd_lui_grayscale, "u_amount");
+		//spr_test_4.setMaterial(_mat_gray);
+
+		// Круглый портрет: скругление группы по маске
+		//spr_test_3.setCachePadding(0).setMaterial(luiMaskMaterial(shd_lui_mask, spr_mask_circle));
 	
 	#endregion
 
@@ -475,5 +487,16 @@ my_ui.addContent([
 
 my_ui.getElement("firstScrollPanel").visual_alpha = 0.5;
 tabs.visual_alpha = 0.75;
+
+// Compare cache modes on the opaque first panel.
+render_benchmark_panel = my_panel;
+render_benchmark_original_cache = render_benchmark_panel.cache_as_surface;
+render_benchmark_mode = 0;
+render_benchmark_metrics = {};
+render_benchmark_frames = 0;
+render_benchmark_cache_us = 0;
+render_benchmark_draw_us = 0;
+render_benchmark_bakes = 0;
+render_benchmark_result = "";
 
 alarm[0] = 1;

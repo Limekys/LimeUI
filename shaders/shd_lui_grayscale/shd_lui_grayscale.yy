@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_lui_grayscale",
+  "name":"shd_lui_grayscale",
+  "parent":{
+    "name":"Core",
+    "path":"folders/Limekys/LimeUI/Core.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

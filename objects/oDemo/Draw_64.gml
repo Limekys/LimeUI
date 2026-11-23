@@ -5,8 +5,31 @@ if enable_alpha_test {
 	draw_set_alpha(Wave(0, 1, 1.0, 0));
 }
 
-// UI render
-my_ui.render();
+if render_benchmark_frames > 0 {
+	my_ui.render(render_benchmark_metrics);
+	render_benchmark_cache_us += render_benchmark_metrics.cache_us;
+	render_benchmark_draw_us += render_benchmark_metrics.draw_us;
+	render_benchmark_bakes += render_benchmark_metrics.bakes;
+	render_benchmark_frames--;
+
+	if render_benchmark_frames == 0 {
+		var _mode = render_benchmark_mode == 1 ? "Direct" : "Cached";
+		var _cache_ms = render_benchmark_cache_us / 180000;
+		var _draw_ms = render_benchmark_draw_us / 180000;
+		render_benchmark_result = $"[First panel / {_mode}] 180 frames | cache {string_format(_cache_ms, 1, 3)} ms | draw {string_format(_draw_ms, 1, 3)} ms | total {string_format(_cache_ms + _draw_ms, 1, 3)} ms | bakes {render_benchmark_bakes}";
+		show_debug_message(render_benchmark_result);
+	}
+} else {
+	my_ui.render();
+}
+
+if render_benchmark_mode != 0 {
+	var _mode_name = render_benchmark_mode == 1 ? "Direct" : "Cached";
+	DrawSetText(c_yellow, fDebug, fa_left, fa_bottom, 1);
+	draw_text(4, display_get_gui_height() - 46, $"First panel benchmark: {_mode_name} | F6: Switch mode | F7: Record 180 frames");
+	var _status = render_benchmark_frames > 0 ? $"Recording: {render_benchmark_frames} frames left" : render_benchmark_result;
+	draw_text(4, display_get_gui_height() - 25, _status);
+}
 
 // Debug info in demo
 DrawSetText(c_red, fDebug, fa_left, fa_bottom, 1);

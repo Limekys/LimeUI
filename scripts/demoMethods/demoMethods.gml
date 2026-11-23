@@ -1,3 +1,99 @@
+///@desc Builds the inventory screen in the supplied demo tab.
+///@arg {Struct} _tab Inventory tab
+function demoBuildInventory(_tab) {
+	var _catalog = [
+		{name: "Wayfarer Key", sprite: sIconKey, description: "Opens supply lockers along the old trade road."},
+		{name: "Supply Crate", sprite: sBoxDemo, description: "Holds spare tools and rations for a long expedition."},
+		{name: "Trail Rations", sprite: sHamburger, description: "A packed meal for the next stop on the route."},
+		{name: "Scout Rover", sprite: sCar, description: "A compact vehicle for scouting unmarked routes."},
+		{name: "Survey Dial", sprite: sIconPalette, description: "A navigation aid calibrated for rough terrain."},
+		{name: "Field Notes", sprite: sIconInfo, description: "A set of observations from earlier expeditions."},
+		{name: "Route Marker", sprite: sIconHome, description: "Marks a safe place to regroup after sundown."},
+		{name: "Signal Lens", sprite: sIconSearch, description: "Focuses light for long-distance signals."}
+	];
+	var _tiers = [
+		{name: "Common", color: #90A7B5},
+		{name: "Uncommon", color: #60C9B0},
+		{name: "Rare", color: #77A4EB},
+		{name: "Epic", color: #C29AE8}
+	];
+	var _grid = new LuiScrollPanel().setGap(8);
+	var _details_panel = new LuiPanel().setPadding(12).setGap(6).setCacheAsSurface(true);
+	var _details = {
+		selected: undefined,
+		icon: new LuiImage({height: 72}).setMouseIgnore(),
+		title: new LuiText({height: 28, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore(),
+		summary: new LuiText({height: 24}).setMouseIgnore(),
+		description: new LuiText({height: 56, text_valign: fa_top, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setMouseIgnore()
+	};
+	_details_panel.addContent([_details.title, _details.summary, _details.icon, _details.description]);
+
+	for (var i = 0; i < array_length(_tiers); i++) {
+		var _tier = _tiers[i];
+		for (var _start = 0; _start < array_length(_catalog); _start += 4) {
+			var _cards = [];
+			for (var _column = 0; _column < 4; _column++) {
+				var _entry = _catalog[_start + _column];
+				var _item = {
+					name: _entry.name,
+					sprite: _entry.sprite,
+					description: _entry.description,
+					tier: _tier.name,
+					color: _tier.color,
+					quantity: 1 + ((_start + _column + i * 3) mod 9)
+				};
+				var _card = new LuiPanel({height: 92}).setPadding(5).setGap(3).setFlexGrow(1)
+					.setLocalStyle({color_primary: #24374A, color_border: _item.color, color_text: #E6EFF8, sprite_panel_border: sUI_panel_border})
+					.setData("item", _item).setData("details", _details)
+					.addContent([
+						new LuiImage({value: _item.sprite, height: 42}).setMouseIgnore(),
+						new LuiText({value: _item.name, height: 18, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore(),
+						new LuiText({value: $"x{_item.quantity}", height: 15, text_halign: fa_center}).setMouseIgnore()
+							.setLocalStyle({color_text: _item.color})
+					])
+					.addEvent(LUI_EV_CLICK, function(_e) {
+						demoSelectInventoryItem(_e);
+					});
+				if is_undefined(_details.selected) {
+					demoSelectInventoryItem(_card);
+				}
+				array_push(_cards, _card);
+			}
+			_grid.addContent(new LuiRow({height: 92}).setGap(8).setFlexShrink(0).addContent(_cards));
+		}
+	}
+
+	var _sidebar = new LuiScrollPanel().addContent(_details_panel);
+	var _layout = new LuiRow().setGap(10).setFlexGrow(1).addContent([_grid, _sidebar, [0.68, 0.32]]);
+	_tab.addContent(_layout);
+	_layout.addEvent(LUI_EV_SHOW, function(_e) {
+		_e.visual_alpha = 0;
+		_e.visual_y = 10;
+		_e.main_ui.animate(_e, "visual_alpha", 1, 0.24);
+		_e.main_ui.animate(_e, "visual_y", 0, 0.24);
+	});
+}
+
+///@desc Highlights the selected card and updates the inventory details.
+///@arg {Struct} _card Inventory card
+function demoSelectInventoryItem(_card) {
+	var _details = _card.getData("details");
+	if _details.selected == _card return;
+
+	if !is_undefined(_details.selected) {
+		var _previous = _details.selected;
+		_previous.setLocalStyle({color_primary: #24374A, color_border: _previous.getData("item").color});
+	}
+
+	var _item = _card.getData("item");
+	_details.selected = _card;
+	_card.setLocalStyle({color_primary: #47637D, color_border: #F5D594});
+	_details.icon.setSprite(_item.sprite);
+	_details.title.setText(_item.name);
+	_details.summary.setText($"{_item.tier}  |  Qty {_item.quantity}").setLocalStyle({color_text: _item.color});
+	_details.description.setText(_item.description);
+}
+
 function demoStressTest() {
 	makeRandomColor = function() {
 		return make_color_hsv(irandom(255), irandom_range(128,255), 255);

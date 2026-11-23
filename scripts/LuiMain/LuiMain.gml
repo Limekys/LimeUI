@@ -25,6 +25,9 @@ function LuiMain() : LuiBase() constructor {
 	self._screen_grid = [];
 	self.elements_to_update_flex = [];
 	self._baking = false;
+	self._cache_bakes = 0;
+	self._clip_stack = [];     // Reusable clip rectangles, one per clipping depth
+	self._clip_depth = -1;
 	
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
@@ -305,7 +308,15 @@ function LuiMain() : LuiBase() constructor {
 	}
 	
 	// RENDER
-	self.render = function() {
+	///@arg {Struct} [_metrics] Optional output for CPU timings in microseconds and successful cache bakes
+	self.render = function(_metrics = undefined) {
+		var _measure = is_struct(_metrics);
+		if _measure {
+			_metrics.cache_us = 0;
+			_metrics.draw_us = 0;
+			_metrics.bakes = 0;
+			self._cache_bakes = 0;
+		}
 		var _prev_alpha = draw_get_alpha();
 		if LUI_FORCE_ALPHA_1 { draw_set_alpha(1); }
 		
@@ -327,16 +338,18 @@ function LuiMain() : LuiBase() constructor {
 			// Root container is always visible
 			self.is_visible_in_region = true;
 			
-			//var _t = get_timer();
+			var _cache_start = _measure ? get_timer() : 0;
 			
 			// 1. Update cache surfaces (bottom-up)
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				self._prepareCaches(self.content[i]);
 			}
 			
-			//luiProf("5_caches", _t);
-			
-			//_t = get_timer();
+			var _draw_start = _measure ? get_timer() : 0;
+			if _measure {
+				_metrics.cache_us = _draw_start - _cache_start;
+				_metrics.bakes = self._cache_bakes;
+			}
 			
 			// 2. Draw the tree directly (children are already in z order)
 			var _gui_w = display_get_gui_width();
@@ -357,7 +370,9 @@ function LuiMain() : LuiBase() constructor {
 			gpu_set_scissor(0, 0, _gui_w, _gui_h);
 			matrix_set(matrix_world, _identity_matrix);
 			
-			//luiProf("6_draw", _t);
+			if _measure {
+				_metrics.draw_us = get_timer() - _draw_start;
+			}
 			
 			// Draw debug rectangles of elements
 			if global.lui_debug_mode != 0 {
@@ -466,9 +481,16 @@ function LuiMain() : LuiBase() constructor {
 		return _best;
 	}
 	
+	///@desc Bottom-up: decides which elements use a cache this frame and (re)bakes dirty ones.
+	/// Cache is used for: explicit cache_as_surface, group alpha (visual_alpha < 1 with children), group material.
 	///@ignore
 	static _prepareCaches = function(_el) {
-		if (!_el.visible || _el.is_destroyed || !_el.is_visible_in_region) return;
+		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
+
+		if _el._last_visual_alpha != _el.visual_alpha {
+			_el._last_visual_alpha = _el.visual_alpha;
+			_el._invalidateAncestorCaches();
+		}
 		
 		var _has_kids = array_length(_el.content) > 0;
 		if (_has_kids) {
@@ -477,86 +499,95 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 		
-		var _group_alpha = _has_kids && _el.visual_alpha < 0.999 && _el.visual_alpha > 0;
-		if ((_el.cache_as_surface || _group_alpha)) {
-			_el._cache_active = true;
-			self._bakeCache(_el);
-		} else if (_el._cache_active) {
+		var _mat = _el.material;
+		var _group_mat = !is_undefined(_mat) && _mat.group;
+		var _group_alpha = _has_kids && _el.visual_alpha < 1 && _el.visual_alpha > 0;
+		var _was_active = _el._cache_active;
+		if _el.cache_as_surface || _group_alpha || _group_mat {
+			_el._cache_active = self._bakeCache(_el);
+		} else if _was_active {
 			_el._cache_active = false;
 			_el._freeCache();
 		}
+		if _was_active && !_el._cache_active {
+			_el._invalidateAncestorCaches();
+		}
 	}
 	
-	///@desc Renders the element (own draw + children) into its cached surface.
-	/// The element's own visual transform and alpha are NOT baked: they are applied when the surface is blitted.
+	///@desc Renders the element and its children into a premultiplied surface.
+	/// The root's visual transform and alpha are applied only on blit.
 	///@ignore
 	static _bakeCache = function(_el) {
 		var _pad = _el.cache_padding;
 		var _ox = floor(_el.x);
 		var _oy = floor(_el.y);
-		var _w = ceil(_el.x + _el.width) - _ox + _pad * 2;
-		var _h = ceil(_el.y + _el.height) - _oy + _pad * 2;
+		var _w = ceil(ceil(_el.x + _el.width) - _ox + _pad * 2);
+		var _h = ceil(ceil(_el.y + _el.height) - _oy + _pad * 2);
 		
-		// Too big / empty: fall back to direct drawing
-		if (_w < 1 || _h < 1 || _w > LUI_CACHE_MAX_SIZE || _h > LUI_CACHE_MAX_SIZE) {
-			_el._cache_active = false;
+		if _w < 1 || _h < 1 || _w > LUI_CACHE_MAX_SIZE || _h > LUI_CACHE_MAX_SIZE {
 			_el._freeCache();
-			return;
+			return false;
 		}
 		
-		// (Re)create surface
-		if (surface_exists(_el._cached_surface)) {
-			if (surface_get_width(_el._cached_surface) != _w || surface_get_height(_el._cached_surface) != _h) {
-				surface_resize(_el._cached_surface, _w, _h);
-				_el._is_cache_dirty = true;
+		if surface_exists(_el._cached_surface) {
+			if surface_get_width(_el._cached_surface) != _w || surface_get_height(_el._cached_surface) != _h {
+				_el._freeCache();
 			}
-		} else {
+		}
+		if !surface_exists(_el._cached_surface) {
 			_el._cached_surface = surface_create(_w, _h);
 			_el._is_cache_dirty = true;
 		}
-		
-		if (!_el._is_cache_dirty) return;
-		
-		//global.lui_bakes_frame++;
+		if !surface_exists(_el._cached_surface) return false;
+		if !_el._is_cache_dirty return true;
 		
 		var _prev_matrix = matrix_get(matrix_world);
 		var _prev_scissor = gpu_get_scissor();
 		var _prev_alpha = draw_get_alpha();
+		if !surface_set_target(_el._cached_surface) {
+			_el._freeCache();
+			return false;
+		}
 		
-		surface_set_target(_el._cached_surface);
 		draw_clear_alpha(c_black, 0);
-		
 		self._baking = true;
 		_luiBlendBake();
 		
-		// Element's top-left (+ padding) becomes (pad, pad) on the surface
 		var _m = matrix_build(_pad - _ox, _pad - _oy, 0, 0, 0, 0, 1, 1, 1);
 		var _clip = [0, 0, _w, _h];
 		matrix_set(matrix_world, _m);
 		gpu_set_scissor(0, 0, _w, _h);
-		
-		// Always alpha 1 here: element's visual_alpha is applied on blit
 		self._drawSelfAndChildren(_el, _m, 1, _clip);
 		
 		_luiBlendReset();
 		self._baking = false;
-		
 		surface_reset_target();
 		gpu_set_scissor(_prev_scissor);
 		matrix_set(matrix_world, _prev_matrix);
 		draw_set_alpha(_prev_alpha);
 		
 		_el._is_cache_dirty = false;
+		self._cache_bakes++;
+		// Ancestor surfaces may contain the old pixels or the direct-draw fallback.
+		_el._invalidateAncestorCaches();
+		return true;
 	}
-	
-	///@desc Draws a cached surface (premultiplied) with group alpha
+
+	///@desc Draws a cached surface (premultiplied) with group alpha and optional group material
 	///@ignore
 	static _blitCache = function(_el, _a) {
 		var _v = floor(255 * _a);
+		var _mat = _el.material;
+		var _group_mat = !is_undefined(_mat) && _mat.group;
+		if (_group_mat) {
+			shader_set(_mat.shader);
+			if (is_callable(_mat.apply)) _mat.apply(_el, _mat);
+		}
 		_luiBlendBlit();
 		draw_surface_ext(_el._cached_surface,
 			floor(_el.x) - _el.cache_padding, floor(_el.y) - _el.cache_padding,
 			1, 1, 0, make_colour_rgb(_v, _v, _v), _a);
+		if (_group_mat) shader_reset();
 		if (self._baking) _luiBlendBake(); else _luiBlendReset();
 	}
 	
@@ -564,30 +595,54 @@ function LuiMain() : LuiBase() constructor {
 	/// Invariant on entry: matrix_world == _pm, scissor == _clip. Restored on exit.
 	///@ignore
 	static _drawTree = function(_el, _pm, _pa, _clip) {
-		if (!_el.visible || _el.is_destroyed || !_el.is_visible_in_region) return;
+		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
 		
 		var _a = _pa * _el.visual_alpha;
 		if (_a <= 0) return;
 		
 		var _has_t = _el._hasVisualTransform();
 		var _m = _has_t ? matrix_multiply(_el._buildVisualMatrix(), _pm) : _pm;
-		if (_has_t) matrix_set(matrix_world, _m);
+		if _has_t {
+			matrix_set(matrix_world, _m);
+		}
 		
-		if (_el._cache_active && surface_exists(_el._cached_surface)) {
-			// Children are baked into the surface
+		if _el._cache_active && surface_exists(_el._cached_surface) {
 			self._blitCache(_el, _a);
 		} else {
 			self._drawSelfAndChildren(_el, _m, _a, _clip);
 		}
 		
-		if (_has_t) matrix_set(matrix_world, _pm);
+		if _has_t {
+			matrix_set(matrix_world, _pm);
+		}
+	}
+
+	///@desc Next slot of the preallocated clip stack filled with (_clip ∩ children clip of _el)
+	///@ignore
+	static _pushClip = function(_clip, _el, _m) {
+		self._clip_depth++;
+		if (self._clip_depth >= array_length(self._clip_stack)) {
+			array_push(self._clip_stack, [0, 0, 0, 0]);
+		}
+		var _c = self._clip_stack[self._clip_depth];
+		_luiClipChildrenInto(_c, _clip, _el, _m);
+		return _c;
 	}
 	
+	///@desc Own draw (with own material) + children (with clipping if the element clips its content).
+	/// Invariant on entry: matrix_world == _m, scissor == _clip. Restored on exit.
 	///@ignore
 	static _drawSelfAndChildren = function(_el, _m, _a, _clip) {
 		if (is_method(_el.draw)) {
 			draw_set_alpha(_a);
+			var _mat = _el.material;
+			var _own_mat = !is_undefined(_mat) && !_mat.group;   // group materials are applied on cache blit
+			if (_own_mat) {
+				shader_set(_mat.shader);
+				if (is_callable(_mat.apply)) _mat.apply(_el, _mat);
+			}
 			_el.draw();
+			if (_own_mat) shader_reset();
 		}
 		
 		var _kids = _el._getDrawChildren();
@@ -597,8 +652,11 @@ function LuiMain() : LuiBase() constructor {
 		var _child_clip = _clip;
 		var _clipping = _el.draw_content_in_cutted_region;
 		if (_clipping) {
-			_child_clip = _luiClipIntersect(_clip, _luiElementClipRect(_el, _m));
-			if (_child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1]) return;
+			_child_clip = self._pushClip(_clip, _el, _m);
+			if (_child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1]) {
+				self._clip_depth--;
+				return;
+			}
 			_luiApplyClip(_child_clip);
 		}
 		
@@ -606,7 +664,10 @@ function LuiMain() : LuiBase() constructor {
 			self._drawTree(_kids[i], _m, _a, _child_clip);
 		}
 		
-		if (_clipping) _luiApplyClip(_clip);
+		if (_clipping) {
+			_luiApplyClip(_clip);
+			self._clip_depth--;
+		}
 	}
 	
 	///@desc Add element to list for update flex node

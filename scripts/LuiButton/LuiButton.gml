@@ -26,6 +26,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	///@arg {string} _text
 	static setText = function(_text) {
 		self.text = _text;
+		self.updateMainUiSurface();
 		return self;
 	}
 	
@@ -33,6 +34,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	///@arg {any} _color
 	static setColor = function(_color) {
 		self.button_color = _color;
+		self.updateMainUiSurface();
 		return self;
 	}
 	
@@ -48,8 +50,9 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		self.icon.color = _color;
 		self.icon.alpha = _alpha;
 		if sprite_exists(_sprite) {
-			_calcIconSize();
+			self._calcIconSize();
 		}
+		self.updateMainUiSurface();
 		return self;
 	}
 	

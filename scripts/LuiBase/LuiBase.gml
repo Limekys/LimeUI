@@ -128,16 +128,27 @@ function LuiBase(_params = {}) constructor {
 	self.pivot_x = 0.5; // 0.0 to 1.0
 	self.pivot_y = 0.5; // 0.0 to 1.0
 	
-		// Surface Caching (Render to Texture)
-	self.cache_as_surface = false;		// явный кеш, включённый пользователем
-	self.cache_padding = 0;				// запас вокруг элемента для теней/свечения/детей за границей
-	self._cache_active = false;			// кеш реально используется в этом кадре (явный или авто для группы alpha)
+	// Surface Caching (Render to Texture)
+	self.cache_as_surface = false;		// Explicit caching requested by the caller
+	self.cache_padding = 0;				// Extra space for content extending beyond the element
+	self._cache_active = false;			// A complete cache is ready to draw
 	self._cached_surface = -1;
 	self._is_cache_dirty = true;
+	self._last_visual_alpha = self.visual_alpha;
 
-	// Порядок отрисовки детей (отсортированы по z, пересобираются лениво)
+	self.material = undefined;
+
+	// Child draw order, sorted by z when it changes
 	self._draw_children = [];
 	self._draw_order_dirty = true;
+
+	///@desc Set material (see luiMaterial)
+	///@arg {Struct} _material
+	static setMaterial = function(_material) {
+		self.material = _material;
+		self.invalidateCache();
+		return self;
+	}
 
 	///@desc Enables or disables surface caching (flattens children into a single texture)
 	///@arg {bool} _enable
@@ -157,7 +168,7 @@ function LuiBase(_params = {}) constructor {
 	///@arg {real} _padding
 	static setCachePadding = function(_padding) {
 		self.cache_padding = max(0, _padding);
-		self._is_cache_dirty = true;
+		self.invalidateCache();
 		return self;
 	}
 
