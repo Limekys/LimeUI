@@ -15,7 +15,8 @@ enum LUI_TEXT_OVERFLOW {
 /// scale_to_fit (deprecated)
 ///@arg {Struct} [_params] Struct with parameters
 function LuiText(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = string(_params[$ "value"] ?? "");
 	self.text_halign = _params[$ "text_halign"] ?? fa_left;
 	self.text_valign = _params[$ "text_valign"] ?? fa_middle;
@@ -31,6 +32,8 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 	self._lc_overflow = -1;
 	self._lc_scale = 1;
 	
+	// PUBLIC API
+
 	///@desc Set text
 	///@arg {string} _text
 	static setText = function(_text) {
@@ -67,6 +70,8 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// INTERNALS
+
 	///@desc Recalculates text scale only if text, size, font or overflow mode changed
 	///@ignore
 	static _updateScaleCache = function() {
@@ -108,6 +113,8 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 		self._lc_scale = _scale;
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();

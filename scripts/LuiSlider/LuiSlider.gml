@@ -9,13 +9,16 @@
 /// color - custom bar accent color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
-	
+	// STATE
+
 	self.can_drag = true;
 	
 	self.knob_width = 0;
 	self.knob_extender = 0;
 	
 	// Calculate knob width in constructor
+	// INTERNALS
+
 	static _initKnobWidth = function() {
 		var _style = self.getStyle();
 		if !is_undefined(_style.sprite_slider_knob) {
@@ -25,6 +28,8 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		}
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -93,6 +98,8 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._initKnobWidth();
 	});

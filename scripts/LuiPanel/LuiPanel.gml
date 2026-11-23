@@ -3,11 +3,14 @@
 /// allow_resize
 ///@arg {Struct} [_params] Struct with parameters
 function LuiPanel(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.allow_resize = _params[$ "allow_resize"] ?? false;
 	
 	self.resizer = undefined;
 	
+	// PUBLIC API
+
 	///@desc Set allow to resize panel or not
 	///@arg {bool} _allow
 	static setAllowResize = function(_allow) {
@@ -23,6 +26,8 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// INTERNALS
+
 	///@ignore
 	static _initResizer = function() {
 		if is_undefined(self.resizer) && self.allow_resize {
@@ -49,6 +54,8 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -72,6 +79,8 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._initResizer();
 	});

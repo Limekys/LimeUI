@@ -6,7 +6,8 @@
 /// maintain_aspect
 ///@arg {Struct} [_params] Struct with parameters
 function LuiSurface(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = _params[$ "value"] ?? -1;
 	self.color_blend = _params[$ "color"] ?? c_white;
 	self.alpha = _params[$ "alpha"] ?? 1;
@@ -16,6 +17,8 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 	self.surface_real_height = 0;
 	self.aspect = 1;
 	
+	// PUBLIC API
+
 	///@desc Set surface id
 	///@arg {id.Surface} _surface
 	static setSurface = function(_surface) {
@@ -51,6 +54,8 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// INTERNALS
+
 	///@ignore
 	static _calcSurfaceSize = function() {
 		if surface_exists(self.value) {
@@ -60,6 +65,8 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		if !surface_exists(self.value) return;
 		//Calculate fit size
@@ -86,6 +93,8 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 									_blend_color, self.alpha);
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
 		_e._calcSurfaceSize();
 	});

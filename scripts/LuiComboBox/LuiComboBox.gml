@@ -3,59 +3,24 @@
 /// placeholder
 ///@arg {Struct} [_params] Struct with parameters
 function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
-	
+	// STATE
+
 	self.placeholder = _params[$ "placeholder"] ?? "";
-	
+
 	self.items = undefined;
 	self.is_open = false;
 	self.combobox_panel = undefined;
 	self.text_width = self.width;
-	
+
+	// PUBLIC API
+
 	///@desc Set placeholder text
 	///@arg {string} _placeholder
 	static setPlaceholder = function(_placeholder) {
 		self.placeholder = _placeholder;
 		return self;
 	}
-	
-	///@ignore
-	static _calculateTextWidth = function() { //???// not used now
-		var _style = self.getStyle();
-		if !is_undefined(_style) && !is_undefined(_style.sprite_combobox_arrow) {
-			self.text_width = self.width - sprite_get_width(_style.sprite_combobox_arrow)*4;
-		} else {
-			self.text_width = self.width;
-		}
-	}
-	
-	///@ignore
-	static _initComboBoxPanel = function() {
-		var _item_count = array_length(self.items);
-		// Calculate panel sizes
-		var _style = self.getStyle();
-		var _width = self.width;
-		var _height = (self.height + _style.padding) * _item_count + _style.padding;
-		// Create panel
-		self.combobox_panel = new LuiPanel({x: 0, y: 0, width: _width}).hide().setVisibilitySwitching(false).setPositionAbsolute();
-		self.main_ui.addContent([self.combobox_panel]);
-	}
-	
-	///@ignore
-	static _initItems = function() {
-		var _item_count = array_length(self.items);
-		//Add items to this panel
-		if !is_array(self.items) {
-			self.items = [self.items];
-		}
-		for (var i = 0; i < _item_count; ++i) {
-			var _item = self.items[i];
-			_item.combobox_parent = self;
-			_item.height = self.height;
-			_item.auto_height = false;
-		}
-		self.combobox_panel.addContent(self.items);
-	}
-	
+
 	///@desc Toggle combobox open/close
 	static toggle = function() {
 		if is_undefined(self.combobox_panel) {
@@ -79,14 +44,14 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		self.combobox_panel.setVisibilitySwitching(false);
 		return self;
 	}
-	
+
 	///@desc Add items //???//
 	///@arg {struct,array} _items Element or array of elements
 	static addItems = function(_items) {
 		self.items = _items;
 		return self;
 	}
-	
+
 	///@desc Remove items //???//
 	static removeItem = function(index) {
 		//if (index >= 0 && index < array_length(self.items)) {
@@ -94,7 +59,49 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		//}
 		return self;
 	}
-	
+
+	// INTERNALS
+
+	///@ignore
+	static _initComboBoxPanel = function() {
+		var _item_count = array_length(self.items);
+		// Calculate panel sizes
+		var _style = self.getStyle();
+		var _width = self.width;
+		var _height = (self.height + _style.padding) * _item_count + _style.padding;
+		// Create panel
+		self.combobox_panel = new LuiPanel({x: 0, y: 0, width: _width}).hide().setVisibilitySwitching(false).setPositionAbsolute();
+		self.main_ui.addContent([self.combobox_panel]);
+	}
+
+	///@ignore
+	static _initItems = function() {
+		var _item_count = array_length(self.items);
+		//Add items to this panel
+		if !is_array(self.items) {
+			self.items = [self.items];
+		}
+		for (var i = 0; i < _item_count; ++i) {
+			var _item = self.items[i];
+			_item.combobox_parent = self;
+			_item.height = self.height;
+			_item.auto_height = false;
+		}
+		self.combobox_panel.addContent(self.items);
+	}
+
+	///@ignore
+	static _calculateTextWidth = function() { //???// not used now
+		var _style = self.getStyle();
+		if !is_undefined(_style) && !is_undefined(_style.sprite_combobox_arrow) {
+			self.text_width = self.width - sprite_get_width(_style.sprite_combobox_arrow)*4;
+		} else {
+			self.text_width = self.width;
+		}
+	}
+
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		//Base
@@ -112,7 +119,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			}
 			draw_sprite_stretched_ext(_style.sprite_combobox, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
-		
+
 		//Arrow
 		if !is_undefined(_style.sprite_combobox_arrow) {
 			var _x_offset = sprite_get_width(_style.sprite_combobox_arrow);
@@ -122,7 +129,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			}
 			draw_sprite_ext(_style.sprite_combobox_arrow, 0, self.x + self.width - _x_offset, self.y + self.height div 2, 1, is_open ? -1 : 1, 0, _blend_color, 1);
 		}
-		
+
 		//Text
 		if !is_undefined(_style.font_buttons) {
 			draw_set_font(_style.font_buttons);
@@ -147,13 +154,15 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		} else {
 			self._drawTruncatedText(_txt_x, _txt_y, string(self.text), _text_draw_width);
 		}
-		
+
 		//Border
 		if !is_undefined(_style.sprite_combobox_border) {
 			draw_sprite_stretched_ext(_style.sprite_combobox_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 		}
 	}
-	
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._calculateTextWidth();
 		if is_undefined(_e.combobox_panel) {
@@ -161,27 +170,27 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			_e._initItems();
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		_e.toggle();
 	});
-	
+
 	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
 		_e._calculateTextWidth();
 	});
-	
+
 	self.addEvent(LUI_EV_HIDE, function(_e) {
 		if _e.is_open {
 			_e.toggle();
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_e) {
 		if _e.is_open && !_e.combobox_panel.isMouseHoveredExc() {
 			_e.toggle();
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		if !is_undefined(_e.combobox_panel) {
 			_e.combobox_panel.destroy();
@@ -196,22 +205,27 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 /// color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
-	
+	// STATE
+
 	self.combobox_parent = undefined;
-	
+
+	// PUBLIC API
+
 	///@desc Set new combobox text and close combobox
 	static chooseItem = function() {
 		self.combobox_parent.setText(self.text);
 		self.combobox_parent.toggle();
 	}
-	
+
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
-		
+
 		// Calculate positions
 		var _center_x = self.x + self.width / 2;
 		var _center_y = self.y + self.height / 2;
-		
+
 		//Base
 		if !is_undefined(_style.sprite_combobox_item) {
 			var _blend_color = _style.color_secondary;
@@ -223,16 +237,18 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 			}
 			draw_sprite_stretched_ext(_style.sprite_combobox_item, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
-		
+
 		// Icon and text
 		self._drawIconAndText(_center_x, _center_y, self.width, _style.color_text);
-		
+
 		//Border
 		if !is_undefined(_style.sprite_combobox_item_border) {
 			draw_sprite_stretched_ext(_style.sprite_combobox_item_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 		}
 	}
-	
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		_e.chooseItem();
 	});

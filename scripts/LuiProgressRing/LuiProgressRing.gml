@@ -9,13 +9,16 @@
 /// color - custom bar accent color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
-	
+	// STATE
+
 	self.sprite_pos = {
 		x : 0,
 		y : 0,
 		scale : 1
 	};
 	
+	// INTERNALS
+
 	///@desc Calculate scale to fit size and position
 	///@ignore
 	static _calcSpritePos = function(_sprite) {
@@ -28,6 +31,8 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 		self.sprite_pos.scale = _scale;
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		// Calculate colors
@@ -73,6 +78,8 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._calcSpritePos(_e.getStyle().sprite_progress_ring);
 	});

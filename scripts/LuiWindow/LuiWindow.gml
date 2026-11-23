@@ -4,16 +4,19 @@
 /// show_controls
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
-	
+	// STATE
+
 	self.setPositionAbsolute();
-	
+
 	self.title = _params[$ "title"] ?? "Title";
 	self.show_controls = _params[$ "show_controls"] ?? true;
-    
+
 	self.is_minimized = false;
 	self.window_header = undefined;
 	self.window_container = undefined;
-	
+
+	// PUBLIC API
+
 	///@desc Set window title
 	///@arg {string} _title
 	static setTitle = function(_title) {
@@ -23,7 +26,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		}
 		return self;
 	}
-	
+
 	///@desc Show controls buttons or not
 	///@arg {bool} _show
 	static showControls = function(_show) {
@@ -36,18 +39,44 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		}
 		return self;
 	}
-	
+
+	///@desc Change getContainer function for compatibility with setFlex... functions
+	self.getContainer = function() {
+		self._initWindowContainer();
+		return self.container;
+	}
+
+	///@desc Redirect addContent
+	self.addContent = function(elements) {
+		self._initWindowContainer();
+		self.window_container.addContent(elements);
+		return self;
+	}
+
+	///@desc Toggle window show or hide
+	static toggleWindow = function() {
+		self.window_container.setVisible(!self.window_container.visible);
+		self.ignore_mouse = !self.window_container.visible;
+	}
+
+	///@desc Destroy window
+	static closeWindow = function() {
+		self.destroy();
+	}
+
+	// INTERNALS
+
 	///@ignore
 	static _initHeader = function() {
 		if is_undefined(self.window_header) {
 			self.window_header = new LuiWindowHeader({title: self.title, show_controls: self.show_controls})
 				.setFlexDirection(flexpanel_flex_direction.row);
-			
+
 			// Set parent window link
 			self.window_header.parent_window = self;
 		}
 	}
-	
+
 	///@desc Create container
 	///@ignore
 	static _initWindowContainer = function() {
@@ -56,31 +85,9 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 			self.setContainer(self.window_container);
 		}
 	}
-	
-	///@desc Change getContainer function for compatibility with setFlex... functions
-	self.getContainer = function() {
-		self._initWindowContainer();
-		return self.container;
-	}
-	
-	///@desc Redirect addContent
-	self.addContent = function(elements) {
-		self._initWindowContainer();
-		self.window_container.addContent(elements);
-		return self;
-	}
-	
-	///@desc Toggle window show or hide
-	static toggleWindow = function() {
-		self.window_container.setVisible(!self.window_container.visible);
-		self.ignore_mouse = !self.window_container.visible;
-	}
-	
-	///@desc Destroy window
-	static closeWindow = function() {
-		self.destroy();
-	}
-	
+
+	// DRAW
+
 	self.draw = function() {
 		if self.window_container.visible {
 			var _style = self.getStyle();
@@ -99,9 +106,11 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 			}
 		}
 	}
-	
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
-		
+
 		// pop-in animation
 		_e.visual_alpha = 0;
 		_e.visual_scale_x = 0.75;
@@ -109,7 +118,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		self.main_ui.animate(_e, "visual_alpha", 1, 0.25);
 		self.main_ui.animate(_e, "visual_scale_x", 1, 0.25, global.Ease.OutBack);
 		self.main_ui.animate(_e, "visual_scale_y", 1, 0.25, global.Ease.OutBack);
-		
+
 		// Window settings
 		if _e.auto_width {
 			_e.setWidth(256);
@@ -129,26 +138,29 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 /// title
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.can_drag = true;
-	
+
 	self.title = _params[$ "title"] ?? "Title";
 	self.show_controls = _params[$ "show_controls"] ?? true;
-	
+
 	self.text_title = undefined;
 	self.parent_window = undefined;
-	
+
+	// INTERNALS
+
 	///@ignore
 	static _initTitle = function() {
 		self.text_title = new LuiText({value: self.title}).setMouseIgnore(true);
 		self.addContentOriginal(self.text_title);
 	}
-	
+
 	///@ignore
 	static _initControlButtons = function() {
 		var _button_size = 32; //???//
 		var _close_button = new LuiButton({width: _button_size, height: _button_size, text: "X", color: self.getStyle().color_semantic_error});
-		
+
 		var _minimize_button = new LuiButton({width: _button_size, height: _button_size, text: "-"});
 		_close_button.addEvent(LUI_EV_CLICK, function(_e) {
 			_e.parent.parent_window.closeWindow();
@@ -158,7 +170,9 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 		});
 		self.addContentOriginal([_minimize_button, _close_button]);
 	}
-	
+
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -172,18 +186,20 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
-	
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._initTitle();
 		if _e.show_controls {
 			_e._initControlButtons();
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
 		_e.parent_window.bringToFront();
 	});
-	
+
 	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
 		if !is_undefined(_e.parent_window) {
 			var _new_pos_x = clamp(_data.new_x, 0, self.main_ui.width - self.width);

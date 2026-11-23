@@ -1,9 +1,10 @@
 ///@desc Panel with the ability to scroll down/up.
 ///@arg {Struct} [_params] Struct with parameters
 function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.draw_content_in_cutted_region = true;
-	
+
 	self.scroll_offset_y = 0;
 	self.scroll_target_offset_y = 0;
 	self.drag_start_y = -1;
@@ -11,13 +12,30 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	self.scroll_pin_edge_offset = 4;
 	self.scroll_smoothness = 0.02;
 	self.scroll_container = undefined;
-	
+
+	// PUBLIC API
+
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {
 		self._initScrollContainer();
 		return self.container;
 	}
-	
+
+	///@desc Redirect addContent
+	self.addContent = function(elements) {
+		self._initScrollContainer();
+		self.scroll_container.addContent(elements);
+		return self;
+	}
+
+	///@desc Delete scroll panel content
+	///@deprecated
+	static cleanScrollPanel = function() {
+		self.destroyContent();
+	}
+
+	// INTERNALS
+
 	///@desc Create container
 	///@ignore
 	static _initScrollContainer = function() {
@@ -26,59 +44,14 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 			self.setContainer(self.scroll_container);
 		}
 	}
-	
-	///@desc Redirect addContent
-	self.addContent = function(elements) {
-		self._initScrollContainer();
-		self.scroll_container.addContent(elements);
-		return self;
-	}
-	
-	///@desc Delete scroll panel content
-	///@deprecated
-	static cleanScrollPanel = function() {
-		self.destroyContent();
-	}
-	
+
 	///@ignore
 	static _applyScroll = function() {
 		self.scroll_container.setPosition(, self.scroll_offset_y);
 	}
-	
-	self.draw = function() {
-		var _style = self.getStyle();
-		var _alpha = draw_get_alpha();
-		//Panel
-		if !is_undefined(_style.sprite_panel) {
-			var _blend_color = _style.color_primary;
-			if self.deactivated {
-				_blend_color = merge_color(_blend_color, c_black, 0.5);
-			}
-			draw_sprite_stretched_ext(_style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
-		}
-		//Scroll slider
-		if array_length(self.getContainer().content) > 0 {
-			var _scroll_slider_x = self.x + self.width - _style.scroll_slider_width - self.scroll_pin_edge_offset;
-			var _scroll_pin_y_offset = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), self.scroll_pin_edge_offset, self.height - _style.scroll_slider_width - self.scroll_pin_edge_offset);
-			// Slider back
-			if !is_undefined(_style.sprite_scroll_slider) {
-				draw_sprite_stretched_ext(_style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, _style.scroll_slider_width, self.height - self.scroll_pin_edge_offset*2, _style.color_back, _alpha);
-			}
-			// Scroll pin
-			if !is_undefined(_style.sprite_scroll_pin) {
-				draw_sprite_stretched_ext(_style.sprite_scroll_pin, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_secondary, _alpha);
-			}
-			// Scroll pin border
-			if !is_undefined(_style.sprite_scroll_pin_border) {
-				draw_sprite_stretched_ext(_style.sprite_scroll_pin_border, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_border, _alpha);
-			}
-		}
-		//Panel border
-		if !is_undefined(_style.sprite_panel_border) {
-			draw_sprite_stretched_ext(_style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
-		}
-	}
-	
+
+	// UPDATE AND DRAW
+
 	self.step = function() {
 		var _input_allowed = self.main_ui.isInputAllowed(self);
 		if !_input_allowed {
@@ -116,7 +89,43 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 			self._applyScroll();
 		}
 	}
-	
+
+	self.draw = function() {
+		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
+		//Panel
+		if !is_undefined(_style.sprite_panel) {
+			var _blend_color = _style.color_primary;
+			if self.deactivated {
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
+			}
+			draw_sprite_stretched_ext(_style.sprite_panel, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
+		}
+		//Scroll slider
+		if array_length(self.getContainer().content) > 0 {
+			var _scroll_slider_x = self.x + self.width - _style.scroll_slider_width - self.scroll_pin_edge_offset;
+			var _scroll_pin_y_offset = Range(self.scroll_offset_y, 0, -(self.scroll_container.height - self.height), self.scroll_pin_edge_offset, self.height - _style.scroll_slider_width - self.scroll_pin_edge_offset);
+			// Slider back
+			if !is_undefined(_style.sprite_scroll_slider) {
+				draw_sprite_stretched_ext(_style.sprite_scroll_slider, 0, _scroll_slider_x, self.y + self.scroll_pin_edge_offset, _style.scroll_slider_width, self.height - self.scroll_pin_edge_offset*2, _style.color_back, _alpha);
+			}
+			// Scroll pin
+			if !is_undefined(_style.sprite_scroll_pin) {
+				draw_sprite_stretched_ext(_style.sprite_scroll_pin, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_secondary, _alpha);
+			}
+			// Scroll pin border
+			if !is_undefined(_style.sprite_scroll_pin_border) {
+				draw_sprite_stretched_ext(_style.sprite_scroll_pin_border, 0, _scroll_slider_x, self.y + _scroll_pin_y_offset, _style.scroll_slider_width, _style.scroll_slider_width, _style.color_border, _alpha);
+			}
+		}
+		//Panel border
+		if !is_undefined(_style.sprite_panel_border) {
+			draw_sprite_stretched_ext(_style.sprite_panel_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
+		}
+	}
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._initScrollContainer();
 		_e.addContentOriginal(_e.scroll_container);
@@ -125,12 +134,12 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 		flexpanel_node_style_set_border(_e.flex_node, flexpanel_edge.right, _e.getStyle().scroll_slider_width + _e.scroll_pin_edge_offset); //???//
 	});
-	
+
 	self.addEvent(LUI_EV_CONTENT_UPDATE, function(_e) {
 		_e.scroll_target_offset_y = clamp(_e.scroll_target_offset_y, -(_e.scroll_container.height - _e.height), 0);
 		_e._applyScroll();
 	});
-	
+
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		if !is_undefined(_e.scroll_container) {
 			_e.scroll_container.destroy();

@@ -1,10 +1,10 @@
 ///@desc Main UI container which would control and render your UI.
 function LuiMain() : LuiBase() constructor {
-	
+	// STATE AND INITIALIZATION
+
 	self.is_initialized = true;
 	self.ignore_mouse = true;
-	
-	// Main variables
+
 	self.name = "_LUI_MAIN_UI";
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
@@ -31,12 +31,13 @@ function LuiMain() : LuiBase() constructor {
 	self._cache_bakes = 0;
 	self._clip_stack = [];     // Reusable clip rectangles, one per clipping depth
 	self._clip_depth = -1;
-	
+
 	// Init Flex size
 	flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
 	flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
-	
-	// Init Screen grid
+
+	// LAYOUT AND SCREEN GRID
+
 	///@ignore
 	static _recalculateScreenGrid = function() {
 		var _cols = ceil(display_get_gui_width() / LUI_GRID_SIZE);
@@ -52,65 +53,24 @@ function LuiMain() : LuiBase() constructor {
 		}
 		return self;
 	}
+
+	///@desc Add element to list for update flex node
+	///@ignore
+	static _addFlexUpdate = function(_element) {
+		array_push(self.elements_to_update_flex, _element);
+		self.elements_to_update_flex = array_unique(self.elements_to_update_flex);
+	}
+
 	self._recalculateScreenGrid();
-	
-	// Recalculate grid size on size change
+
 	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
 		_e._recalculateScreenGrid();
 	});
-	
-	// Init easing functions
+
 	_luiInitEaseFunctions();
-	
-	// SYSTEM
-	
-	///@desc Create animation for any variables of target element
-	static animate = function(target_element, property, end_value, duration, easing_func = global.Ease.OutQuad) {
-	    
-		// Delete previous if found to exlude animation conflicts
-		for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
-			var _existing_tween = self.active_animations[i];
-			if _existing_tween.target == target_element && _existing_tween.property == property {
-				array_delete(self.active_animations, i, 1);
-				break;
-			}
-		}
-		
-		// Create new tween
-		var _tween = new LuiTween(target_element, property, end_value, duration, easing_func);
-		array_push(self.active_animations, _tween);
-		
-		return _tween;
-	}
-	
-	///@desc Set flag to display or not display white rectangle on focused element
-	///@arg {bool} _display
-	static displayFocusedElement = function(_display) {
-		self.display_focused_element = _display;
-	}
-	
-	// CHECKERS
-	
-	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
-	///@return {bool}
-	static isInteracting = function() {
-		return self.isInteractingKeyboard() || self.isInteractingMouse();
-	}
-	
-	///@desc Return true if we interacting with UI at the moment with mouse
-	///@return {bool}
-	static isInteractingMouse = function() {
-		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
-	}
-	
-	///@desc Return true if we interacting with UI at the moment with keyboard
-	///@return {bool}
-	static isInteractingKeyboard = function() {
-		return self.visible && !self.deactivated && (self.waiting_for_keyboard_input || !is_undefined(self._activeModal()));
-	}
-	
-	// GETTERS
-	
+
+	// PUBLIC API
+
 	///@desc Get element by name
 	///@return {Struct}
 	static getElement = function(_name) {
@@ -121,46 +81,107 @@ function LuiMain() : LuiBase() constructor {
 			return -1;
 		}
 	}
-	
-	// UPDATE
+
+	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
+	///@return {bool}
+	static isInteracting = function() {
+		return self.isInteractingKeyboard() || self.isInteractingMouse();
+	}
+
+	///@desc Return true if we interacting with UI at the moment with mouse
+	///@return {bool}
+	static isInteractingMouse = function() {
+		return self.visible && !self.deactivated && !is_undefined(self.topmost_hovered_element);
+	}
+
+	///@desc Return true if we interacting with UI at the moment with keyboard
+	///@return {bool}
+	static isInteractingKeyboard = function() {
+		return self.visible && !self.deactivated && (self.waiting_for_keyboard_input || !is_undefined(self._activeModal()));
+	}
+
+	///@desc Returns whether a widget can handle input with the current modal open.
+	///@arg {Struct} _element Widget requesting input
+	static isInputAllowed = function(_element) {
+		if self.is_destroyed || !self.visible || self.deactivated || _element.is_destroyed || !_element.visible || _element.deactivated return false;
+		var _modal = self._activeModal();
+		return is_undefined(_modal) || self._isInModal(_element, _modal);
+	}
+
+	///@desc Create animation for any variables of target element
+	static animate = function(target_element, property, end_value, duration, easing_func = global.Ease.OutQuad) {
+
+		// Delete previous if found to exlude animation conflicts
+		for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
+			var _existing_tween = self.active_animations[i];
+			if _existing_tween.target == target_element && _existing_tween.property == property {
+				array_delete(self.active_animations, i, 1);
+				break;
+			}
+		}
+
+		// Create new tween
+		var _tween = new LuiTween(target_element, property, end_value, duration, easing_func);
+		array_push(self.active_animations, _tween);
+
+		return _tween;
+	}
+
+	///@desc Shows a modal dialog with backdrop blur by default. Set backdrop_blur to 0 to disable it.
+	///@arg {Struct} [_params] Message options: text, content, button_text, width, height, backdrop_blur
+	///@return {Struct} The opened LuiMessage
+	static alert = function(_params = {}) {
+		var _message = new LuiMessage(_params, LUI_DEFAULT_ALERT_BLUR);
+		self.addContent(_message);
+		return _message;
+	}
+
+	///@desc Set flag to display or not display white rectangle on focused element
+	///@arg {bool} _display
+	static displayFocusedElement = function(_display) {
+		self.display_focused_element = _display;
+	}
+
+	// FRAME UPDATE
+
 	self.base_update = method(self, update);
 	self.update = function() {
-		
+
 		//var _t = get_timer();
 		// Update all elements
 		self.base_update();
 		//luiProf("1_base_update", _t);
-			
+
 		// Mouse position
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
-			
+
 		//_t = get_timer();
-		
+
 		// Mouse events
 		if self.visible && !self.deactivated && (_mouse_x >= 0 && _mouse_x < self.width && _mouse_y >= 0 && _mouse_y < self.height) {
 			var _previous_hovered_element = self.topmost_hovered_element;
-			
+
 			// Prioritize dragging element if it exists and mouse is held
 			if !is_undefined(self.dragging_element) && mouse_check_button(mb_left) {
 				self.topmost_hovered_element = self.dragging_element;
 			} else {
 				self.topmost_hovered_element = self._getTopmostElement(_mouse_x, _mouse_y);
 			}
-			
+
 			// Update mouse hover state
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 				_previous_hovered_element.is_mouse_hovered = false;
 				_previous_hovered_element.is_pressed = false;
 				_previous_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEAVE);
 			}
-			
+
 			if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) {
 				if self.topmost_hovered_element.is_mouse_hovered == false {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_ENTER);
 				}
-				
+
 				// Handle on mouse pressed
 				if !is_undefined(self.topmost_hovered_element) && mouse_check_button_pressed(mb_left) {
 					var _pressed_element = self.topmost_hovered_element;
@@ -185,7 +206,7 @@ function LuiMain() : LuiBase() constructor {
 						_pressed_element._dispatchEvent(LUI_EV_DRAG_START);
 					}
 				}
-				
+
 				// Handle on mouse left
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && mouse_check_button(mb_left) {
 					// Call LUI_EV_MOUSE_LEFT event
@@ -202,7 +223,7 @@ function LuiMain() : LuiBase() constructor {
 						self.prev_mouse_y = _mouse_y;
 					}
 				}
-				
+
 				// Handle on mouse released
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && mouse_check_button_released(mb_left) {
 					var _released_element = self.topmost_hovered_element;
@@ -247,9 +268,9 @@ function LuiMain() : LuiBase() constructor {
 				self.topmost_hovered_element.is_pressed = false;
 			}
 		}
-		
+
 		//luiProf("2_mouse", _t);
-		
+
 		// Keyboard events
 		var _modal = self._activeModal();
 		if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
@@ -267,9 +288,9 @@ function LuiMain() : LuiBase() constructor {
 				_focused.removeFocus();
 			}
 		}
-		
+
 		//_t = get_timer();
-		
+
 		// Update animations
 		if array_length(self.active_animations) > 0 {
 			for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
@@ -290,24 +311,24 @@ function LuiMain() : LuiBase() constructor {
 				}
 			}
 		}
-		
+
 		//luiProf("3_anim", _t);
-		
+
 		// Update debug mode states
 		if self.current_debug_mode != global.lui_debug_mode {
 			self.updateMainUiSurface();
 			self.current_debug_mode = global.lui_debug_mode;
 		}
-		
+
 		//_t = get_timer();
-		
+
 		// Update layout and all flex data
 		if self.needs_update_flex {
 			self.needs_update_flex = false;
 			self._calculateLayout();
 			self._updateFlex(self.flex_node);
 		}
-		
+
 		// Update list of elements to update flex
 		if array_length(self.elements_to_update_flex) > 0 {
 			self._calculateLayout();
@@ -317,11 +338,12 @@ function LuiMain() : LuiBase() constructor {
 				_e._updateFlex(_e.flex_node);
 			}
 		}
-		
+
 		//luiProf("4_flex", _t);
 	}
-	
-	// RENDER
+
+	// FRAME RENDER
+
 	///@arg {Struct} [_metrics] Optional output for CPU timings in microseconds and successful cache bakes
 	self.render = function(_metrics = undefined) {
 		var _measure = is_struct(_metrics);
@@ -335,7 +357,7 @@ function LuiMain() : LuiBase() constructor {
 		if LUI_FORCE_ALPHA_1 {
 			draw_set_alpha(1);
 		}
-		
+
 		// Pre draw events
 		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
 			var _element = self.pre_draw_list[i];
@@ -343,42 +365,42 @@ function LuiMain() : LuiBase() constructor {
 				_element.preDraw();
 			}
 		}
-		
+
 		if self.visible {
-			
+
 			// Force initial layout if it was not calculated yet
 			if self.needs_update_flex {
 				self.needs_update_flex = false;
 				self._calculateLayout();
 				self._updateFlex(self.flex_node);
 			}
-			
+
 			// Root container is always visible
 			self.is_visible_in_region = true;
-			
+
 			var _cache_start = _measure ? get_timer() : 0;
-			
+
 			// 1. Update cache surfaces (bottom-up)
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				self._prepareCaches(self.content[i]);
 			}
-			
+
 			var _draw_start = _measure ? get_timer() : 0;
 			if _measure {
 				_metrics.cache_us = _draw_start - _cache_start;
 				_metrics.bakes = self._cache_bakes;
 			}
-			
+
 			// 2. Draw the tree directly (children are already in z order)
 			var _gui_w = display_get_gui_width();
 			var _gui_h = display_get_gui_height();
 			var _identity_matrix = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
 			var _root_clip = [0, 0, _gui_w, _gui_h];
-			
+
 			matrix_set(matrix_world, _identity_matrix);
 			gpu_set_scissor(0, 0, _gui_w, _gui_h);
 			_luiBlendReset();
-			
+
 			var _kids = self._getDrawChildren();
 			var _first = 0;
 			if array_length(self._modal_stack) > 0 {
@@ -400,15 +422,15 @@ function LuiMain() : LuiBase() constructor {
 			for (var i = _first, n = array_length(_kids); i < n; i++) {
 				self._drawTree(_kids[i], _identity_matrix, 1, _root_clip);
 			}
-			
+
 			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 			gpu_set_scissor(0, 0, _gui_w, _gui_h);
 			matrix_set(matrix_world, _identity_matrix);
-			
+
 			if _measure {
 				_metrics.draw_us = get_timer() - _draw_start;
 			}
-			
+
 			// Draw debug rectangles of elements
 			if global.lui_debug_mode != 0 {
 				for (var i = 0, n = array_length(self.content); i < n; i++) {
@@ -417,7 +439,7 @@ function LuiMain() : LuiBase() constructor {
 					_element._renderDebug(_element.x, _element.y, true);
 				}
 			}
-			
+
 			// Draw other stuff (focused element, etc)
 			if self.display_focused_element {
 				if !is_undefined(self.element_in_focus) {
@@ -426,10 +448,10 @@ function LuiMain() : LuiBase() constructor {
 				}
 			}
 		}
-		
+
 		// Reset matrix for tooltips and overlays
 		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
-		
+
 		// Get topmost element
 		var _element = self.topmost_hovered_element;
 		// Draw tooltip text
@@ -443,7 +465,7 @@ function LuiMain() : LuiBase() constructor {
 				var _height = string_height(_element.tooltip) + _padding_text*2;
 				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
 				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
-				
+
 				if !is_undefined(_style.sprite_tooltip) {
 					draw_sprite_stretched_ext(_style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, _style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
@@ -456,17 +478,17 @@ function LuiMain() : LuiBase() constructor {
 				draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);
 			}
 		}
-		
+
 		if global.lui_debug_render_grid {
 			self._drawScreenGrid();
 		}
-		
+
 		if global.lui_debug_mode != 0 && !is_undefined(_element) {
 			var _mouse_x = device_mouse_x_to_gui(0) + 32;
 			var _mouse_y = device_mouse_y_to_gui(0) + 32;
 			_element._renderDebugInfo(_mouse_x, _mouse_y);
 		}
-		
+
 		//luiProfFrameEnd(is_undefined(self.topmost_hovered_element) ? "-" : self.topmost_hovered_element.name);
 		//
 		//if keyboard_check_pressed(vk_f10) {
@@ -477,31 +499,37 @@ function LuiMain() : LuiBase() constructor {
 			//global.lui_prof = {};
 			//global.lui_spike_log = "";
 		//}
-		
+
 		if !LUI_FORCE_ALPHA_1 {
 			draw_set_alpha(_prev_alpha);
 		}
 	}
-	
-	// DIALOGS
-	
-	///@desc Shows a modal dialog with backdrop blur by default. Set backdrop_blur to 0 to disable it.
-	///@arg {Struct} [_params] Message options: text, content, button_text, width, height, backdrop_blur
-	///@return {Struct} The opened LuiMessage
-	static alert = function(_params = {}) {
-		var _message = new LuiMessage(_params, LUI_DEFAULT_ALERT_BLUR);
-		self.addContent(_message);
-		return _message;
-	}
-	
-	// PRIVATE
 
-	///@desc Returns whether a widget can handle input with the current modal open.
-	///@arg {Struct} _element Widget requesting input
-	static isInputAllowed = function(_element) {
-		if self.is_destroyed || !self.visible || self.deactivated || _element.is_destroyed || !_element.visible || _element.deactivated return false;
+	// INPUT AND MODALS
+
+	///@desc Returns topmost element on UI
+	///@ignore
+	static _getTopmostElement = function(_mouse_x, _mouse_y) {
+		var _grid = self.main_ui._screen_grid;
+		var _cx = floor(_mouse_x / LUI_GRID_SIZE);
+		var _cy = floor(_mouse_y / LUI_GRID_SIZE);
+		if _cx < 0 || _cx >= array_length(_grid) return undefined;
+		var _col = _grid[_cx];
+		if _cy < 0 || _cy >= array_length(_col) return undefined;
+		var _cell = _col[_cy];
+
+		var _best = undefined;
 		var _modal = self._activeModal();
-		return is_undefined(_modal) || self._isInModal(_element, _modal);
+		for (var i = array_length(_cell) - 1; i >= 0; --i) {
+			var _e = _cell[i];
+			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
+			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
+			// Not above the current best: skip without the expensive hover checks
+			if !is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0 continue;
+			if !_e.isMouseHoveredExc() || !_e.isMouseHoveredParents() continue;
+			_best = _e;
+		}
+		return _best;
 	}
 
 	///@ignore
@@ -576,6 +604,213 @@ function LuiMain() : LuiBase() constructor {
 			return;
 		}
 	}
+
+	// TREE DRAWING AND CLIPPING
+
+	///@desc Draws element with its subtree.
+	/// Invariant on entry: matrix_world == _pm, scissor == _clip. Restored on exit.
+	///@ignore
+	static _drawTree = function(_el, _pm, _pa, _clip) {
+		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
+
+		var _a = _pa * _el.visual_alpha;
+		if _a <= 0 return;
+
+		var _has_t = _el._hasVisualTransform();
+		var _m = _has_t ? matrix_multiply(_el._buildVisualMatrix(), _pm) : _pm;
+		if _has_t {
+			matrix_set(matrix_world, _m);
+		}
+
+		if _el._cache_active && surface_exists(_el._cached_surface) {
+			self._blitCache(_el, _a);
+		} else {
+			self._drawSelfAndChildren(_el, _m, _a, _clip);
+		}
+
+		if _has_t {
+			matrix_set(matrix_world, _pm);
+		}
+	}
+
+	///@desc Own draw (with own material) + children (with clipping if the element clips its content).
+	/// Invariant on entry: matrix_world == _m, scissor == _clip. Restored on exit.
+	///@ignore
+	static _drawSelfAndChildren = function(_el, _m, _a, _clip) {
+		if is_method(_el.draw) {
+			draw_set_alpha(_a);
+			var _mat = _el.material;
+			var _own_mat = !is_undefined(_mat) && !_mat.group;   // group materials are applied on cache blit
+			if _own_mat {
+				shader_set(_mat.shader);
+				if is_callable(_mat.apply) {
+					_mat.apply(_el, _mat);
+				}
+			}
+			_el.draw();
+			if _own_mat {
+				shader_reset();
+			}
+		}
+
+		var _kids = _el._getDrawChildren();
+		var _n = array_length(_kids);
+		if _n == 0 return;
+
+		var _child_clip = _clip;
+		var _clipping = _el.draw_content_in_cutted_region;
+		if _clipping {
+			_child_clip = self._pushClip(_clip, _el, _m);
+			if _child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1] {
+				self._clip_depth--;
+				return;
+			}
+			_luiApplyClip(_child_clip);
+		}
+
+		for (var i = 0; i < _n; i++) {
+			self._drawTree(_kids[i], _m, _a, _child_clip);
+		}
+
+		if _clipping {
+			_luiApplyClip(_clip);
+			self._clip_depth--;
+		}
+	}
+
+	///@desc Next slot of the preallocated clip stack filled with (_clip ∩ children clip of _el)
+	///@ignore
+	static _pushClip = function(_clip, _el, _m) {
+		self._clip_depth++;
+		if self._clip_depth >= array_length(self._clip_stack) {
+			array_push(self._clip_stack, [0, 0, 0, 0]);
+		}
+		var _c = self._clip_stack[self._clip_depth];
+		_luiClipChildrenInto(_c, _clip, _el, _m);
+		return _c;
+	}
+
+	// SURFACE CACHES
+
+	///@desc Bottom-up: decides which elements use a cache this frame and (re)bakes dirty ones.
+	/// Cache is used for: explicit cache_as_surface, group alpha (visual_alpha < 1 with children), group material.
+	///@ignore
+	static _prepareCaches = function(_el) {
+		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
+
+		if _el._last_visual_alpha != _el.visual_alpha {
+			_el._last_visual_alpha = _el.visual_alpha;
+			_el._invalidateAncestorCaches();
+		}
+
+		var _has_kids = array_length(_el.content) > 0;
+		if _has_kids {
+			for (var i = 0, n = array_length(_el.content); i < n; i++) {
+				self._prepareCaches(_el.content[i]);
+			}
+		}
+
+		var _mat = _el.material;
+		var _group_mat = !is_undefined(_mat) && _mat.group;
+		var _group_alpha = _has_kids && _el.visual_alpha < 1 && _el.visual_alpha > 0;
+		var _was_active = _el._cache_active;
+		if _el.cache_as_surface || _group_alpha || _group_mat {
+			_el._cache_active = self._bakeCache(_el);
+		} else if _was_active {
+			_el._cache_active = false;
+			_el._freeCache();
+		}
+		if _was_active && !_el._cache_active {
+			_el._invalidateAncestorCaches();
+		}
+	}
+
+	///@desc Renders the element and its children into a premultiplied surface.
+	/// The root's visual transform and alpha are applied only on blit.
+	///@ignore
+	static _bakeCache = function(_el) {
+		var _pad = _el.cache_padding;
+		var _ox = floor(_el.x);
+		var _oy = floor(_el.y);
+		var _w = ceil(ceil(_el.x + _el.width) - _ox + _pad * 2);
+		var _h = ceil(ceil(_el.y + _el.height) - _oy + _pad * 2);
+
+		if _w < 1 || _h < 1 || _w > LUI_CACHE_MAX_SIZE || _h > LUI_CACHE_MAX_SIZE {
+			_el._freeCache();
+			return false;
+		}
+
+		if surface_exists(_el._cached_surface) {
+			if surface_get_width(_el._cached_surface) != _w || surface_get_height(_el._cached_surface) != _h {
+				_el._freeCache();
+			}
+		}
+		if !surface_exists(_el._cached_surface) {
+			_el._cached_surface = surface_create(_w, _h);
+			_el._is_cache_dirty = true;
+		}
+		if !surface_exists(_el._cached_surface) return false;
+		if !_el._is_cache_dirty return true;
+
+		var _prev_matrix = matrix_get(matrix_world);
+		var _prev_scissor = gpu_get_scissor();
+		var _prev_alpha = draw_get_alpha();
+		if !surface_set_target(_el._cached_surface) {
+			_el._freeCache();
+			return false;
+		}
+
+		draw_clear_alpha(c_black, 0);
+		self._baking = true;
+		_luiBlendBake();
+
+		var _m = matrix_build(_pad - _ox, _pad - _oy, 0, 0, 0, 0, 1, 1, 1);
+		var _clip = [0, 0, _w, _h];
+		matrix_set(matrix_world, _m);
+		gpu_set_scissor(0, 0, _w, _h);
+		self._drawSelfAndChildren(_el, _m, 1, _clip);
+
+		_luiBlendReset();
+		self._baking = false;
+		surface_reset_target();
+		gpu_set_scissor(_prev_scissor);
+		matrix_set(matrix_world, _prev_matrix);
+		draw_set_alpha(_prev_alpha);
+
+		_el._is_cache_dirty = false;
+		self._cache_bakes++;
+		// Ancestor surfaces may contain the old pixels or the direct-draw fallback.
+		_el._invalidateAncestorCaches();
+		return true;
+	}
+
+	///@desc Draws a cached surface (premultiplied) with group alpha and optional group material
+	///@ignore
+	static _blitCache = function(_el, _a) {
+		var _v = floor(255 * _a);
+		var _mat = _el.material;
+		var _group_mat = !is_undefined(_mat) && _mat.group;
+		if _group_mat {
+			shader_set(_mat.shader);
+			if is_callable(_mat.apply) {
+				_mat.apply(_el, _mat);
+			}
+		}
+		_luiBlendBlit();
+		draw_surface_ext(_el._cached_surface,
+			floor(_el.x) - _el.cache_padding, floor(_el.y) - _el.cache_padding,
+			1, 1, 0, make_colour_rgb(_v, _v, _v), _a);
+		if _group_mat {
+			shader_reset();
+		}
+		if self._baking {
+			_luiBlendBake();
+		} else {
+			_luiBlendReset();
+		}
+	}
+
+	// MODAL BACKDROP
 
 	///@desc Composites the root children behind the topmost blurred modal.
 	///@ignore
@@ -684,240 +919,9 @@ function LuiMain() : LuiBase() constructor {
 		}
 		self._backdrop_blur_surface = -1;
 	}
-	
-	///@desc Returns topmost element on UI
-	///@ignore
-	static _getTopmostElement = function(_mouse_x, _mouse_y) {
-		var _grid = self.main_ui._screen_grid;
-		var _cx = floor(_mouse_x / LUI_GRID_SIZE);
-		var _cy = floor(_mouse_y / LUI_GRID_SIZE);
-		if _cx < 0 || _cx >= array_length(_grid) return undefined;
-		var _col = _grid[_cx];
-		if _cy < 0 || _cy >= array_length(_col) return undefined;
-		var _cell = _col[_cy];
-		
-		var _best = undefined;
-		var _modal = self._activeModal();
-		for (var i = array_length(_cell) - 1; i >= 0; --i) {
-			var _e = _cell[i];
-			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
-			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
-			// Not above the current best: skip without the expensive hover checks
-			if !is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0 continue;
-			if !_e.isMouseHoveredExc() || !_e.isMouseHoveredParents() continue;
-			_best = _e;
-		}
-		return _best;
-	}
-	
-	///@desc Bottom-up: decides which elements use a cache this frame and (re)bakes dirty ones.
-	/// Cache is used for: explicit cache_as_surface, group alpha (visual_alpha < 1 with children), group material.
-	///@ignore
-	static _prepareCaches = function(_el) {
-		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
 
-		if _el._last_visual_alpha != _el.visual_alpha {
-			_el._last_visual_alpha = _el.visual_alpha;
-			_el._invalidateAncestorCaches();
-		}
-		
-		var _has_kids = array_length(_el.content) > 0;
-		if _has_kids {
-			for (var i = 0, n = array_length(_el.content); i < n; i++) {
-				self._prepareCaches(_el.content[i]);
-			}
-		}
-		
-		var _mat = _el.material;
-		var _group_mat = !is_undefined(_mat) && _mat.group;
-		var _group_alpha = _has_kids && _el.visual_alpha < 1 && _el.visual_alpha > 0;
-		var _was_active = _el._cache_active;
-		if _el.cache_as_surface || _group_alpha || _group_mat {
-			_el._cache_active = self._bakeCache(_el);
-		} else if _was_active {
-			_el._cache_active = false;
-			_el._freeCache();
-		}
-		if _was_active && !_el._cache_active {
-			_el._invalidateAncestorCaches();
-		}
-	}
-	
-	///@desc Renders the element and its children into a premultiplied surface.
-	/// The root's visual transform and alpha are applied only on blit.
-	///@ignore
-	static _bakeCache = function(_el) {
-		var _pad = _el.cache_padding;
-		var _ox = floor(_el.x);
-		var _oy = floor(_el.y);
-		var _w = ceil(ceil(_el.x + _el.width) - _ox + _pad * 2);
-		var _h = ceil(ceil(_el.y + _el.height) - _oy + _pad * 2);
-		
-		if _w < 1 || _h < 1 || _w > LUI_CACHE_MAX_SIZE || _h > LUI_CACHE_MAX_SIZE {
-			_el._freeCache();
-			return false;
-		}
-		
-		if surface_exists(_el._cached_surface) {
-			if surface_get_width(_el._cached_surface) != _w || surface_get_height(_el._cached_surface) != _h {
-				_el._freeCache();
-			}
-		}
-		if !surface_exists(_el._cached_surface) {
-			_el._cached_surface = surface_create(_w, _h);
-			_el._is_cache_dirty = true;
-		}
-		if !surface_exists(_el._cached_surface) return false;
-		if !_el._is_cache_dirty return true;
-		
-		var _prev_matrix = matrix_get(matrix_world);
-		var _prev_scissor = gpu_get_scissor();
-		var _prev_alpha = draw_get_alpha();
-		if !surface_set_target(_el._cached_surface) {
-			_el._freeCache();
-			return false;
-		}
-		
-		draw_clear_alpha(c_black, 0);
-		self._baking = true;
-		_luiBlendBake();
-		
-		var _m = matrix_build(_pad - _ox, _pad - _oy, 0, 0, 0, 0, 1, 1, 1);
-		var _clip = [0, 0, _w, _h];
-		matrix_set(matrix_world, _m);
-		gpu_set_scissor(0, 0, _w, _h);
-		self._drawSelfAndChildren(_el, _m, 1, _clip);
-		
-		_luiBlendReset();
-		self._baking = false;
-		surface_reset_target();
-		gpu_set_scissor(_prev_scissor);
-		matrix_set(matrix_world, _prev_matrix);
-		draw_set_alpha(_prev_alpha);
-		
-		_el._is_cache_dirty = false;
-		self._cache_bakes++;
-		// Ancestor surfaces may contain the old pixels or the direct-draw fallback.
-		_el._invalidateAncestorCaches();
-		return true;
-	}
+	// DEBUG
 
-	///@desc Draws a cached surface (premultiplied) with group alpha and optional group material
-	///@ignore
-	static _blitCache = function(_el, _a) {
-		var _v = floor(255 * _a);
-		var _mat = _el.material;
-		var _group_mat = !is_undefined(_mat) && _mat.group;
-		if _group_mat {
-			shader_set(_mat.shader);
-			if is_callable(_mat.apply) {
-				_mat.apply(_el, _mat);
-			}
-		}
-		_luiBlendBlit();
-		draw_surface_ext(_el._cached_surface,
-			floor(_el.x) - _el.cache_padding, floor(_el.y) - _el.cache_padding,
-			1, 1, 0, make_colour_rgb(_v, _v, _v), _a);
-		if _group_mat {
-			shader_reset();
-		}
-		if self._baking {
-			_luiBlendBake();
-		} else {
-			_luiBlendReset();
-		}
-	}
-	
-	///@desc Draws element with its subtree.
-	/// Invariant on entry: matrix_world == _pm, scissor == _clip. Restored on exit.
-	///@ignore
-	static _drawTree = function(_el, _pm, _pa, _clip) {
-		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
-		
-		var _a = _pa * _el.visual_alpha;
-		if _a <= 0 return;
-		
-		var _has_t = _el._hasVisualTransform();
-		var _m = _has_t ? matrix_multiply(_el._buildVisualMatrix(), _pm) : _pm;
-		if _has_t {
-			matrix_set(matrix_world, _m);
-		}
-		
-		if _el._cache_active && surface_exists(_el._cached_surface) {
-			self._blitCache(_el, _a);
-		} else {
-			self._drawSelfAndChildren(_el, _m, _a, _clip);
-		}
-		
-		if _has_t {
-			matrix_set(matrix_world, _pm);
-		}
-	}
-
-	///@desc Next slot of the preallocated clip stack filled with (_clip ∩ children clip of _el)
-	///@ignore
-	static _pushClip = function(_clip, _el, _m) {
-		self._clip_depth++;
-		if self._clip_depth >= array_length(self._clip_stack) {
-			array_push(self._clip_stack, [0, 0, 0, 0]);
-		}
-		var _c = self._clip_stack[self._clip_depth];
-		_luiClipChildrenInto(_c, _clip, _el, _m);
-		return _c;
-	}
-	
-	///@desc Own draw (with own material) + children (with clipping if the element clips its content).
-	/// Invariant on entry: matrix_world == _m, scissor == _clip. Restored on exit.
-	///@ignore
-	static _drawSelfAndChildren = function(_el, _m, _a, _clip) {
-		if is_method(_el.draw) {
-			draw_set_alpha(_a);
-			var _mat = _el.material;
-			var _own_mat = !is_undefined(_mat) && !_mat.group;   // group materials are applied on cache blit
-			if _own_mat {
-				shader_set(_mat.shader);
-				if is_callable(_mat.apply) {
-					_mat.apply(_el, _mat);
-				}
-			}
-			_el.draw();
-			if _own_mat {
-				shader_reset();
-			}
-		}
-		
-		var _kids = _el._getDrawChildren();
-		var _n = array_length(_kids);
-		if _n == 0 return;
-		
-		var _child_clip = _clip;
-		var _clipping = _el.draw_content_in_cutted_region;
-		if _clipping {
-			_child_clip = self._pushClip(_clip, _el, _m);
-			if _child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1] {
-				self._clip_depth--;
-				return;
-			}
-			_luiApplyClip(_child_clip);
-		}
-		
-		for (var i = 0; i < _n; i++) {
-			self._drawTree(_kids[i], _m, _a, _child_clip);
-		}
-		
-		if _clipping {
-			_luiApplyClip(_clip);
-			self._clip_depth--;
-		}
-	}
-	
-	///@desc Add element to list for update flex node
-	///@ignore
-	static _addFlexUpdate = function(_element) {
-		array_push(self.elements_to_update_flex, _element);
-		self.elements_to_update_flex = array_unique(self.elements_to_update_flex);
-	}
-	
 	///@desc Draw debug grid info
 	///@ignore
 	static _drawScreenGrid = function() {
@@ -926,30 +930,30 @@ function LuiMain() : LuiBase() constructor {
 		draw_set_halign(fa_left);
 		draw_set_valign(fa_top);
 		draw_set_font(fDebug);
-		
+
 		var _gui_width = display_get_gui_width();
 		var _gui_height = display_get_gui_height();
-		
+
 		var _width = ceil(_gui_width / LUI_GRID_SIZE);
 		var _height = ceil(_gui_height / LUI_GRID_SIZE);
-		
+
 		for (var _x = 0; _x <= _width; ++_x) {
 			var _x_pos = _x * LUI_GRID_SIZE;
 			draw_line(_x_pos, 0, _x_pos, _gui_height);
-			
+
 			for (var _y = 0; _y <= _height; ++_y) {
 				var _y_pos = _y * LUI_GRID_SIZE;
-				
+
 				if _x == 0 {
 					draw_line(0, _y_pos, _gui_width, _y_pos);
 				}
-				
+
 				var _array = [];
 				if _x < array_length(self._screen_grid) && _y < array_length(self._screen_grid[_x]) {
 					_array = self._screen_grid[_x][_y];
 				}
 				draw_text(_x_pos + 2, _y_pos + 1, $"{_x}_{_y}");
-				
+
 				var _elements_in_cell = array_length(_array);
 				for (var i = 0, n = min(18, _elements_in_cell); i < n; ++i) {
 					if i mod 2 == 0 {
@@ -966,8 +970,9 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 	};
-	
-	// Cleanup
+
+	// CLEANUP
+
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		_e._freeBackdrop();
 		_e.pre_draw_list = -1;

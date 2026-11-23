@@ -9,7 +9,8 @@
 /// color - custom bar accent color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = _params[$ "value"] ?? 0;
 	self.min_value = min(_params[$ "min_value"] ?? 0, _params[$ "max_value"] ?? 100);
 	self.max_value = max(_params[$ "min_value"] ?? 0, _params[$ "max_value"] ?? 100);
@@ -20,6 +21,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	
 	self.bar_value = Range(value, min_value, max_value, 0, 1);
 	
+	// PUBLIC API
+
 	///@desc Set min value
 	///@arg {real} _min_value
 	static setMinValue = function(_min_value) {
@@ -64,6 +67,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// INTERNALS
+
 	///@desc Calculate final value with rounding and clamping
 	///@ignore
 	static _calculateValue = function(_value) {
@@ -71,6 +76,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		return clamp(_new_value, self.min_value, self.max_value);
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -120,6 +127,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e.value = _calculateValue(_e.value);
 	});

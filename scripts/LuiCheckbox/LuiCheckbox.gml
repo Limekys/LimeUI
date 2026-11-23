@@ -5,11 +5,14 @@
 /// icon_spacing
 ///@arg {Struct} [_params] Struct with parameters
 function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
 	self.icon_spacing = _params[$ "icon_spacing"] ?? 8;
 	
+	// PUBLIC API
+
 	///@desc Set display text of checkbox (render right of checkbox)
 	///@arg {string} _text
 	static setText = function(_text) {
@@ -17,6 +20,8 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -69,6 +74,8 @@ function LuiCheckbox(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		_e.set(!_e.get());
 		var _style = _e.getStyle();

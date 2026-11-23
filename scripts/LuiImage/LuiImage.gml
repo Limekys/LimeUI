@@ -7,7 +7,8 @@
 /// maintain_aspect
 ///@arg {Struct} [_params] Struct with parameters
 function LuiImage(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = _params[$ "value"] ?? undefined;
 	self.subimg = _params[$ "subimg"] ?? 0;
 	self.color_blend = _params[$ "color"] ?? c_white;
@@ -18,6 +19,8 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 	self.sprite_real_height = 0;
 	self.aspect = 1;
 	
+	// PUBLIC API
+
 	///@desc Set sprite
 	///@arg {asset.GMSprite} _sprite
 	static setSprite = function(_sprite) {
@@ -53,6 +56,8 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// INTERNALS
+
 	///@ignore
 	static _calcSpriteSize = function() {
 		if !is_undefined(self.value) && sprite_exists(self.value) {
@@ -62,6 +67,8 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		//Calculate fit size
@@ -90,6 +97,8 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._calcSpriteSize();
 	});

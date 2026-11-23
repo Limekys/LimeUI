@@ -4,16 +4,13 @@
 /// alpha
 ///@arg {Struct} [_params] Struct with parameters
 function LuiBox(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.color = _params[$ "color"] ?? c_black;
 	self.alpha = _params[$ "alpha"] ?? 0.5;
 	
-	self.draw = function() {
-		draw_set_alpha(self.alpha);
-		draw_set_color(self.color);
-		draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, false);
-	}
-	
+	// PUBLIC API
+
 	///@desc Set color for block area (default is c_black)
 	///@arg {any} _color
 	static setColor = function(_color) {
@@ -26,5 +23,13 @@ function LuiBox(_params = {}) : LuiBase(_params) constructor {
 	static setAlpha = function(_alpha) {
 		self.alpha = _alpha;
 		return self;
+	}
+
+	// DRAW
+
+	self.draw = function() {
+		draw_set_alpha(self.alpha);
+		draw_set_color(self.color);
+		draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, false);
 	}
 }

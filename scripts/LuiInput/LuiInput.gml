@@ -18,7 +18,8 @@ enum LUI_INPUT_MODE {
 /// allowed_chars (string of allowed chars, e.g. "!@", takes priority over excluded_chars)
 ///@arg {Struct} [_params] Struct with parameters
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = string(_params[$ "value"] ?? "");
 	self.placeholder = _params[$ "placeholder"] ?? "";
 	self.is_masked = _params[$ "is_masked"] ?? false;
@@ -38,6 +39,8 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
 		self.updateMainUiSurface();
 	}, [], -1);
     
+	// PUBLIC API
+
 	///@desc Set text
 	///@arg {string} _text
 	static setText = function(_text) {
@@ -104,6 +107,8 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
 		return _is_real ? real(_v) : _default_value;
 	}
     
+	// INTERNALS
+
 	///@ignore
 	static _limit_value = function(_string) {
 		return string_copy(_string, 1, self.max_length);
@@ -169,6 +174,8 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
 		return false;
 	}
     
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -251,6 +258,8 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
     
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e.set(_e._limit_value(_e._filter_input(_e.get())));
 	});

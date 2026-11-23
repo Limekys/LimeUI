@@ -5,9 +5,12 @@
 /// value
 ///@arg {Struct} [_params] Struct with parameters
 function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
-	
+	// STATE
+
 	self.value = _params[$ "value"] ?? false;
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -43,6 +46,8 @@ function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		_e.set(!_e.get());
 	});

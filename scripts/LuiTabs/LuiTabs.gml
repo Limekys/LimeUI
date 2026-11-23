@@ -4,14 +4,17 @@
 /// tab_indent
 ///@arg {Struct} [_params] Struct with parameters
 function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
-	
+	// STATE
+
 	self.tab_height = _params[$ "tab_height"] ?? LUI_AUTO;
 	self.tab_indent = _params[$ "tab_indent"] ?? 0;
-	
+
 	self.tabs = undefined;
 	self.tabs_header = undefined;
 	self.active_tab = undefined;
-	
+
+	// PUBLIC API
+
 	///@desc Set tabs height
 	///@arg {real} _tab_height
 	static setTabHeight = function(_tab_height) {
@@ -21,7 +24,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		}
 		return self;
 	}
-	
+
 	///@desc Set tabs indent
 	///@arg {real} _tab_indent
 	static setTabIndent = function(_tab_indent) {
@@ -32,7 +35,50 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		}
 		return self;
 	}
-	
+
+	///@desc Add LuiTab's
+	///@arg {struct,array} _tabs
+	static addTabs = function(_tabs) {
+		self.tabs = _tabs;
+		if !is_undefined(self.main_ui) {
+			self._initTabs();
+		}
+		return self;
+	}
+
+	///@desc Switch tab to another
+	static switchTab = function(_new_tab) {
+		if self.active_tab == _new_tab return;
+
+		if !is_undefined(self.active_tab) {
+			self.active_tab.tabDeactivate();
+		}
+
+		_new_tab.tabActivate();
+		self.active_tab = _new_tab;
+	}
+
+	///@desc Deactivate all tabs
+	static tabDeactivateAll = function() {
+		var _tab_count = array_length(self.tabs);
+		for (var i = 0; i < _tab_count; ++i) {
+			//Get tab
+			var _tab = self.tabs[i];
+			//Deactivate it
+			_tab.tabDeactivate();
+		}
+	}
+
+	///@desc Removes tab (WIP)
+	static removeTab = function(index) {
+		if index >= 0 && index < array_length(self.tabs) {
+			array_delete(self.tabs, index, 1);
+		}
+		return self;
+	}
+
+	// INTERNALS
+
 	///@desc Create header container for tabs
 	///@ignore
 	static _initHeader = function() {
@@ -40,7 +86,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 			self.tabs_header = new LuiRow({height: self.tab_height}).setGap(self.tab_indent).setMinHeight(self.tab_height);
 		}
 	}
-	
+
 	///@desc Create tabs
 	///@ignore
 	static _initTabs = function() {
@@ -67,48 +113,9 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 			self.active_tab = self.tabs[0];
 		}
 	}
-	
-	///@desc Add LuiTab's
-	///@arg {struct,array} _tabs
-	static addTabs = function(_tabs) {
-		self.tabs = _tabs;
-		if !is_undefined(self.main_ui) {
-			self._initTabs();
-		}
-		return self;
-	}
-	
-	///@desc Switch tab to another
-	static switchTab = function(_new_tab) {
-		if self.active_tab == _new_tab return;
-		
-		if !is_undefined(self.active_tab) {
-			self.active_tab.tabDeactivate();
-		}
-		
-		_new_tab.tabActivate();
-		self.active_tab = _new_tab;
-	}
-	
-	///@desc Deactivate all tabs
-	static tabDeactivateAll = function() {
-		var _tab_count = array_length(self.tabs);
-		for (var i = 0; i < _tab_count; ++i) {
-			//Get tab
-			var _tab = self.tabs[i];
-			//Deactivate it
-			_tab.tabDeactivate();
-		}
-	}
-	
-	///@desc Removes tab (WIP)
-	static removeTab = function(index) {
-		if index >= 0 && index < array_length(self.tabs) {
-			array_delete(self.tabs, index, 1);
-		}
-		return self;
-	}
-	
+
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		//Base
@@ -124,7 +131,9 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 			draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _style.color_border, 1);
 		}
 	}
-	
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		// Setting up padding for tabs
 		_e.setPadding(0).setGap(_e.tab_indent);
@@ -140,7 +149,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 			_e.setTabHeight(_style.min_height);
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_SHOW, function(_e) {
 		//Turn of visible of deactivated tab_container's
 		var _tab_count = array_length(_e.tabs);
@@ -151,7 +160,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 			}
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		if !is_undefined(_e.tabs_header) {
 			_e.tabs_header.destroy();
@@ -166,25 +175,27 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 /// color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiTab(_params = {}) : LuiButton(_params) constructor {
-	
+	// STATE
+
 	self.is_active = false;
 	self.tabs_parent = undefined;
 	self.tab_container = undefined;
-	
+
+	// PUBLIC API
+
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {
 		self._initContainer();
 		return self.container;
 	}
-	
-	///@ignore
-	static _initContainer = function() {
-		if is_undefined(self.tab_container) {
-			self.tab_container = new LuiContainer({x: 0, y: 0}).setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
-			self.setContainer(self.tab_container);
-		}
+
+	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
+	self.addContent = function(elements) {
+		self._initContainer();
+		self.tab_container.addContent(elements);
+		return self;
 	}
-	
+
 	///@desc Set active state of tab
 	///@arg {bool} _is_active
 	static setActiveState = function(_is_active) {
@@ -195,24 +206,29 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 			self.tab_container.setVisible(false).setFlexDisplay(flexpanel_display.none);
 		}
 	}
-	
+
 	///@desc Activate current tab
 	static tabActivate = function() {
 		self.setActiveState(true);
 	}
-	
+
 	///@desc Deactivate current tab
 	static tabDeactivate = function() {
 		self.setActiveState(false);
 	}
-	
-	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
-	self.addContent = function(elements) {
-		self._initContainer();
-		self.tab_container.addContent(elements);
-		return self;
+
+	// INTERNALS
+
+	///@ignore
+	static _initContainer = function() {
+		if is_undefined(self.tab_container) {
+			self.tab_container = new LuiContainer({x: 0, y: 0}).setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
+			self.setContainer(self.tab_container);
+		}
 	}
-	
+
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		// Calculate colors
@@ -230,35 +246,37 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 				}
 			}
 		}
-		
+
 		// Calculate positions
 		var _center_x = self.x + self.width / 2;
 		var _center_y = self.y + self.height / 2;
-		
+
 		// Base
 		if !is_undefined(_style.sprite_tab) {
 			draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
 		}
-		
+
 		// Icon and text
 		self._drawIconAndText(_center_x, _center_y, self.width, _blend_text);
-		
+
 		// Border
 		if !is_undefined(_style.sprite_tab_border) {
 			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
 		}
 	}
-	
+
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._initContainer();
 	});
-	
+
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		if !_e.is_active {
 			_e.tabs_parent.switchTab(_e);
 		}
 	});
-	
+
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		if !is_undefined(_e.tab_container) {
 			_e.tab_container.destroy();

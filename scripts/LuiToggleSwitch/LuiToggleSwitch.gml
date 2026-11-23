@@ -5,7 +5,8 @@
 /// icon_spacing
 ///@arg {Struct} [_params] Struct with parameters
 function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
-	
+	// STATE
+
 	self.value = _params[$ "value"] ?? false;
 	self.text = _params[$ "text"] ?? "";
 	self.icon_spacing = _params[$ "icon_spacing"] ?? 8;
@@ -16,6 +17,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	self.draw_width = 0;
 	self.draw_height = 0;
 	
+	// PUBLIC API
+
 	///@desc Set display text (render right of element)
 	///@arg {string} _text
 	static setText = function(_text) {
@@ -23,6 +26,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// INTERNALS
+
 	///@ignore
 	static _updateSlider = function() {
 		var _style = self.getStyle();
@@ -39,6 +44,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -94,6 +101,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._updateSlider();
 	});

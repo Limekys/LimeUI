@@ -9,7 +9,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 ///@arg {Real} [_default_backdrop_blur] Blur strength used when backdrop_blur is omitted
 function LuiMessage(_params = {}, _default_backdrop_blur = 0) : LuiBox(_params) constructor {
-	
+	// STATE
+
 	self.message_text = _params[$ "text"] ?? "";
 	self.dialog_content = _params[$ "content"] ?? undefined;
 	self.backdrop_blur = max(0, _params[$ "backdrop_blur"] ?? _default_backdrop_blur);
@@ -17,11 +18,15 @@ function LuiMessage(_params = {}, _default_backdrop_blur = 0) : LuiBox(_params) 
 	self.dialog_width = _params[$ "width"] ?? LUI_AUTO;
 	self.dialog_height = _params[$ "height"] ?? LUI_AUTO;
 	
+	// PUBLIC API
+
 	///@desc Close the message dialog
 	static close = function() {
 		self.destroy();
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		
 		// Set up a full-screen overlay and center the dialog.

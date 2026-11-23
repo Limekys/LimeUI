@@ -8,6 +8,8 @@
 ///@arg {Struct} [_params] Struct with parameters
 function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		//Calculate fit size
@@ -43,6 +45,8 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		var _style = _e.getStyle();
 		if !is_undefined(_style.sound_click) {

@@ -4,6 +4,7 @@
 /// color
 ///@arg {Struct} [_params] Struct with parameters
 function LuiButton(_params = {}) : LuiBase(_params) constructor {
+	// STATE
 	
 	self.text = _params[$ "text"] ?? "";
 	self.button_color = _params[$ "color"] ?? undefined;
@@ -22,6 +23,8 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	self.height_offset = 0;
 	*/
 	
+	// PUBLIC API
+
 	///@desc Set button text
 	///@arg {string} _text
 	static setText = function(_text) {
@@ -56,6 +59,8 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		return self;
 	}
 	
+	// INTERNALS
+
 	///@ignore
 	static _calcIconSize = function() {
 		if sprite_exists(self.icon.sprite) {
@@ -111,6 +116,8 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// DRAW
+
 	self.draw = function() {
 		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
@@ -149,6 +156,8 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
+	// EVENT HANDLERS
+
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		if sprite_exists(_e.icon.sprite) {
 			_e._calcIconSize();
