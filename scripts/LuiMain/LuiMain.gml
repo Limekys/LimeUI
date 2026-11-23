@@ -630,7 +630,7 @@ function LuiMain() : LuiBase() constructor {
 		var _origin = undefined;
 		if !is_undefined(_focused) && self.isInputAllowed(_focused)
 			&& self._isInModal(_focused, _root) && self._isKeyboardFocusable(_focused) {
-			_origin = flexpanel_node_layout_get_position(_focused.flex_node, false);
+			_origin = _focused.getLayoutBounds();
 		}
 		var _search = {origin: _origin, dx: _dx, dy: _dy, best: undefined, score: infinity, aligned: false};
 		self._findKeyboardFocus(_root, false, _search);
@@ -656,7 +656,7 @@ function LuiMain() : LuiBase() constructor {
 		if !_element.visible || _element.is_destroyed || _element.deactivated return;
 		if !_element.is_visible_in_region && (!_inside_scroll || is_undefined(_search.origin)) return;
 		if _element != self && self._isKeyboardFocusable(_element) {
-			var _bounds = flexpanel_node_layout_get_position(_element.flex_node, false);
+			var _bounds = _element.getLayoutBounds();
 			if _bounds.width > 0 && _bounds.height > 0 {
 				self._scoreKeyboardFocus(_element, _bounds, _search);
 			}
@@ -700,7 +700,7 @@ function LuiMain() : LuiBase() constructor {
 
 	///@ignore
 	static _revealKeyboardFocus = function(_element) {
-		var _bounds = flexpanel_node_layout_get_position(_element.flex_node, false);
+		var _bounds = _element.getLayoutBounds();
 		var _top = _bounds.top;
 		var _bottom = _top + _bounds.height;
 		var _parent = _element.parent;

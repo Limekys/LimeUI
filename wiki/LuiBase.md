@@ -13,6 +13,15 @@ min_height - minimum height of element
 name - unique name_id for element  
 
 ## Methods
+
+### `getLayoutBounds(_relative = false)`
+
+Returns the bounds from the last Flex layout with `left`, `top`, `width` and `height`. The default coordinates are in GUI space. Pass `true` for coordinates relative to the Flex parent.
+
+### `getWidth()` and `getHeight()`
+
+Return the calculated width and height in GUI units. These methods and `getLayoutBounds()` read the last layout result. After a setter, the new bounds become available once LimeUI recalculates layout. The bounds exclude visual transforms and are zero before the first layout or after destruction.
+
 ### `addEvent`
 Add a callback for a specific event
 Check "LuiEvents" script for available events

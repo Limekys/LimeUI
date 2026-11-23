@@ -467,6 +467,30 @@ function LuiBase(_params = {}) constructor {
 
 	// Layout
 
+	///@desc Returns the last Flex layout bounds without recalculating layout.
+	/// Bounds are in GUI coordinates by default and exclude visual transforms.
+	/// Coordinates and dimensions are zero before the first layout and after destruction.
+	///@arg {Bool} [_relative] Return bounds relative to the Flex parent when true
+	///@return {Struct} Calculated bounds with left, top, width and height
+	static getLayoutBounds = function(_relative = false) {
+		if self.is_destroyed || is_undefined(self.flex_node) {
+			return {left: 0, top: 0, width: 0, height: 0};
+		}
+		return flexpanel_node_layout_get_position(self.flex_node, _relative);
+	}
+
+	///@desc Returns the width from the last Flex layout in GUI units.
+	///@return {Real} Calculated width
+	static getWidth = function() {
+		return self.getLayoutBounds().width;
+	}
+
+	///@desc Returns the height from the last Flex layout in GUI units.
+	///@return {Real} Calculated height
+	static getHeight = function() {
+		return self.getLayoutBounds().height;
+	}
+
 	///@desc Set flexpanel(element) position type (default is flexpanel_position_type.relative)
 	///@arg {constant.flexpanel_position_type} [_type]
 	static setPositionType = function(_type = flexpanel_position_type.relative) {

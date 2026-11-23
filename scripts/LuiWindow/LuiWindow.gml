@@ -91,7 +91,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	///@ignore
 	static _moveInViewport = function(_x, _y) {
 		var _ui = self.main_ui;
-		var _bounds = flexpanel_node_layout_get_position(self.flex_node, false);
+		var _bounds = self.getLayoutBounds();
 		if _ui.width <= 0 || _ui.height <= 0 || _bounds.width <= 0 || _bounds.height <= 0 return;
 
 		var _max_x = _ui.width - _bounds.width;
@@ -99,7 +99,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		var _target_y = clamp(_y, 0, max(0, _ui.height - _bounds.height));
 		if _target_x == _bounds.left && _target_y == _bounds.top return;
 
-		var _relative = flexpanel_node_layout_get_position(self.flex_node);
+		var _relative = self.getLayoutBounds(true);
 		if _target_x != _bounds.left {
 			var _left = _relative.left + _target_x - _bounds.left;
 			flexpanel_node_style_set_position(self.flex_node, flexpanel_edge.left, _left, flexpanel_unit.point);
@@ -160,7 +160,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		_e._viewport_resize_handler = method(_e, function(_ui) {
 			if self.is_destroyed || !self.visible return;
 
-			var _bounds = flexpanel_node_layout_get_position(self.flex_node, false);
+			var _bounds = self.getLayoutBounds();
 			self._moveInViewport(_bounds.left, _bounds.top);
 		});
 		_e.main_ui.addEvent(LUI_EV_SIZE_UPDATE, _e._viewport_resize_handler);
