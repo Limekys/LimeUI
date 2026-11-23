@@ -12,37 +12,16 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 
 	self.draw = function() {
 		var _style = self.getStyle();
-		//Calculate fit size
-		var _width = self.width;
-		var _height = self.height;
-		if self.maintain_aspect {
-			if _width / self.aspect <= self.height  {
-				_height = _width / self.aspect;
-			} else {
-				_width = _height * self.aspect;
-			}
-		}
-		//Get blend color
 		var _blend_color = self.color_blend;
-		if !self.deactivated {
-			if self.isMouseHovered() {
-				_blend_color = merge_color(_blend_color, _style.color_hover, 0.5);
-				if self.is_pressed {
-					_blend_color = merge_color(_blend_color, c_black, 0.5);
-				}
-			}
-		} else {
+		if self.deactivated {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
+		} else if self.isMouseHovered() {
+			_blend_color = merge_color(_blend_color, _style.color_hover, 0.5);
+			if self.is_pressed {
+				_blend_color = merge_color(_blend_color, c_black, 0.5);
+			}
 		}
-		//Draw sprite button
-		var _sprite_render_function = _style.sprite_render_function ?? draw_sprite_stretched_ext;
-		if !is_undefined(self.value) && sprite_exists(self.value) {
-			_sprite_render_function(self.value, self.subimg,
-										floor(self.x + self.width/2 - _width/2),
-										floor(self.y + self.height/2 - _height/2),
-										_width, _height,
-										_blend_color, self.alpha);
-		}
+		self._drawImage(_blend_color);
 	}
 	
 	// EVENT HANDLERS

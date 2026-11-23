@@ -519,7 +519,7 @@ my_ui.addContent([
 	])
 ]);
 
-//demoStressTest();
+demoStressTest();
 
 // Compare cache modes on the opaque first panel.
 render_benchmark_panel = my_panel;

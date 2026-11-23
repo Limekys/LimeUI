@@ -67,34 +67,30 @@ function LuiImage(_params = {}) : LuiBase(_params) constructor {
 		}
 	}
 	
-	// DRAW
-
-	self.draw = function() {
-		var _style = self.getStyle();
-		//Calculate fit size
+	///@ignore
+	static _drawImage = function(_blend_color) {
+		if is_undefined(self.value) || !sprite_exists(self.value) || self.width <= 0 || self.height <= 0 return;
 		var _width = self.width;
 		var _height = self.height;
 		if self.maintain_aspect {
-			if _width / self.aspect <= self.height  {
-				_height = _width / self.aspect;
-			} else {
-				_width = _height * self.aspect;
-			}
+			_width = min(_width, _height * self.aspect);
+			_height = min(_height, _width / self.aspect);
 		}
-		//Get blend color
+		var _style = self.getStyle();
+		var _render = is_callable(_style.sprite_render_function) ? _style.sprite_render_function : draw_sprite_stretched_ext;
+		var _x = self.x + (self.width - _width) / 2;
+		var _y = self.y + (self.height - _height) / 2;
+		_render(self.value, self.subimg, _x, _y, _width, _height, _blend_color, self.alpha * draw_get_alpha());
+	}
+
+	// DRAW
+
+	self.draw = function() {
 		var _blend_color = self.color_blend;
 		if self.deactivated {
 			_blend_color = merge_color(_blend_color, c_black, 0.5);
 		}
-		//Draw sprite
-		var _sprite_render_function = is_callable(_style.sprite_render_function) ? _style.sprite_render_function : draw_sprite_stretched_ext;
-		if !is_undefined(self.value) && sprite_exists(self.value) {
-			_sprite_render_function(self.value, self.subimg,
-										floor(self.x + self.width/2 - _width/2),
-										floor(self.y + self.height/2 - _height/2),
-										_width, _height,
-										_blend_color, self.alpha * draw_get_alpha());
-		}
+		self._drawImage(_blend_color);
 	}
 	
 	// EVENT HANDLERS

@@ -32,8 +32,8 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	static _updateSlider = function() {
 		var _style = self.getStyle();
 		var _sprite_height = is_undefined(_style.sprite_toggleswitch) ? self.height : sprite_get_height(_style.sprite_toggleswitch);
-		self.draw_height = floor(min(self.height, self.width / 2, _sprite_height));
-		self.draw_width = floor(self.draw_height * 2);
+		self.draw_height = max(0, floor(min(self.height, self.width / 2, _sprite_height)));
+		self.draw_width = self.draw_height * 2;
 		self.knob_size = self.draw_height;
 		if self.value == false {
 			self.slider_color_value = 0;
@@ -51,8 +51,10 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 		var _alpha = draw_get_alpha();
 		
 		// Align slider position
-		var _slider_x = self.x;
+		// Keep the track and knob on the same pixel grid.
+		var _slider_x = floor(self.x);
 		var _slider_y = floor(self.y + (self.height - self.draw_height) / 2);
+		var _knob_x = _slider_x + round(clamp(self.knob_xoffset, 0, self.draw_width - self.knob_size));
 		
 		// Base
 		if !is_undefined(_style.sprite_toggleswitch) {
@@ -72,18 +74,19 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			} else {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider, 0, _slider_x + self.knob_xoffset, _slider_y, self.knob_size, self.knob_size, _blend_color, _alpha);
+			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider, 0, _knob_x, _slider_y, self.knob_size, self.knob_size, _blend_color, _alpha);
 		}
 		// Knob border
 		if !is_undefined(_style.sprite_toggleswitch_slider_border) {
-			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider_border, 0, _slider_x + self.knob_xoffset, _slider_y, self.knob_size, self.knob_size, _style.color_border, _alpha);
+			draw_sprite_stretched_ext(_style.sprite_toggleswitch_slider_border, 0, _knob_x, _slider_y, self.knob_size, self.knob_size, _style.color_border, _alpha);
 		}
 		// Border
 		if !is_undefined(_style.sprite_toggleswitch_border) {
 			draw_sprite_stretched_ext(_style.sprite_toggleswitch_border, 0, _slider_x, _slider_y, self.draw_width, self.draw_height, _style.color_border, _alpha);
 		}
 		// Text
-		if self.text != "" {
+		var _text_width = self.width - self.draw_width - self.icon_spacing;
+		if self.text != "" && _text_width > 0 {
 			if !self.deactivated {
 				draw_set_color(_style.color_text);
 			} else {
@@ -95,7 +98,6 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 			if !is_undefined(_style.font_default) {
 				draw_set_font(_style.font_default);
 			}
-			var _text_width = min(string_width(self.text), self.width - self.draw_width - self.icon_spacing);
 			var _text_x = _slider_x + self.draw_width + self.icon_spacing;
 			self._drawTruncatedText(_text_x, self.y + self.height / 2, self.text, _text_width);
 		}
@@ -116,6 +118,10 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	});
 	
 	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {
+		_e._updateSlider();
+	});
+
+	self.addEvent(LUI_EV_STYLE_UPDATE, function(_e) {
 		_e._updateSlider();
 	});
 	

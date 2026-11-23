@@ -232,14 +232,22 @@ function LuiBase(_params = {}) constructor {
 	///@arg {any} _value
 	static set = function(_value) {
 		if self.value != _value {
+			var _redraw = self._valueAffectsRender(self.value, _value);
 			self.value = _value;
 			if !is_undefined(self.binded_variable) {
 				self._updateToBindedVariable();
 			}
 			self._dispatchEvent(LUI_EV_VALUE_UPDATE);
-			self.updateMainUiSurface();
+			if _redraw {
+				self.updateMainUiSurface();
+			}
 		}
 		return self;
+	}
+
+	///@ignore
+	static _valueAffectsRender = function(_previous, _next) {
+		return true;
 	}
 
 	///@desc Get data struct or specified value from it

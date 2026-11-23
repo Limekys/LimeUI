@@ -19,7 +19,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	self.bar_height = _params[$ "bar_height"] ?? LUI_AUTO;
 	self.bar_color = _params[$ "color"] ?? undefined;
 	
-	self.bar_value = Range(value, min_value, max_value, 0, 1);
+	self.bar_value = 0;
+	self._bar_target = self.bar_value;
 	
 	// PUBLIC API
 
@@ -28,6 +29,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	static setMinValue = function(_min_value) {
 		self.min_value = _min_value;
 		self.set(self._calculateValue(self.get()));
+		self._updateBarTarget();
+		self.updateMainUiSurface();
 		return self;
 	}
 	
@@ -36,6 +39,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	static setMaxValue = function(_max_value) {
 		self.max_value = _max_value;
 		self.set(self._calculateValue(self.get()));
+		self._updateBarTarget();
+		self.updateMainUiSurface();
 		return self;
 	}
 	
@@ -50,6 +55,8 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	///@arg {real} _rounding
 	static setRounding = function(_rounding) {
 		self.rounding = _rounding;
+		self._updateBarTarget();
+		self.updateMainUiSurface();
 		return self;
 	}
 	
@@ -74,6 +81,25 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	static _calculateValue = function(_value) {
 		var _new_value = self.rounding > 0 ? round(_value / self.rounding) * self.rounding : _value;
 		return clamp(_new_value, self.min_value, self.max_value);
+	}
+
+	///@ignore
+	static _valueAffectsRender = function(_previous, _next) {
+		return self._calculateValue(_previous) != self._calculateValue(_next);
+	}
+
+	///@ignore
+	static _updateBarTarget = function(_immediate = false) {
+		var _target = 0;
+		if self.max_value > self.min_value {
+			_target = Range(self._calculateValue(self.value), self.min_value, self.max_value, 0, 1);
+		}
+		if _immediate || is_undefined(self.main_ui) {
+			self.bar_value = _target;
+		} else if _target != self._bar_target {
+			self.main_ui.animate(self, "bar_value", _target, 0.1);
+		}
+		self._bar_target = _target;
 	}
 	
 	// DRAW
@@ -123,18 +149,18 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 			draw_set_alpha(_alpha);
 			draw_set_halign(fa_center);
 			draw_set_valign(fa_middle);
-			draw_text(self.x + self.width div 2, self.y + self.height div 2, _calculateValue(self.value));
+			draw_text(self.x + self.width div 2, self.y + self.height div 2, self._calculateValue(self.value));
 		}
 	}
 	
 	// EVENT HANDLERS
 
 	self.addEvent(LUI_EV_CREATE, function(_e) {
-		_e.value = _calculateValue(_e.value);
+		_e.value = _e._calculateValue(_e.value);
+		_e._updateBarTarget(true);
 	});
 	
 	self.addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
-		var _target_bar_value = Range(_e.value, _e.min_value, _e.max_value, 0, 1);
-		_e.main_ui.animate(_e, "bar_value", _target_bar_value, 0.1);
+		_e._updateBarTarget();
 	});
 }
