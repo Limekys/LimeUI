@@ -57,6 +57,9 @@ function LuiBase(_params = {}) constructor {
 	self.prev_h = -1;									//Previous height
 	self.min_width = LUI_AUTO;
 	self.min_height = LUI_AUTO;
+	self._explicit_min_width = LUI_AUTO;
+	self._explicit_min_height = LUI_AUTO;
+	self._applied_style = undefined;
 	self.max_width = LUI_AUTO;
 	self.max_height = LUI_AUTO;
 	self.auto_x = false;
@@ -189,6 +192,8 @@ function LuiBase(_params = {}) constructor {
 		self.b = _params[$ "b"] ?? LUI_AUTO;
 		self.min_width = _params[$ "min_width"] ?? LUI_AUTO;
 		self.min_height = _params[$ "min_height"] ?? LUI_AUTO;
+		self._explicit_min_width = self.min_width;
+		self._explicit_min_height = self.min_height;
 		self.max_width = _params[$ "max_width"] ?? 10000;
 		self.max_height = _params[$ "max_height"] ?? 10000;
 		self.width = _params[$ "width"] ?? _params[$ "w"] ?? LUI_AUTO;
@@ -449,25 +454,6 @@ function LuiBase(_params = {}) constructor {
 			}
 
 			// Flex setting up
-			var _element_style = _element.getStyle();
-			var _style_min_width = is_undefined(_element_style) ? 1 : _element_style.min_width;
-			var _style_min_height = is_undefined(_element_style) ? 1 : _element_style.min_height;
-			if _element.min_width == LUI_AUTO {
-				if _element.auto_width || is_string(_element._requested_width) {
-					_element.min_width = _style_min_width;
-				} else {
-					_element.min_width = min(_element.width, _style_min_width);
-				}
-			}
-			if _element.min_height == LUI_AUTO {
-				if _element.auto_height || is_string(_element._requested_height) {
-					_element.min_height = _style_min_height;
-				} else {
-					_element.min_height = min(_element.height, _style_min_height);
-				}
-			}
-			flexpanel_node_style_set_min_width(_element.flex_node, _element.min_width, flexpanel_unit.point);
-			flexpanel_node_style_set_min_height(_element.flex_node, _element.min_height, flexpanel_unit.point);
 			if array_length(_ranges) > 0 && i+1 <= array_length(_ranges) {
 				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
 				flexpanel_node_style_set_flex_shrink(_element.flex_node, _ranges[i]);
@@ -696,6 +682,9 @@ function LuiBase(_params = {}) constructor {
 	///@desc Set flexpanel(element) min width
 	///@arg {real} [_min_width]
 	static setMinWidth = function(_min_width = LUI_AUTO) {
+		if _min_width != LUI_AUTO {
+			self._explicit_min_width = _min_width;
+		}
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _min_width != LUI_AUTO && self.min_width != _min_width {
@@ -728,6 +717,9 @@ function LuiBase(_params = {}) constructor {
 	///@desc Set flexpanel(element) min height
 	///@arg {real} [_min_height]
 	static setMinHeight = function(_min_height = LUI_AUTO) {
+		if _min_height != LUI_AUTO {
+			self._explicit_min_height = _min_height;
+		}
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _min_height != LUI_AUTO && self.min_height != _min_height {
@@ -763,6 +755,12 @@ function LuiBase(_params = {}) constructor {
 	///@arg {real} [_min_height]
 	///@arg {real} [_max_height]
 	static setMinMaxSize = function(_min_width = LUI_AUTO, _max_width = LUI_AUTO, _min_height = LUI_AUTO, _max_height = LUI_AUTO) {
+		if _min_width != LUI_AUTO {
+			self._explicit_min_width = _min_width;
+		}
+		if _min_height != LUI_AUTO {
+			self._explicit_min_height = _min_height;
+		}
 		var _flex_node = self.flex_node;
 		var _update_flex = false;
 		if _min_width != LUI_AUTO && self.min_width != _min_width {
@@ -987,6 +985,7 @@ function LuiBase(_params = {}) constructor {
 		self._style_dirty = true;
 		self._propagateStyleToChildren();
 		self._applyStyles();
+		self.updateMainUiFlex(!is_undefined(self.parent));
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -1005,7 +1004,7 @@ function LuiBase(_params = {}) constructor {
 		}
 		self._style_dirty = true;
 		self._applyStyles();
-		self.updateMainUiFlex();
+		self.updateMainUiFlex(!is_undefined(self.parent));
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -1014,8 +1013,9 @@ function LuiBase(_params = {}) constructor {
 	/// Call this after mutating a shared style object in place.
 	static invalidateStyle = function() {
 		self._style_dirty = true;
-		self._applyStyles();
-		self._propagateStyleToChildren();
+		self._applyStyles(true);
+		self._propagateStyleToChildren(true);
+		self.updateMainUiFlex(!is_undefined(self.parent));
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -1430,6 +1430,7 @@ function LuiBase(_params = {}) constructor {
 		// Do not use delete here: _cached_style may reference a shared style object
 		self.local_style = undefined;
 		self._cached_style = undefined;
+		self._applied_style = undefined;
 		self._style_delta = undefined;
 		delete self.render_region_offset; self.render_region_offset = undefined;
 		delete self.view_region; self.view_region = undefined;
@@ -1606,14 +1607,16 @@ function LuiBase(_params = {}) constructor {
 	///@desc Passes the inheritable style down to children. Skips elements with a fully
 	/// autonomous style; delta-based styles are rebuilt on top of the new inherited style.
 	///@ignore
-	static _propagateStyleToChildren = function() {
+	static _propagateStyleToChildren = function(_force_notify = false) {
+		if self.is_destroyed return self;
 		// Composite widgets can redirect getContent to an inner container.
 		var _content = self.content;
 		for (var i = array_length(_content) - 1; i >= 0; --i) {
 			var _child = _content[i];
 			if _child.is_destroyed continue;
 			if !_child._has_own_style || is_struct(_child._style_delta) {
-				_child._applyInheritedStyle(self.style);
+				_child._applyInheritedStyle(self.style, _force_notify);
+				if self.is_destroyed return self;
 			}
 		}
 		return self;
@@ -1621,9 +1624,9 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Applies a style inherited from the parent. Called by the parent during propagation.
 	///@ignore
-	static _applyInheritedStyle = function(_style) {
+	static _applyInheritedStyle = function(_style, _force_notify = false) {
 		self._rebuildStyleFromInherited(_style);
-		self._applyStyles();
+		self._applyStyles(_force_notify);
 		self.updateMainUiSurface();
 		self._propagateStyleToChildren();
 		return self;
@@ -1647,7 +1650,8 @@ function LuiBase(_params = {}) constructor {
 	///@desc Applies the effective style to the flex node. Class rules and local overrides
 	/// are already baked into the effective style by _buildEffectiveStyle().
 	///@ignore
-	static _applyStyles = function() {
+	static _applyStyles = function(_force_notify = false) {
+		if self.is_destroyed return;
 		var _style = self.getStyle();
 		if is_undefined(_style) return;
 		var _container_node = self.getContainer().flex_node;
@@ -1656,6 +1660,31 @@ function LuiBase(_params = {}) constructor {
 		flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, _style.gap);
 		flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, _style.border);
 		self._applySelfAlignment(_style.margin);
+		if !is_undefined(self.parent) {
+			self._applyStyleMinSize(_style);
+		}
+
+		var _previous = self._applied_style;
+		self._applied_style = _style;
+		if !self.is_adding && !is_undefined(_previous) && (_force_notify || _previous != _style) {
+			self._dispatchEvent(LUI_EV_STYLE_UPDATE, _style);
+		}
+	}
+
+	///@ignore
+	static _applyStyleMinSize = function(_style) {
+		var _min_width = self._explicit_min_width;
+		var _min_height = self._explicit_min_height;
+		if _min_width == LUI_AUTO {
+			_min_width = is_real(self._requested_width) ? min(self._requested_width, _style.min_width) : _style.min_width;
+		}
+		if _min_height == LUI_AUTO {
+			_min_height = is_real(self._requested_height) ? min(self._requested_height, _style.min_height) : _style.min_height;
+		}
+		self.min_width = _min_width;
+		self.min_height = _min_height;
+		flexpanel_node_style_set_min_width(self.flex_node, _min_width, flexpanel_unit.point);
+		flexpanel_node_style_set_min_height(self.flex_node, _min_height, flexpanel_unit.point);
 	}
 
 	// Flex layout

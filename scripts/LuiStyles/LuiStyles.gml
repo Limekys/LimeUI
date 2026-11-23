@@ -157,7 +157,28 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
+	///@desc Sets minimum dimensions for the specified concrete widget classes.
+	///@arg {Real|Undefined} _min_width Minimum width in pixels, or undefined to keep it unchanged
+	///@arg {Real|Undefined} _min_height Minimum height in pixels, or undefined to keep it unchanged
+	///@arg {Array} _class_names Constructor names, such as ["LuiButton", "LuiInput"]
+	///@return {Struct} This style
+	static setMinSizeFor = function(_min_width, _min_height, _class_names) {
+		for (var i = 0, n = array_length(_class_names); i < n; i++) {
+			var _class_name = _class_names[i];
+			var _override = self._class_overrides[$ _class_name] ?? {};
+			if !is_undefined(_min_width) {
+				_override.min_width = _min_width;
+			}
+			if !is_undefined(_min_height) {
+				_override.min_height = _min_height;
+			}
+			self._class_overrides[$ _class_name] = _override;
+		}
+		return self;
+	}
+
 	// FONTS FUNCTIONS
+
 	
 	///@desc Set fonts (_default, _buttons, _debug)
 	///@arg {asset.GMFont} _default

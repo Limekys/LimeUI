@@ -51,7 +51,7 @@ demo_style_dark = new LuiStyle()
 	.setColorAccent(#3a7d44)
 	.setColorHover(c_gray)
 	.setColorText(merge_color(c_white, #393c4f, 0.2), #77726e)
-	.setSounds(sndBasicClick);
+	.setSounds(sndBasicClick)
 	//.setPaddingFor(4, ["LuiPanel"])
 
 // Create Modern style theme
