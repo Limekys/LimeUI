@@ -59,6 +59,7 @@ function LuiBase(_params = {}) constructor {
 	self.min_height = LUI_AUTO;
 	self._explicit_min_width = LUI_AUTO;
 	self._explicit_min_height = LUI_AUTO;
+	self._content_min_height = 0;
 	self._applied_style = undefined;
 	self.max_width = LUI_AUTO;
 	self.max_height = LUI_AUTO;
@@ -1680,6 +1681,9 @@ function LuiBase(_params = {}) constructor {
 		}
 		if _min_height == LUI_AUTO {
 			_min_height = is_real(self._requested_height) ? min(self._requested_height, _style.min_height) : _style.min_height;
+		}
+		if is_undefined(self._requested_height) {
+			_min_height = max(_min_height, self._content_min_height);
 		}
 		self.min_width = _min_width;
 		self.min_height = _min_height;
