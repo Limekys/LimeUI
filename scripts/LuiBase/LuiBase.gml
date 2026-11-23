@@ -4,8 +4,10 @@
 /// y - y position for element (top position of flex node)
 /// r - right position for element (right position of flex node)
 /// b - bottom position for element (bottom position of flex node)
-/// width or w - width of element
-/// height or h - height of element
+/// width - width of element
+/// w - alias for width
+/// height - height of element
+/// h - alias for height
 /// min_width - minimum width of element
 /// min_height - minimum height of element
 /// max_width - maximum width of element

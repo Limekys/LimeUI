@@ -2,7 +2,9 @@
 /// During vertical scrolling, offscreen rows in an ordered list refresh their screen position when they enter the viewport.
 /// Use getLayoutBounds() to query the current position of an offscreen row.
 /// Available parameters:
-/// allow_resize, scroll_x, scroll_y
+/// allow_resize
+/// scroll_x
+/// scroll_y
 ///@arg {Struct} [_params] Struct with parameters
 function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	// STATE
