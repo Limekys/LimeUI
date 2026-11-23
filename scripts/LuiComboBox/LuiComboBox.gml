@@ -10,6 +10,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	self.items = undefined;
 	self.is_open = false;
 	self.combobox_panel = undefined;
+	self._popup_row_height = undefined;
 	self.text_width = self.width;
 
 	// PUBLIC API
@@ -75,10 +76,11 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		if !is_array(self.items) {
 			self.items = [self.items];
 		}
+		self._popup_row_height = max(self.min_height, self.height);
 		for (var i = 0; i < array_length(self.items); i++) {
 			var _item = self.items[i];
 			_item.combobox_parent = self;
-			_item.setHeight(max(24, self.height)).setFlexShrink(0);
+			_item.setHeight(self._popup_row_height).setFlexShrink(0);
 		}
 		self.combobox_panel.addContent(self.items);
 	}
@@ -91,9 +93,19 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		var _top = clamp(self.y, 0, _ui.height);
 		var _bottom = clamp(self.y + self.height, 0, _ui.height);
 		var _below = _ui.height - _bottom;
-		var _desired_height = array_length(self.items) * max(24, self.height) + 8;
-		var _open_above = _desired_height > _below && _top > _below;
-		var _height = min(_desired_height, _open_above ? _top : _below);
+		var _row_height = max(self.min_height, self.height);
+		if _row_height != self._popup_row_height {
+			for (var i = 0; i < array_length(self.items); i++) {
+				self.items[i].setHeight(_row_height);
+			}
+			self._popup_row_height = _row_height;
+		}
+		var _content_style = _panel.getContainer().getStyle();
+		var _count = array_length(self.items);
+		var _desired_height = _count * _row_height + max(0, _count - 1) * _content_style.gap
+			+ 2 * (_content_style.padding + _content_style.border);
+		var _height = min(_desired_height, _ui.height);
+		var _open_above = _height > _below && _top > _below;
 		if _width < 1 || _height < 1 {
 			self._closePopup();
 			return;
@@ -105,7 +117,8 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		}
 		var _host = _panel.parent;
 		var _x = clamp(self.x, 0, _ui.width - _width);
-		var _y = _open_above ? _top - _height : _bottom;
+		// Shift the popup into the viewport when neither side can fit it.
+		var _y = clamp(_open_above ? _top - _height : _bottom, 0, _ui.height - _height);
 		_panel.setSize(_width, _height).setPosition(_x - _host.x, _y - _host.y);
 	}
 
