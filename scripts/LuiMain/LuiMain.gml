@@ -11,6 +11,7 @@ function LuiMain() : LuiBase() constructor {
 	self.is_visible_in_region = true;
 	self.pre_draw_list = [];
 	self.element_names = {};
+	self._elements_by_tag = {};
 	self.main_ui = self;
 	self.element_in_focus = undefined;
 	self.topmost_hovered_element = undefined;
@@ -104,14 +105,29 @@ function LuiMain() : LuiBase() constructor {
 	}
 
 	///@desc Get element by name
-	///@return {Struct}
-	static getElement = function(_name) {
+	///@arg {String} _name Element name
+	///@arg {Bool} [_warn] Log a warning when the name is absent
+	///@return {Struct|Real} Element or -1 when absent
+	static getElement = function(_name, _warn = false) {
 		if variable_struct_exists(self.element_names, _name) {
 			return variable_struct_get(self.element_names, _name);
-		} else {
-			_luiPrintError($"Can't find element {_name}!");
-			return -1;
 		}
+		if _warn {
+			_luiPrintWarning($"Can't find element {_name}!");
+		}
+		return -1;
+	}
+
+	///@desc Returns an independent array of elements with the given case-sensitive tag.
+	///@arg {String} _tag Element tag
+	///@return {Array} Matching elements in registration order
+	static getTag = function(_tag) {
+		var _elements = self._elements_by_tag[$ _tag];
+		if is_undefined(_elements) return [];
+		var _count = array_length(_elements);
+		var _result = array_create(_count);
+		array_copy(_result, 0, _elements, 0, _count);
+		return _result;
 	}
 
 	///@desc Return true if we interacting with UI at the moment with mouse or keyboard
@@ -1464,6 +1480,7 @@ function LuiMain() : LuiBase() constructor {
 		_e.active_animations = -1;
 		_e._screen_grid = undefined;
 		delete _e.element_names;
+		_e._elements_by_tag = {};
 		global.lui_element_count = 0;
 		global.lui_id_count = 0;
 		global.lui_max_z = 0;

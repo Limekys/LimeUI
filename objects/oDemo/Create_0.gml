@@ -521,9 +521,6 @@ my_ui.addContent([
 
 //demoStressTest();
 
-my_ui.getElement("firstScrollPanel").visual_alpha = 0.5;
-tabs.visual_alpha = 0.75;
-
 // Compare cache modes on the opaque first panel.
 render_benchmark_panel = my_panel;
 render_benchmark_original_cache = render_benchmark_panel.cache_as_surface;

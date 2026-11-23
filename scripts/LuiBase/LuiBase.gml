@@ -82,6 +82,7 @@ function LuiBase(_params = {}) constructor {
 	self.has_focus = false;
 	self._keyboard_focusable = undefined;
 	self._shortcut_key = undefined;
+	self._tags = [];
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.ignore_mouse_all = undefined;
@@ -168,7 +169,11 @@ function LuiBase(_params = {}) constructor {
 	self._draw_order_dirty = true;
 
 	// Constructor parameters
+	self._debug_param_keys = undefined;
 	if is_struct(_params) {
+		if LUI_DEBUG_VALIDATE_PARAMS || global.lui_debug_mode != 0 {
+			self._debug_param_keys = variable_struct_get_names(_params);
+		}
 		self.x = _params[$ "x"] ?? LUI_AUTO;
 		self.y = _params[$ "y"] ?? LUI_AUTO;
 		self.r = _params[$ "r"] ?? LUI_AUTO;
@@ -232,14 +237,48 @@ function LuiBase(_params = {}) constructor {
 		}
 	}
 
-	///@desc Set data
-	///@arg {string} _key variable name
-	///@arg {any} _value value
-	static setData = function(_key, _value) {
+	///@desc Sets one data field or merges all fields from a struct.
+	///@arg {String|Struct} _key Field name or struct of fields
+	///@arg {Any} [_value] Value when a field name is supplied
+	///@return {Struct} This element
+	static setData = function(_key, _value = undefined) {
 		if is_undefined(self.data) {
 			self.data = {};
 		}
-		self.data[$ _key] = _value;
+		if is_struct(_key) {
+			var _keys = variable_struct_get_names(_key);
+			for (var i = 0, n = array_length(_keys); i < n; i++) {
+				var _name = _keys[i];
+				self.data[$ _name] = _key[$ _name];
+			}
+		} else {
+			self.data[$ _key] = _value;
+		}
+		return self;
+	}
+
+	///@desc Adds a case-sensitive tag. Built-in tags use the lowercase concrete widget class without the Lui prefix.
+	///@arg {String} _tag Tag to add
+	///@return {Struct} This element
+	static setTag = function(_tag) {
+		if self.is_destroyed || _tag == "" || array_contains(self._tags, _tag) return self;
+		array_push(self._tags, _tag);
+		if !is_undefined(self.main_ui) {
+			self._indexTag(_tag);
+		}
+		return self;
+	}
+
+	///@desc Removes a tag from this element.
+	///@arg {String} _tag Tag to remove
+	///@return {Struct} This element
+	static removeTag = function(_tag) {
+		var _index = array_get_index(self._tags, _tag);
+		if _index < 0 return self;
+		array_delete(self._tags, _index, 1);
+		if !is_undefined(self.main_ui) {
+			self._unindexTag(_tag);
+		}
 		return self;
 	}
 
@@ -313,6 +352,7 @@ function LuiBase(_params = {}) constructor {
 		}
 
 		var _elements_count = array_length(elements);
+		if self.is_destroyed || _elements_count == 0 return self;
 
 		// Update array with delayed content for unordered adding
 		if is_undefined(self.main_ui) {
@@ -356,12 +396,18 @@ function LuiBase(_params = {}) constructor {
 
 			// Get element
 			var _element = elements[i];
+			if !is_struct(_element) || !is_instanceof(_element, LuiBase) {
+				_luiPrintWarning("addContent expects a LimeUI element.");
+				continue;
+			}
+			if _element == self || _element.is_destroyed || _element.is_adding || !is_undefined(_element.main_ui) {
+				_luiPrintWarning($"Cannot add element \"{_element.name}\". It is already attached, being added, or destroyed.");
+				continue;
+			}
 
 			// Init element
 			_element._initElement();
 
-			// Recursion prevention
-			if _element.is_adding continue;
 			_element.is_adding = true;
 
 			// Init depth
@@ -424,6 +470,8 @@ function LuiBase(_params = {}) constructor {
 
 			// Register element name
 			_element._registerElementName();
+			_element._registerTags();
+			_element._validateConstructorParams();
 			if !is_undefined(_element._shortcut_key) {
 				_element._syncShortcutRegistration();
 			}
@@ -443,7 +491,7 @@ function LuiBase(_params = {}) constructor {
 		}
 
 		// Update content
-		self.setNeedToUpdateContent();
+		self.requestContentUpdate();
 
 		// Update flex
 		self.updateMainUiFlex();
@@ -465,14 +513,24 @@ function LuiBase(_params = {}) constructor {
 		}
 	}
 
-	///@desc Set flag to update content
-	static setNeedToUpdateContent = function(_update_parent = false) {
+	///@desc Requests a content update. Optionally also requests updates on all ancestors.
+	///@arg {Bool} [_update_parent] Include ancestors
+	///@return {Struct} This element
+	static requestContentUpdate = function(_update_parent = false) {
 		self.need_to_update_content = true;
 		if _update_parent {
 			if is_undefined(self.parent) return self;
-			self.parent.setNeedToUpdateContent(_update_parent);
+			self.parent.requestContentUpdate(true);
 		}
 		return self;
+	}
+
+	///@desc Compatibility alias for requestContentUpdate().
+	///@arg {Bool} [_update_parent] Include ancestors
+	///@return {Struct} This element
+	///@deprecated
+	static setNeedToUpdateContent = function(_update_parent = false) {
+		return self.requestContentUpdate(_update_parent);
 	}
 
 	// Layout
@@ -931,7 +989,7 @@ function LuiBase(_params = {}) constructor {
 		if flexpanel_node_style_get_display(_flex_node) != _flex_display {
 			flexpanel_node_style_set_display(_flex_node, _flex_display);
 			self.updateMainUiFlex(true);
-			self.setNeedToUpdateContent(true);
+			self.requestContentUpdate(true);
 		}
 		return self;
 	}
@@ -1398,6 +1456,13 @@ function LuiBase(_params = {}) constructor {
 		}
 		// Double-Destroy protection
 		self.is_destroyed = true;
+		if !is_undefined(self.main_ui) {
+			for (var i = 0, n = array_length(self._tags); i < n; i++) {
+				self._unindexTag(self._tags[i]);
+			}
+		}
+		self._tags = [];
+		self._deleteElementName();
 		if !is_undefined(self._shortcut_key) {
 			self._syncShortcutRegistration();
 		}
@@ -1410,10 +1475,9 @@ function LuiBase(_params = {}) constructor {
 			self.main_ui.element_in_focus = undefined;
 			self.removeFocus();
 		}
-		self._deleteElementName();
 		self._cleanupScreenGrid();
 		if !is_undefined(self.parent) {
-			self.parent.setNeedToUpdateContent(true);
+			self.parent.requestContentUpdate(true);
 		}
 		self.updateMainUiFlex(true);
 		self.updateMainUiSurface();
@@ -1491,10 +1555,60 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _deleteElementName = function() {
 		if !is_undefined(self.main_ui) && self != self.main_ui {
-			if variable_struct_exists(self.main_ui.element_names, self.name) {
+			if self.main_ui.element_names[$ self.name] == self {
 				variable_struct_remove(self.main_ui.element_names, self.name);
-			} else {
-				_luiPrintError($"_deleteElementName: Can't find element {instanceof(self)} with name \"{self.name}\"!");
+			}
+		}
+	}
+
+	///@ignore
+	static _registerTags = function() {
+		var _class = instanceof(self);
+		if string_copy(_class, 1, 3) == "Lui" {
+			var _tag = string_lower(string_delete(_class, 1, 3));
+			if !array_contains(self._tags, _tag) {
+				array_push(self._tags, _tag);
+			}
+		}
+		for (var i = 0, n = array_length(self._tags); i < n; i++) {
+			self._indexTag(self._tags[i]);
+		}
+	}
+
+	///@ignore
+	static _indexTag = function(_tag) {
+		var _index = self.main_ui._elements_by_tag;
+		var _elements = _index[$ _tag] ?? [];
+		array_push(_elements, self);
+		_index[$ _tag] = _elements;
+	}
+
+	///@ignore
+	static _unindexTag = function(_tag) {
+		var _index = self.main_ui._elements_by_tag;
+		var _elements = _index[$ _tag];
+		if is_undefined(_elements) return;
+		var _position = array_get_index(_elements, self);
+		if _position < 0 return;
+		array_delete(_elements, _position, 1);
+		if array_length(_elements) == 0 {
+			variable_struct_remove(_index, _tag);
+		} else {
+			_index[$ _tag] = _elements;
+		}
+	}
+
+	///@ignore
+	static _validateConstructorParams = function() {
+		if is_undefined(self._debug_param_keys) return;
+		var _keys = self._debug_param_keys;
+		self._debug_param_keys = undefined;
+		var _allowed = _luiGetConstructorKeys(instanceof(self));
+		if is_undefined(_allowed) return;
+		for (var i = 0, n = array_length(_keys); i < n; i++) {
+			var _key = _keys[i];
+			if !array_contains(_allowed, _key) {
+				_luiPrintWarning($"Unknown constructor parameter \"{_key}\".");
 			}
 		}
 	}

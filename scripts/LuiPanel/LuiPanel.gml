@@ -463,6 +463,9 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 function LuiScrollThumb(_params = {}) : LuiButton({x: 0, y: 0, width: 1, height: 1}) constructor {
 	// STATE
 
+	if is_array(self._debug_param_keys) {
+		self._debug_param_keys = variable_struct_get_names(_params);
+	}
 	self._panel = _params[$ "panel"];
 	self._horizontal = _params[$ "horizontal"] ?? false;
 	self._grab_fraction = 0;

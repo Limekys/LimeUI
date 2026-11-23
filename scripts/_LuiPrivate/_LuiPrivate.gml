@@ -14,6 +14,45 @@ function _luiPrintWarning(_text) {
 	}
 }
 
+///@ignore
+function _luiGetConstructorKeys(_class) {
+	static _base_keys = ["x", "y", "r", "b", "min_width", "min_height", "max_width", "max_height", "width", "w", "height", "h", "name"];
+	static _widget_keys = {
+		LuiBase: [],
+		LuiAbsoluteContainer: [],
+		LuiBox: ["color", "alpha"],
+		LuiButton: ["text", "color"],
+		LuiCheckbox: ["value", "text", "icon_spacing"],
+		LuiColumn: [],
+		LuiComboBox: ["text", "color", "placeholder"],
+		LuiComboBoxItem: ["text", "color"],
+		LuiContainer: [],
+		LuiImage: ["value", "subimg", "color", "alpha", "maintain_aspect"],
+		LuiImageButton: ["value", "subimg", "color", "alpha", "maintain_aspect"],
+		LuiInput: ["value", "placeholder", "is_masked", "max_length", "input_mode", "excluded_chars", "allowed_chars"],
+		LuiLayer: [],
+		LuiMessage: ["color", "alpha", "text", "content", "backdrop_blur", "button_text"],
+		LuiPanel: ["allow_resize", "scroll_x", "scroll_y"],
+		LuiProgressBar: ["value", "min_value", "max_value", "rounding", "display_value", "bar_height", "color"],
+		LuiProgressRing: ["value", "min_value", "max_value", "rounding", "display_value", "bar_height", "color"],
+		LuiRow: [],
+		LuiScrollPanel: ["allow_resize", "scroll_x", "scroll_y"],
+		LuiSlider: ["value", "min_value", "max_value", "rounding", "display_value", "bar_height", "color"],
+		LuiSurface: ["value", "color", "alpha", "maintain_aspect"],
+		LuiTab: ["text", "color"],
+		LuiTabs: ["allow_resize", "scroll_x", "scroll_y", "tab_height", "tab_indent"],
+		LuiText: ["value", "text_halign", "text_valign", "overflow", "scale_to_fit"],
+		LuiToggleButton: ["text", "color", "value"],
+		LuiToggleSwitch: ["value", "text", "icon_spacing"],
+		LuiWindow: ["allow_resize", "scroll_x", "scroll_y", "title", "show_controls"],
+		LuiWindowHeader: ["title", "show_controls"]
+	};
+	if _class == "LuiScrollThumb" return ["panel", "horizontal"];
+	var _keys = _widget_keys[$ _class];
+	if is_undefined(_keys) return undefined;
+	return array_concat(_base_keys, _keys);
+}
+
 ///@desc Converts a LuiStyle instance into a plain raw struct (instance variables only)
 ///@arg {Struct} _style LuiStyle instance
 ///@return {Struct} Plain struct with all style fields

@@ -15,6 +15,7 @@ global.lui_debug_render_grid = false;			// Enable/Disable render of debug grid
 #macro LUI_GRID_SIZE					512	// UI grid size for elements
 #macro LUI_GRID_ACCURACY				64		// 64 is good, but you can use low size if you have problem with mouse hovering on elements
 #macro LUI_LOG_ERROR_MODE				2		// 0 - do not log, 1 - errors only, 2 - errors and warnings
+#macro LUI_DEBUG_VALIDATE_PARAMS		true	// Validate widget constructor keys when attaching elements
 #macro LUI_FORCE_ALPHA_1				true	// Determines whether to set alpha to 1 before rendering the UI or not
 #macro LUI_ALLOW_CHANGE_CURSOR			true	// Change windows cursor on panels resizing
 #macro LUI_DEFAULT_ALERT_BLUR			5		// Default backdrop blur strength for alert dialogs
