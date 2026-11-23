@@ -26,4 +26,4 @@
 #macro LUI_EV_DRAGGING "dragging" // Triggered while the element is being dragged (returns the structure with the new coordinates of the element or mouse)
 #macro LUI_EV_DRAG_START "drag_start" // Triggered once when dragging starts
 #macro LUI_EV_DRAG_END "drag_end" // Triggered once when dragging ends
-#macro LUI_EV_CLICK "click" // Triggered when the element is clicked (full press-release cycle)
+#macro LUI_EV_CLICK "click" // Local activation from a completed left click or Enter

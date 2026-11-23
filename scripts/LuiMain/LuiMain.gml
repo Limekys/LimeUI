@@ -285,7 +285,7 @@ function LuiMain() : LuiBase() constructor {
 						self.element_in_focus = undefined;
 					}
 					if _click && self.isInputAllowed(_released_element) {
-						self._activateElement(_released_element);
+						self._dispatchPointerClick(_released_element, mb_left);
 					}
 				}
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && (mouse_wheel_down() || mouse_wheel_up()) {
@@ -582,10 +582,9 @@ function LuiMain() : LuiBase() constructor {
 	// INPUT AND MODALS
 
 	///@ignore
-	static _activateElement = function(_element) {
-		self._dispatchPointer(_element, LUI_EV_POINTER_CLICK, mb_left);
+	static _activateElement = function(_element, _event = LUI_EV_CLICK) {
 		if self.isInputAllowed(_element) {
-			_element._dispatchEvent(LUI_EV_CLICK);
+			_element._dispatchEvent(_event);
 		}
 	}
 
@@ -856,12 +855,15 @@ function LuiMain() : LuiBase() constructor {
 
 			_target._dispatchEvent(LUI_EV_MOUSE_RIGHT_RELEASED);
 			if _origin == _target && self.isInputAllowed(_target) {
-				self._dispatchPointer(_target, LUI_EV_POINTER_CLICK, mb_right);
-				if self.isInputAllowed(_target) {
-					_target._dispatchEvent(LUI_EV_RIGHT_CLICK);
-				}
+				self._dispatchPointerClick(_target, mb_right);
 			}
 		}
+	}
+
+	///@ignore
+	static _dispatchPointerClick = function(_target, _button) {
+		self._dispatchPointer(_target, LUI_EV_POINTER_CLICK, _button);
+		self._activateElement(_target, _button == mb_right ? LUI_EV_RIGHT_CLICK : LUI_EV_CLICK);
 	}
 
 	///@ignore

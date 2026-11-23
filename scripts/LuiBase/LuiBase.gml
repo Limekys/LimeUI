@@ -1753,7 +1753,11 @@ function LuiBase(_params = {}) constructor {
 
 	///@ignore
 	static _getClipInsets = function() {
-		var _style = self.getStyle();
+		return self._getStyleClipInsets(self.getStyle());
+	}
+
+	///@ignore
+	static _getStyleClipInsets = function(_style) {
 		return is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
 	}
 

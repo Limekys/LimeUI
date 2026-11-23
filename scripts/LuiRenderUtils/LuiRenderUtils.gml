@@ -16,11 +16,6 @@ function _luiBlendReset() {
 	gpu_set_blendmode(bm_normal);
 }
 
-/// Return the intersection of two rectangles [x1, y1, x2, y2].
-function _luiClipIntersect(_a, _b) {
-	return [max(_a[0], _b[0]), max(_a[1], _b[1]), min(_a[2], _b[2]), min(_a[3], _b[3])];
-}
-
 /// Apply the rectangle [x1, y1, x2, y2] as the scissor.
 function _luiApplyClip(_c) {
 	var _x = floor(_c[0]);
@@ -39,14 +34,6 @@ function _luiTransformRect(_m, _x1, _y1, _x2, _y2) {
 	var _dx = _x2 * _m[0] + _y2 * _m[4] + _m[12];
 	var _dy = _x2 * _m[1] + _y2 * _m[5] + _m[13];
 	return [min(_ax, _bx, _cx, _dx), min(_ay, _by, _cy, _dy), max(_ax, _bx, _cx, _dx), max(_ay, _by, _cy, _dy)];
-}
-
-/// Return the element's child clip in the coordinates transformed by _m.
-function _luiElementClipRect(_el, _m) {
-	var _o = _el._getClipInsets();
-	return _luiTransformRect(_m,
-		_el.x + _o.left, _el.y + _o.top,
-		_el.x + _el.width - _o.right, _el.y + _el.height - _o.bottom);
 }
 
 /// Writes the intersection of the parent clip and the transformed child clip into an existing array.

@@ -95,14 +95,13 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _getClipInsets = function() {
 		if self.scroll_x || self.scroll_y return self._panel_insets;
-		return self._getScrollInsets();
+		return self._getStyleClipInsets(self.getStyle());
 	}
 
 	///@ignore
 	static _getScrollInsets = function() {
 		var _style = self.getStyle();
-		var _o = is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
-		if !self.scroll_x && !self.scroll_y return _o;
+		var _o = self._getStyleClipInsets(_style);
 		var _gutter = is_undefined(_style) ? 0 : _style.scroll_slider_width + self.scroll_pin_edge_offset;
 		var _insets = self._scroll_insets;
 		_insets.left = _o.left;
