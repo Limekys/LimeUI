@@ -55,6 +55,26 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 		return min(0, self.height - self.scroll_container.height);
 	}
 
+	///@desc Queues scrolling to reveal the vertical bounds and returns the planned change in offset.
+	///@ignore
+	static _revealFocusBounds = function(_top, _bottom) {
+		var _bounds = flexpanel_node_layout_get_position(self.flex_node, false);
+		var _insets = self.getStyle().render_region_offset;
+		var _view_top = _bounds.top + _insets.top;
+		var _view_bottom = _bounds.top + _bounds.height - _insets.bottom;
+		var _shift = 0;
+		if _top < _view_top {
+			_shift = _view_top - _top;
+		} else if _bottom > _view_bottom {
+			_shift = max(_view_top - _top, _view_bottom - _bottom);
+		}
+
+		var _content_bounds = flexpanel_node_layout_get_position(self.scroll_container.flex_node, false);
+		var _min_offset = min(0, _bounds.height - _content_bounds.height);
+		self.scroll_target_offset_y = clamp(self.scroll_offset_y + _shift, _min_offset, 0);
+		return self.scroll_target_offset_y - self.scroll_offset_y;
+	}
+
 	// UPDATE AND DRAW
 
 	self.step = function() {

@@ -114,6 +114,11 @@ function LuiSlider(_params = {}) : LuiProgressBar(_params) constructor {
 		_e.set(_new_value);
 	});
 	
+	self.addEvent(LUI_EV_KEYBOARD_ADJUST, function(_e, _direction) {
+		var _step = _e.rounding > 0 ? _e.rounding : (_e.max_value - _e.min_value) * 0.02;
+		_e.set(_e._calculateValue(_e.get() + _direction * _step));
+	});
+
 	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
 		var x1 = _e.x;
 		var x2 = x1 + _e.width;

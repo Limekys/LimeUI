@@ -74,6 +74,7 @@ function LuiBase(_params = {}) constructor {
 	self.visible = true;
 	self.visibility_switching = true;
 	self.has_focus = false;
+	self._keyboard_focusable = undefined;
 	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.ignore_mouse_all = undefined;
@@ -1058,6 +1059,13 @@ function LuiBase(_params = {}) constructor {
 	static removeFocus = function() {
 		self.has_focus = false;
 		self._dispatchEvent(LUI_EV_FOCUS_REMOVE);
+		return self;
+	}
+
+	///@desc Overrides automatic keyboard focus detection. Pass undefined to restore automatic detection.
+	///@arg {Bool|Undefined} [_focusable] Whether arrow navigation can focus this element
+	static setKeyboardFocusable = function(_focusable = true) {
+		self._keyboard_focusable = _focusable;
 		return self;
 	}
 

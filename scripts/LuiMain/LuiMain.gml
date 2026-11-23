@@ -16,6 +16,9 @@ function LuiMain() : LuiBase() constructor {
 	self.topmost_hovered_element = undefined;
 	self.dragging_element = undefined;
 	self.display_focused_element = false;
+	self._keyboard_navigation_active = false;
+	self._keyboard_edit_target = undefined;
+	self._focus_frame_bounds = undefined;
 	self.waiting_for_keyboard_input = false;
 	self.needs_update_flex = true;
 	self.current_debug_mode = 0;
@@ -99,7 +102,9 @@ function LuiMain() : LuiBase() constructor {
 	///@desc Return true if we interacting with UI at the moment with keyboard
 	///@return {bool}
 	static isInteractingKeyboard = function() {
-		return self.visible && !self.deactivated && (self.waiting_for_keyboard_input || !is_undefined(self._activeModal()));
+		return self.visible && !self.deactivated
+			&& (self.waiting_for_keyboard_input || (self._keyboard_navigation_active && !is_undefined(self.element_in_focus))
+				|| !is_undefined(self._activeModal()));
 	}
 
 	///@desc Returns whether a widget can handle input with the current modal open.
@@ -138,10 +143,13 @@ function LuiMain() : LuiBase() constructor {
 		return _message;
 	}
 
-	///@desc Set flag to display or not display white rectangle on focused element
+	///@desc Controls the focus rectangle. Arrow keys show it and a mouse press hides it.
 	///@arg {bool} _display
 	static displayFocusedElement = function(_display) {
 		self.display_focused_element = _display;
+		if !_display {
+			self._focus_frame_bounds = undefined;
+		}
 	}
 
 	// FRAME UPDATE
@@ -153,6 +161,13 @@ function LuiMain() : LuiBase() constructor {
 		// Update all elements
 		self.base_update();
 		self._updatePopups();
+		var _mouse_pressed = mouse_check_button_pressed(mb_left) || mouse_check_button_pressed(mb_right)
+			|| mouse_check_button_pressed(mb_middle);
+		if _mouse_pressed {
+			self._keyboard_navigation_active = false;
+			self._keyboard_edit_target = undefined;
+			self.displayFocusedElement(false);
+		}
 		//luiProf("1_base_update", _t);
 
 		// Mouse position
@@ -251,10 +266,7 @@ function LuiMain() : LuiBase() constructor {
 						self.element_in_focus = undefined;
 					}
 					if _click && self.isInputAllowed(_released_element) {
-						self._dispatchPointer(_released_element, LUI_EV_POINTER_CLICK, mb_left);
-						if self.isInputAllowed(_released_element) {
-							_released_element._dispatchEvent(LUI_EV_CLICK);
-						}
+						self._activateElement(_released_element);
 					}
 				}
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && (mouse_wheel_down() || mouse_wheel_up()) {
@@ -290,11 +302,15 @@ function LuiMain() : LuiBase() constructor {
 
 		// Keyboard events
 		var _modal = self._activeModal();
-		if self.visible && !self.deactivated && keyboard_check_pressed(vk_escape) && array_length(self._open_popups) > 0 {
+		if !_mouse_pressed && self._updateKeyboardEdit() {
+			// The focused control owns the navigation keys while editing.
+		} else if self.visible && !self.deactivated && keyboard_check_pressed(vk_escape) && array_length(self._open_popups) > 0 {
 			var _popup = self._open_popups[array_length(self._open_popups) - 1];
 			_popup.close();
 		} else if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
 			_modal.close();
+		} else if !_mouse_pressed && self.visible && !self.deactivated && self._updateKeyboardNavigation() {
+			// Navigation keys have already been handled.
 		} else if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) && self.isInputAllowed(self.element_in_focus) {
 			var _focused = self.element_in_focus;
 			if keyboard_check(vk_anykey) {
@@ -304,6 +320,8 @@ function LuiMain() : LuiBase() constructor {
 				_focused._dispatchEvent(LUI_EV_KEYBOARD_RELEASE);
 			}
 			if self.element_in_focus == _focused && is_undefined(self._activeModal()) && keyboard_check_pressed(vk_escape) {
+				self._keyboard_navigation_active = false;
+				self.displayFocusedElement(false);
 				self.element_in_focus = undefined;
 				_focused.removeFocus();
 			}
@@ -460,12 +478,8 @@ function LuiMain() : LuiBase() constructor {
 				}
 			}
 
-			// Draw other stuff (focused element, etc)
 			if self.display_focused_element {
-				if !is_undefined(self.element_in_focus) {
-					var _elm = self.element_in_focus;
-					draw_rectangle_color(_elm.x - 1, _elm.y - 1, _elm.x + _elm.width, _elm.y + _elm.height, c_white, c_white, c_white, c_white, true);
-				}
+				self._drawFocusFrame(_identity_matrix);
 			}
 		}
 
@@ -526,6 +540,214 @@ function LuiMain() : LuiBase() constructor {
 	}
 
 	// INPUT AND MODALS
+
+	///@ignore
+	static _activateElement = function(_element) {
+		self._dispatchPointer(_element, LUI_EV_POINTER_CLICK, mb_left);
+		if self.isInputAllowed(_element) {
+			_element._dispatchEvent(LUI_EV_CLICK);
+		}
+	}
+
+	// KEYBOARD NAVIGATION
+
+	///@ignore
+	static _updateKeyboardNavigation = function() {
+		var _dx = (keyboard_check_pressed(vk_right) ? 1 : 0) - (keyboard_check_pressed(vk_left) ? 1 : 0);
+		var _dy = (keyboard_check_pressed(vk_down) ? 1 : 0) - (keyboard_check_pressed(vk_up) ? 1 : 0);
+		if _dx != 0 || _dy != 0 {
+			self._keyboard_navigation_active = true;
+			self.displayFocusedElement(true);
+			self._moveKeyboardFocus(_dx, _dx == 0 ? _dy : 0);
+			return true;
+		}
+
+		var _focused = self.element_in_focus;
+		if !self._keyboard_navigation_active || !keyboard_check_pressed(vk_enter)
+			|| is_undefined(_focused) || !self.isInputAllowed(_focused) return false;
+		if !self._isInModal(_focused, self._keyboardFocusRoot()) return false;
+		if self._hasFocusListener(_focused, LUI_EV_KEYBOARD_ADJUST) {
+			self._keyboard_edit_target = _focused;
+			return true;
+		}
+		if !self._hasFocusListener(_focused, LUI_EV_CLICK) return false;
+
+		self._activateElement(_focused);
+		return true;
+	}
+
+	///@ignore
+	static _updateKeyboardEdit = function() {
+		var _target = self._keyboard_edit_target;
+		if is_undefined(_target) return false;
+		if self.element_in_focus != _target || !self.isInputAllowed(_target)
+			|| !self._isInModal(_target, self._keyboardFocusRoot()) || !self._hasFocusListener(_target, LUI_EV_KEYBOARD_ADJUST) {
+			self._keyboard_edit_target = undefined;
+			return false;
+		}
+		if keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape) {
+			self._keyboard_edit_target = undefined;
+			return true;
+		}
+		var _direction = (keyboard_check_pressed(vk_right) ? 1 : 0) - (keyboard_check_pressed(vk_left) ? 1 : 0);
+		if _direction != 0 {
+			_target._dispatchEvent(LUI_EV_KEYBOARD_ADJUST, _direction);
+		}
+		return true;
+	}
+
+	///@ignore
+	static _keyboardFocusRoot = function() {
+		for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
+			var _panel = self._open_popups[i].panel;
+			if self.isInputAllowed(_panel) return _panel;
+		}
+		return self._activeModal() ?? self;
+	}
+
+	///@ignore
+	static _hasFocusListener = function(_element, _event) {
+		var _listeners = _element.event_listeners[$ _event];
+		return is_array(_listeners) && array_length(_listeners) > 0;
+	}
+
+	///@ignore
+	static _isKeyboardFocusable = function(_element) {
+		return _element._keyboard_focusable
+			?? (!_element.ignore_mouse && (self._hasFocusListener(_element, LUI_EV_CLICK)
+				|| self._hasFocusListener(_element, LUI_EV_KEYBOARD_INPUT)
+				|| self._hasFocusListener(_element, LUI_EV_KEYBOARD_RELEASE)
+				|| self._hasFocusListener(_element, LUI_EV_KEYBOARD_ADJUST)));
+	}
+
+	///@ignore
+	static _moveKeyboardFocus = function(_dx, _dy) {
+		var _root = self._keyboardFocusRoot();
+		var _focused = self.element_in_focus;
+		var _origin = undefined;
+		if !is_undefined(_focused) && self.isInputAllowed(_focused)
+			&& self._isInModal(_focused, _root) && self._isKeyboardFocusable(_focused) {
+			_origin = flexpanel_node_layout_get_position(_focused.flex_node, false);
+		}
+		var _search = {origin: _origin, dx: _dx, dy: _dy, best: undefined, score: infinity, aligned: false};
+		self._findKeyboardFocus(_root, false, _search);
+		var _next = _search.best;
+		if is_undefined(_next) || _next == _focused return;
+
+		if !is_undefined(_focused) && !_focused.is_destroyed {
+			self.element_in_focus = undefined;
+			_focused.removeFocus();
+		}
+		if !self.isInputAllowed(_next) || !self._isInModal(_next, self._keyboardFocusRoot()) return;
+
+		self.element_in_focus = _next;
+		_next.setFocus();
+		if self.element_in_focus == _next && self.isInputAllowed(_next) {
+			self._revealKeyboardFocus(_next);
+		}
+	}
+
+	///@desc Searches layout bounds, including offscreen rows inside scroll panels.
+	///@ignore
+	static _findKeyboardFocus = function(_element, _inside_scroll, _search) {
+		if !_element.visible || _element.is_destroyed || _element.deactivated return;
+		if !_element.is_visible_in_region && (!_inside_scroll || is_undefined(_search.origin)) return;
+		if _element != self && self._isKeyboardFocusable(_element) {
+			var _bounds = flexpanel_node_layout_get_position(_element.flex_node, false);
+			if _bounds.width > 0 && _bounds.height > 0 {
+				self._scoreKeyboardFocus(_element, _bounds, _search);
+			}
+		}
+		if is_undefined(_search.origin) && !is_undefined(_search.best) return;
+
+		var _can_reveal = _inside_scroll || is_instanceof(_element, LuiScrollPanel);
+		var _children = _element.content;
+		for (var i = 0; i < array_length(_children); i++) {
+			// Root contains registered modals, which are searched separately.
+			var _child = _children[i];
+			if _child._is_modal continue;
+			self._findKeyboardFocus(_child, _can_reveal, _search);
+			if is_undefined(_search.origin) && !is_undefined(_search.best) return;
+		}
+	}
+
+	///@ignore
+	static _scoreKeyboardFocus = function(_element, _bounds, _search) {
+		var _origin = _search.origin;
+		if is_undefined(_origin) {
+			_search.best = _element;
+			return;
+		}
+		var _x = _bounds.left + _bounds.width * 0.5 - (_origin.left + _origin.width * 0.5);
+		var _y = _bounds.top + _bounds.height * 0.5 - (_origin.top + _origin.height * 0.5);
+		var _forward = _x * _search.dx + _y * _search.dy;
+		if _forward <= 0.5 return;
+
+		var _horizontal = _search.dx != 0;
+		var _cross = abs(_horizontal ? _y : _x);
+		var _span = (_horizontal ? _origin.height + _bounds.height : _origin.width + _bounds.width) * 0.5;
+		var _aligned = _cross < _span;
+		var _score = _forward + 2 * _cross;
+		if (_aligned && !_search.aligned) || (_aligned == _search.aligned && _score < _search.score) {
+			_search.best = _element;
+			_search.aligned = _aligned;
+			_search.score = _score;
+		}
+	}
+
+	///@ignore
+	static _revealKeyboardFocus = function(_element) {
+		var _bounds = flexpanel_node_layout_get_position(_element.flex_node, false);
+		var _top = _bounds.top;
+		var _bottom = _top + _bounds.height;
+		var _parent = _element.parent;
+		while !is_undefined(_parent) && _parent != self {
+			if is_instanceof(_parent, LuiScrollPanel) {
+				var _shift = _parent._revealFocusBounds(_top, _bottom);
+				_top += _shift;
+				_bottom += _shift;
+			}
+			_parent = _parent.parent;
+		}
+	}
+
+	///@ignore
+	static _drawFocusFrame = function(_identity_matrix) {
+		var _focused = self.element_in_focus;
+		if is_undefined(_focused) || !self.isInputAllowed(_focused) return;
+
+		if _focused.is_visible_in_region {
+			var _matrix = _identity_matrix;
+			var _element = _focused;
+			while !is_undefined(_element) && _element != self {
+				if _element._hasVisualTransform() {
+					_matrix = matrix_multiply(_matrix, _element._buildVisualMatrix());
+				}
+				_element = _element.parent;
+			}
+			var _target = _luiTransformRect(_matrix, _focused.x, _focused.y, _focused.x + _focused.width, _focused.y + _focused.height);
+			if is_undefined(self._focus_frame_bounds) {
+				self._focus_frame_bounds = _target;
+			} else {
+				var _blend = 1 - exp(-20 * min(delta_time / 1000000, 0.1));
+				var _bounds = self._focus_frame_bounds;
+				for (var i = 0; i < 4; i++) {
+					_bounds[i] = lerp(_bounds[i], _target[i], _blend);
+				}
+				self._focus_frame_bounds = _bounds;
+			}
+		}
+		var _frame = self._focus_frame_bounds;
+		if is_undefined(_frame) return;
+
+		var _alpha = draw_get_alpha();
+		draw_set_alpha(1);
+		var _color = self._keyboard_edit_target == _focused ? #FFD37A : c_white;
+		draw_rectangle_color(_frame[0] - 1, _frame[1] - 1, _frame[2] + 1, _frame[3] + 1, _color, _color, _color, _color, true);
+		draw_set_alpha(_alpha);
+	}
+
+	// POPUPS AND POINTER ROUTING
 
 	///@ignore
 	static _registerPopup = function(_owner, _panel, _close, _place) {
