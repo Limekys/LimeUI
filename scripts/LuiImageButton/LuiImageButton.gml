@@ -35,10 +35,10 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 		//Draw sprite button
 		var _sprite_render_function = _style.sprite_render_function ?? draw_sprite_stretched_ext;
 		if !is_undefined(self.value) && sprite_exists(self.value) {
-			_sprite_render_function(self.value, self.subimg, 
-										floor(self.x + self.width/2 - _width/2), 
-										floor(self.y + self.height/2 - _height/2), 
-										_width, _height, 
+			_sprite_render_function(self.value, self.subimg,
+										floor(self.x + self.width/2 - _width/2),
+										floor(self.y + self.height/2 - _height/2),
+										_width, _height,
 										_blend_color, self.alpha);
 		}
 	}

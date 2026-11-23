@@ -35,7 +35,7 @@ function LuiToggleButton(_params = {}) : LuiButton(_params) constructor {
 		}
 		
 		// Icon and text
-		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
+		self._drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
 		if !is_undefined(_style.sprite_button_border) {

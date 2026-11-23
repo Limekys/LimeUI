@@ -80,7 +80,9 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		if self.text != "" {
 			var _style = self.getStyle();
 			var _alpha = draw_get_alpha();
-			if !is_undefined(_style.font_buttons) draw_set_font(_style.font_buttons);
+			if !is_undefined(_style.font_buttons) {
+				draw_set_font(_style.font_buttons);
+			}
 			draw_set_color(_text_color);
 			draw_set_alpha(_alpha);
 			draw_set_valign(fa_middle);
@@ -100,11 +102,11 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 				var _icon_x = floor(_center_x - _total_width / 2);
 				var _icon_y = floor(_center_y - self.icon.height / 2);
 				var _text_x = _icon_x + self.icon.width + _space_width;
-				_drawIcon(_icon_x, _icon_y);
-				_drawTruncatedText(_text_x, _center_y, self.text, _available_width - self.icon.width - _space_width);
+				self._drawIcon(_icon_x, _icon_y);
+				self._drawTruncatedText(_text_x, _center_y, self.text, _available_width - self.icon.width - _space_width);
 			} else {
 				draw_set_halign(fa_center);
-				_drawTruncatedText(_center_x, _center_y, self.text, _available_width);
+				self._drawTruncatedText(_center_x, _center_y, self.text, _available_width);
 			}
 		}
 	}
@@ -137,7 +139,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		}
 		
 		// Icon and text
-		_drawIconAndText(_center_x, _center_y, self.width, _blend_text);
+		self._drawIconAndText(_center_x, _center_y, self.width, _blend_text);
 		
 		// Border
 		if !is_undefined(_style.sprite_button_border) {
@@ -185,17 +187,17 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	/* //???// Button animation test
 	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
 		var _anim_time = 0.2;
-		// 
+		//
 		_e.main_ui.animate(_e, "width_offset", 4, _anim_time);
-		// 
+		//
 		_e.main_ui.animate(_e, "height_offset", 4, _anim_time);
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
 		var _anim_time = 0.2;
-		// 
+		//
 		_e.main_ui.animate(_e, "width_offset", 0, _anim_time);
-		// 
+		//
 		_e.main_ui.animate(_e, "height_offset", 0, _anim_time);
 	});
 	*/

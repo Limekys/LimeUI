@@ -13,9 +13,15 @@
 /// name - unique name_id for element
 ///@arg {Struct} [_params] Struct with parameters
 function LuiBase(_params = {}) constructor {
-	if !variable_global_exists("lui_element_count") variable_global_set("lui_element_count", 0);
-	if !variable_global_exists("lui_id_count") variable_global_set("lui_id_count", 0);
-	if !variable_global_exists("lui_max_z") variable_global_set("lui_max_z", 0);
+	if !variable_global_exists("lui_element_count") {
+		variable_global_set("lui_element_count", 0);
+	}
+	if !variable_global_exists("lui_id_count") {
+		variable_global_set("lui_id_count", 0);
+	}
+	if !variable_global_exists("lui_max_z") {
+		variable_global_set("lui_max_z", 0);
+	}
 		
 	global.lui_element_count++;
 	self.element_id = global.lui_id_count++;
@@ -115,9 +121,9 @@ function LuiBase(_params = {}) constructor {
 	self.depth_array = [];
 	// Dragging system
 	self.can_drag = false;
-    self.is_dragging = false;
-    self.drag_offset_x = 0;
-    self.drag_offset_y = 0;
+	self.is_dragging = false;
+	self.drag_offset_x = 0;
+	self.drag_offset_y = 0;
 	
 	// Visual Transform (Offset Transform) - Does not affect Flex layout or mouse collision
 	self.visual_x = 0;
@@ -154,10 +160,10 @@ function LuiBase(_params = {}) constructor {
 	///@desc Enables or disables surface caching (flattens children into a single texture)
 	///@arg {bool} _enable
 	static setCacheAsSurface = function(_enable) {
-		if (self.cache_as_surface == _enable) return self;
+		if self.cache_as_surface == _enable return self;
 		self.cache_as_surface = _enable;
 		self._is_cache_dirty = true;
-		if (!_enable) {
+		if !_enable {
 			self._cache_active = false;
 			self._freeCache();
 		}
@@ -182,7 +188,9 @@ function LuiBase(_params = {}) constructor {
 
 	///@ignore
 	static _freeCache = function() {
-		if (surface_exists(self._cached_surface)) surface_free(self._cached_surface);
+		if surface_exists(self._cached_surface) {
+			surface_free(self._cached_surface);
+		}
 		self._cached_surface = -1;
 		self._is_cache_dirty = true;
 	}
@@ -198,7 +206,7 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _getDrawChildren = function() {
 		var _n = array_length(self.content);
-		if (self._draw_order_dirty || array_length(self._draw_children) != _n) {
+		if self._draw_order_dirty || array_length(self._draw_children) != _n {
 			var _arr = array_create(_n);
 			array_copy(_arr, 0, self.content, 0, _n);
 			array_sort(_arr, function(a, b) { return a.z - b.z; });
@@ -211,22 +219,22 @@ function LuiBase(_params = {}) constructor {
 	///@desc Builds the visual transformation matrix for rendering relative to pivot
 	///@ignore
 	static _buildVisualMatrix = function() {
-	    // Absolute pivot point on the screen
-	    var _abs_pivot_x = self.x + self.width * self.pivot_x;
-	    var _abs_pivot_y = self.y + self.height * self.pivot_y;
+		// Absolute pivot point on the screen
+		var _abs_pivot_x = self.x + self.width * self.pivot_x;
+		var _abs_pivot_y = self.y + self.height * self.pivot_y;
 	
-	    // Move pivot to origin
-	    var _m1 = matrix_build(-_abs_pivot_x, -_abs_pivot_y, 0, 0, 0, 0, 1, 1, 1);
+		// Move pivot to origin
+		var _m1 = matrix_build(-_abs_pivot_x, -_abs_pivot_y, 0, 0, 0, 0, 1, 1, 1);
 	
-	    // Apply scale and rotation at origin
-	    var _m2 = matrix_build(0, 0, 0, 0, 0, self.visual_angle, self.visual_scale_x, self.visual_scale_y, 1);
+		// Apply scale and rotation at origin
+		var _m2 = matrix_build(0, 0, 0, 0, 0, self.visual_angle, self.visual_scale_x, self.visual_scale_y, 1);
 	
-	    // Move back to pivot + visual offset
-	    var _m3 = matrix_build(_abs_pivot_x + self.visual_x, _abs_pivot_y + self.visual_y, 0, 0, 0, 0, 1, 1, 1);
+		// Move back to pivot + visual offset
+		var _m3 = matrix_build(_abs_pivot_x + self.visual_x, _abs_pivot_y + self.visual_y, 0, 0, 0, 0, 1, 1, 1);
 	
-	    // FIXED: Reversed order for GameMaker's row-vector convention
-	    // Application order: _m1 (to origin) -> _m2 (scale/rotate) -> _m3 (back)
-	    return matrix_multiply(matrix_multiply(_m1, _m2), _m3);
+		// FIXED: Reversed order for GameMaker's row-vector convention
+		// Application order: _m1 (to origin) -> _m2 (scale/rotate) -> _m3 (back)
+		return matrix_multiply(matrix_multiply(_m1, _m2), _m3);
 	}
 	
 	// Processing parameters from the structure
@@ -262,11 +270,11 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Add a callback for a specific event
 	/// Check "LuiEvents" script for available events
-	///@param {string} _eventType The event type (constants of string e.g., LUI_EV_CREATE, LUI_EV_CLICK)
-	///@param {function} _callback The callback function to execute
+	///@arg {string} _eventType The event type (constants of string e.g., LUI_EV_CREATE, LUI_EV_CLICK)
+	///@arg {function} _callback The callback function to execute
 	///@return {struct} The element itself for chaining
 	static addEvent = function(_eventType, _callback) {
-		if (is_undefined(self.event_listeners[$ _eventType])) {
+		if is_undefined(self.event_listeners[$ _eventType]) {
 			self.event_listeners[$ _eventType] = [];
 		}
 		array_push(self.event_listeners[$ _eventType], _callback);
@@ -274,14 +282,14 @@ function LuiBase(_params = {}) constructor {
 	}
 	
 	///@desc Remove a callback for a specific event //???// It may not be appropriate to unsubscribe from an event with a callback (searching by exact callback is a peculiar solution).
-	///@param {string} _eventType The event type
-	///@param {function} _callback The callback function to remove
+	///@arg {string} _eventType The event type
+	///@arg {function} _callback The callback function to remove
 	///@return {struct} The element itself for chaining
 	static removeEvent = function(_eventType, _callback) {
-		if (!is_undefined(self.event_listeners[$ _eventType])) {
+		if !is_undefined(self.event_listeners[$ _eventType]) {
 			var _listeners = self.event_listeners[$ _eventType];
 			for (var i = array_length(_listeners) - 1; i >= 0; i--) {
-				if (_listeners[i] == _callback) {
+				if _listeners[i] == _callback {
 					array_delete(_listeners, i, 1);
 				}
 			}
@@ -292,7 +300,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Call events from event listener
 	///@ignore
 	static _dispatchEvent = function(_eventType, _data = undefined) {
-		if (!is_undefined(self.event_listeners[$ _eventType])) {
+		if !is_undefined(self.event_listeners[$ _eventType]) {
 			var _listeners = self.event_listeners[$ _eventType];
 			for (var i = 0; i < array_length(_listeners); i++) {
 				_listeners[i](self, _data);
@@ -309,7 +317,7 @@ function LuiBase(_params = {}) constructor {
 	}
 	
 	///@desc Get data struct or specified value from it
-	///@param {string} _key variable name
+	///@arg {string} _key variable name
 	static getData = function(_key = undefined) {
 		if is_undefined(_key) {
 			return self.data;
@@ -321,7 +329,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Returns the effective style (inherited style + class rules + local overrides).
 	/// The result is cached and rebuilt only when the style is marked dirty.
 	static getStyle = function() {
-		if (self._style_dirty) {
+		if self._style_dirty {
 			self._cached_style = self._buildEffectiveStyle();
 			self._style_dirty = false;
 		}
@@ -365,10 +373,12 @@ function LuiBase(_params = {}) constructor {
 	}
 	
 	///@desc Set data
-	///@param {string} _key variable name
-	///@param {any} _value value
+	///@arg {string} _key variable name
+	///@arg {any} _value value
 	static setData = function(_key, _value) {
-		if is_undefined(self.data) self.data = {};
+		if is_undefined(self.data) {
+			self.data = {};
+		}
 		self.data[$ _key] = _value;
 		return self;
 	}
@@ -826,7 +836,7 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Binds the object/struct variable to the element value
 	static bindVariable = function(_source, _variable) {
-		if (_source != noone && _variable != "") {
+		if _source != noone && _variable != "" {
 			self.binded_variable = {
 				source : _source,
 				variable : _variable
@@ -848,12 +858,12 @@ function LuiBase(_params = {}) constructor {
 	/// - undefined resets the own style back to parent inheritance.
 	///@arg {Struct|LuiStyle} [_style] Style data or a LuiStyle instance
 	static setStyle = function(_style) {
-		if (is_undefined(_style)) {
+		if is_undefined(_style) {
 			// Reset: inherit from the parent again
 			self._has_own_style = false;
 			self._style_delta = undefined;
 			self.style = is_undefined(self.parent) ? undefined : self.parent.getMainStyle();
-		} else if (instanceof(_style) == "LuiStyle") {
+		} else if instanceof(_style) == "LuiStyle" {
 			// Full replacement with a ready-made style instance
 			self._style_delta = undefined;
 			self.style = _style;
@@ -862,7 +872,7 @@ function LuiBase(_params = {}) constructor {
 			// Partial overrides: accumulate in delta and rebuild on top of the inherited style
 			self._style_delta = _luiMergeOverrides(self._style_delta, _style);
 			var _base = is_undefined(self.parent) ? undefined : self.parent.getMainStyle();
-			if (array_length(variable_struct_get_names(self._style_delta)) == 0) {
+			if array_length(variable_struct_get_names(self._style_delta)) == 0 {
 				// No overrides left: fall back to plain inheritance
 				self._style_delta = undefined;
 				self._has_own_style = false;
@@ -885,7 +895,7 @@ function LuiBase(_params = {}) constructor {
 	/// Pass undefined as a value to remove a single override, e.g. { padding: undefined }.
 	///@arg {Struct} [_local_style] Local overrides struct or undefined to clear all
 	static setLocalStyle = function(_local_style) {
-		if (is_undefined(_local_style)) {
+		if is_undefined(_local_style) {
 			// Full reset of the local style
 			self.local_style = undefined;
 		} else {
@@ -941,7 +951,7 @@ function LuiBase(_params = {}) constructor {
 				for (var i = array_length(self.content) - 1; i >= 0; i--) {
 					self.content[i].setVisible(self.visible);
 				}
-				// Main surface update 
+				// Main surface update
 				self.updateMainUiSurface();
 			}
 		}
@@ -1000,7 +1010,9 @@ function LuiBase(_params = {}) constructor {
 	///@desc Sets a new depth value for the element and recalculates depth_array for itself and its children
 	static setDepth = function(_new_z) {
 		self.z = _new_z;
-		if (!is_undefined(self.parent)) self.parent._draw_order_dirty = true;
+		if !is_undefined(self.parent) {
+			self.parent._draw_order_dirty = true;
+		}
 		self._rebuildDepthArrayRec();
 		self.updateMainUiSurface();
 		return self;
@@ -1084,17 +1096,17 @@ function LuiBase(_params = {}) constructor {
 		var _has_class_rules = is_struct(_base) && variable_struct_exists(_base._class_overrides, instanceof(self));
 		// Fast path: nothing to overlay. If no base style exists, return a default style
 		// so getStyle() always returns a valid LuiStyle instance (no undefined checks needed).
-		if (!_has_local && !_has_class_rules) {
+		if !_has_local && !_has_class_rules {
 			return _base ?? new LuiStyle({});
 		}
 		// No base style: build from local overrides only
 		if (is_undefined(_base)) return new LuiStyle(self.local_style ?? {});
 		// Merge order: base <- class rules <- local overrides
 		var _raw = _luiStyleToRawStruct(_base);
-		if (_has_class_rules) {
+		if _has_class_rules {
 			_raw = struct_merge(_raw, _base._class_overrides[$ instanceof(self)]);
 		}
-		if (_has_local) {
+		if _has_local {
 			_raw = struct_merge(_raw, self.local_style);
 		}
 		return new LuiStyle(_raw);
@@ -1107,7 +1119,7 @@ function LuiBase(_params = {}) constructor {
 		var _content = self.getContent();
 		for (var i = array_length(_content) - 1; i >= 0; --i) {
 			var _child = _content[i];
-			if (!_child._has_own_style || is_struct(_child._style_delta)) {
+			if !_child._has_own_style || is_struct(_child._style_delta) {
 				_child._applyInheritedStyle(self.style);
 			}
 		}
@@ -1126,10 +1138,10 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Rebuilds own style from the inherited style, applying delta overrides on top.
 	/// Without delta, the inherited style is used as-is (shared reference, no copy).
-	///@param {Struct} _inherited_style Style inherited from the parent
+	///@arg {Struct} _inherited_style Style inherited from the parent
 	///@ignore
 	static _rebuildStyleFromInherited = function(_inherited_style) {
-		if (is_struct(self._style_delta)) {
+		if is_struct(self._style_delta) {
 			var _raw = is_undefined(_inherited_style) ? {} : _luiStyleToRawStruct(_inherited_style);
 			self.style = new LuiStyle(struct_merge(_raw, self._style_delta));
 		} else {
@@ -1140,189 +1152,189 @@ function LuiBase(_params = {}) constructor {
 	}
 	
 	///@desc Renders debug rectangles for element boundaries and view region
-	///@param {real} _x X-coordinate for rendering (default 0)
-	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@arg {real} _x X-coordinate for rendering (default 0)
+	///@arg {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectangles = function(_x = 0, _y = 0) {
-	    // Remember previous colors
-	    var _prev_color = draw_get_color();
-	    var _prev_alpha = draw_get_alpha();
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
 	    
-	    // Set colors based on mouse hover
-	    if isMouseHovered() {
-	        draw_set_alpha(1);
-	        draw_set_color(c_red);
-	    } else {
-	        draw_set_alpha(0.5);
-	        draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
-	    }
+		// Set colors based on mouse hover
+		if isMouseHovered() {
+			draw_set_alpha(1);
+			draw_set_color(c_red);
+		} else {
+			draw_set_alpha(0.5);
+			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		}
 	    
-	    // Draw element boundary rectangle
-	    if isMouseHovered() {
-	        draw_rectangle(_x - 1, _y - 1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
-	    } else {
-	        draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
-	    }
+		// Draw element boundary rectangle
+		if isMouseHovered() {
+			draw_rectangle(_x - 1, _y - 1, _x + self.width - 1 + 1, _y + self.height - 1 + 1, true);
+		} else {
+			draw_rectangle(_x, _y, _x + self.width - 1, _y + self.height - 1, true);
+		}
 	    
-	    // Draw view region rectangle
-	    draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
-	    draw_rectangle(self.view_region.x1, self.view_region.y1, self.view_region.x2, self.view_region.y2, true);
+		// Draw view region rectangle
+		draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		draw_rectangle(self.view_region.x1, self.view_region.y1, self.view_region.x2, self.view_region.y2, true);
 	    
-	    // Reset colors
-	    draw_set_color(_prev_color);
-	    draw_set_alpha(_prev_alpha);
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc Renders debug rectangles for element
-	///@param {real} _x X-coordinate for rendering (default 0)
-	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@arg {real} _x X-coordinate for rendering (default 0)
+	///@arg {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectPadding = function(_x = 0, _y = 0) {
 	    
-	    // Get values
-	    var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
-	    var _p = flexpanel_node_style_get_padding(self.flex_node, flexpanel_edge.all_edges).value;
+		// Get values
+		var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
+		var _p = flexpanel_node_style_get_padding(self.flex_node, flexpanel_edge.all_edges).value;
 	    
-	    if _p == 0 return;
+		if _p == 0 return;
 	    
-	    // Remember previous colors
-	    var _prev_color = draw_get_color();
-	    var _prev_alpha = draw_get_alpha();
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
 	    
-	    // Set colors
-	    draw_set_alpha(0.5);
-	    draw_set_color(#F06292);
+		// Set colors
+		draw_set_alpha(0.5);
+		draw_set_color(#F06292);
 	    
-	    // Draw padding INSIDE border (border-box model)
-	    // Top padding
-	    draw_rectangle(_x + _b, _y + _b, _x + self.width - _b, _y + _b + _p, false);
-	    // Bottom padding
-	    draw_rectangle(_x + _b, _y + self.height - _b - _p, _x + self.width - _b, _y + self.height - _b, false);
-	    // Left padding
-	    draw_rectangle(_x + _b, _y + _b + _p, _x + _b + _p, _y + self.height - _b - _p, false);
-	    // Right padding
-	    draw_rectangle(_x + self.width - _b - _p, _y + _b + _p, _x + self.width - _b, _y + self.height - _b - _p, false);
+		// Draw padding INSIDE border (border-box model)
+		// Top padding
+		draw_rectangle(_x + _b, _y + _b, _x + self.width - _b, _y + _b + _p, false);
+		// Bottom padding
+		draw_rectangle(_x + _b, _y + self.height - _b - _p, _x + self.width - _b, _y + self.height - _b, false);
+		// Left padding
+		draw_rectangle(_x + _b, _y + _b + _p, _x + _b + _p, _y + self.height - _b - _p, false);
+		// Right padding
+		draw_rectangle(_x + self.width - _b - _p, _y + _b + _p, _x + self.width - _b, _y + self.height - _b - _p, false);
 	    
-	    // Draw text
-	    draw_set_valign(fa_top);
-	    draw_set_halign(fa_left);
-	    draw_set_alpha(0.75);
+		// Draw text
+		draw_set_valign(fa_top);
+		draw_set_halign(fa_left);
+		draw_set_alpha(0.75);
 		draw_set_color(#C2185B);
-	    draw_text(_x + _b + 2, _y + _b + 2, "padding");
+		draw_text(_x + _b + 2, _y + _b + 2, "padding");
 	    
-	    // Reset colors
-	    draw_set_color(_prev_color);
-	    draw_set_alpha(_prev_alpha);
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc Renders debug rectangles for element
-	///@param {real} _x X-coordinate for rendering (default 0)
-	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@arg {real} _x X-coordinate for rendering (default 0)
+	///@arg {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectBorder = function(_x = 0, _y = 0) {
 	    
-	    // Get value
-	    var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
+		// Get value
+		var _b = flexpanel_node_style_get_border(self.flex_node, flexpanel_edge.all_edges);
 	    
-	    if _b == 0 return;
+		if _b == 0 return;
 	    
-	    // Remember previous colors
-	    var _prev_color = draw_get_color();
-	    var _prev_alpha = draw_get_alpha();
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
 	    
-	    // Set colors
-	    draw_set_alpha(0.5);
-	    draw_set_color(#4DD0E1);
+		// Set colors
+		draw_set_alpha(0.5);
+		draw_set_color(#4DD0E1);
 	    
-	    // Draw border ON THE EDGE of self.width/height (border-box model)
-	    // Top border (full width)
-	    draw_rectangle(_x, _y, _x + self.width, _y + _b, false);
-	    // Bottom border (full width)
-	    draw_rectangle(_x, _y + self.height - _b, _x + self.width, _y + self.height, false);
-	    // Left border (inner height only, excluding top/bottom borders)
-	    draw_rectangle(_x, _y + _b, _x + _b, _y + self.height - _b, false);
-	    // Right border (inner height only, excluding top/bottom borders)
-	    draw_rectangle(_x + self.width - _b, _y + _b, _x + self.width, _y + self.height - _b, false);
+		// Draw border ON THE EDGE of self.width/height (border-box model)
+		// Top border (full width)
+		draw_rectangle(_x, _y, _x + self.width, _y + _b, false);
+		// Bottom border (full width)
+		draw_rectangle(_x, _y + self.height - _b, _x + self.width, _y + self.height, false);
+		// Left border (inner height only, excluding top/bottom borders)
+		draw_rectangle(_x, _y + _b, _x + _b, _y + self.height - _b, false);
+		// Right border (inner height only, excluding top/bottom borders)
+		draw_rectangle(_x + self.width - _b, _y + _b, _x + self.width, _y + self.height - _b, false);
 	    
-	    // Draw text
-	    draw_set_valign(fa_top);
-	    draw_set_halign(fa_left);
+		// Draw text
+		draw_set_valign(fa_top);
+		draw_set_halign(fa_left);
 		draw_set_alpha(0.75);
-	    draw_set_color(#00838F);
-	    draw_text(_x + 2, _y + 2, "border");
+		draw_set_color(#00838F);
+		draw_text(_x + 2, _y + 2, "border");
 	    
-	    // Reset colors
-	    draw_set_color(_prev_color);
-	    draw_set_alpha(_prev_alpha);
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc Renders debug rectangles for element
-	///@param {real} _x X-coordinate for rendering (default 0)
-	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@arg {real} _x X-coordinate for rendering (default 0)
+	///@arg {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugRectMargin = function(_x = 0, _y = 0) {
 	    
-	    // Get value
-	    var _m = flexpanel_node_style_get_margin(self.flex_node, flexpanel_edge.all_edges).value;
+		// Get value
+		var _m = flexpanel_node_style_get_margin(self.flex_node, flexpanel_edge.all_edges).value;
 	    
-	    if _m == 0 return;
+		if _m == 0 return;
 	    
-	    // Remember previous colors
-	    var _prev_color = draw_get_color();
-	    var _prev_alpha = draw_get_alpha();
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
 	    
-	    // Set colors
-	    draw_set_alpha(0.5);
-	    draw_set_color(#FFB74D);
+		// Set colors
+		draw_set_alpha(0.5);
+		draw_set_color(#FFB74D);
 	    
-	    // Draw margin OUTSIDE the element (border-box edge is at _x,_y,width,height)
-	    // Top margin (full width including side margins)
-	    draw_rectangle(_x - _m, _y - _m, _x + self.width + _m, _y, false);
-	    // Bottom margin (full width including side margins)
-	    draw_rectangle(_x - _m, _y + self.height, _x + self.width + _m, _y + self.height + _m, false);
-	    // Left margin (inner height only, excluding top/bottom margins to avoid corner overlap)
-	    draw_rectangle(_x - _m, _y, _x, _y + self.height, false);
-	    // Right margin (inner height only, excluding top/bottom margins)
-	    draw_rectangle(_x + self.width, _y, _x + self.width + _m, _y + self.height, false);
+		// Draw margin OUTSIDE the element (border-box edge is at _x,_y,width,height)
+		// Top margin (full width including side margins)
+		draw_rectangle(_x - _m, _y - _m, _x + self.width + _m, _y, false);
+		// Bottom margin (full width including side margins)
+		draw_rectangle(_x - _m, _y + self.height, _x + self.width + _m, _y + self.height + _m, false);
+		// Left margin (inner height only, excluding top/bottom margins to avoid corner overlap)
+		draw_rectangle(_x - _m, _y, _x, _y + self.height, false);
+		// Right margin (inner height only, excluding top/bottom margins)
+		draw_rectangle(_x + self.width, _y, _x + self.width + _m, _y + self.height, false);
 	    
-	    // Draw text
-	    draw_set_valign(fa_top);
-	    draw_set_halign(fa_left);
+		// Draw text
+		draw_set_valign(fa_top);
+		draw_set_halign(fa_left);
 		draw_set_alpha(0.75);
-	    draw_set_color(#E65100);
-	    draw_text(_x - _m, _y - _m, "margin");
+		draw_set_color(#E65100);
+		draw_text(_x - _m, _y - _m, "margin");
 	    
-	    // Reset colors
-	    draw_set_color(_prev_color);
-	    draw_set_alpha(_prev_alpha);
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc Renders debug text information for the element
-	///@param {real} _x X-coordinate for rendering (default 0)
-	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@arg {real} _x X-coordinate for rendering (default 0)
+	///@arg {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebugInfo = function(_x = 0, _y = 0) {
-	    var _style = self.getStyle();
+		var _style = self.getStyle();
 		// Set font if defined
-	    if (!is_undefined(_style) && !is_undefined(_style.font_debug)) {
+		if !is_undefined(_style) && !is_undefined(_style.font_debug) {
 			draw_set_font(_style.font_debug);
 		}
 	    
-	    // Remember previous colors
-	    var _prev_color = draw_get_color();
-	    var _prev_alpha = draw_get_alpha();
+		// Remember previous colors
+		var _prev_color = draw_get_color();
+		var _prev_alpha = draw_get_alpha();
 	    
-	    // Set colors based on mouse hover
-	    if isMouseHovered() {
-	        draw_set_alpha(1);
-	        draw_set_color(c_red);
-	    } else {
-	        draw_set_alpha(0.5);
-	        draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
-	    }
+		// Set colors based on mouse hover
+		if isMouseHovered() {
+			draw_set_alpha(1);
+			draw_set_color(c_red);
+		} else {
+			draw_set_alpha(0.5);
+			draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
+		}
 	    
-	    // Draw debug text
-		_drawDebugText(_x, _y, 
+		// Draw debug text
+		self._drawDebugText(_x, _y,
 			"id: " + string(self.element_id) + "\n" +
 			"name: " + string(self.name) + "\n" +
 			"class: " + instanceof(self) + "\n" +
@@ -1336,14 +1348,14 @@ function LuiBase(_params = {}) constructor {
 			"nesting_level: " + string(self.nesting_level)
 		);
 	    
-	    // Reset colors
-	    draw_set_color(_prev_color);
-	    draw_set_alpha(_prev_alpha);
+		// Reset colors
+		draw_set_color(_prev_color);
+		draw_set_alpha(_prev_alpha);
 	}
 	
 	///@desc Renders debug info for the element (rectangles and text)
-	///@param {real} _x X-coordinate for rendering (default 0)
-	///@param {real} _y Y-coordinate for rendering (default 0)
+	///@arg {real} _x X-coordinate for rendering (default 0)
+	///@arg {real} _y Y-coordinate for rendering (default 0)
 	///@ignore
 	static _renderDebug = function(_x = 0, _y = 0, _recursive = false) {
 		
@@ -1351,13 +1363,13 @@ function LuiBase(_params = {}) constructor {
 		if self.is_destroyed || !self.is_visible_in_region return;
 		
 		// Set font
-	    var _style = self.getStyle();
-		if (!is_undefined(_style) && !is_undefined(_style.font_debug)) {
+		var _style = self.getStyle();
+		if !is_undefined(_style) && !is_undefined(_style.font_debug) {
 			draw_set_font(_style.font_debug);
 		}
 		
 		// Draw rectangles
-	    self._renderDebugRectangles(_x, _y);
+		self._renderDebugRectangles(_x, _y);
 		
 		// Margin, border, padding
 		if global.lui_debug_mode == 2 {
@@ -1366,9 +1378,10 @@ function LuiBase(_params = {}) constructor {
 			self._renderDebugRectPadding(_x, _y);
 		}
 	    
-	    // Draw debug text info
-		if global.lui_debug_mode == 3
-	    self._renderDebugInfo(_x, _y);
+		// Draw debug text info
+		if global.lui_debug_mode == 3 {
+			self._renderDebugInfo(_x, _y);
+		}
 		
 		// Recursive
 		if _recursive {
@@ -1405,7 +1418,7 @@ function LuiBase(_params = {}) constructor {
 		var _str_width = string_width(_str_to_draw);
 		
 		// Check if the text needs to be truncated
-		if (_str_width > _width) {
+		if _str_width > _width {
 			// Calculate the width of "..." once, to use in our calculations
 			var _ellipsis = "...";
 			var _ellipsis_width = string_width(_ellipsis);
@@ -1424,7 +1437,7 @@ function LuiBase(_params = {}) constructor {
 				_str_to_draw = string_copy(_string, 1, _mid);
 				_str_width = string_width(_str_to_draw);
 				
-				if (_str_width < _available_width) {
+				if _str_width < _available_width {
 					_low = _mid + 1;
 				} else {
 					_high = _mid;
@@ -1443,7 +1456,7 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _drawTruncatedText = function(_x, _y, _string, _width = infinity) {
 		var _font = draw_get_font();
-		if (self._tc_string != _string || self._tc_width != _width || self._tc_font != _font) {
+		if self._tc_string != _string || self._tc_width != _width || self._tc_font != _font {
 			self._tc_result = self._truncateTextToFitWidth(_string, _width);
 			self._tc_string = _string;
 			self._tc_width = _width;
@@ -1483,7 +1496,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Add element in system ui grid
 	///@ignore
 	static _addToScreenGrid = function() {
-		if (!self.is_visible_in_region || !self.visible) {
+		if !self.is_visible_in_region || !self.visible {
 			return;
 		}
 		
@@ -1510,16 +1523,19 @@ function LuiBase(_params = {}) constructor {
 	///@desc Delete element from system ui grid
 	///@ignore
 	static _deleteFromScreenGrid = function() {
-		if (is_undefined(self.main_ui) || !is_array(self.main_ui._screen_grid)) { self._grid_location = []; return; }
+		if is_undefined(self.main_ui) || !is_array(self.main_ui._screen_grid) {
+			self._grid_location = [];
+			return;
+		}
 		var _grid = self.main_ui._screen_grid;
 		for (var i = 0, n = array_length(self._grid_location); i < n; i++) {
 			var _loc = self._grid_location[i];
 			var _cx = _loc div LUI_GRID_STRIDE;
 			var _cy = _loc mod LUI_GRID_STRIDE;
-			if (_cx < array_length(_grid) && _cy < array_length(_grid[_cx])) {
+			if _cx < array_length(_grid) && _cy < array_length(_grid[_cx]) {
 				var _cell = _grid[_cx][_cy];
 				var _index = array_get_index(_cell, self);
-				if (_index != -1) {
+				if _index != -1 {
 					var _last = array_length(_cell) - 1;
 					_cell[_index] = _cell[_last];
 					array_pop(_cell);
@@ -1539,7 +1555,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Recursively forces an invisible state onto itself and all descendants
 	///@ignore
 	static _propagateVisibleRegionState = function() {
-		if (!self.is_visible_in_region) return;
+		if !self.is_visible_in_region return;
 		
 		self.is_visible_in_region = false;
 		
@@ -1571,7 +1587,7 @@ function LuiBase(_params = {}) constructor {
 		var _cr = self.child_region;
 		
 		// Root
-		if (self.parent == undefined) {
+		if self.parent == undefined {
 			self.is_visible_in_region = true;
 			_cr.x1 = self.view_region.x1; _cr.y1 = self.view_region.y1;
 			_cr.x2 = self.view_region.x2; _cr.y2 = self.view_region.y2;
@@ -1589,7 +1605,7 @@ function LuiBase(_params = {}) constructor {
 								 && (self.view_region.y2 - self.view_region.y1 > 0);
 		
 		// Region for own children
-		if (self.draw_content_in_cutted_region) {
+		if self.draw_content_in_cutted_region {
 			var _style = self.getStyle();
 			var _o = is_undefined(_style) ? self.render_region_offset : _style.render_region_offset;
 			_cr.x1 = max(_pr.x1, self.x + _o.left);
@@ -1606,7 +1622,7 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _applyStyles = function() {
 		var _style = self.getStyle();
-		if (is_undefined(_style)) return;
+		if is_undefined(_style) return;
 		var _container_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_margin(_container_node, flexpanel_edge.all_edges, _style.margin);
 		flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, _style.padding);
@@ -1618,44 +1634,44 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _calculateLayout = function() {
 		if !is_undefined(self.main_ui) {
-            flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
-            return true;
-        }
-        return false;
-    }
+			flexpanel_calculate_layout(self.main_ui.flex_node, self.main_ui.width, self.main_ui.height, flexpanel_direction.LTR);
+			return true;
+		}
+		return false;
+	}
 		
 	///@desc Update position, size and z depth for specified flex node
 	///@ignore
 	static _updateFlex = function(_node) {
 	    
-		if is_undefined(_node)  return;
+		if is_undefined(_node) return;
 		
 		var _pos = flexpanel_node_layout_get_position(_node, false);
-	    var _data = flexpanel_node_get_data(_node);
-	    var _element = _data.element;
+		var _data = flexpanel_node_get_data(_node);
+		var _element = _data.element;
 	    
 		// Check position change
 		var _position_changed = (_element.x != _pos.left || _element.y != _pos.top);
 		// Check size change
 		var _size_changed = (_element.width != _pos.width || _element.height != _pos.height);
 		
-	    _element.x = _pos.left;
-	    _element.y = _pos.top;
-	    _element.width = _pos.width;
-	    _element.height = _pos.height;
-	    if (_element.start_x == -1) {
-	        _element.start_x = _element.x;
-	    }
-	    if (_element.start_y == -1) {
-	        _element.start_y = _element.y;
-	    }
+		_element.x = _pos.left;
+		_element.y = _pos.top;
+		_element.width = _pos.width;
+		_element.height = _pos.height;
+		if _element.start_x == -1 {
+			_element.start_x = _element.x;
+		}
+		if _element.start_y == -1 {
+			_element.start_y = _element.y;
+		}
 		
 		_element._updateViewRegion();
 		
 		_element._updateScreenGrid();
 		
 		// On position change
-		if (_position_changed) {
+		if _position_changed {
 			_element._dispatchEvent(LUI_EV_POSITION_UPDATE);
 			_element.updateMainUiSurface();
 			_element.prev_x = _element.x;
@@ -1663,7 +1679,7 @@ function LuiBase(_params = {}) constructor {
 		}
 		
 		// On size change
-		if (_size_changed) {
+		if _size_changed {
 			_element._dispatchEvent(LUI_EV_SIZE_UPDATE);
 			_element.updateMainUiSurface();
 			_element.prev_w = _element.width;
@@ -1684,11 +1700,11 @@ function LuiBase(_params = {}) constructor {
 		}
 		
 		// Update childrens
-	    var _children_count = flexpanel_node_get_num_children(_node);
-	    for (var i = 0; i < _children_count; i++) {
-	        var _child = flexpanel_node_get_child(_node, i);
-	        _element._updateFlex(_child);
-	    }
+		var _children_count = flexpanel_node_get_num_children(_node);
+		for (var i = 0; i < _children_count; i++) {
+			var _child = flexpanel_node_get_child(_node, i);
+			_element._updateFlex(_child);
+		}
 	}
 	
 	///@desc Update element value from binded variable
@@ -1696,7 +1712,7 @@ function LuiBase(_params = {}) constructor {
 	static _updateFromBindedVariable = function() {
 		var _source = self.binded_variable.source;
 		var _variable = self.binded_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
+		if _source != noone && variable_instance_exists(_source, _variable) {
 			var _source_value = variable_instance_get(_source, _variable);
 			self.set(_source_value);
 		} else {
@@ -1710,7 +1726,7 @@ function LuiBase(_params = {}) constructor {
 	static _updateToBindedVariable = function() {
 		var _source = self.binded_variable.source;
 		var _variable = self.binded_variable.variable;
-		if (_source != noone && variable_instance_exists(_source, _variable)) {
+		if _source != noone && variable_instance_exists(_source, _variable) {
 			var _element_value = self.get();
 			variable_instance_set(_source, _variable, _element_value);
 		} else {
@@ -1722,18 +1738,18 @@ function LuiBase(_params = {}) constructor {
 	///@desc Compare two depth arrays
 	///@ignore
 	function _compareDepthArrays(a, b) {
-	    var len_a = array_length(a);
-	    var len_b = array_length(b);
-	    var min_len = min(len_a, len_b);
+		var _len_a = array_length(a);
+		var _len_b = array_length(b);
+		var _min_len = min(_len_a, _len_b);
 	    
-	    for (var i = 0; i < min_len; i++) {
-	        if (a[i] > b[i]) return 1;
-	        if (a[i] < b[i]) return -1;
-	    }
+		for (var i = 0; i < _min_len; i++) {
+			if a[i] > b[i] return 1;
+			if a[i] < b[i] return -1;
+		}
 	    
-	    if (len_a > len_b) return 1;
-	    if (len_a < len_b) return -1;
-	    return 0;
+		if _len_a > _len_b return 1;
+		if _len_a < _len_b return -1;
+		return 0;
 	}
 	
 	///@desc Recalculates depth_array for the element and all its children
@@ -1746,12 +1762,12 @@ function LuiBase(_params = {}) constructor {
 	
 	///@ignore
 	static _rebuildDepthArrayRec = function() {
-		if (self.parent != undefined) {
+		if self.parent != undefined {
 			self.depth_array = array_concat(self.parent.depth_array, [self.z]);
 		} else {
 			self.depth_array = [self.z];
 		}
-		if (!is_array(self.content)) return;
+		if !is_array(self.content) return;
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
 			self.content[i]._rebuildDepthArrayRec();
 		}
@@ -1764,47 +1780,51 @@ function LuiBase(_params = {}) constructor {
 	self.addContent = function(elements) {
 	    
 		// Convert to array if one element
-		if !is_array(elements) elements = [elements];
+		if !is_array(elements) {
+			elements = [elements];
+		}
 	    
 		var _elements_count = array_length(elements);
 		
 		// Update array with delayed content for unordered adding
-	    if is_undefined(self.main_ui) {
-	        if !is_array(self.delayed_content) self.delayed_content = [];
-	        self.delayed_content = array_concat(self.delayed_content, elements);
-	        return self;
-	    }
+		if is_undefined(self.main_ui) {
+			if !is_array(self.delayed_content) {
+				self.delayed_content = [];
+			}
+			self.delayed_content = array_concat(self.delayed_content, elements);
+			return self;
+		}
 	    
 		// Take ranges from array
 		var _ranges = elements[_elements_count - 1];
-	    if is_array(_ranges) {
-	        if array_length(_ranges) != _elements_count - 1 {
-	            if LUI_LOG_ERROR_MODE == 2 {
+		if is_array(_ranges) {
+			if array_length(_ranges) != _elements_count - 1 {
+				if LUI_LOG_ERROR_MODE == 2 {
 					_luiPrintWarning($"Incorrect number of ratios for {self.name} ({instanceof(self)}). Elements {_elements_count - 1}, but ratios {array_length(_ranges)}.\nThe others will be filled in automatically and the extra ones will be cut off.");
-	            }
+				}
 				
 				var _current_length = array_length(_ranges);
-		        var _target_length = _elements_count - 1;
+				var _target_length = _elements_count - 1;
 		        
-		        if _current_length < _target_length {
-		            var _sum = 0;
-		            for (var i = 0; i < _current_length; i++) {
-		                _sum += _ranges[i];
-		            }
-		            var _remaining = 1 - _sum;
-		            var _num = _remaining / (_target_length - _current_length);
+				if _current_length < _target_length {
+					var _sum = 0;
+					for (var i = 0; i < _current_length; i++) {
+						_sum += _ranges[i];
+					}
+					var _remaining = 1 - _sum;
+					var _num = _remaining / (_target_length - _current_length);
 		            
-		            while (array_length(_ranges) < _target_length) {
-		                array_push(_ranges, _num);
-		            }
-		        }
-	        }
+					while (array_length(_ranges) < _target_length) {
+						array_push(_ranges, _num);
+					}
+				}
+			}
 			
-	        _elements_count--;
-	    }
+			_elements_count--;
+		}
 	    
 		// Adding
-	    for (var i = 0; i < _elements_count; i++) {
+		for (var i = 0; i < _elements_count; i++) {
 	        
 			// Get element
 			var _element = elements[i];
@@ -1813,8 +1833,8 @@ function LuiBase(_params = {}) constructor {
 			_element._initElement();
 			
 			// Recursion prevention
-	        if _element.is_adding continue;
-	        _element.is_adding = true;
+			if _element.is_adding continue;
+			_element.is_adding = true;
 	        
 			// Init depth
 			_element.nesting_level = self.nesting_level + 1;
@@ -1822,14 +1842,14 @@ function LuiBase(_params = {}) constructor {
 			_element.depth_array = array_concat(self.depth_array, [_element.z]);
 			
 			// Inherit variables
-	        _element.parent = self;
-	        _element.main_ui = self.main_ui;
+			_element.parent = self;
+			_element.main_ui = self.main_ui;
 	        
 			// Style inheritance:
 			// - Elements without their own style inherit the parent style as-is
 			// - Elements with delta overrides rebuild their style on top of the parent style
 			// - Elements with a fully autonomous style keep it untouched
-			if (!_element._has_own_style || is_struct(_element._style_delta)) {
+			if !_element._has_own_style || is_struct(_element._style_delta) {
 				_element._rebuildStyleFromInherited(self.style);
 			}
 			_element._style_dirty = true;
@@ -1865,29 +1885,31 @@ function LuiBase(_params = {}) constructor {
 			}
 			flexpanel_node_style_set_min_width(_element.flex_node, _element.min_width, flexpanel_unit.point);
 			flexpanel_node_style_set_min_height(_element.flex_node, _element.min_height, flexpanel_unit.point);
-	        if array_length(_ranges) > 0 && i+1 <= array_length(_ranges) {
+			if array_length(_ranges) > 0 && i+1 <= array_length(_ranges) {
 				flexpanel_node_style_set_flex(_element.flex_node, _ranges[i]);
 				flexpanel_node_style_set_flex_shrink(_element.flex_node, _ranges[i]);
-	        }
-	        flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
+			}
+			flexpanel_node_insert_child(self.flex_node, _element.flex_node, flexpanel_node_get_num_children(self.flex_node));
 			
 			// Apply styles settings
 			_element._applyStyles();
 	        
 			// Register element name
-	        _element._registerElementName();
+			_element._registerElementName();
 	        
 			// Add to content array
-			if !is_array(self.content) self.content = [];
+			if !is_array(self.content) {
+				self.content = [];
+			}
 			array_push(self.content, _element);
 			self._draw_order_dirty = true;
-	        _element._addDelayedContent();
+			_element._addDelayedContent();
 	        
 			// Call create event
 			_element._dispatchEvent(LUI_EV_CREATE);
 			
-	        _element.is_adding = false;
-	    }
+			_element.is_adding = false;
+		}
 		
 		// Update content
 		self.setNeedToUpdateContent();
@@ -1895,7 +1917,7 @@ function LuiBase(_params = {}) constructor {
 		// Update flex
 		self.updateMainUiFlex();
 	    
-	    return self;
+		return self;
 	}
 	
 	///@desc Original addContent
@@ -1903,14 +1925,14 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc This function updates all nested elements
 	static update = function() {
-	    if (!self.is_visible_in_region || !self.visible || self.deactivated) return false;
+		if !self.is_visible_in_region || !self.visible || self.deactivated return false;
 	    
-	    // Define the list of items to be processed
-	    var _elements = self.content;
-	    var _source_length = array_length(_elements);
+		// Define the list of items to be processed
+		var _elements = self.content;
+		var _source_length = array_length(_elements);
 	    
-	    for (var i = _source_length - 1; i >= 0; --i) {
-	        var _element = _elements[i];
+		for (var i = _source_length - 1; i >= 0; --i) {
+			var _element = _elements[i];
 	        
 			// Delete destroyed elements
 			if _element.is_destroyed {
@@ -1919,26 +1941,28 @@ function LuiBase(_params = {}) constructor {
 				continue;
 			}
 			
-	        // Skip the invisible elements
-	        if (!_element.is_visible_in_region || !_element.visible || self.deactivated) continue;
+			// Skip the invisible elements
+			if !_element.is_visible_in_region || !_element.visible || self.deactivated continue;
 	        
-	        // Updating the bound variables
-	        if (!is_undefined(_element.binded_variable) && _element.get() != variable_instance_get(_element.binded_variable.source, _element.binded_variable.variable)) {
-	            _element._updateFromBindedVariable();
-	        }
+			// Updating the bound variables
+			if !is_undefined(_element.binded_variable) && _element.get() != variable_instance_get(_element.binded_variable.source, _element.binded_variable.variable) {
+				_element._updateFromBindedVariable();
+			}
 	        
 			// Update content if required
-	        if (_element.need_to_update_content) {
+			if _element.need_to_update_content {
 				_element._dispatchEvent(LUI_EV_CONTENT_UPDATE);
-	            _element.need_to_update_content = false;
-	        }
+				_element.need_to_update_content = false;
+			}
 			
-	        // Execute custom step and recursive update
-	        if (is_method(_element.step)) _element.step();
+			// Execute custom step and recursive update
+			if is_method(_element.step) {
+				_element.step();
+			}
 	        
 			// Call update for nested elements
 			_element.update();
-	    }
+		}
 	}
 	 
 	///@desc Centers the content. Calls setFlexJustifyContent and setFlexAlignItems with centering
@@ -1959,10 +1983,11 @@ function LuiBase(_params = {}) constructor {
 	static activate = function() {
 		if self.deactivated {
 			self.deactivated = false;
-			if is_array(self.content)
-			array_foreach(self.content, function(_elm) {
-				_elm.activate();
-			});
+			if is_array(self.content) {
+				array_foreach(self.content, function(_elm) {
+					_elm.activate();
+				});
+			}
 			self.updateMainUiSurface();
 		}
 		return self;
@@ -1972,10 +1997,11 @@ function LuiBase(_params = {}) constructor {
 	static deactivate = function() {
 		if !self.deactivated {
 			self.deactivated = true;
-			if is_array(self.content)
-			array_foreach(self.content, function(_elm) {
-				_elm.deactivate();
-			});
+			if is_array(self.content) {
+				array_foreach(self.content, function(_elm) {
+					_elm.deactivate();
+				});
+			}
 			self.updateMainUiSurface();
 		}
 		return self;
@@ -2037,10 +2063,10 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Returns true if the mouse is hovered over this element and every clipping ancestor
 	static isMouseHoveredParents = function() {
-		if (!self.isMouseHoveredExc()) return false;
+		if !self.isMouseHoveredExc() return false;
 		var _p = self.parent;
 		while (!is_undefined(_p)) {
-			if (_p.draw_content_in_cutted_region && !_p.isMouseHoveredExc()) return false;
+			if _p.draw_content_in_cutted_region && !_p.isMouseHoveredExc() return false;
 			_p = _p.parent;
 		}
 		return true;
@@ -2053,7 +2079,7 @@ function LuiBase(_params = {}) constructor {
 		var _mouse_y = device_mouse_y_to_gui(0);
 		var _on_element = false;
 		for (var i = 0, n = array_length(self.content); i < n; ++i) {
-		    var _element = self.content[i];
+			var _element = self.content[i];
 			if _element.isMouseHoveredChilds() {
 				return true;
 			}
@@ -2075,30 +2101,30 @@ function LuiBase(_params = {}) constructor {
 	
 	///@desc Destroys all elements from real element container
 	self.destroyContent = function() {
-	    var _content = self.getContent();
+		var _content = self.getContent();
 		while (array_length(_content) > 0) {
-	        var _element = array_pop(_content);
-	        if (!is_undefined(_element)) {
-	            _element.destroy();
-	        }
-	    }
+			var _element = array_pop(_content);
+			if !is_undefined(_element) {
+				_element.destroy();
+			}
+		}
 	}
 	
 	///@desc Destroys all nested elements
 	///@ignore
 	static _destroyAllNestedElements = function() {
-	    while (array_length(self.content) > 0) {
-	        var _element = array_pop(self.content);
-	        if (!is_undefined(_element)) {
-	            _element.destroy();
-	        }
-	    }
+		while (array_length(self.content) > 0) {
+			var _element = array_pop(self.content);
+			if !is_undefined(_element) {
+				_element.destroy();
+			}
+		}
 	}
 	
 	///@desc Destroys self and all nested elements
 	self.destroy = function() {
 		// Double-Destroy protection
-		if (self.is_destroyed) {
+		if self.is_destroyed {
 			return;
 		}
 		// Double-Destroy protection
@@ -2114,15 +2140,17 @@ function LuiBase(_params = {}) constructor {
 		}
 		self._deleteElementName();
 		self._cleanupScreenGrid();
-		if !is_undefined(self.parent) self.parent.setNeedToUpdateContent(true);
+		if !is_undefined(self.parent) {
+			self.parent.setNeedToUpdateContent(true);
+		}
 		self.updateMainUiFlex(true);
 		self.updateMainUiSurface();
 		// Delete flex_node
-		if (!is_undefined(self.flex_node)) {
-		    // For the rest of the elements to react to the disappearance of this
+		if !is_undefined(self.flex_node) {
+			// For the rest of the elements to react to the disappearance of this
 			flexpanel_node_style_set_display(self.flex_node, flexpanel_display.none);
-		    // Delete flex node from memory
-		    self.flex_node = flexpanel_delete_node(self.flex_node, true);
+			// Delete flex node from memory
+			self.flex_node = flexpanel_delete_node(self.flex_node, true);
 		}
 		// Call destroy event
 		self._dispatchEvent(LUI_EV_DESTROY);

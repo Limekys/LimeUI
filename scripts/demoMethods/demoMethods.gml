@@ -260,16 +260,16 @@ function demoTestAnim5() {
 	// Animate each child element with increasing duration (creates stagger effect)
 	var _children = _panel.content;
 	for (var i = 0; i < array_length(_children); i++) {
-	    var _child = _children[i];
+		var _child = _children[i];
 	    
-	    // Initial state: hidden and shifted to the left
-	    _child.visual_alpha = 0;
-	    _child.visual_x = -30;
+		// Initial state: hidden and shifted to the left
+		_child.visual_alpha = 0;
+		_child.visual_x = -30;
 	    
-	    // Each next child has a longer duration, creating a cascade delay
-	    var _duration = 0.3 + i * 0.1;
+		// Each next child has a longer duration, creating a cascade delay
+		var _duration = 0.3 + i * 0.1;
 	    
-	    my_ui.animate(_child, "visual_alpha", 1, _duration, global.Ease.OutQuad);
-	    my_ui.animate(_child, "visual_x", 0, _duration, global.Ease.OutBack);
+		my_ui.animate(_child, "visual_alpha", 1, _duration, global.Ease.OutQuad);
+		my_ui.animate(_child, "visual_x", 0, _duration, global.Ease.OutBack);
 	}
 }

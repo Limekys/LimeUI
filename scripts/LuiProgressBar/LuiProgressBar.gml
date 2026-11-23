@@ -109,7 +109,9 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		
 		// Text value
 		if self.display_value {
-			if !is_undefined(_style.font_default) draw_set_font(_style.font_default);
+			if !is_undefined(_style.font_default) {
+				draw_set_font(_style.font_default);
+			}
 			draw_set_color(_blend_text);
 			draw_set_alpha(_alpha);
 			draw_set_halign(fa_center);

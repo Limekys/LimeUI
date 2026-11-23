@@ -2,7 +2,7 @@ LIME_RESOLUTION.init();
 
 my_style = new LuiStyle()
 	.setPadding(16)	// Padding for all elements
-    .setBorder(16)
+	.setBorder(16)
 	.setFonts(fDemo, fDemo, fDebug)	// Default font and font for interactive elements
 	.setSprites(sUI_button, sUI_button)	// The same sprite for panels and for elements
 	.setSounds(sndBasicClick); // Click sound
@@ -52,7 +52,7 @@ game_ui.addContent([
 /*
 game_ui.addContent([
 	new LuiText(, , , , , "ABOBA", true).setTextHalign(fa_center),
-	hello_button, 
+	hello_button,
 	new LuiRow().addContent([
 		second_button, third_button, new LuiColumn().addContent([
 			new LuiText(, , , , , "SUGOMA", true).setTextHalign(fa_center),

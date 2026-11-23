@@ -184,7 +184,7 @@ changeImageButtonColor = function(_e) {
 }
 var _sprite_buttons = [];
 for (var i = 0; i < 7; ++i) {
-    var _button = new LuiImageButton({width: 80, height: 56, value: sLogoDemo, maintain_aspect: i mod 2 == 0 ? true : false});
+	var _button = new LuiImageButton({width: 80, height: 56, value: sLogoDemo, maintain_aspect: i mod 2 == 0 ? true : false});
 	_button.addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeImageButtonColor(_e);});
 	array_push(_sprite_buttons, _button);
 }
@@ -204,7 +204,7 @@ my_panel_2.addContent([
 		new LuiText({value: "Panel in panel"}).setTextHalign(fa_center),
 		new LuiRow().addContent([
 			activate_button, deactivated_button
-		]),	
+		]),
 		new LuiButton({text: "Visible"}).addEvent(LUI_EV_CLICK, function() {
 			oDemo.panel_with_sprites.setVisible(!oDemo.panel_with_sprites.visible);
 		}),
@@ -222,7 +222,7 @@ combobox_item_1 = new LuiComboBoxItem({text: "Dark"}).addEvent(LUI_EV_CLICK, fun
 		// Change background
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #191919);
-		// Set colors to buttons 
+		// Set colors to buttons
 		btn_show_msg.setColor(merge_color(#ffff77, c_black, 0.5));
 		btn_restart.setColor(merge_color(#ff7777, c_black, 0.5));
 		// Tabs settings
@@ -251,14 +251,14 @@ combobox_item_2 = new LuiComboBoxItem({text: "Light"}).addEvent(LUI_EV_CLICK, fu
 		tab_about.setIcon(-1);
 	}
 });
-combobox_item_3 = new LuiComboBoxItem({text: "Modern"}).addEvent(LUI_EV_CLICK, function() { 
+combobox_item_3 = new LuiComboBoxItem({text: "Modern"}).addEvent(LUI_EV_CLICK, function() {
 	with(oDemo) {
 		// Change ui style
 		my_ui.setStyle(demo_style_modern);
 		// Change background
 		var _b = layer_background_get_id("bgColor");
 		layer_background_blend(_b, #32333d);
-		// Set colors to buttons 
+		// Set colors to buttons
 		btn_show_msg.setColor(merge_color(#fa9a31, c_white, 0.25));
 		btn_restart.setColor(merge_color(#e5538d, c_white, 0.25));
 		// Tabs settings
@@ -313,7 +313,11 @@ my_panel_3.addContent([
 			new LuiScrollPanel({name: "firstScrollPanel"}).setCacheAsSurface(true).addContent([
 				
 				new LuiInput({placeholder: "only numbers allowed", input_mode: LUI_INPUT_MODE.numbers, allowed_chars: "-."}).addEvent(LUI_EV_VALUE_UPDATE, function(_e) {
-					if _e.get() == "" _e.setIncorrect(true) else _e.setIncorrect(false);
+					if _e.get() == "" {
+						_e.setIncorrect(true);
+					} else {
+						_e.setIncorrect(false);
+					}
 				}),
 				new LuiPanel().addContent([
 					new LuiText({value: "Nested panel 1.1"}),
@@ -373,7 +377,7 @@ my_panel_3.addContent([
 				});
 				// Show filtered elements
 				for (var i = 0, n = array_length(_filtered_elements); i < n; ++i) {
-				    var _element = _filtered_elements[i];
+					var _element = _filtered_elements[i];
 					_element.show();
 				}
 			}
@@ -434,16 +438,6 @@ my_panel_3.addContent([
 				spr_test_1, spr_test_2, spr_test_3, spr_test_4
 			])
 		]);
-
-		// Серый заблокированный предмет (вся карточка целиком)
-		//var _mat_gray = luiMaterial(shd_lui_grayscale, function(_e, _m) {
-			//shader_set_uniform_f(_m.u_amount, _e.getData("gray_amount") ?? 1);
-		//}, true);
-		//_mat_gray.u_amount = shader_get_uniform(shd_lui_grayscale, "u_amount");
-		//spr_test_4.setMaterial(_mat_gray);
-
-		// Круглый портрет: скругление группы по маске
-		//spr_test_3.setCachePadding(0).setMaterial(luiMaskMaterial(shd_lui_mask, spr_mask_circle));
 	
 	#endregion
 

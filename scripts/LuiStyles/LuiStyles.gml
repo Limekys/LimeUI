@@ -90,7 +90,9 @@ function LuiStyleDefaults() {
 /// Undefined values are ignored (the default is used instead).
 ///@arg {Struct} [_style] Style data
 function LuiStyle(_style = {}) constructor {
-	if (!is_struct(_style)) _style = {};
+	if !is_struct(_style) {
+		_style = {};
+	}
 	// Merge: defaults <- user values (undefined values are skipped)
 	var _merged = _luiMergeStruct(LuiStyleDefaults(), _style);
 	// Copy the merged result onto self
@@ -106,52 +108,52 @@ function LuiStyle(_style = {}) constructor {
 	// Specific styles
 	
 	/// @desc Set padding for specific class elements
-	/// @param {real} value padding value
-	/// @param {array} class_names Array of class names ["LuiPanel", "LuiContainer"...]
+	/// @arg {real} value padding value
+	/// @arg {array} class_names Array of class names ["LuiPanel", "LuiContainer"...]
 	static setPaddingFor = function(value, class_names) {
-	    for (var i = 0; i < array_length(class_names); i++) {
-	        var cls = class_names[i];
-	        if (!variable_struct_exists(self._class_overrides, cls)) {
-	            self._class_overrides[$ cls] = {};
-	        }
-	        self._class_overrides[$ cls][$ "padding"] = value;
-	    }
+		for (var i = 0; i < array_length(class_names); i++) {
+			var _class_name = class_names[i];
+			if !variable_struct_exists(self._class_overrides, _class_name) {
+				self._class_overrides[$ _class_name] = {};
+			}
+			self._class_overrides[$ _class_name][$ "padding"] = value;
+		}
 		return self;
 	}
 	
-	/// Аналогично для border
+	/// Set border overrides for the specified classes.
 	static setBorderFor = function(value, class_names) {
-	    for (var i = 0; i < array_length(class_names); i++) {
-	        var cls = class_names[i];
-	        if (!variable_struct_exists(self._class_overrides, cls)) {
-	            self._class_overrides[$ cls] = {};
-	        }
-	        self._class_overrides[$ cls][$ "border"] = value;
-	    }
+		for (var i = 0; i < array_length(class_names); i++) {
+			var _class_name = class_names[i];
+			if !variable_struct_exists(self._class_overrides, _class_name) {
+				self._class_overrides[$ _class_name] = {};
+			}
+			self._class_overrides[$ _class_name][$ "border"] = value;
+		}
 		return self;
 	}
 	
-	/// Аналогично для margin (если нужно)
+	/// Set margin overrides for the specified classes.
 	static setMarginFor = function(value, class_names) {
-	    for (var i = 0; i < array_length(class_names); i++) {
-	        var cls = class_names[i];
-	        if (!variable_struct_exists(self._class_overrides, cls)) {
-	            self._class_overrides[$ cls] = {};
-	        }
-	        self._class_overrides[$ cls][$ "margin"] = value;
-	    }
+		for (var i = 0; i < array_length(class_names); i++) {
+			var _class_name = class_names[i];
+			if !variable_struct_exists(self._class_overrides, _class_name) {
+				self._class_overrides[$ _class_name] = {};
+			}
+			self._class_overrides[$ _class_name][$ "margin"] = value;
+		}
 		return self;
 	}
 	
-	/// Аналогично для gap (если нужно)
+	/// Set gap overrides for the specified classes.
 	static setGapFor = function(value, class_names) {
-	    for (var i = 0; i < array_length(class_names); i++) {
-	        var cls = class_names[i];
-			if (!variable_struct_exists(self._class_overrides, cls)) {
-	            self._class_overrides[$ cls] = {};
-	        }
-	        self._class_overrides[$ cls][$ "gap"] = value;
-	    }
+		for (var i = 0; i < array_length(class_names); i++) {
+			var _class_name = class_names[i];
+			if !variable_struct_exists(self._class_overrides, _class_name) {
+				self._class_overrides[$ _class_name] = {};
+			}
+			self._class_overrides[$ _class_name][$ "gap"] = value;
+		}
 		return self;
 	}
 	
@@ -316,77 +318,77 @@ function LuiStyle(_style = {}) constructor {
 	// COLORS FUNCTIONS
 	
 	///@desc Sets the primary, secondary, accent, and border colors for UI elements.
-    ///@arg {Real} [_primary] The primary color for elements (default: c_white).
-    ///@arg {Real} [_secondary] The secondary color for interactive elements (default: c_ltgray).
-    ///@arg {Real} [_back] The back color for interactive elements (default: c_ltgray).
-    ///@arg {Real} [_accent] The accent color for active states (default: c_green).
-    ///@arg {Real} [_border] The border color for elements (default: c_gray).
-    static setColors = function(_primary = c_white, _secondary = c_ltgray, _back = c_ltgray, _accent = c_green, _border = c_gray) {
-        // Panel
-        self.color_primary = _primary;
-        self.color_secondary = _secondary;
+	///@arg {Real} [_primary] The primary color for elements (default: c_white).
+	///@arg {Real} [_secondary] The secondary color for interactive elements (default: c_ltgray).
+	///@arg {Real} [_back] The back color for interactive elements (default: c_ltgray).
+	///@arg {Real} [_accent] The accent color for active states (default: c_green).
+	///@arg {Real} [_border] The border color for elements (default: c_gray).
+	static setColors = function(_primary = c_white, _secondary = c_ltgray, _back = c_ltgray, _accent = c_green, _border = c_gray) {
+		// Panel
+		self.color_primary = _primary;
+		self.color_secondary = _secondary;
 		self.color_back = _back;
-        self.color_accent = _accent;
-        self.color_border = _border;
-        return self;
-    }
+		self.color_accent = _accent;
+		self.color_border = _border;
+		return self;
+	}
     
-    ///@desc Sets the accent color for interactive elements.
-    ///@arg {Real} [_color] The accent color for active states (default: c_green).
-    static setColorAccent = function(_color = c_green) {
-        self.color_accent = _color;
-        return self;
-    }
+	///@desc Sets the accent color for interactive elements.
+	///@arg {Real} [_color] The accent color for active states (default: c_green).
+	static setColorAccent = function(_color = c_green) {
+		self.color_accent = _color;
+		return self;
+	}
     
-    ///@desc Sets the hover color for UI elements.
-    ///@arg {Real} [_hover] The hover color to be mixed with element colors (default: c_gray).
-    static setColorHover = function(_hover = c_gray) {
-        self.color_hover = _hover;
-        return self;
-    }
+	///@desc Sets the hover color for UI elements.
+	///@arg {Real} [_hover] The hover color to be mixed with element colors (default: c_gray).
+	static setColorHover = function(_hover = c_gray) {
+		self.color_hover = _hover;
+		return self;
+	}
     
-    ///@desc Sets the text and text hint colors for UI elements.
-    ///@arg {Real} [_font] The color for text (default: c_black).
-    ///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
-    static setColorText = function(_font = c_black, _font_hint = c_gray) {
-        self.color_text = _font;
-        self.color_text_hint = _font_hint;
-        return self;
-    }
+	///@desc Sets the text and text hint colors for UI elements.
+	///@arg {Real} [_font] The color for text (default: c_black).
+	///@arg {Real} [_font_hint] The color for text hints (default: c_gray).
+	static setColorText = function(_font = c_black, _font_hint = c_gray) {
+		self.color_text = _font;
+		self.color_text_hint = _font_hint;
+		return self;
+	}
     
-    ///@desc [DEPRECATED] Previously set the tooltip colors (no longer used).
-    ///@arg {Real} [_tooltip] The tooltip background color (default: c_white).
-    ///@arg {Real} [_tooltip_border] The tooltip border color (default: c_black).
-    ///@deprecated
-    static setColorTooltip = function(_tooltip = c_white, _tooltip_border = c_black) {
-        _luiPrintWarning($"setColorTooltip: function is deprecated!");
-        return self;
-    }
+	///@desc [DEPRECATED] Previously set the tooltip colors (no longer used).
+	///@arg {Real} [_tooltip] The tooltip background color (default: c_white).
+	///@arg {Real} [_tooltip_border] The tooltip border color (default: c_black).
+	///@deprecated
+	static setColorTooltip = function(_tooltip = c_white, _tooltip_border = c_black) {
+		_luiPrintWarning($"setColorTooltip: function is deprecated!");
+		return self;
+	}
     
-    ///@desc Sets the color for deactivated elements, which can be mixed with active colors.
-    ///@arg {Real} [_color] The base color for deactivated elements (default: c_gray).
-    static setColorDeactivated = function(_color = c_gray) {
-        self.color_deactivated = _color;
-        return self;
-    }
+	///@desc Sets the color for deactivated elements, which can be mixed with active colors.
+	///@arg {Real} [_color] The base color for deactivated elements (default: c_gray).
+	static setColorDeactivated = function(_color = c_gray) {
+		self.color_deactivated = _color;
+		return self;
+	}
     
-    ///@desc Sets the semantic colors for success, error, and warning states.
-    ///@arg {Real} [_success] The color for success (default: #4CAF50).
+	///@desc Sets the semantic colors for success, error, and warning states.
+	///@arg {Real} [_success] The color for success (default: #4CAF50).
 	///@arg {Real} [_warning] The color for warning (default: #FF9800).
-    ///@arg {Real} [_error] The color for error (default: #F44336).
-    static setColorSemantic = function(_success = #4CAF50, _warning = #FF9800, _error = #F44336) {
-        self.color_semantic_success = _success;
-        self.color_semantic_warning = _warning;
+	///@arg {Real} [_error] The color for error (default: #F44336).
+	static setColorSemantic = function(_success = #4CAF50, _warning = #FF9800, _error = #F44336) {
+		self.color_semantic_success = _success;
+		self.color_semantic_warning = _warning;
 		self.color_semantic_error = _error;
-        return self;
-    }
+		return self;
+	}
     
-    ///@desc Sets the optional shadow color for UI elements (default: undefined).
-    ///@arg {Real} [_color] The shadow color (default: undefined).
-    static setColorShadow = function(_color = undefined) {
-        self.color_shadow = _color;
-        return self;
-    }
+	///@desc Sets the optional shadow color for UI elements (default: undefined).
+	///@arg {Real} [_color] The shadow color (default: undefined).
+	static setColorShadow = function(_color = undefined) {
+		self.color_shadow = _color;
+		return self;
+	}
 	
 	// SOUNDS FUNCTIONS
 	

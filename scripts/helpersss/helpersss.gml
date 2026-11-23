@@ -1,8 +1,8 @@
 global.lui_prof = {};
-global.lui_prof_frame = {};        // фазы текущего кадра
-global.lui_bakes_frame = 0;        // сколько кешей пересобрано в этом кадре
-global.lui_spike_log = "";         // накопленный текст
-global.lui_spike_threshold_us = 11000;   // кадр дольше 6 мс (~166 FPS) считаем медленным
+global.lui_prof_frame = {};        // Phases measured in the current frame
+global.lui_bakes_frame = 0;        // Cache surfaces rebuilt in the current frame
+global.lui_spike_log = "";         // Accumulated log text
+global.lui_spike_threshold_us = 11000;   // Log frames above this threshold in microseconds
 
 function luiProf(_name, _t0) {
 	var _ms = (get_timer() - _t0) / 1000;
@@ -13,12 +13,12 @@ function luiProf(_name, _t0) {
 	global.lui_prof_frame[$ _name] = _ms;
 }
 
-global.lui_prev = { phases: {}, bakes: 0, hover: "-" };   // данные предыдущего кадра
+global.lui_prev = { phases: {}, bakes: 0, hover: "-" };   // Measurements from the previous frame
 
-/// Вызывать в самом конце LuiMain.render (как и раньше)
+/// Call at the end of LuiMain.render.
 function luiProfFrameEnd(_hovered_name) {
-	// delta_time = длительность ПРЕДЫДУЩЕГО кадра, поэтому при спайке логируем сохранённые данные того кадра
-	if (delta_time > global.lui_spike_threshold_us) {
+	// delta_time measures the previous frame, so report that frame's saved timings.
+	if delta_time > global.lui_spike_threshold_us {
 		var _p = global.lui_prev;
 		var _names = struct_get_names(_p.phases);
 		array_sort(_names, true);

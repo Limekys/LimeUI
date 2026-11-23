@@ -1,34 +1,34 @@
 #macro LUI_CACHE_MAX_SIZE 8192
 #macro LUI_GRID_STRIDE 65536
 
-/// Блендинг для РИСОВАНИЯ В кеш-поверхность (результат — premultiplied alpha)
+/// Blend straight-alpha draws into a premultiplied cache surface.
 function _luiBlendBake() {
 	gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_inv_src_alpha);
 }
 
-/// Блендинг для ВЫВОДА premultiplied-поверхности (в экран или в другую поверхность)
+/// Composite a premultiplied surface onto the screen or another surface.
 function _luiBlendBlit() {
 	gpu_set_blendmode_ext(bm_one, bm_inv_src_alpha);
 }
 
-/// Обычный блендинг (предполагается, что в GUI всегда bm_normal)
+/// Restore normal GUI blending.
 function _luiBlendReset() {
 	gpu_set_blendmode(bm_normal);
 }
 
-/// Пересечение двух прямоугольников [x1, y1, x2, y2]
+/// Return the intersection of two rectangles [x1, y1, x2, y2].
 function _luiClipIntersect(_a, _b) {
 	return [max(_a[0], _b[0]), max(_a[1], _b[1]), min(_a[2], _b[2]), min(_a[3], _b[3])];
 }
 
-/// Применяет прямоугольник [x1, y1, x2, y2] как scissor
+/// Apply the rectangle [x1, y1, x2, y2] as the scissor.
 function _luiApplyClip(_c) {
 	var _x = floor(_c[0]);
 	var _y = floor(_c[1]);
 	gpu_set_scissor(_x, _y, max(0, ceil(_c[2]) - _x), max(0, ceil(_c[3]) - _y));
 }
 
-/// AABB прямоугольника после применения матрицы (строчная конвенция GM: v * M)
+/// Return the axis-aligned bounds after applying the matrix using GameMaker's row-vector convention.
 function _luiTransformRect(_m, _x1, _y1, _x2, _y2) {
 	var _ax = _x1 * _m[0] + _y1 * _m[4] + _m[12];
 	var _ay = _x1 * _m[1] + _y1 * _m[5] + _m[13];
@@ -41,7 +41,7 @@ function _luiTransformRect(_m, _x1, _y1, _x2, _y2) {
 	return [min(_ax, _bx, _cx, _dx), min(_ay, _by, _cy, _dy), max(_ax, _bx, _cx, _dx), max(_ay, _by, _cy, _dy)];
 }
 
-/// Прямоугольник клипа детей элемента (в координатах после матрицы _m)
+/// Return the element's child clip in the coordinates transformed by _m.
 function _luiElementClipRect(_el, _m) {
 	var _style = _el.getStyle();
 	var _o = is_undefined(_style) ? _el.render_region_offset : _style.render_region_offset;

@@ -24,13 +24,13 @@ function getLimeResolutionManager() {
 			var win_width = window_get_width();
 			var win_height = window_get_height();
 
-			if (win_width <= 0 || win_height <= 0) return self;
+			if win_width <= 0 || win_height <= 0 return self;
 
 			var render_width, render_height;
 
 			// Determine screen rendering resolution
-			if (window_get_fullscreen()) {
-				if (self.screen_width == -1 || self.screen_height == -1) {
+			if window_get_fullscreen() {
+				if self.screen_width == -1 || self.screen_height == -1 {
 					// Use screen resolution if no target is set
 					render_width = display_get_width();
 					render_height = display_get_height();
@@ -66,7 +66,7 @@ function getLimeResolutionManager() {
 			var render_height = getScreenHeight();
 
 			var gui_width, gui_height;
-			if (self.gui_width == -1 || self.gui_height == -1) {
+			if self.gui_width == -1 || self.gui_height == -1 {
 				// Auto: follows screen resolution with scale
 				gui_width = render_width / self.gui_scale;
 				gui_height = render_height / self.gui_scale;
@@ -103,8 +103,8 @@ function getLimeResolutionManager() {
 
 		// Get current screen width
 		static getScreenWidth = function() {
-			if (window_get_fullscreen()) {
-				if (self.screen_width == -1) {
+			if window_get_fullscreen() {
+				if self.screen_width == -1 {
 					return display_get_width();
 				} else {
 					return self.screen_width;
@@ -116,8 +116,8 @@ function getLimeResolutionManager() {
 
 		// Get current screen height
 		static getScreenHeight = function() {
-			if (window_get_fullscreen()) {
-				if (self.screen_height == -1) {
+			if window_get_fullscreen() {
+				if self.screen_height == -1 {
 					return display_get_height();
 				} else {
 					return self.screen_height;
@@ -129,7 +129,7 @@ function getLimeResolutionManager() {
 
 		// Get current GUI width
 		static getGuiWidth = function() {
-			if (self.gui_width == -1) {
+			if self.gui_width == -1 {
 				return getScreenWidth() / self.gui_scale;
 			} else {
 				return self.gui_width / self.gui_scale;
@@ -138,7 +138,7 @@ function getLimeResolutionManager() {
 
 		// Get current GUI height
 		static getGuiHeight = function() {
-			if (self.gui_height == -1) {
+			if self.gui_height == -1 {
 				return getScreenHeight() / self.gui_scale;
 			} else {
 				return self.gui_height / self.gui_scale;
@@ -152,7 +152,7 @@ function getLimeResolutionManager() {
 
 		// Check and update resolution if window size or mode changed
 		static update = function() {
-			if (self.last_window_width != window_get_width() || self.last_window_height != window_get_height()) {
+			if self.last_window_width != window_get_width() || self.last_window_height != window_get_height() {
 				updateResolution();
 			}
 		}

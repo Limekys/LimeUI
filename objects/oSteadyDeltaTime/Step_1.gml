@@ -8,10 +8,10 @@ dt = delta_time/1000000;
 global.dt_unsteady = dt*scale;
 
 // Prevent delta time from exhibiting sporadic behaviour
-if (dt > 1/min_fps) {
-	if (dt_restored) { 
-		dt = 1/min_fps; 
-	} else { 
+if dt > 1/min_fps {
+	if dt_restored {
+		dt = 1/min_fps;
+	} else {
 		dt = dt_previous;
 		dt_restored = true;
 	}

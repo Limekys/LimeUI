@@ -2,7 +2,7 @@ global.debug_counter = 0;
 
 repeat (10000) {
 	flex_node = flexpanel_create_node({
-		name: "test", 
+		name: "test",
 		data: new LuiWindow()
 	});
 	

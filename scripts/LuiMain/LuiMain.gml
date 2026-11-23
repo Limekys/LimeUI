@@ -42,7 +42,9 @@ function LuiMain() : LuiBase() constructor {
 		var _cols = ceil(display_get_gui_width() / LUI_GRID_SIZE);
 		var _rows = ceil(display_get_gui_height() / LUI_GRID_SIZE);
 		for (var _x = 0; _x < _cols; ++_x) {
-			if (_x >= array_length(self._screen_grid)) array_push(self._screen_grid, []);
+			if _x >= array_length(self._screen_grid) {
+				array_push(self._screen_grid, []);
+			}
 			var _col = self._screen_grid[_x];
 			for (var _y = array_length(_col); _y < _rows; ++_y) {
 				array_push(_col, []);
@@ -67,16 +69,16 @@ function LuiMain() : LuiBase() constructor {
 	    
 		// Delete previous if found to exlude animation conflicts
 		for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
-	        var _existing_tween = self.active_animations[i];
-	        if (_existing_tween.target == target_element && _existing_tween.property == property) {
-	            array_delete(self.active_animations, i, 1);
-	            break;
-	        }
-	    }
+			var _existing_tween = self.active_animations[i];
+			if _existing_tween.target == target_element && _existing_tween.property == property {
+				array_delete(self.active_animations, i, 1);
+				break;
+			}
+		}
 		
 		// Create new tween
 		var _tween = new LuiTween(target_element, property, end_value, duration, easing_func);
-	    array_push(self.active_animations, _tween);
+		array_push(self.active_animations, _tween);
 		
 		return _tween;
 	}
@@ -140,7 +142,7 @@ function LuiMain() : LuiBase() constructor {
 			var _previous_hovered_element = self.topmost_hovered_element;
 			
 			// Prioritize dragging element if it exists and mouse is held
-			if (!is_undefined(self.dragging_element) && mouse_check_button(mb_left)) {
+			if !is_undefined(self.dragging_element) && mouse_check_button(mb_left) {
 				self.topmost_hovered_element = self.dragging_element;
 			} else {
 				self.topmost_hovered_element = self._getTopmostElement(_mouse_x, _mouse_y);
@@ -229,7 +231,7 @@ function LuiMain() : LuiBase() constructor {
 			} else {
 				// Remove focus from element
 				if !is_undefined(self.element_in_focus) {
-					if (mouse_check_button_pressed(mb_left) || mouse_check_button_released(mb_left)) {
+					if mouse_check_button_pressed(mb_left) || mouse_check_button_released(mb_left) {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus.is_pressed = false;
 						self.element_in_focus = undefined;
@@ -242,8 +244,8 @@ function LuiMain() : LuiBase() constructor {
 			self.dragging_element = undefined;
 			// Reset is_pressed state
 			if !is_undefined(self.topmost_hovered_element) {
-                self.topmost_hovered_element.is_pressed = false;
-            }
+				self.topmost_hovered_element.is_pressed = false;
+			}
 		}
 		
 		//luiProf("2_mouse", _t);
@@ -269,7 +271,7 @@ function LuiMain() : LuiBase() constructor {
 		//_t = get_timer();
 		
 		// Update animations
-		if (array_length(self.active_animations) > 0) {
+		if array_length(self.active_animations) > 0 {
 			for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
 				var _tween = self.active_animations[i];
 				if _tween.target.is_destroyed {
@@ -277,13 +279,13 @@ function LuiMain() : LuiBase() constructor {
 					continue;
 				}
 				// Transform/alpha of the element itself doesn't change its own cached content
-				if (string_starts_with(_tween.property, "visual_") || string_starts_with(_tween.property, "pivot_")) {
+				if string_starts_with(_tween.property, "visual_") || string_starts_with(_tween.property, "pivot_") {
 					_tween.target._invalidateAncestorCaches();
 				} else {
 					_tween.target.updateMainUiSurface();
 				}
 				// If update return false, animate end
-				if (!_tween.update(DT)) {
+				if !_tween.update(DT) {
 					array_delete(self.active_animations, i, 1);
 				}
 			}
@@ -330,18 +332,22 @@ function LuiMain() : LuiBase() constructor {
 			self._cache_bakes = 0;
 		}
 		var _prev_alpha = draw_get_alpha();
-		if LUI_FORCE_ALPHA_1 { draw_set_alpha(1); }
+		if LUI_FORCE_ALPHA_1 {
+			draw_set_alpha(1);
+		}
 		
 		// Pre draw events
 		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
 			var _element = self.pre_draw_list[i];
-			if is_method(_element.preDraw) _element.preDraw();
+			if is_method(_element.preDraw) {
+				_element.preDraw();
+			}
 		}
 		
 		if self.visible {
 			
 			// Force initial layout if it was not calculated yet
-			if (self.needs_update_flex) {
+			if self.needs_update_flex {
 				self.needs_update_flex = false;
 				self._calculateLayout();
 				self._updateFlex(self.flex_node);
@@ -430,8 +436,8 @@ function LuiMain() : LuiBase() constructor {
 		if !is_undefined(_element) {
 			if _element.tooltip != "" {
 				var _style = self.getStyle();
-				var _padding = _style.padding; 
-				var _padding_text = _style.padding; 
+				var _padding = _style.padding;
+				var _padding_text = _style.padding;
 				draw_set_font(_style.font_default);
 				var _width = string_width(_element.tooltip) + _padding_text*2;
 				var _height = string_height(_element.tooltip) + _padding_text*2;
@@ -472,7 +478,9 @@ function LuiMain() : LuiBase() constructor {
 			//global.lui_spike_log = "";
 		//}
 		
-		if !LUI_FORCE_ALPHA_1 { draw_set_alpha(_prev_alpha); }
+		if !LUI_FORCE_ALPHA_1 {
+			draw_set_alpha(_prev_alpha);
+		}
 	}
 	
 	// DIALOGS
@@ -683,9 +691,9 @@ function LuiMain() : LuiBase() constructor {
 		var _grid = self.main_ui._screen_grid;
 		var _cx = floor(_mouse_x / LUI_GRID_SIZE);
 		var _cy = floor(_mouse_y / LUI_GRID_SIZE);
-		if (_cx < 0 || _cx >= array_length(_grid)) return undefined;
+		if _cx < 0 || _cx >= array_length(_grid) return undefined;
 		var _col = _grid[_cx];
-		if (_cy < 0 || _cy >= array_length(_col)) return undefined;
+		if _cy < 0 || _cy >= array_length(_col) return undefined;
 		var _cell = _col[_cy];
 		
 		var _best = undefined;
@@ -695,8 +703,8 @@ function LuiMain() : LuiBase() constructor {
 			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
 			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
 			// Not above the current best: skip without the expensive hover checks
-			if (!is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0) continue;
-			if (!_e.isMouseHoveredExc() || !_e.isMouseHoveredParents()) continue;
+			if !is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0 continue;
+			if !_e.isMouseHoveredExc() || !_e.isMouseHoveredParents() continue;
 			_best = _e;
 		}
 		return _best;
@@ -714,7 +722,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 		
 		var _has_kids = array_length(_el.content) > 0;
-		if (_has_kids) {
+		if _has_kids {
 			for (var i = 0, n = array_length(_el.content); i < n; i++) {
 				self._prepareCaches(_el.content[i]);
 			}
@@ -800,16 +808,24 @@ function LuiMain() : LuiBase() constructor {
 		var _v = floor(255 * _a);
 		var _mat = _el.material;
 		var _group_mat = !is_undefined(_mat) && _mat.group;
-		if (_group_mat) {
+		if _group_mat {
 			shader_set(_mat.shader);
-			if (is_callable(_mat.apply)) _mat.apply(_el, _mat);
+			if is_callable(_mat.apply) {
+				_mat.apply(_el, _mat);
+			}
 		}
 		_luiBlendBlit();
 		draw_surface_ext(_el._cached_surface,
 			floor(_el.x) - _el.cache_padding, floor(_el.y) - _el.cache_padding,
 			1, 1, 0, make_colour_rgb(_v, _v, _v), _a);
-		if (_group_mat) shader_reset();
-		if (self._baking) _luiBlendBake(); else _luiBlendReset();
+		if _group_mat {
+			shader_reset();
+		}
+		if self._baking {
+			_luiBlendBake();
+		} else {
+			_luiBlendReset();
+		}
 	}
 	
 	///@desc Draws element with its subtree.
@@ -819,7 +835,7 @@ function LuiMain() : LuiBase() constructor {
 		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
 		
 		var _a = _pa * _el.visual_alpha;
-		if (_a <= 0) return;
+		if _a <= 0 return;
 		
 		var _has_t = _el._hasVisualTransform();
 		var _m = _has_t ? matrix_multiply(_el._buildVisualMatrix(), _pm) : _pm;
@@ -842,7 +858,7 @@ function LuiMain() : LuiBase() constructor {
 	///@ignore
 	static _pushClip = function(_clip, _el, _m) {
 		self._clip_depth++;
-		if (self._clip_depth >= array_length(self._clip_stack)) {
+		if self._clip_depth >= array_length(self._clip_stack) {
 			array_push(self._clip_stack, [0, 0, 0, 0]);
 		}
 		var _c = self._clip_stack[self._clip_depth];
@@ -854,27 +870,31 @@ function LuiMain() : LuiBase() constructor {
 	/// Invariant on entry: matrix_world == _m, scissor == _clip. Restored on exit.
 	///@ignore
 	static _drawSelfAndChildren = function(_el, _m, _a, _clip) {
-		if (is_method(_el.draw)) {
+		if is_method(_el.draw) {
 			draw_set_alpha(_a);
 			var _mat = _el.material;
 			var _own_mat = !is_undefined(_mat) && !_mat.group;   // group materials are applied on cache blit
-			if (_own_mat) {
+			if _own_mat {
 				shader_set(_mat.shader);
-				if (is_callable(_mat.apply)) _mat.apply(_el, _mat);
+				if is_callable(_mat.apply) {
+					_mat.apply(_el, _mat);
+				}
 			}
 			_el.draw();
-			if (_own_mat) shader_reset();
+			if _own_mat {
+				shader_reset();
+			}
 		}
 		
 		var _kids = _el._getDrawChildren();
 		var _n = array_length(_kids);
-		if (_n == 0) return;
+		if _n == 0 return;
 		
 		var _child_clip = _clip;
 		var _clipping = _el.draw_content_in_cutted_region;
-		if (_clipping) {
+		if _clipping {
 			_child_clip = self._pushClip(_clip, _el, _m);
-			if (_child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1]) {
+			if _child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1] {
 				self._clip_depth--;
 				return;
 			}
@@ -885,7 +905,7 @@ function LuiMain() : LuiBase() constructor {
 			self._drawTree(_kids[i], _m, _a, _child_clip);
 		}
 		
-		if (_clipping) {
+		if _clipping {
 			_luiApplyClip(_clip);
 			self._clip_depth--;
 		}
@@ -907,35 +927,41 @@ function LuiMain() : LuiBase() constructor {
 		draw_set_valign(fa_top);
 		draw_set_font(fDebug);
 		
-		var gui_width = display_get_gui_width();
-		var gui_height = display_get_gui_height();
+		var _gui_width = display_get_gui_width();
+		var _gui_height = display_get_gui_height();
 		
-		var _width = ceil(gui_width / LUI_GRID_SIZE);
-		var _height = ceil(gui_height / LUI_GRID_SIZE);
+		var _width = ceil(_gui_width / LUI_GRID_SIZE);
+		var _height = ceil(_gui_height / LUI_GRID_SIZE);
 		
 		for (var _x = 0; _x <= _width; ++_x) {
-			var x_pos = _x * LUI_GRID_SIZE;
-			draw_line(x_pos, 0, x_pos, gui_height);
+			var _x_pos = _x * LUI_GRID_SIZE;
+			draw_line(_x_pos, 0, _x_pos, _gui_height);
 			
 			for (var _y = 0; _y <= _height; ++_y) {
-				var y_pos = _y * LUI_GRID_SIZE;
+				var _y_pos = _y * LUI_GRID_SIZE;
 				
-				if _x == 0 draw_line(0, y_pos, gui_width, y_pos);
+				if _x == 0 {
+					draw_line(0, _y_pos, _gui_width, _y_pos);
+				}
 				
 				var _array = [];
-				if (_x < array_length(self._screen_grid) && _y < array_length(self._screen_grid[_x])) {
+				if _x < array_length(self._screen_grid) && _y < array_length(self._screen_grid[_x]) {
 					_array = self._screen_grid[_x][_y];
 				}
-				draw_text(x_pos + 2, y_pos + 1, $"{_x}_{_y}");
+				draw_text(_x_pos + 2, _y_pos + 1, $"{_x}_{_y}");
 				
 				var _elements_in_cell = array_length(_array);
 				for (var i = 0, n = min(18, _elements_in_cell); i < n; ++i) {
-					if i mod 2 == 0 draw_set_color(c_orange); else draw_set_color(c_red);
-					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
+					if i mod 2 == 0 {
+						draw_set_color(c_orange);
+					} else {
+						draw_set_color(c_red);
+					}
+					draw_text(_x_pos + 2, _y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
 				}
 				draw_set_color(c_red);
 				if _elements_in_cell > 18 {
-					draw_text(x_pos + 2, y_pos + 1 + 12 + 6 * 18, $"and {_elements_in_cell - 18} elements...");
+					draw_text(_x_pos + 2, _y_pos + 1 + 12 + 6 * 18, $"and {_elements_in_cell - 18} elements...");
 				}
 			}
 		}

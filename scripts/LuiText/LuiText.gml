@@ -1,8 +1,8 @@
 /// @enum LuiTextOverflow
 enum LUI_TEXT_OVERFLOW {
-    Clip,       // Clip and add "..." at the end
-    Wrap,       // Wrap by words
-    Scale,      // Scale text size to fit all width of element
+	Clip,       // Clip and add "..." at the end
+	Wrap,       // Wrap by words
+	Scale,      // Scale text size to fit all width of element
 	WrapScale   // Wrap by words, and scale down if it still exceeds element height
 }
 
@@ -83,19 +83,19 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 		
 		var _text = self.value;
 		var _scale = 1.0;
-		if (_text != "") {
-			if (self.overflow == LUI_TEXT_OVERFLOW.Scale) {
+		if _text != "" {
+			if self.overflow == LUI_TEXT_OVERFLOW.Scale {
 				_scale = min(1.0, self.width / string_width(_text), self.height / string_height(_text));
-			} else if (self.overflow == LUI_TEXT_OVERFLOW.WrapScale) {
+			} else if self.overflow == LUI_TEXT_OVERFLOW.WrapScale {
 				var _target_w = self.width;
 				var _target_h = self.height;
-				if (string_height_ext(_text, -1, _target_w) > _target_h) {
+				if string_height_ext(_text, -1, _target_w) > _target_h {
 					var _low = 0.1;
 					var _high = 1.0;
 					for (var i = 0; i < 10; i++) {
 						var _mid = (_low + _high) / 2;
 						var _scaled_h = string_height_ext(_text, -1, _target_w / _mid) * _mid;
-						if (_scaled_h <= _target_h) {
+						if _scaled_h <= _target_h {
 							_scale = _mid;
 							_low = _mid;
 						} else {
@@ -127,24 +127,24 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 		var _txt_x = 0;
 		var _txt_y = 0;
 		switch(self.text_halign) {
-			case fa_left: 
+			case fa_left:
 				_txt_x = self.x;
 			break;
 			case fa_center:
 				_txt_x = self.x + self.width / 2;
 			break;
-			case fa_right: 
+			case fa_right:
 				_txt_x = self.x + self.width;
 			break;
 		}
 		switch(self.text_valign) {
-			case fa_top: 
+			case fa_top:
 				_txt_y = self.y;
 			break;
 			case fa_middle:
 				_txt_y = self.y + self.height / 2;
 			break;
-			case fa_bottom: 
+			case fa_bottom:
 				_txt_y = self.y + self.height;
 			break;
 		}
@@ -162,7 +162,7 @@ function LuiText(_params = {}) : LuiBase(_params) constructor {
 				case LUI_TEXT_OVERFLOW.Scale:
 					self._updateScaleCache();
 					draw_text_transformed(_txt_x, _txt_y, self.value, self._lc_scale, self._lc_scale, 0);
-					break; 
+					break;
 				
 				case LUI_TEXT_OVERFLOW.WrapScale:
 					self._updateScaleCache();

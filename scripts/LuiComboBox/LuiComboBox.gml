@@ -44,7 +44,9 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	static _initItems = function() {
 		var _item_count = array_length(self.items);
 		//Add items to this panel
-		if !is_array(self.items) self.items = [self.items];
+		if !is_array(self.items) {
+			self.items = [self.items];
+		}
 		for (var i = 0; i < _item_count; ++i) {
 			var _item = self.items[i];
 			_item.combobox_parent = self;
@@ -76,22 +78,22 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		}
 		self.combobox_panel.setVisibilitySwitching(false);
 		return self;
-    }
+	}
 	
 	///@desc Add items //???//
 	///@arg {struct,array} _items Element or array of elements
 	static addItems = function(_items) {
-        self.items = _items;
-        return self;
-    }
+		self.items = _items;
+		return self;
+	}
 	
 	///@desc Remove items //???//
-    static removeItem = function(index) {
-        //if (index >= 0 && index < array_length(self.items)) {
-        //    array_delete(self.items, index, 1);
-        //}
-        return self;
-    }
+	static removeItem = function(index) {
+		//if (index >= 0 && index < array_length(self.items)) {
+		//    array_delete(self.items, index, 1);
+		//}
+		return self;
+	}
 	
 	self.draw = function() {
 		var _style = self.getStyle();
@@ -141,9 +143,9 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		draw_set_valign(fa_middle);
 		if is_undefined(self.text) || self.text == "" {
 			draw_set_alpha(0.5);
-			_drawTruncatedText(_txt_x, _txt_y, self.placeholder, _text_draw_width);
+			self._drawTruncatedText(_txt_x, _txt_y, self.placeholder, _text_draw_width);
 		} else {
-			_drawTruncatedText(_txt_x, _txt_y, string(self.text), _text_draw_width);
+			self._drawTruncatedText(_txt_x, _txt_y, string(self.text), _text_draw_width);
 		}
 		
 		//Border
@@ -223,7 +225,7 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 		}
 		
 		// Icon and text
-		_drawIconAndText(_center_x, _center_y, self.width, _style.color_text);
+		self._drawIconAndText(_center_x, _center_y, self.width, _style.color_text);
 		
 		//Border
 		if !is_undefined(_style.sprite_combobox_item_border) {

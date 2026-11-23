@@ -34,7 +34,7 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 	///@arg {real} _alpha
 	static setAlpha = function(_alpha) {
 		self.alpha = _alpha;
-		return self
+		return self;
 	}
 	
 	///@desc Set maintain aspect of surface
@@ -79,10 +79,10 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 		}
 		//Draw surface
 		var _sprite_render_function = draw_surface_stretched_ext;
-		_sprite_render_function(self.value, 
-									floor(self.x + self.width/2 - _width/2), 
-									floor(self.y + self.height/2 - _height/2), 
-									_width, _height, 
+		_sprite_render_function(self.value,
+									floor(self.x + self.width/2 - _width/2),
+									floor(self.y + self.height/2 - _height/2),
+									_width, _height,
 									_blend_color, self.alpha);
 	}
 	

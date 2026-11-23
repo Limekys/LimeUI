@@ -35,7 +35,7 @@ function LuiMessage(_params = {}, _default_backdrop_blur = 0) : LuiBox(_params) 
 		if _panel_width == LUI_AUTO {
 			var _panel_min_width = 256;
 			var _style = _e.getStyle();
-			if (!is_undefined(_style) && !is_undefined(_style.font_default)) {
+			if !is_undefined(_style) && !is_undefined(_style.font_default) {
 				draw_set_font(_style.font_default);
 			}
 			var _padding = is_undefined(_style) ? 0 : (_style.padding ?? 0);

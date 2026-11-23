@@ -81,7 +81,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		self.destroy();
 	}
 	
-    self.draw = function() {
+	self.draw = function() {
 		if self.window_container.visible {
 			var _style = self.getStyle();
 			var _alpha = draw_get_alpha();
@@ -98,7 +98,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 				draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.window_header.height, self.width, self.height - self.window_header.height, _style.color_border, _alpha);
 			}
 		}
-    }
+	}
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		
@@ -160,18 +160,18 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 	}
 	
 	self.draw = function() {
-        var _style = self.getStyle();
+		var _style = self.getStyle();
 		var _alpha = draw_get_alpha();
 		// Header
 		if !is_undefined(_style.sprite_tab) {
-            var _blend_color = merge_color(_style.color_primary, c_black, 0.25);
-            draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
-        }
+			var _blend_color = merge_color(_style.color_primary, c_black, 0.25);
+			draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
+		}
 		// Border
 		if !is_undefined(_style.sprite_tab_border) {
 			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
-    }
+	}
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		_e._initTitle();
@@ -185,10 +185,10 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 	});
 	
 	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
-		if (!is_undefined(_e.parent_window)) {
-            var _new_pos_x = clamp(_data.new_x, 0, self.main_ui.width - self.width);
+		if !is_undefined(_e.parent_window) {
+			var _new_pos_x = clamp(_data.new_x, 0, self.main_ui.width - self.width);
 			var _new_pos_y = clamp(_data.new_y, 0, self.main_ui.height - self.height);
 			_e.parent_window.setPosition(_new_pos_x, _new_pos_y);
-        }
+		}
 	});
 }

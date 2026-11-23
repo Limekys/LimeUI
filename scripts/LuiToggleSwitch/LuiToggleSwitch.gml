@@ -101,7 +101,9 @@ function LuiToggleSwitch(_params = {}) : LuiBase(_params) constructor {
 	self.addEvent(LUI_EV_CLICK, function(_e) {
 		_e.set(!_e.get());
 		var _style = _e.getStyle();
-		if _style.sound_click != undefined audio_play_sound(_style.sound_click, 1, false);
+		if _style.sound_click != undefined {
+			audio_play_sound(_style.sound_click, 1, false);
+		}
 	});
 	
 	self.addEvent(LUI_EV_SIZE_UPDATE, function(_e) {

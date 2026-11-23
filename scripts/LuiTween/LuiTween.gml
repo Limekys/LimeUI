@@ -31,14 +31,14 @@ function LuiTween(target_element, property, end_value, duration, easing_func) co
 		self.target[$ self.property] = _new_value;
 		
 		// Check if end
-		if (_raw_progress >= 1) {
-			self.target[$ self.property] = self.end_value; 
+		if _raw_progress >= 1 {
+			self.target[$ self.property] = self.end_value;
 			self.is_finished = true;
 			return false; // Animation ended
 		}
 		
 		return true; // Continue animation
-    }
+	}
 }
 
 // Ease functions from easings.net
@@ -138,12 +138,12 @@ function _luiInitEaseFunctions() {
 		OutBounce: function(p) {
 			var n1 = 7.5625;
 			var d1 = 2.75;
-			if (p < 1 / d1) {
+			if p < 1 / d1 {
 				return n1 * p * p;
-			} else if (p < 2 / d1) {
+			} else if p < 2 / d1 {
 				var _p = p - (1.5 / d1);
 				return n1 * _p * _p + 0.75;
-			} else if (p < 2.5 / d1) {
+			} else if p < 2.5 / d1 {
 				var _p = p - (2.25 / d1);
 				return n1 * _p * _p + 0.9375;
 			} else {
