@@ -409,6 +409,7 @@ function LuiMain() : LuiBase() constructor {
 		for (var i = 0; i < array_length(_scrolled); i++) {
 			var _container = _scrolled[i];
 			if !_container.is_destroyed {
+				_container._scroll_owner._applyPendingFocusReveal();
 				_container.updateMainUiSurface();
 				_container._updateFlex(true);
 				_container._scroll_owner._updateScrollThumbs();

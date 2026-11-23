@@ -8,6 +8,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	self.placeholder = _params[$ "placeholder"] ?? "";
 
 	self.items = undefined;
+	self._selected_item = undefined;
 	self.is_open = false;
 	self.combobox_panel = undefined;
 	self._popup_row_height = undefined;
@@ -42,6 +43,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 
 		self.combobox_panel.setVisibilitySwitching(true).show().bringToFront().setVisibilitySwitching(false);
 		self.main_ui._registerPopup(self, self.combobox_panel, method(self, self._closePopup), method(self, self._placePopup));
+		self._focusPopupItem();
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -120,6 +122,42 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		// Shift the popup into the viewport when neither side can fit it.
 		var _y = clamp(_open_above ? _top - _height : _bottom, 0, _ui.height - _height);
 		_panel.setSize(_width, _height).setPosition(_x - _host.x, _y - _host.y);
+	}
+
+	///@ignore
+	static _focusPopupItem = function() {
+		var _ui = self.main_ui;
+		var _panel = self.combobox_panel;
+		var _items = _panel.getContent();
+		var _item = self._selected_item;
+		if is_undefined(_item) || !array_contains(_items, _item)
+			|| !_ui.isInputAllowed(_item) || !_ui._isKeyboardFocusable(_item) {
+			_item = undefined;
+			_panel.scroll_target_offset_y = 0;
+			if _panel.scroll_offset_y != 0 {
+				_panel.scroll_offset_y = 0;
+				_panel._applyScroll();
+			}
+			for (var i = 0, n = array_length(_items); i < n; i++) {
+				var _candidate = _items[i];
+				if !_ui.isInputAllowed(_candidate) || !_ui._isKeyboardFocusable(_candidate) continue;
+				_item = _candidate;
+				break;
+			}
+		}
+		var _previous = _ui.element_in_focus;
+		if is_undefined(_item) return;
+		if _previous != _item {
+			if !is_undefined(_previous) && !_previous.is_destroyed {
+				_previous.removeFocus();
+			}
+			if !self.is_open || !_ui.isInputAllowed(_item) return;
+			_ui.element_in_focus = _item;
+			_item.setFocus();
+		}
+		if self.is_open && _item == self._selected_item && _ui.element_in_focus == _item {
+			_panel._queueFocusReveal(_item);
+		}
 	}
 
 	///@ignore
@@ -268,6 +306,7 @@ function LuiComboBoxItem(_params = {}) : LuiButton(_params) constructor {
 	///@desc Set new combobox text and close combobox
 	static chooseItem = function() {
 		if is_undefined(self.combobox_parent) || self.combobox_parent.is_destroyed return;
+		self.combobox_parent._selected_item = self;
 		self.combobox_parent.setText(self.text);
 		self.combobox_parent._closePopup();
 	}

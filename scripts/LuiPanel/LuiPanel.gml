@@ -21,6 +21,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		self.scroll_target_offset_x = 0;
 		self.scroll_target_offset_y = 0;
 		self._drag_origin = undefined;
+		self._pending_focus_reveal = undefined;
 		self._scroll_thumb_x = undefined;
 		self._scroll_thumb_y = undefined;
 		self._panel_insets = {left: 0, top: 0, right: 0, bottom: 0};
@@ -197,6 +198,23 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		}
 		self._scroll_first_row = _first;
 		self._scroll_end_row = _end;
+	}
+
+	///@ignore
+	static _queueFocusReveal = function(_item) {
+		self._pending_focus_reveal = _item;
+		self._applyScroll();
+	}
+
+	///@ignore
+	static _applyPendingFocusReveal = function() {
+		var _item = self._pending_focus_reveal;
+		self._pending_focus_reveal = undefined;
+		if is_undefined(_item) || _item != self.main_ui.element_in_focus || !self.main_ui.isInputAllowed(_item) return;
+
+		self._revealFocusBounds(_item.getLayoutBounds());
+		self.scroll_offset_x = self.scroll_target_offset_x;
+		self.scroll_offset_y = self.scroll_target_offset_y;
 	}
 
 	///@ignore
