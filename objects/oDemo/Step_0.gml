@@ -10,7 +10,7 @@ if !is_undefined(inventory_inspect_message) && inventory_inspect_message.is_dest
 
 var _inspect_open = !is_undefined(inventory_inspect_message);
 if _inspect_open && keyboard_check_pressed(vk_f8) {
-	inventory_inspect_message.backdrop_blur = inventory_inspect_message.backdrop_blur > 0 ? 0 : 5;
+	inventory_inspect_message.backdrop_blur = inventory_inspect_message.backdrop_blur > 0 ? 0 : LUI_DEFAULT_ALERT_BLUR;
 }
 
 if !_inspect_open && keyboard_check_pressed(vk_f6) {

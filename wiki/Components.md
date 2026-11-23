@@ -280,6 +280,28 @@ Get element by name
 **Returns:**  
 - `{Struct}`  
 
+### `alert(_params = {})`
+
+Opens a modal dialog and returns the resulting `LuiMessage`. Use `text` for a message or `content` for a UI element or array of elements. `button_text`, `width`, and `height` control the close button label and dialog size.
+
+Alerts blur the LimeUI content behind the dialog with a strength of `5` by default (`LUI_DEFAULT_ALERT_BLUR`). Set `backdrop_blur: 0` for a dim-only alert, or pass a positive value to customize its strength. When alerts are stacked, the topmost visible dialog that requests blur determines the blur pass. If the shader or render surface is unavailable, the dim overlay still draws.
+
+Only the top modal receives UI input. Opening an alert moves focus to its close button. Pressing **Esc** closes the top dialog and restores the previous focus when that element is still available.
+
+```gml
+my_ui.alert({text: "Changes saved."});
+
+my_ui.alert({
+	content: [
+		new LuiText({value: "Connection settings"}),
+		new LuiInput({placeholder: "Server address"})
+	],
+	button_text: "Close",
+	width: 360,
+	backdrop_blur: 0
+});
+```
+
 # LuiPanel
 
 A visually visible container for placing elements in it.  

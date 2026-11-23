@@ -69,6 +69,7 @@ function LuiBase(_params = {}) constructor {
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
 	self.is_destroyed = false;
+	self._is_modal = false;
 	self.is_initialized = false;
 	self.draw_content_in_cutted_region = false;
 	self.render_region_offset = { //???// it may still be useful
@@ -2106,10 +2107,10 @@ function LuiBase(_params = {}) constructor {
 		self._freeCache();
 		// Destroy all content
 		self._destroyAllNestedElements();
-		// Remove focus from main ui
-		if !is_undefined(main_ui) && self == main_ui.element_in_focus {
-			//self.main_ui.element_in_focus.removeFocus(); //???//
+		// Release keyboard input before the element's listeners are removed.
+		if !is_undefined(self.main_ui) && self == self.main_ui.element_in_focus {
 			self.main_ui.element_in_focus = undefined;
+			self.removeFocus();
 		}
 		self._deleteElementName();
 		self._cleanupScreenGrid();

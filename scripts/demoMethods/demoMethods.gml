@@ -54,14 +54,20 @@ function demoBuildInventory(_tab) {
 		oDemo.inventory_inspect_message = _e.main_ui.alert({
 			width: 360,
 			alpha: 0.65,
-			backdrop_blur: 5,
 			button_text: "Close",
 			content: [
 				new LuiText({value: _item.name, height: 36, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.Scale}).setMouseIgnore(),
 				new LuiImage({value: _item.sprite, height: 120}).setMouseIgnore(),
 				new LuiText({value: $"{_item.tier}  |  {_status}", height: 28, text_halign: fa_center})
 					.setLocalStyle({color_text: _item.color}).setMouseIgnore(),
-				new LuiText({value: _item.description, height: 56, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setMouseIgnore()
+				new LuiText({value: _item.description, height: 56, text_halign: fa_center, overflow: LUI_TEXT_OVERFLOW.WrapScale}).setMouseIgnore(),
+				new LuiButton({text: "About rarity", height: 36}).addEvent(LUI_EV_CLICK, function(_button) {
+					_button.main_ui.alert({
+						text: "A colored border indicates item rarity. Locked items can still be inspected.",
+						width: 360,
+						button_text: "Back"
+					});
+				})
 			]
 		});
 	});

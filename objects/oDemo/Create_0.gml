@@ -130,7 +130,7 @@ createNewLoginWindow = function() {
 				new LuiInput({placeholder: "password", is_masked: true, input_mode: LUI_INPUT_MODE.password})
 			]),
 			new LuiButton({text: "Login", width: 150}).addEvent(LUI_EV_CLICK, function() {
-				oDemo.my_ui.alert({text: "Wrong password!"});
+				oDemo.my_ui.alert({text: "Wrong password!", backdrop_blur: 0});
 			})
 		])
 	]);

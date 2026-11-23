@@ -2,16 +2,17 @@
 /// Available parameters:
 /// text - message text (default: "")
 /// content - custom element or array of elements displayed in place of the message text
-/// backdrop_blur - Gaussian blur strength for the LimeUI content behind the dialog (default: 0)
+/// backdrop_blur - Gaussian blur strength for the LimeUI content behind the dialog
 /// button_text - button label (default: "OK")
 /// width - dialog panel width (default: LUI_AUTO)
 /// height - dialog panel height (default: LUI_AUTO)
 ///@arg {Struct} [_params] Struct with parameters
-function LuiMessage(_params = {}) : LuiBox(_params) constructor {
+///@arg {Real} [_default_backdrop_blur] Blur strength used when backdrop_blur is omitted
+function LuiMessage(_params = {}, _default_backdrop_blur = 0) : LuiBox(_params) constructor {
 	
 	self.message_text = _params[$ "text"] ?? "";
 	self.dialog_content = _params[$ "content"] ?? undefined;
-	self.backdrop_blur = max(0, _params[$ "backdrop_blur"] ?? 0);
+	self.backdrop_blur = max(0, _params[$ "backdrop_blur"] ?? _default_backdrop_blur);
 	self.button_text = _params[$ "button_text"] ?? "OK";
 	self.dialog_width = _params[$ "width"] ?? LUI_AUTO;
 	self.dialog_height = _params[$ "height"] ?? LUI_AUTO;
@@ -23,12 +24,11 @@ function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 	
 	self.addEvent(LUI_EV_CREATE, function(_e) {
 		
-		// Overlay setup: full-screen, absolute position in 0,0, centered, on top
+		// Set up a full-screen overlay and center the dialog.
 		_e.setPositionAbsolute()
 			.setPosition(0,0)
 			.setFullSize()
-			.centerContent()
-			.bringToFront();
+			.centerContent();
 		
 		// Calculate panel width based on content and style
 		var _panel_width = _e.dialog_width;
@@ -89,5 +89,16 @@ function LuiMessage(_params = {}) : LuiBox(_params) constructor {
 		]);
 		
 		_e.addContent(_panel);
+		if _e.parent == _e.main_ui {
+			_e.main_ui._pushModal(_e, _btn_close);
+		} else {
+			_e.bringToFront();
+		}
+	});
+
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if _e._is_modal {
+			_e.main_ui._popModal(_e);
+		}
 	});
 }

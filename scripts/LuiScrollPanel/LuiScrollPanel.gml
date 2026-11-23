@@ -80,8 +80,12 @@ function LuiScrollPanel(_params = {}) : LuiBase(_params) constructor {
 	}
 	
 	self.step = function() {
+		var _input_allowed = self.main_ui.isInputAllowed(self);
+		if !_input_allowed {
+			self.drag_start_y = -1;
+		}
 		// Mouse wheel input
-		if self.isMouseHoveredExc() && self.isMouseHoveredChilds() {
+		if _input_allowed && self.isMouseHoveredExc() && self.isMouseHoveredChilds() {
 			var _wheel_up = mouse_wheel_up() ? 1 : 0;
 			var _wheel_down = mouse_wheel_down() ? 1 : 0;
 			var _wheel = _wheel_up - _wheel_down;

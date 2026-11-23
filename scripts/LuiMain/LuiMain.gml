@@ -27,6 +27,7 @@ function LuiMain() : LuiBase() constructor {
 	self._baking = false;
 	self._backdrop_surface = -1;
 	self._backdrop_blur_surface = -1;
+	self._modal_stack = [];
 	self._cache_bakes = 0;
 	self._clip_stack = [];     // Reusable clip rectangles, one per clipping depth
 	self._clip_depth = -1;
@@ -103,7 +104,7 @@ function LuiMain() : LuiBase() constructor {
 	///@desc Return true if we interacting with UI at the moment with keyboard
 	///@return {bool}
 	static isInteractingKeyboard = function() {
-		return self.visible && !self.deactivated && self.waiting_for_keyboard_input;
+		return self.visible && !self.deactivated && (self.waiting_for_keyboard_input || !is_undefined(self._activeModal()));
 	}
 	
 	// GETTERS
@@ -152,46 +153,48 @@ function LuiMain() : LuiBase() constructor {
 				_previous_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEAVE);
 			}
 			
-			if (!is_undefined(self.topmost_hovered_element) && !self.topmost_hovered_element.deactivated) {
+			if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) {
 				if self.topmost_hovered_element.is_mouse_hovered == false {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_ENTER);
 				}
 				
 				// Handle on mouse pressed
-				if (mouse_check_button_pressed(mb_left)) {
-					self.topmost_hovered_element.is_pressed = true;
-					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT_PRESSED);
+				if !is_undefined(self.topmost_hovered_element) && mouse_check_button_pressed(mb_left) {
+					var _pressed_element = self.topmost_hovered_element;
+					_pressed_element.is_pressed = true;
+					_pressed_element._dispatchEvent(LUI_EV_MOUSE_LEFT_PRESSED);
 					// Set focus on element
-					if self.element_in_focus != self.topmost_hovered_element {
+					if self.isInputAllowed(_pressed_element) && self.element_in_focus != _pressed_element {
 						// Remove focus from previous element
 						if !is_undefined(self.element_in_focus) {
 							self.element_in_focus.removeFocus();
 							self.element_in_focus = undefined;
 						}
-						self.topmost_hovered_element.setFocus();
-						self.element_in_focus = self.topmost_hovered_element;
+						self.element_in_focus = _pressed_element;
+						_pressed_element.setFocus();
 					}
 					// Set dragging element
-					if (self.topmost_hovered_element.can_drag) {
-						self.topmost_hovered_element.is_dragging = true;
-						self.topmost_hovered_element.drag_offset_x = _mouse_x - self.topmost_hovered_element.x;
-						self.topmost_hovered_element.drag_offset_y = _mouse_y - self.topmost_hovered_element.y;
-						self.dragging_element = self.topmost_hovered_element;
-						self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAG_START);
+					if self.isInputAllowed(_pressed_element) && _pressed_element.can_drag {
+						_pressed_element.is_dragging = true;
+						_pressed_element.drag_offset_x = _mouse_x - _pressed_element.x;
+						_pressed_element.drag_offset_y = _mouse_y - _pressed_element.y;
+						self.dragging_element = _pressed_element;
+						_pressed_element._dispatchEvent(LUI_EV_DRAG_START);
 					}
 				}
 				
 				// Handle on mouse left
-				if (mouse_check_button(mb_left)) {
+				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && mouse_check_button(mb_left) {
 					// Call LUI_EV_MOUSE_LEFT event
-					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT);
+					var _held_element = self.topmost_hovered_element;
+					_held_element._dispatchEvent(LUI_EV_MOUSE_LEFT);
 					// Call LUI_EV_DRAGGING event
-					if (self.topmost_hovered_element.can_drag && !is_undefined(self.dragging_element)) {
+					if _held_element.can_drag && self.dragging_element == _held_element && self.isInputAllowed(_held_element) {
 						var _new_x = _mouse_x - self.topmost_hovered_element.drag_offset_x;
 						var _new_y = _mouse_y - self.topmost_hovered_element.drag_offset_y;
 						if self.prev_mouse_x != _mouse_x || self.prev_mouse_y != _mouse_y {
-							self.topmost_hovered_element._dispatchEvent(LUI_EV_DRAGGING, { new_x : _new_x, new_y : _new_y, mouse_x : _mouse_x, mouse_y : _mouse_y });
+							_held_element._dispatchEvent(LUI_EV_DRAGGING, { new_x : _new_x, new_y : _new_y, mouse_x : _mouse_x, mouse_y : _mouse_y });
 						}
 						self.prev_mouse_x = _mouse_x;
 						self.prev_mouse_y = _mouse_y;
@@ -199,12 +202,12 @@ function LuiMain() : LuiBase() constructor {
 				}
 				
 				// Handle on mouse released
-				if (mouse_check_button_released(mb_left)) {
-					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEFT_RELEASED);
-					if (self.topmost_hovered_element.is_pressed) {
-                        self.topmost_hovered_element._dispatchEvent(LUI_EV_CLICK);
-                    }
-					self.topmost_hovered_element.is_pressed = false;
+				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && mouse_check_button_released(mb_left) {
+					var _released_element = self.topmost_hovered_element;
+					var _modal_before_release = self._activeModal();
+					_released_element._dispatchEvent(LUI_EV_MOUSE_LEFT_RELEASED);
+					var _click = _released_element.is_pressed && !_released_element.is_destroyed;
+					_released_element.is_pressed = false;
 					// Clear dragging
 					if !is_undefined(self.dragging_element) {
 						self.dragging_element.is_dragging = false;
@@ -212,12 +215,15 @@ function LuiMain() : LuiBase() constructor {
 						self.dragging_element = undefined;
 					}
 					// Remove focus from element if clicking outside
-					if !is_undefined(self.element_in_focus) && self.element_in_focus != self.topmost_hovered_element {
+					if self._activeModal() == _modal_before_release && !is_undefined(self.element_in_focus) && self.element_in_focus != _released_element {
 						self.element_in_focus.removeFocus();
 						self.element_in_focus = undefined;
 					}
+					if _click && self.isInputAllowed(_released_element) {
+						_released_element._dispatchEvent(LUI_EV_CLICK);
+					}
 				}
-				if (mouse_wheel_down() || mouse_wheel_up()) {
+				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && (mouse_wheel_down() || mouse_wheel_up()) {
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_WHEEL);
 				}
 			} else {
@@ -243,16 +249,20 @@ function LuiMain() : LuiBase() constructor {
 		//luiProf("2_mouse", _t);
 		
 		// Keyboard events
-		if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) {
+		var _modal = self._activeModal();
+		if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
+			_modal.close();
+		} else if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) && self.isInputAllowed(self.element_in_focus) {
+			var _focused = self.element_in_focus;
 			if keyboard_check(vk_anykey) {
-				self.element_in_focus._dispatchEvent(LUI_EV_KEYBOARD_INPUT);
+				_focused._dispatchEvent(LUI_EV_KEYBOARD_INPUT);
 			}
-			if keyboard_check_released(vk_anykey) {
-				self.element_in_focus._dispatchEvent(LUI_EV_KEYBOARD_RELEASE);
+			if self.element_in_focus == _focused && self.isInputAllowed(_focused) && keyboard_check_released(vk_anykey) {
+				_focused._dispatchEvent(LUI_EV_KEYBOARD_RELEASE);
 			}
-			if keyboard_check_pressed(vk_escape) { //???//
-				self.element_in_focus.removeFocus();
+			if self.element_in_focus == _focused && is_undefined(self._activeModal()) && keyboard_check_pressed(vk_escape) {
 				self.element_in_focus = undefined;
+				_focused.removeFocus();
 			}
 		}
 		
@@ -364,7 +374,23 @@ function LuiMain() : LuiBase() constructor {
 			_luiBlendReset();
 			
 			var _kids = self._getDrawChildren();
-			var _first = self._drawBackdrop(_kids, _identity_matrix, _root_clip);
+			var _first = 0;
+			if array_length(self._modal_stack) > 0 {
+				var _layers = [];
+				for (var i = 0, n = array_length(_kids); i < n; i++) {
+					if !_kids[i]._is_modal {
+						array_push(_layers, _kids[i]);
+					}
+				}
+				var _modal_start = array_length(_layers);
+				for (var i = 0, n = array_length(self._modal_stack); i < n; i++) {
+					array_push(_layers, self._modal_stack[i].dialog);
+				}
+				_kids = _layers;
+				_first = self._drawBackdrop(_kids, _modal_start, _identity_matrix, _root_clip);
+			} else if self._backdrop_surface != -1 {
+				self._freeBackdrop();
+			}
 			for (var i = _first, n = array_length(_kids); i < n; i++) {
 				self._drawTree(_kids[i], _identity_matrix, 1, _root_clip);
 			}
@@ -451,25 +477,107 @@ function LuiMain() : LuiBase() constructor {
 	
 	// DIALOGS
 	
-	///@desc Show a modal message dialog (convenience wrapper for LuiMessage widget)
+	///@desc Shows a modal dialog with backdrop blur by default. Set backdrop_blur to 0 to disable it.
 	///@arg {Struct} [_params] Message options: text, content, button_text, width, height, backdrop_blur
+	///@return {Struct} The opened LuiMessage
 	static alert = function(_params = {}) {
-		var _message = new LuiMessage(_params);
+		var _message = new LuiMessage(_params, LUI_DEFAULT_ALERT_BLUR);
 		self.addContent(_message);
 		return _message;
 	}
 	
 	// PRIVATE
 
-	///@desc Composites the root children behind the first blurred modal and returns the remaining start index.
+	///@desc Returns whether a widget can handle input with the current modal open.
+	///@arg {Struct} _element Widget requesting input
+	static isInputAllowed = function(_element) {
+		if self.is_destroyed || !self.visible || self.deactivated || _element.is_destroyed || !_element.visible || _element.deactivated return false;
+		var _modal = self._activeModal();
+		return is_undefined(_modal) || self._isInModal(_element, _modal);
+	}
+
 	///@ignore
-	static _drawBackdrop = function(_children, _matrix, _clip) {
+	static _activeModal = function() {
+		for (var i = array_length(self._modal_stack) - 1; i >= 0; i--) {
+			var _dialog = self._modal_stack[i].dialog;
+			if _dialog.visible && !_dialog.is_destroyed return _dialog;
+		}
+		return undefined;
+	}
+
+	///@ignore
+	static _isInModal = function(_element, _dialog) {
+		while !is_undefined(_element) {
+			if _element == _dialog return true;
+			_element = _element.parent;
+		}
+		return false;
+	}
+
+	///@ignore
+	static _pushModal = function(_dialog, _initial_focus) {
+		var _previous_focus = self.element_in_focus;
+		_dialog._is_modal = true;
+		array_push(self._modal_stack, {dialog: _dialog, previous_focus: _previous_focus});
+		if !is_undefined(_previous_focus) {
+			_previous_focus.removeFocus();
+		}
+		self.element_in_focus = _initial_focus;
+		_initial_focus.setFocus();
+
+		var _drag = self.dragging_element;
+		self.dragging_element = undefined;
+		if !is_undefined(_drag) && !_drag.is_destroyed {
+			_drag.is_dragging = false;
+			_drag._dispatchEvent(LUI_EV_DRAG_END);
+		}
+		var _hovered = self.topmost_hovered_element;
+		self.topmost_hovered_element = undefined;
+		if !is_undefined(_hovered) && !_hovered.is_destroyed {
+			_hovered.is_mouse_hovered = false;
+			_hovered.is_pressed = false;
+			_hovered._dispatchEvent(LUI_EV_MOUSE_LEAVE);
+		}
+	}
+
+	///@ignore
+	static _popModal = function(_dialog) {
+		var _count = array_length(self._modal_stack);
+		for (var i = _count - 1; i >= 0; i--) {
+			var _entry = self._modal_stack[i];
+			if _entry.dialog != _dialog continue;
+			array_delete(self._modal_stack, i, 1);
+			if self._isInModal(self.topmost_hovered_element, _dialog) {
+				self.topmost_hovered_element = undefined;
+			}
+			if self._isInModal(self.dragging_element, _dialog) {
+				self.dragging_element = undefined;
+			}
+			var _restore = _entry.previous_focus;
+			for (var _next = i; _next < _count - 1; _next++) {
+				var _later = self._modal_stack[_next];
+				if self._isInModal(_later.previous_focus, _dialog) {
+					_later.previous_focus = _restore;
+				}
+			}
+			if i == _count - 1 && !is_undefined(_restore) && _restore.visible && !_restore.deactivated
+				&& _restore.main_ui == self && self.isInputAllowed(_restore) {
+				self.element_in_focus = _restore;
+				_restore.setFocus();
+			}
+			return;
+		}
+	}
+
+	///@desc Composites the root children behind the topmost blurred modal.
+	///@ignore
+	static _drawBackdrop = function(_children, _modal_start, _matrix, _clip) {
 		var _index = 0;
 		var _radius = 0;
-		for (var i = 1, n = array_length(_children); i < n; i++) {
+		for (var i = array_length(_children) - 1; i >= max(1, _modal_start); i--) {
 			var _child = _children[i];
 			if !_child.visible || _child.is_destroyed || !_child.is_visible_in_region || _child.visual_alpha <= 0 continue;
-			if variable_struct_exists(_child, "backdrop_blur") && _child.backdrop_blur > 0 {
+			if _child.backdrop_blur > 0 {
 				_index = i;
 				_radius = _child.backdrop_blur;
 				break;
@@ -581,9 +689,11 @@ function LuiMain() : LuiBase() constructor {
 		var _cell = _col[_cy];
 		
 		var _best = undefined;
+		var _modal = self._activeModal();
 		for (var i = array_length(_cell) - 1; i >= 0; --i) {
 			var _e = _cell[i];
-			if (!_e.visible || _e.ignore_mouse) continue;
+			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
+			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
 			// Not above the current best: skip without the expensive hover checks
 			if (!is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0) continue;
 			if (!_e.isMouseHoveredExc() || !_e.isMouseHoveredParents()) continue;
