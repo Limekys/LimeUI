@@ -512,8 +512,8 @@ my_panel_3.addContent([
 
 // Create buttons to go another demo room
 my_ui.addContent([
-	new LuiRow().setFlexAlignItems(flexpanel_align.flex_end).setFlexJustifyContent(flexpanel_justify.flex_end).addContent([
-		new LuiButton({text: "Next demo -->", width: 256}).addEvent(LUI_EV_CLICK, function() {
+	new LuiRow().addContent([
+		new LuiButton({text: "Next demo -->", width: "25%"}).alignRight().addEvent(LUI_EV_CLICK, function() {
 			room_goto(rDemo2);
 		})
 	])

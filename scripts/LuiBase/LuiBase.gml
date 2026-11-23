@@ -68,6 +68,10 @@ function LuiBase(_params = {}) constructor {
 	self.auto_y = false;
 	self.auto_width = false;
 	self.auto_height = false;
+	self._requested_width = undefined;
+	self._requested_height = undefined;
+	self._align_x = undefined;
+	self._align_y = undefined;
 
 	// Element tree
 	self.parent = undefined;
@@ -449,14 +453,14 @@ function LuiBase(_params = {}) constructor {
 			var _style_min_width = is_undefined(_element_style) ? 1 : _element_style.min_width;
 			var _style_min_height = is_undefined(_element_style) ? 1 : _element_style.min_height;
 			if _element.min_width == LUI_AUTO {
-				if _element.auto_width {
+				if _element.auto_width || is_string(_element._requested_width) {
 					_element.min_width = _style_min_width;
 				} else {
 					_element.min_width = min(_element.width, _style_min_width);
 				}
 			}
 			if _element.min_height == LUI_AUTO {
-				if _element.auto_height {
+				if _element.auto_height || is_string(_element._requested_height) {
 					_element.min_height = _style_min_height;
 				} else {
 					_element.min_height = min(_element.height, _style_min_height);
@@ -660,73 +664,33 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 
-	///@desc Set flexpanel(element) width
-	///@arg {real} [_width]
+	///@desc Sets width in pixels or as a percentage of the Flex containing block.
+	///@arg {Real|String} [_width] Pixel size or a string such as "50%"
 	static setWidth = function(_width = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _width != LUI_AUTO && self.width != _width {
-			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.width = _width;
-			}
-			_update_flex = true;
-		}
-		if _update_flex {
-			self.updateMainUiFlex();
-		}
-		return self;
+		return self.setSize(_width);
 	}
 
-	///@desc Set flexpanel(element) height
-	///@arg {real} [_height]
+	///@desc Sets height in pixels or as a percentage of the Flex containing block.
+	///@arg {Real|String} [_height] Pixel size or a string such as "50%"
 	static setHeight = function(_height = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _height != LUI_AUTO && self.height != _height {
-			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.height = _height;
-			}
-			_update_flex = true;
-		}
-		if _update_flex {
-			self.updateMainUiFlex();
-		}
-		return self;
+		return self.setSize(, _height);
 	}
 
-	///@desc Set flexpanel(element) size
-	///@arg {real} [_width]
-	///@arg {real} [_height]
+	///@desc Sets the size. Omit either dimension to keep it unchanged.
+	///@arg {Real|String} [_width] Pixel size or a percentage string
+	///@arg {Real|String} [_height] Pixel size or a percentage string
 	static setSize = function(_width = LUI_AUTO, _height = LUI_AUTO) {
-		var _flex_node = self.flex_node;
-		var _update_flex = false;
-		if _width != LUI_AUTO && self.width != _width {
-			flexpanel_node_style_set_width(_flex_node, _width, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.width = _width;
-			}
-			_update_flex = true;
-		}
-		if _height != LUI_AUTO && self.height != _height {
-			flexpanel_node_style_set_height(_flex_node, _height, flexpanel_unit.point);
-			if !self.is_initialized {
-				self.height = _height;
-			}
-			_update_flex = true;
-		}
-		if _update_flex {
+		var _width_changed = self._setDimension(true, _width);
+		var _height_changed = self._setDimension(false, _height);
+		if _width_changed || _height_changed {
 			self.updateMainUiFlex();
 		}
 		return self;
 	}
 
-	//@desc Stretch element on all width and height of parent
+	///@desc Sets both dimensions to 100% of the Flex containing block.
 	static setFullSize = function() {
-		flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
-		flexpanel_node_style_set_height(self.flex_node, 100, flexpanel_unit.percent);
-		return self;
+		return self.setSize("100%", "100%");
 	}
 
 	///@desc Set flexpanel(element) min width
@@ -925,6 +889,31 @@ function LuiBase(_params = {}) constructor {
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
 		self.updateMainUiFlex();
 		return self;
+	}
+
+	///@desc Centers this element in the free space available on both axes in its Flex parent.
+	static alignCenter = function() {
+		return self._setSelfAlignment(0, 0);
+	}
+
+	///@desc Aligns this element to the left in its Flex parent.
+	static alignLeft = function() {
+		return self._setSelfAlignment(-1, undefined);
+	}
+
+	///@desc Aligns this element to the right in its Flex parent.
+	static alignRight = function() {
+		return self._setSelfAlignment(1, undefined);
+	}
+
+	///@desc Aligns this element to the top in its Flex parent.
+	static alignTop = function() {
+		return self._setSelfAlignment(undefined, -1);
+	}
+
+	///@desc Aligns this element to the bottom in its Flex parent.
+	static alignBottom = function() {
+		return self._setSelfAlignment(undefined, 1);
 	}
 
 	///@desc Set flexpanel display(flex) or not(none) (Default: flexpanel_display.flex)
@@ -1322,8 +1311,8 @@ function LuiBase(_params = {}) constructor {
 	static _initElement = function() {
 		self.auto_x = self.x == LUI_AUTO && self.r == LUI_AUTO;
 		self.auto_y = self.y == LUI_AUTO && self.b == LUI_AUTO;
-		self.auto_width = self.width == LUI_AUTO;
-		self.auto_height = self.height == LUI_AUTO;
+		self.auto_width = is_undefined(self._requested_width) && self.width == LUI_AUTO;
+		self.auto_height = is_undefined(self._requested_height) && self.height == LUI_AUTO;
 		self._initFlexNode();
 		self.is_initialized = true;
 	}
@@ -1666,6 +1655,7 @@ function LuiBase(_params = {}) constructor {
 		flexpanel_node_style_set_padding(_container_node, flexpanel_edge.all_edges, _style.padding);
 		flexpanel_node_style_set_gap(_container_node, flexpanel_gutter.all_gutters, _style.gap);
 		flexpanel_node_style_set_border(_container_node, flexpanel_edge.all_edges, _style.border);
+		self._applySelfAlignment(_style.margin);
 	}
 
 	// Flex layout
@@ -1690,17 +1680,90 @@ function LuiBase(_params = {}) constructor {
 		}
 
 		// Width
-		if !self.auto_width {
-			flexpanel_node_style_set_width(self.flex_node, self.width, flexpanel_unit.point);
-		} else {
-			flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
-			flexpanel_node_style_set_flex_shrink(self.flex_node, 1);
+		if is_undefined(self._requested_width) {
+			if self.auto_width {
+				flexpanel_node_style_set_width(self.flex_node, 100, flexpanel_unit.percent);
+				flexpanel_node_style_set_flex_shrink(self.flex_node, 1);
+			} else {
+				self._setDimension(true, self.width);
+			}
 		}
 
 		// Height
-		if !self.auto_height {
-			flexpanel_node_style_set_height(self.flex_node, self.height, flexpanel_unit.point);
+		if is_undefined(self._requested_height) && !self.auto_height {
+			self._setDimension(false, self.height);
 		}
+	}
+
+	///@ignore
+	static _setDimension = function(_horizontal, _size) {
+		var _previous = _horizontal ? self._requested_width : self._requested_height;
+		if _size == LUI_AUTO || _size == _previous return false;
+
+		var _unit = flexpanel_unit.point;
+		var _value = _size;
+		if is_string(_size) {
+			var _length = string_length(_size);
+			var _number = string_copy(_size, 1, max(0, _length - 1));
+			var _digits = string_digits(_number);
+			if string_char_at(_size, _length) != "%" || _digits == ""
+				|| string_replace_all(_number, ".", "") != _digits || string_count(".", _number) > 1 {
+				_luiPrintWarning("Expected a size in pixels or a percentage string such as \"50%\".");
+				return false;
+			}
+			_unit = flexpanel_unit.percent;
+			_value = real(_number);
+		} else if !is_real(_size) || _size < 0 {
+			_luiPrintWarning("Expected a non-negative pixel size or percentage.");
+			return false;
+		}
+
+		if _horizontal {
+			self._requested_width = _size;
+			flexpanel_node_style_set_width(self.flex_node, _value, _unit);
+			if !self.is_initialized {
+				self.width = _unit == flexpanel_unit.point ? _value : LUI_AUTO;
+			}
+		} else {
+			self._requested_height = _size;
+			flexpanel_node_style_set_height(self.flex_node, _value, _unit);
+			if !self.is_initialized {
+				self.height = _unit == flexpanel_unit.point ? _value : LUI_AUTO;
+			}
+		}
+		return true;
+	}
+
+	///@ignore
+	static _setSelfAlignment = function(_x, _y) {
+		if !is_undefined(_x) {
+			self._align_x = _x;
+		}
+		if !is_undefined(_y) {
+			self._align_y = _y;
+		}
+		var _style = self.getStyle();
+		self._applySelfAlignment(is_undefined(_style) ? 0 : _style.margin);
+		self.updateMainUiFlex();
+		return self;
+	}
+
+	///@ignore
+	static _applySelfAlignment = function(_margin) {
+		if !is_undefined(self._align_x) {
+			self._setAlignMargin(flexpanel_edge.left, self._align_x >= 0, _margin);
+			self._setAlignMargin(flexpanel_edge.right, self._align_x <= 0, _margin);
+		}
+		if !is_undefined(self._align_y) {
+			self._setAlignMargin(flexpanel_edge.top, self._align_y >= 0, _margin);
+			self._setAlignMargin(flexpanel_edge.bottom, self._align_y <= 0, _margin);
+		}
+	}
+
+	///@ignore
+	static _setAlignMargin = function(_edge, _auto, _margin) {
+		flexpanel_node_style_set_margin(self.flex_node, _edge, _auto ? 0 : _margin,
+			_auto ? flexpanel_unit.auto : flexpanel_unit.point);
 	}
 
 	///@ignore
