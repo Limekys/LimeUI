@@ -181,15 +181,23 @@ function LuiMain() : LuiBase() constructor {
 		// Mouse position
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
+		var _left_held = mouse_check_button(mb_left);
+		var _left_released = mouse_check_button_released(mb_left);
+		var _inside_ui = self.visible && !self.deactivated
+			&& _mouse_x >= 0 && _mouse_x < self.width && _mouse_y >= 0 && _mouse_y < self.height;
+		var _drag = self.dragging_element;
+		if !is_undefined(_drag) && (!self.isInputAllowed(_drag) || (!_left_held && (!_inside_ui || !_left_released))) {
+			self._cancelPointerDrag();
+		}
 
 		//_t = get_timer();
 
 		// Mouse events
-		if self.visible && !self.deactivated && (_mouse_x >= 0 && _mouse_x < self.width && _mouse_y >= 0 && _mouse_y < self.height) {
+		if _inside_ui {
 			var _previous_hovered_element = self.topmost_hovered_element;
 
 			// Prioritize dragging element if it exists and mouse is held
-			if !is_undefined(self.dragging_element) && mouse_check_button(mb_left) {
+			if !is_undefined(self.dragging_element) && (_left_held || _left_released) {
 				self.topmost_hovered_element = self.dragging_element;
 			} else {
 				self.topmost_hovered_element = self._getTopmostElement(_mouse_x, _mouse_y);
@@ -261,6 +269,9 @@ function LuiMain() : LuiBase() constructor {
 					var _modal_before_release = self._activeModal();
 					_released_element._dispatchEvent(LUI_EV_MOUSE_LEFT_RELEASED);
 					var _click = _released_element.is_pressed && !_released_element.is_destroyed;
+					if self.dragging_element == _released_element {
+						_click = _click && self._getTopmostElement(_mouse_x, _mouse_y) == _released_element;
+					}
 					_released_element.is_pressed = false;
 					// Clear dragging
 					if !is_undefined(self.dragging_element) {
@@ -298,11 +309,14 @@ function LuiMain() : LuiBase() constructor {
 			if mouse_check_button_released(mb_right) {
 				self._right_pressed_element = undefined;
 			}
-			// Clear dragging element if mouse is outside UI
-			self.dragging_element = undefined;
-			// Reset is_pressed state
-			if !is_undefined(self.topmost_hovered_element) {
-				self.topmost_hovered_element.is_pressed = false;
+			var _hovered = self.topmost_hovered_element;
+			self.topmost_hovered_element = undefined;
+			if !is_undefined(_hovered) && !_hovered.is_destroyed {
+				_hovered.is_mouse_hovered = false;
+				if _hovered != self.dragging_element {
+					_hovered.is_pressed = false;
+				}
+				_hovered._dispatchEvent(LUI_EV_MOUSE_LEAVE);
 			}
 		}
 
@@ -397,6 +411,7 @@ function LuiMain() : LuiBase() constructor {
 			if !_container.is_destroyed {
 				_container.updateMainUiSurface();
 				_container._updateFlex(true);
+				_container._scroll_owner._updateScrollThumbs();
 			}
 		}
 
@@ -906,6 +921,20 @@ function LuiMain() : LuiBase() constructor {
 			if _dialog.visible && !_dialog.is_destroyed return _dialog;
 		}
 		return undefined;
+	}
+
+	///@ignore
+	static _cancelPointerDrag = function() {
+		var _drag = self.dragging_element;
+		self.dragging_element = undefined;
+		if is_undefined(_drag) || _drag.is_destroyed return;
+
+		_drag.is_pressed = false;
+		_drag.is_dragging = false;
+		_drag._dispatchEvent(LUI_EV_MOUSE_LEFT_RELEASED);
+		if !_drag.is_destroyed {
+			_drag._dispatchEvent(LUI_EV_DRAG_END);
+		}
 	}
 
 	///@ignore

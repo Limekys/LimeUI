@@ -68,6 +68,7 @@ function LuiBase(_params = {}) constructor {
 	self.parent = undefined;
 	self._scroll_owner = undefined;
 	self._flex_bounds = undefined;
+	self._overlay_bounds = undefined;
 	self._child_bounds_stale = true;
 	self.content = [];
 	self.delayed_content = [];
@@ -480,6 +481,15 @@ function LuiBase(_params = {}) constructor {
 	static getLayoutBounds = function(_relative = false) {
 		if self.is_destroyed || is_undefined(self.flex_node) {
 			return {left: 0, top: 0, width: 0, height: 0};
+		}
+		if is_method(self._overlay_bounds) {
+			if is_undefined(self._flex_bounds) return {left: 0, top: 0, width: 0, height: 0};
+			var _overlay = self._overlay_bounds();
+			if _relative && !is_undefined(self.parent) {
+				_overlay.left -= self.parent.x;
+				_overlay.top -= self.parent.y;
+			}
+			return _overlay;
 		}
 		var _bounds = flexpanel_node_layout_get_position(self.flex_node, _relative);
 		var _node = self;
@@ -1663,6 +1673,11 @@ function LuiBase(_params = {}) constructor {
 		var _pos = self._flex_bounds;
 		var _left = _pos.left + _offset_x;
 		var _top = _pos.top + _offset_y;
+		if is_method(self._overlay_bounds) {
+			_pos = self._overlay_bounds();
+			_left = _pos.left;
+			_top = _pos.top;
+		}
 
 		// Check position change
 		var _position_changed = (self.x != _left || self.y != _top);
