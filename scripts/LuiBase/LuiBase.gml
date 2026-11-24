@@ -93,6 +93,7 @@ function LuiBase(_params = {}) constructor {
 	self._allows_visibility_changes = true;
 	self.has_focus = false;
 	self._keyboard_focusable = undefined;
+	self._blocks_keyboard_shortcuts = false;
 	self._shortcut_key = undefined;
 	self._tags = [];
 	self.ignore_mouse = false;

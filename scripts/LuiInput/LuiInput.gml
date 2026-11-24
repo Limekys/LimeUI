@@ -20,6 +20,8 @@ enum LUI_INPUT_MODE {
 function LuiInput(_params = {}) : LuiBase(_params) constructor {
 	// STATE
 
+	self._blocks_keyboard_shortcuts = true;
+
 	self.value = string(_params[$ "value"] ?? "");
 	self.placeholder = _params[$ "placeholder"] ?? "";
 	self.is_masked = _params[$ "is_masked"] ?? false;

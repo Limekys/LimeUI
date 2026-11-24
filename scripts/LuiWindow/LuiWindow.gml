@@ -172,6 +172,10 @@ function LuiWindow(_params = {}) : LuiBase(_params) constructor {
 		}
 	});
 
+	self.addEvent(LUI_EV_KEYBOARD_CANCEL, function(_e) {
+		_e.closeWindow();
+	});
+
 	self.addEvent(LUI_EV_POINTER_DOWN, function(_e, _data) {
 		if _data.button == mb_left {
 			_e.bringToFront();

@@ -382,34 +382,7 @@ function LuiMain() : LuiBase() constructor {
 
 		//luiProf("2_mouse", _t);
 
-		// Keyboard events
-		var _modal = self._activeModal();
-		if !_mouse_pressed && self._updateKeyboardEdit() {
-			// The focused control owns the navigation keys while editing.
-		} else if self.visible && !self.deactivated && keyboard_check_pressed(vk_escape) && array_length(self._open_popups) > 0 {
-			var _popup = self._open_popups[array_length(self._open_popups) - 1];
-			_popup.close();
-		} else if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
-			_modal.close();
-		} else if !_mouse_pressed && self.visible && !self.deactivated && self._updateKeyboardNavigation() {
-			// Navigation keys have already been handled.
-		} else if self.visible && !self.deactivated && self._updateKeyboardShortcuts() {
-			// The shortcut consumed this key press.
-		} else if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) && self.isInputAllowed(self.element_in_focus) {
-			var _focused = self.element_in_focus;
-			if keyboard_check(vk_anykey) {
-				_focused._dispatchEvent(LUI_EV_KEYBOARD_INPUT);
-			}
-			if self.element_in_focus == _focused && self.isInputAllowed(_focused) && keyboard_check_released(vk_anykey) {
-				_focused._dispatchEvent(LUI_EV_KEYBOARD_RELEASE);
-			}
-			if self.element_in_focus == _focused && is_undefined(self._activeModal()) && keyboard_check_pressed(vk_escape) {
-				self._keyboard_navigation_active = false;
-				self.showFocusFrame(false);
-				self.element_in_focus = undefined;
-				_focused.removeFocus();
-			}
-		}
+		self._updateKeyboardInput(_mouse_pressed);
 
 		//_t = get_timer();
 
@@ -627,12 +600,43 @@ function LuiMain() : LuiBase() constructor {
 		}
 	}
 
-	// KEYBOARD NAVIGATION
+	// KEYBOARD INPUT
+
+	///@ignore
+	static _updateKeyboardInput = function(_mouse_pressed) {
+		var _modal = self._activeModal();
+		if !_mouse_pressed && self._updateKeyboardEdit() {
+			// The focused control owns the navigation keys while editing.
+		} else if self.visible && !self.deactivated && keyboard_check_pressed(vk_escape) && array_length(self._open_popups) > 0 {
+			var _popup = self._open_popups[array_length(self._open_popups) - 1];
+			_popup.close();
+		} else if self.visible && !self.deactivated && !is_undefined(_modal) && keyboard_check_pressed(vk_escape) {
+			_modal.close();
+		} else if !_mouse_pressed && self.visible && !self.deactivated && self._updateKeyboardNavigation() {
+			// Navigation keys have already been handled.
+		} else if self.visible && !self.deactivated && self._updateKeyboardShortcuts() {
+			// The shortcut consumed this key press.
+		} else if self.visible && !self.deactivated && !is_undefined(self.element_in_focus) && self.isInputAllowed(self.element_in_focus) {
+			var _focused = self.element_in_focus;
+			if keyboard_check(vk_anykey) {
+				_focused._dispatchEvent(LUI_EV_KEYBOARD_INPUT);
+			}
+			if self.element_in_focus == _focused && self.isInputAllowed(_focused) && keyboard_check_released(vk_anykey) {
+				_focused._dispatchEvent(LUI_EV_KEYBOARD_RELEASE);
+			}
+			if self.element_in_focus == _focused && is_undefined(self._activeModal()) && keyboard_check_pressed(vk_escape) {
+				self._keyboard_navigation_active = false;
+				self.showFocusFrame(false);
+				self.element_in_focus = undefined;
+				_focused.removeFocus();
+			}
+		}
+	}
 
 	///@ignore
 	static _updateKeyboardShortcuts = function() {
 		var _focused = self.element_in_focus;
-		if !is_undefined(_focused) && self.isInputAllowed(_focused) && is_instanceof(_focused, LuiInput) return false;
+		if !is_undefined(_focused) && self.isInputAllowed(_focused) && _focused._blocks_keyboard_shortcuts return false;
 		var _root = self._keyboardFocusRoot();
 		var _element = self._findShortcutElement(_root);
 		if !is_undefined(_element) {
@@ -640,16 +644,14 @@ function LuiMain() : LuiBase() constructor {
 			return true;
 		}
 		if _root != self || array_length(self._open_popups) > 0 return false;
-		if !is_undefined(_focused) && self.isInputAllowed(_focused) {
-			if keyboard_check_pressed(vk_escape) {
-				var _window = _focused;
-				while !is_undefined(_window) {
-					if is_instanceof(_window, LuiWindow) && self.isInputAllowed(_window) {
-						_window.closeWindow();
-						return true;
-					}
-					_window = _window.parent;
+		if keyboard_check_pressed(vk_escape) && !is_undefined(_focused) && self.isInputAllowed(_focused) {
+			var _target = _focused;
+			while !is_undefined(_target) {
+				if self._hasFocusListener(_target, LUI_EV_KEYBOARD_CANCEL) && self.isInputAllowed(_target) {
+					_target._dispatchEvent(LUI_EV_KEYBOARD_CANCEL);
+					return true;
 				}
+				_target = _target.parent;
 			}
 		}
 		for (var i = 0, n = array_length(self._keyboard_shortcuts); i < n; i++) {

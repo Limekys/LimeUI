@@ -16,6 +16,7 @@
 #macro LUI_EV_MOUSE_LEAVE "mouse_leave" // Triggered once when the mouse leaves the element
 #macro LUI_EV_KEYBOARD_INPUT "keyboard_input" // Triggered during keyboard input when the element is focused
 #macro LUI_EV_KEYBOARD_RELEASE "keyboard_release" // Triggered when a keyboard key is released while focused
+#macro LUI_EV_KEYBOARD_CANCEL "keyboard_cancel" // Escape targets the nearest eligible listener in the focus chain
 #macro LUI_EV_KEYBOARD_ADJUST "keyboard_adjust" // Triggered in keyboard edit mode with direction -1 or 1
 #macro LUI_EV_POSITION_UPDATE "position_update" // Triggered when the element changes its position
 #macro LUI_EV_FOCUS_SET "focus_set" // Triggered once when the element gains focus
