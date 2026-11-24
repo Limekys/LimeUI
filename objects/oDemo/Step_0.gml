@@ -32,7 +32,7 @@ if _list_open {
 		_offset = clamp(_offset + 24 * list_benchmark_direction, _min_offset, 0);
 		list_benchmark_panel.scroll_offset_y = _offset;
 		list_benchmark_panel.scroll_target_offset_y = _offset;
-		list_benchmark_panel._applyScroll();
+		list_benchmark_panel._requestScrollUpdate();
 	}
 } else if !is_undefined(list_benchmark_saved_alpha) {
 	tabs.visual_alpha = list_benchmark_saved_alpha;

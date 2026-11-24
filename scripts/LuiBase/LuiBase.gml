@@ -233,11 +233,11 @@ function LuiBase(_params = {}) constructor {
 			var _redraw = self._valueAffectsRender(self.value, _value);
 			self.value = _value;
 			if !is_undefined(self._value_binding) {
-				self._updateToBindedVariable();
+				self._writeBoundValue();
 			}
 			self._dispatchEvent(LUI_EV_VALUE_UPDATE);
 			if _redraw {
-				self.updateMainUiSurface();
+				self.invalidateCache();
 			}
 		}
 		return self;
@@ -281,13 +281,19 @@ function LuiBase(_params = {}) constructor {
 	///@desc Adds a case-sensitive tag. Built-in tags use the lowercase concrete widget class without the Lui prefix.
 	///@arg {String} _tag Tag to add
 	///@return {Struct} This element
-	static setTag = function(_tag) {
+	static addTag = function(_tag) {
 		if self.is_destroyed || _tag == "" || array_contains(self._tags, _tag) return self;
 		array_push(self._tags, _tag);
 		if !is_undefined(self.main_ui) {
 			self._indexTag(_tag);
 		}
 		return self;
+	}
+
+	///@desc Use addTag() to add a tag.
+	///@deprecated
+	static setTag = function(_tag) {
+		return self.addTag(_tag);
 	}
 
 	///@desc Removes a tag from this element.
@@ -496,13 +502,20 @@ function LuiBase(_params = {}) constructor {
 		self.requestContentUpdate();
 
 		// Update flex
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 
 		return self;
 	}
 
-	///@desc Original addContent
-	self.addContentOriginal = method(self, addContent);
+	///@desc Adds content directly to this element, bypassing its redirected content container.
+	///@arg {Any} elements Element or array of elements
+	self.addContentDirect = method(self, addContent);
+
+	///@desc Use addContentDirect() to add content directly.
+	///@deprecated
+	self.addContentOriginal = function(elements) {
+		return self.addContentDirect(elements);
+	}
 
 	///@desc Destroys all elements from real element container
 	self.destroyContent = function() {
@@ -528,6 +541,7 @@ function LuiBase(_params = {}) constructor {
 	}
 
 	///@desc Compatibility alias for requestContentUpdate().
+	///@deprecated
 	///@arg {Bool} [_update_parent] Include ancestors
 	///@return {Struct} This element
 	///@deprecated
@@ -589,7 +603,7 @@ function LuiBase(_params = {}) constructor {
 		if self.is_initialized && _type == flexpanel_position_type.absolute {
 			self._applyAbsoluteDefaults();
 		}
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -643,7 +657,7 @@ function LuiBase(_params = {}) constructor {
 			_changed = self._setPositionEdge(flexpanel_edge.bottom, "b", _b) || _changed;
 		}
 		if _changed {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -653,7 +667,7 @@ function LuiBase(_params = {}) constructor {
 	///@return {Struct} This element
 	static setKeepInViewport = function(_enabled = true) {
 		self._keep_in_viewport = _enabled;
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -676,7 +690,7 @@ function LuiBase(_params = {}) constructor {
 		var _width_changed = self._setDimension(true, _width);
 		var _height_changed = self._setDimension(false, _height);
 		if _width_changed || _height_changed {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -700,7 +714,7 @@ function LuiBase(_params = {}) constructor {
 			_update_flex = true;
 		}
 		if _update_flex {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -716,7 +730,7 @@ function LuiBase(_params = {}) constructor {
 			_update_flex = true;
 		}
 		if _update_flex {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -735,7 +749,7 @@ function LuiBase(_params = {}) constructor {
 			_update_flex = true;
 		}
 		if _update_flex {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -751,7 +765,7 @@ function LuiBase(_params = {}) constructor {
 			_update_flex = true;
 		}
 		if _update_flex {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -791,7 +805,7 @@ function LuiBase(_params = {}) constructor {
 			_update_flex = true;
 		}
 		if _update_flex {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 		return self;
 	}
@@ -825,7 +839,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexDirection = function(_direction = flexpanel_flex_direction.column) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_direction(_flex_node, _direction);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -834,7 +848,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexWrap = function(_wrap = flexpanel_wrap.no_wrap) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_flex_wrap(_flex_node, _wrap);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -843,7 +857,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexGrow = function(_grow = 1) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_grow(_flex_node, _grow);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -852,7 +866,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexShrink = function(_shrink = 1) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_flex_shrink(_flex_node, _shrink);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -862,7 +876,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexJustifyContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_justify_content(_flex_node, _flex_justify);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -872,7 +886,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexAlignItems = function(_flex_align = flexpanel_align.stretch) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_items(_flex_node, _flex_align);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -882,7 +896,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexAlignContent = function(_flex_justify = flexpanel_justify.start) {
 		var _flex_node = self.getContainer().flex_node;
 		flexpanel_node_style_set_align_content(_flex_node, _flex_justify);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -892,7 +906,7 @@ function LuiBase(_params = {}) constructor {
 	static setFlexAlignSelf = function(_flex_align = flexpanel_align.auto) {
 		var _flex_node = self.flex_node;
 		flexpanel_node_style_set_align_self(_flex_node, _flex_align);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -927,7 +941,7 @@ function LuiBase(_params = {}) constructor {
 		var _flex_node = self.flex_node;
 		if flexpanel_node_style_get_display(_flex_node) != _flex_display {
 			flexpanel_node_style_set_display(_flex_node, _flex_display);
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 			self.requestContentUpdate(true);
 		}
 		return self;
@@ -992,8 +1006,8 @@ function LuiBase(_params = {}) constructor {
 		self._style_dirty = true;
 		self._propagateStyleToChildren();
 		self._applyStyles();
-		self.updateMainUiFlex();
-		self.updateMainUiSurface();
+		self.requestFlexLayout();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -1011,8 +1025,8 @@ function LuiBase(_params = {}) constructor {
 		}
 		self._style_dirty = true;
 		self._applyStyles();
-		self.updateMainUiFlex();
-		self.updateMainUiSurface();
+		self.requestFlexLayout();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -1022,8 +1036,8 @@ function LuiBase(_params = {}) constructor {
 		self._style_dirty = true;
 		self._applyStyles(true);
 		self._propagateStyleToChildren(true);
-		self.updateMainUiFlex();
-		self.updateMainUiSurface();
+		self.requestFlexLayout();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -1048,7 +1062,7 @@ function LuiBase(_params = {}) constructor {
 					self.content[i].setVisible(self.visible);
 				}
 				// Main surface update
-				self.updateMainUiSurface();
+				self.invalidateCache();
 			}
 		}
 		return self;
@@ -1067,9 +1081,15 @@ function LuiBase(_params = {}) constructor {
 	}
 
 	///@desc Enable or disable visibility switching by function setVisible()
-	static setVisibilitySwitching = function(_allow) {
+	static allowVisibilityChanges = function(_allow = true) {
 		self._allows_visibility_changes = _allow;
 		return self;
+	}
+
+	///@desc Use allowVisibilityChanges() to control whether visibility can change.
+	///@deprecated
+	static setVisibilitySwitching = function(_allow) {
+		return self.allowVisibilityChanges(_allow);
 	}
 
 	///@desc Activate an element
@@ -1081,7 +1101,7 @@ function LuiBase(_params = {}) constructor {
 					_elm.activate();
 				});
 			}
-			self.updateMainUiSurface();
+			self.invalidateCache();
 		}
 		return self;
 	}
@@ -1095,7 +1115,7 @@ function LuiBase(_params = {}) constructor {
 					_elm.deactivate();
 				});
 			}
-			self.updateMainUiSurface();
+			self.invalidateCache();
 		}
 		return self;
 	}
@@ -1153,8 +1173,8 @@ function LuiBase(_params = {}) constructor {
 		return self.is_mouse_hovered;
 	}
 
-	///@desc Returns true if the mouse is hovered over this element, excluding all elements above it
-	static isMouseHoveredExc = function() {
+	///@desc Tests the pointer against this visible element's own bounds.
+	static isPointerInsideBounds = function() {
 		if !self.visible return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
@@ -1164,18 +1184,19 @@ function LuiBase(_params = {}) constructor {
 		return _on_this;
 	}
 
-	///@desc Returns true if the mouse is hovered over this element and every clipping ancestor
-	static isMouseHoveredParents = function() {
-		if !self.isMouseHoveredExc() return false;
+	///@desc Tests this element and all its clipping ancestors against the pointer.
+	static isPointerInsideClippedBounds = function() {
+		if !self.isPointerInsideBounds() return false;
 		var _p = self.parent;
 		while (!is_undefined(_p)) {
-			if _p._clip_children && !_p.isMouseHoveredExc() return false;
+			if _p._clip_children && !_p.isPointerInsideBounds() return false;
 			_p = _p.parent;
 		}
 		return true;
 	}
 
-	///@desc Returns true if the mouse is hovered over the descendants of this element
+	///@desc Returns whether this element or one of its descendants is hovered.
+	///@deprecated
 	static isMouseHoveredChilds = function() {
 		if !self.visible return false;
 		var _mouse_x = device_mouse_x_to_gui(0);
@@ -1188,6 +1209,18 @@ function LuiBase(_params = {}) constructor {
 			}
 		}
 		return self.isMouseHovered() ? true : false;
+	}
+
+	///@desc Use isPointerInsideBounds() to test this element's bounds.
+	///@deprecated
+	static isMouseHoveredExc = function() {
+		return self.isPointerInsideBounds();
+	}
+
+	///@desc Use isPointerInsideClippedBounds() to include clipping ancestors.
+	///@deprecated
+	static isMouseHoveredParents = function() {
+		return self.isPointerInsideClippedBounds();
 	}
 
 	///@desc Set popup text to element when mouse on it
@@ -1205,7 +1238,7 @@ function LuiBase(_params = {}) constructor {
 			self.parent._draw_order_dirty = true;
 		}
 		self._rebuildDepthArrayRec();
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -1261,7 +1294,7 @@ function LuiBase(_params = {}) constructor {
 			self._cache_active = false;
 			self._freeCache();
 		}
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -1273,11 +1306,21 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 
-	///@desc Forces the cached surface to be redrawn on the next frame
+	///@desc Marks this element's cache and its ancestor caches for redraw.
 	static invalidateCache = function() {
-		self._is_cache_dirty = true;
-		self.updateMainUiSurface();
+		var _element = self;
+		while !is_undefined(_element) {
+			_element._is_cache_dirty = true;
+			_element = _element.parent;
+		}
 		return self;
+	}
+
+	///@desc Use invalidateCache() after changing rendered content.
+	///@deprecated
+	static updateMainUiSurface = function() {
+		if is_undefined(self.main_ui) return self;
+		return self.invalidateCache();
 	}
 
 	// Events
@@ -1370,7 +1413,7 @@ function LuiBase(_params = {}) constructor {
 
 			// Updating the bound variables
 			if !is_undefined(_element._value_binding) && _element.get() != variable_instance_get(_element._value_binding.source, _element._value_binding.variable) {
-				_element._updateFromBindedVariable();
+				_element._readBoundValue();
 			}
 
 			// Update content if required
@@ -1420,8 +1463,8 @@ function LuiBase(_params = {}) constructor {
 		if !is_undefined(self.parent) {
 			self.parent.requestContentUpdate(true);
 		}
-		self.updateMainUiFlex();
-		self.updateMainUiSurface();
+		self.requestFlexLayout();
+		self.invalidateCache();
 		// Delete flex_node
 		if !is_undefined(self.flex_node) {
 			// For the rest of the elements to react to the disappearance of this
@@ -1563,7 +1606,7 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Update element value from binded variable
 	///@ignore
-	static _updateFromBindedVariable = function() {
+	static _readBoundValue = function() {
 		var _source = self._value_binding.source;
 		var _variable = self._value_binding.variable;
 		if _source != noone && variable_instance_exists(_source, _variable) {
@@ -1577,7 +1620,7 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Update binded variable from element value
 	///@ignore
-	static _updateToBindedVariable = function() {
+	static _writeBoundValue = function() {
 		var _source = self._value_binding.source;
 		var _variable = self._value_binding.variable;
 		if _source != noone && variable_instance_exists(_source, _variable) {
@@ -1638,7 +1681,7 @@ function LuiBase(_params = {}) constructor {
 	static _applyInheritedStyle = function(_style, _force_notify = false) {
 		self._rebuildStyleFromInherited(_style);
 		self._applyStyles(_force_notify);
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		self._propagateStyleToChildren();
 		return self;
 	}
@@ -1787,7 +1830,7 @@ function LuiBase(_params = {}) constructor {
 		}
 		var _style = self.getStyle();
 		self._applySelfAlignment(is_undefined(_style) ? 0 : _style.margin);
-		self.updateMainUiFlex();
+		self.requestFlexLayout();
 		return self;
 	}
 
@@ -1863,18 +1906,24 @@ function LuiBase(_params = {}) constructor {
 			}
 		}
 		if _changed {
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 	}
 
 	///@desc Requests a Flex layout pass for the UI.
-	///@arg {Bool} [_update_parent] Legacy argument retained for compatibility
 	///@return {Struct} This element
-	static updateMainUiFlex = function(_update_parent = false) {
+	static requestFlexLayout = function() {
 		if !is_undefined(self.main_ui) {
 			self.main_ui._flex_layout_dirty = true;
 		}
 		return self;
+	}
+
+	///@desc Use requestFlexLayout() to request a layout pass.
+	///@deprecated
+	///@arg {Bool} [_update_parent] Legacy argument retained for compatibility
+	static updateMainUiFlex = function(_update_parent = false) {
+		return self.requestFlexLayout();
 	}
 
 	///@desc Calculate all sizes and positions of elements
@@ -1890,7 +1939,7 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Update position, size and z depth for specified flex node
 	///@ignore
-	static _updateFlex = function(_scroll_only = false, _offset_x = undefined, _offset_y = 0) {
+	static _applyLayoutGeometry = function(_scroll_only = false, _offset_x = undefined, _offset_y = 0) {
 		if is_undefined(self.flex_node) return;
 		if is_undefined(_offset_x) {
 			_offset_x = 0;
@@ -1956,7 +2005,7 @@ function LuiBase(_params = {}) constructor {
 			if _scroll_only {
 				self._is_cache_dirty = true;
 			} else {
-				self.updateMainUiSurface();
+				self.invalidateCache();
 			}
 			self.prev_x = self.x;
 			self.prev_y = self.y;
@@ -1965,7 +2014,7 @@ function LuiBase(_params = {}) constructor {
 		// On size change
 		if _size_changed {
 			self._dispatchEvent(LUI_EV_SIZE_UPDATE);
-			self.updateMainUiSurface();
+			self.invalidateCache();
 			self.prev_w = self.width;
 			self.prev_h = self.height;
 		}
@@ -1993,7 +2042,7 @@ function LuiBase(_params = {}) constructor {
 			return;
 		}
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
-			self.content[i]._updateFlex(_reuse_children, _offset_x, _offset_y);
+			self.content[i]._applyLayoutGeometry(_reuse_children, _offset_x, _offset_y);
 		}
 	}
 
@@ -2155,7 +2204,7 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _recalculateDepthArray = function() {
 		self._rebuildDepthArrayRec();
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -2215,17 +2264,6 @@ function LuiBase(_params = {}) constructor {
 	}
 
 	// Cache invalidation
-
-	///@desc Content of this element (or its subtree) changed: invalidate own and all ancestor caches
-	static updateMainUiSurface = function() {
-		if is_undefined(self.main_ui) return self;
-		var _n = self;
-		while (!is_undefined(_n)) {
-			_n._is_cache_dirty = true;
-			_n = _n.parent;
-		}
-		return self;
-	}
 
 	///@desc Only visual transform/alpha of this element changed: its own cache stays valid, ancestors must be rebaked
 	static _invalidateAncestorCaches = function() {

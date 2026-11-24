@@ -95,11 +95,17 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	}
 
 	///@desc Deactivates every tab in this group.
-	static tabDeactivateAll = function() {
+	static deactivateAllTabs = function() {
 		for (var i = 0, n = array_length(self.tabs); i < n; i++) {
 			self.tabs[i].tabDeactivate();
 		}
 		self.active_tab = undefined;
+	}
+
+	///@desc Use deactivateAllTabs() to clear the active tab.
+	///@deprecated
+	static tabDeactivateAll = function() {
+		self.deactivateAllTabs();
 	}
 
 	///@desc Removes and destroys a tab and its contents.
@@ -126,7 +132,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	static _attachTab = function(_tab) {
 		if _tab.is_destroyed || !is_undefined(_tab.main_ui) return;
 		_tab._initContainer();
-		self.addContentOriginal(_tab.tab_container);
+		self.addContentDirect(_tab.tab_container);
 		self.tabs_header.addContent(_tab);
 		if is_undefined(self.active_tab) {
 			self.switchTab(_tab);
@@ -156,7 +162,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		self._content_min_height = _height;
 		if !is_undefined(self.main_ui) {
 			self._applyStyleMinSize(self.getStyle());
-			self.updateMainUiFlex();
+			self.requestFlexLayout();
 		}
 	}
 
@@ -184,7 +190,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		// Setting up padding for tabs
 		_e.setPadding(0).setGap(_e.tab_indent);
 		_e.tabs_header = new LuiRow({height: _e.tab_height}).setGap(_e.tab_indent).setMinHeight(_e.tab_height);
-		_e.addContentOriginal(_e.tabs_header);
+		_e.addContentDirect(_e.tabs_header);
 		var _tabs = _e.tabs;
 		for (var i = 0, n = array_length(_tabs); i < n; i++) {
 			_e._attachTab(_tabs[i]);

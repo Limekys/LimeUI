@@ -70,7 +70,7 @@ function LuiMain() : LuiBase() constructor {
 		for (var _pass = 0; _pass < 2 && self._flex_layout_dirty; _pass++) {
 			self._flex_layout_dirty = false;
 			self._calculateLayout();
-			self._updateFlex();
+			self._applyLayoutGeometry();
 		}
 	}
 
@@ -124,7 +124,7 @@ function LuiMain() : LuiBase() constructor {
 	///@desc Returns an independent array of elements with the given case-sensitive tag.
 	///@arg {String} _tag Element tag
 	///@return {Array} Matching elements in registration order
-	static getTag = function(_tag) {
+	static getElementsByTag = function(_tag) {
 		var _elements = self._elements_by_tag[$ _tag];
 		if is_undefined(_elements) return [];
 		var _count = array_length(_elements);
@@ -158,7 +158,7 @@ function LuiMain() : LuiBase() constructor {
 	static isInputAllowed = function(_element) {
 		if self.is_destroyed || !self.visible || self.deactivated || _element.is_destroyed || !_element.visible || _element.deactivated return false;
 		var _modal = self._activeModal();
-		return is_undefined(_modal) || self._isInModal(_element, _modal);
+		return is_undefined(_modal) || self._isInSubtree(_element, _modal);
 	}
 
 	///@desc Create animation for any variables of target element
@@ -191,11 +191,17 @@ function LuiMain() : LuiBase() constructor {
 
 	///@desc Controls the focus rectangle. Arrow keys show it and a mouse press hides it.
 	///@arg {bool} _display
-	static displayFocusedElement = function(_display) {
+	static showFocusFrame = function(_display = true) {
 		self._show_focus_frame = _display;
 		if !_display {
 			self._focus_frame_bounds = undefined;
 		}
+	}
+
+	///@desc Use showFocusFrame() to control the keyboard focus frame.
+	///@deprecated
+	static displayFocusedElement = function(_display) {
+		self.showFocusFrame(_display);
 	}
 
 	// FRAME UPDATE
@@ -218,7 +224,7 @@ function LuiMain() : LuiBase() constructor {
 		if _mouse_pressed {
 			self._keyboard_navigation_active = false;
 			self._keyboard_edit_target = undefined;
-			self.displayFocusedElement(false);
+			self.showFocusFrame(false);
 		}
 		//luiProf("1_base_update", _t);
 
@@ -399,7 +405,7 @@ function LuiMain() : LuiBase() constructor {
 			}
 			if self.element_in_focus == _focused && is_undefined(self._activeModal()) && keyboard_check_pressed(vk_escape) {
 				self._keyboard_navigation_active = false;
-				self.displayFocusedElement(false);
+				self.showFocusFrame(false);
 				self.element_in_focus = undefined;
 				_focused.removeFocus();
 			}
@@ -419,7 +425,7 @@ function LuiMain() : LuiBase() constructor {
 				if string_starts_with(_tween.property, "visual_") || string_starts_with(_tween.property, "pivot_") {
 					_tween.target._invalidateAncestorCaches();
 				} else {
-					_tween.target.updateMainUiSurface();
+					_tween.target.invalidateCache();
 				}
 				// If update return false, animate end
 				if !_tween.update(DT) {
@@ -432,7 +438,7 @@ function LuiMain() : LuiBase() constructor {
 
 		// Update debug mode states
 		if self.current_debug_mode != global.lui_debug_mode {
-			self.updateMainUiSurface();
+			self.invalidateCache();
 			self.current_debug_mode = global.lui_debug_mode;
 		}
 
@@ -448,8 +454,8 @@ function LuiMain() : LuiBase() constructor {
 			var _container = _scrolled[i];
 			if !_container.is_destroyed {
 				_container._scroll_owner._applyPendingFocusReveal();
-				_container.updateMainUiSurface();
-				_container._updateFlex(true);
+				_container.invalidateCache();
+				_container._applyLayoutGeometry(true);
 				_container._scroll_owner._updateScrollThumbs();
 			}
 		}
@@ -666,7 +672,7 @@ function LuiMain() : LuiBase() constructor {
 		for (var i = array_length(self._shortcut_elements) - 1; i >= 0; i--) {
 			var _element = self._shortcut_elements[i];
 			if !keyboard_check_pressed(_element._shortcut_key) || !_element._intersects_clip_region
-				|| !self.isInputAllowed(_element) || !self._isInModal(_element, _root)
+				|| !self.isInputAllowed(_element) || !self._isInSubtree(_element, _root)
 				|| !self._hasFocusListener(_element, LUI_EV_CLICK) continue;
 			var _parent = _element.parent;
 			while !is_undefined(_parent) && _parent.visible && !_parent.deactivated && !_parent.is_destroyed {
@@ -686,7 +692,7 @@ function LuiMain() : LuiBase() constructor {
 		var _dy = (keyboard_check_pressed(vk_down) ? 1 : 0) - (keyboard_check_pressed(vk_up) ? 1 : 0);
 		if _dx != 0 || _dy != 0 {
 			self._keyboard_navigation_active = true;
-			self.displayFocusedElement(true);
+			self.showFocusFrame(true);
 			self._moveKeyboardFocus(_dx, _dx == 0 ? _dy : 0);
 			return true;
 		}
@@ -694,7 +700,7 @@ function LuiMain() : LuiBase() constructor {
 		var _focused = self.element_in_focus;
 		if !self._keyboard_navigation_active || !keyboard_check_pressed(vk_enter)
 			|| is_undefined(_focused) || !self.isInputAllowed(_focused) return false;
-		if !self._isInModal(_focused, self._keyboardFocusRoot()) return false;
+		if !self._isInSubtree(_focused, self._keyboardFocusRoot()) return false;
 		if self._hasFocusListener(_focused, LUI_EV_KEYBOARD_ADJUST) {
 			self._keyboard_edit_target = _focused;
 			return true;
@@ -710,7 +716,7 @@ function LuiMain() : LuiBase() constructor {
 		var _target = self._keyboard_edit_target;
 		if is_undefined(_target) return false;
 		if self.element_in_focus != _target || !self.isInputAllowed(_target)
-			|| !self._isInModal(_target, self._keyboardFocusRoot()) || !self._hasFocusListener(_target, LUI_EV_KEYBOARD_ADJUST) {
+			|| !self._isInSubtree(_target, self._keyboardFocusRoot()) || !self._hasFocusListener(_target, LUI_EV_KEYBOARD_ADJUST) {
 			self._keyboard_edit_target = undefined;
 			return false;
 		}
@@ -755,7 +761,7 @@ function LuiMain() : LuiBase() constructor {
 		var _focused = self.element_in_focus;
 		var _origin = undefined;
 		if !is_undefined(_focused) && self.isInputAllowed(_focused)
-			&& self._isInModal(_focused, _root) && self._isKeyboardFocusable(_focused) {
+			&& self._isInSubtree(_focused, _root) && self._isKeyboardFocusable(_focused) {
 			_origin = _focused.getLayoutBounds();
 		}
 		var _search = {origin: _origin, dx: _dx, dy: _dy, best: undefined, score: infinity, aligned: false};
@@ -767,7 +773,7 @@ function LuiMain() : LuiBase() constructor {
 			self.element_in_focus = undefined;
 			_focused.removeFocus();
 		}
-		if !self.isInputAllowed(_next) || !self._isInModal(_next, self._keyboardFocusRoot()) return;
+		if !self.isInputAllowed(_next) || !self._isInSubtree(_next, self._keyboardFocusRoot()) return;
 
 		self.element_in_focus = _next;
 		_next.setFocus();
@@ -894,7 +900,7 @@ function LuiMain() : LuiBase() constructor {
 	static _closePopupsOutside = function(_target) {
 		for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
 			var _popup = self._open_popups[i];
-			if !self._isInModal(_target, _popup.owner) && !self._isInModal(_target, _popup.panel) {
+			if !self._isInSubtree(_target, _popup.owner) && !self._isInSubtree(_target, _popup.panel) {
 				_popup.close();
 			}
 		}
@@ -916,7 +922,7 @@ function LuiMain() : LuiBase() constructor {
 	static _raiseOwnedPopups = function(_ancestor) {
 		for (var i = 0; i < array_length(self._open_popups); i++) {
 			var _popup = self._open_popups[i];
-			if self._isInModal(_popup.owner, _ancestor) {
+			if self._isInSubtree(_popup.owner, _ancestor) {
 				_popup.panel.bringToFront();
 			}
 		}
@@ -1006,10 +1012,10 @@ function LuiMain() : LuiBase() constructor {
 			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
 			var _region = _e._visible_bounds;
 			if _mouse_x < _region.x1 || _mouse_x >= _region.x2 || _mouse_y < _region.y1 || _mouse_y >= _region.y2 continue;
-			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
+			if !is_undefined(_modal) && !self._isInSubtree(_e, _modal) continue;
 			// Not above the current best: skip without the expensive hover checks
 			if !is_undefined(_best) && _compareDepthArrays(_e._z_order_path, _best._z_order_path) <= 0 continue;
-			if !_e.isMouseHoveredExc() || !_e.isMouseHoveredParents() continue;
+			if !_e.isPointerInsideBounds() || !_e.isPointerInsideClippedBounds() continue;
 			_best = _e;
 		}
 		return _best;
@@ -1039,7 +1045,7 @@ function LuiMain() : LuiBase() constructor {
 	}
 
 	///@ignore
-	static _isInModal = function(_element, _dialog) {
+	static _isInSubtree = function(_element, _dialog) {
 		while !is_undefined(_element) {
 			if _element == _dialog return true;
 			_element = _element.parent;
@@ -1082,16 +1088,16 @@ function LuiMain() : LuiBase() constructor {
 			var _entry = self._modal_stack[i];
 			if _entry.dialog != _dialog continue;
 			array_delete(self._modal_stack, i, 1);
-			if self._isInModal(self.topmost_hovered_element, _dialog) {
+			if self._isInSubtree(self.topmost_hovered_element, _dialog) {
 				self.topmost_hovered_element = undefined;
 			}
-			if self._isInModal(self.dragging_element, _dialog) {
+			if self._isInSubtree(self.dragging_element, _dialog) {
 				self.dragging_element = undefined;
 			}
 			var _restore = _entry.previous_focus;
 			for (var _next = i; _next < _count - 1; _next++) {
 				var _later = self._modal_stack[_next];
-				if self._isInModal(_later.previous_focus, _dialog) {
+				if self._isInSubtree(_later.previous_focus, _dialog) {
 					_later.previous_focus = _restore;
 				}
 			}

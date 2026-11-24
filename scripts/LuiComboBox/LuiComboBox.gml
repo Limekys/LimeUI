@@ -41,10 +41,10 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		self._placePopup();
 		if !self.is_open return self;
 
-		self._popup_panel.setVisibilitySwitching(true).show().bringToFront().setVisibilitySwitching(false);
+		self._popup_panel.allowVisibilityChanges(true).show().bringToFront().allowVisibilityChanges(false);
 		self.main_ui._registerPopup(self, self._popup_panel, method(self, self._closePopup), method(self, self._placePopup));
 		self._focusPopupItem();
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 
@@ -69,8 +69,8 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	static _initComboBoxPanel = function() {
 		var _host = self.main_ui._activeModal() ?? self.main_ui;
 		self._popup_panel = new LuiScrollPanel({x: 0, y: 0, width: 1, height: 1, min_width: 1, min_height: 1})
-			.setPositionAbsolute().setPadding(4).setGap(0).hide().setVisibilitySwitching(false);
-		_host.addContentOriginal(self._popup_panel);
+			.setPositionAbsolute().setPadding(4).setGap(0).hide().allowVisibilityChanges(false);
+		_host.addContentDirect(self._popup_panel);
 	}
 
 	///@ignore
@@ -136,7 +136,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			_panel.scroll_target_offset_y = 0;
 			if _panel.scroll_offset_y != 0 {
 				_panel.scroll_offset_y = 0;
-				_panel._applyScroll();
+				_panel._requestScrollUpdate();
 			}
 			for (var i = 0, n = array_length(_items); i < n; i++) {
 				var _candidate = _items[i];
@@ -167,7 +167,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		var _ui = self.main_ui;
 		_ui._unregisterPopup(self._popup_panel);
 		var _focused = _ui.element_in_focus;
-		if _ui._isInModal(_focused, self._popup_panel) {
+		if _ui._isInSubtree(_focused, self._popup_panel) {
 			_ui.element_in_focus = undefined;
 			if !_focused.is_destroyed {
 				_focused.removeFocus();
@@ -178,9 +178,9 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			}
 		}
 		if !self._popup_panel.is_destroyed {
-			self._popup_panel.setVisibilitySwitching(true).hide().setVisibilitySwitching(false);
+			self._popup_panel.allowVisibilityChanges(true).hide().allowVisibilityChanges(false);
 		}
-		self.updateMainUiSurface();
+		self.invalidateCache();
 	}
 
 	///@ignore

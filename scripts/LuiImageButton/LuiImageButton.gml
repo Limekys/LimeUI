@@ -34,18 +34,18 @@ function LuiImageButton(_params = {}) : LuiImage(_params) constructor {
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEFT_RELEASED, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 }

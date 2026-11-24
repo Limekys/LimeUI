@@ -29,7 +29,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	///@arg {string} _text
 	static setText = function(_text) {
 		self.text = _text;
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 	
@@ -37,7 +37,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	///@arg {any} _color
 	static setColor = function(_color) {
 		self.button_color = _color;
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 	
@@ -55,7 +55,7 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 		if sprite_exists(_sprite) {
 			self._calcIconSize();
 		}
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 	
@@ -178,19 +178,19 @@ function LuiButton(_params = {}) : LuiBase(_params) constructor {
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_ENTER, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEAVE, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEFT_PRESSED, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	self.addEvent(LUI_EV_MOUSE_LEFT_RELEASED, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 	
 	/* //???// Button animation test

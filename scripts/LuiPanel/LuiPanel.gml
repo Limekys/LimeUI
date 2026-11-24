@@ -89,7 +89,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 					window_set_cursor(cr_default);
 				});
 			}
-			self.addContentOriginal(self.resizer);
+			self.addContentDirect(self.resizer);
 		}
 	}
 	
@@ -125,7 +125,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	}
 
 	///@ignore
-	static _applyScroll = function() {
+	static _requestScrollUpdate = function() {
 		var _queue = self.main_ui._pending_scroll_containers;
 		if !array_contains(_queue, self.scroll_container) {
 			array_push(self.main_ui._pending_scroll_containers, self.scroll_container);
@@ -173,7 +173,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		var _rebuild = !_reuse_bounds || self._scroll_layout_revision != _revision || self._scroll_row_count != _count;
 		if _rebuild || is_undefined(self._scroll_rows) {
 			for (var i = 0; i < _count; i++) {
-				_children[i]._updateFlex(!_rebuild, _offset_x, _offset_y);
+				_children[i]._applyLayoutGeometry(!_rebuild, _offset_x, _offset_y);
 			}
 			if !_rebuild return;
 			self._scroll_rows = self._indexScrollRows(_children, _container._flex_bounds.top);
@@ -193,7 +193,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 				_rows[i].element._propagateVisibleRegionState();
 			}
 			for (var i = _first; i < _end; i++) {
-				_rows[i].element._updateFlex(true, _offset_x, _offset_y);
+				_rows[i].element._applyLayoutGeometry(true, _offset_x, _offset_y);
 			}
 		}
 		self._visible_row_start = _first;
@@ -203,7 +203,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _queueFocusReveal = function(_item) {
 		self._pending_focus_reveal = _item;
-		self._applyScroll();
+		self._requestScrollUpdate();
 	}
 
 	///@ignore
@@ -250,7 +250,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	}
 
 	///@ignore
-	static _getScrollBar = function(_horizontal, _style) {
+	static _getScrollbarGeometry = function(_horizontal, _style) {
 		var _limit = self._getMinScrollOffset(_horizontal);
 		if _limit >= 0 return undefined;
 
@@ -281,7 +281,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 
 	///@ignore
 	static _pageScrollBar = function(_horizontal, _mx, _my, _style) {
-		var _bar = self._getScrollBar(_horizontal, _style);
+		var _bar = self._getScrollbarGeometry(_horizontal, _style);
 		if is_undefined(_bar) return false;
 		if !point_in_rectangle(_mx, _my, _bar.x, _bar.y, _bar.x + _bar.width, _bar.y + _bar.height) return false;
 
@@ -299,10 +299,10 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _updateScrollThumbs = function() {
 		if !is_undefined(self._scroll_thumb_x) && !self._scroll_thumb_x.is_destroyed {
-			self._scroll_thumb_x._updateFlex(true);
+			self._scroll_thumb_x._applyLayoutGeometry(true);
 		}
 		if !is_undefined(self._scroll_thumb_y) && !self._scroll_thumb_y.is_destroyed {
-			self._scroll_thumb_y._updateFlex(true);
+			self._scroll_thumb_y._applyLayoutGeometry(true);
 		}
 	}
 
@@ -382,13 +382,13 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		if _x != self.scroll_offset_x || _y != self.scroll_offset_y {
 			self.scroll_offset_x = _x;
 			self.scroll_offset_y = _y;
-			self._applyScroll();
+			self._requestScrollUpdate();
 		}
 	}
 
 	///@ignore
 	static _drawScrollBar = function(_horizontal, _style, _alpha) {
-		var _bar = self._getScrollBar(_horizontal, _style);
+		var _bar = self._getScrollbarGeometry(_horizontal, _style);
 		if is_undefined(_bar) return;
 
 		if !is_undefined(_style.sprite_scroll_slider) {
@@ -443,14 +443,14 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 				// A partial layout can resize the content without visiting its sibling thumbs.
 				_content._scroll_owner._updateScrollThumbs();
 			});
-			_e.addContentOriginal(_e.scroll_container);
+			_e.addContentDirect(_e.scroll_container);
 			if _e.scroll_x {
 				_e._scroll_thumb_x = new LuiScrollThumb({panel: _e, horizontal: true});
-				_e.addContentOriginal(_e._scroll_thumb_x);
+				_e.addContentDirect(_e._scroll_thumb_x);
 			}
 			if _e.scroll_y {
 				_e._scroll_thumb_y = new LuiScrollThumb({panel: _e});
-				_e.addContentOriginal(_e._scroll_thumb_y);
+				_e.addContentDirect(_e._scroll_thumb_y);
 			}
 			if _e.auto_height {
 				flexpanel_node_style_set_flex(_e.flex_node, 1);
@@ -491,7 +491,7 @@ function LuiScrollThumb(_params = {}) : LuiButton({x: 0, y: 0, width: 1, height:
 	// INTERNALS
 
 	self._overlay_bounds = function() {
-		var _bar = self._panel._getScrollBar(self._horizontal, self._panel.getStyle());
+		var _bar = self._panel._getScrollbarGeometry(self._horizontal, self._panel.getStyle());
 		if is_undefined(_bar) {
 			return {left: self._panel.x, top: self._panel.y, width: 0, height: 0};
 		}
@@ -542,7 +542,7 @@ function LuiScrollThumb(_params = {}) : LuiButton({x: 0, y: 0, width: 1, height:
 
 	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
 		var _panel = _e._panel;
-		var _bar = _panel._getScrollBar(_e._horizontal, _panel.getStyle());
+		var _bar = _panel._getScrollbarGeometry(_e._horizontal, _panel.getStyle());
 		if is_undefined(_bar) || _bar.travel <= 0 return;
 		var _pointer = _e._horizontal ? _data.mouse_x : _data.mouse_y;
 		var _position = _pointer - _bar.start - _e._grab_fraction * _bar.thumb_length;
@@ -554,10 +554,10 @@ function LuiScrollThumb(_params = {}) : LuiButton({x: 0, y: 0, width: 1, height:
 			_panel.scroll_offset_y = _offset;
 			_panel.scroll_target_offset_y = _offset;
 		}
-		_panel._applyScroll();
+		_panel._requestScrollUpdate();
 	});
 
 	self.addEvent(LUI_EV_DRAG_END, function(_e) {
-		_e.updateMainUiSurface();
+		_e.invalidateCache();
 	});
 }

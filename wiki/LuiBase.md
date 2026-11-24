@@ -312,7 +312,7 @@ Set flag to update content
 Set element visibility (only visibility not flex display)
 
 
-### `setVisibilitySwitching`
+### `allowVisibilityChanges`
 Enable or disable visibility switching by function setVisible()
 
 
@@ -370,24 +370,24 @@ Activate an element
 Deactivate an element
 
 
-### `updateMainUiSurface`
-Update main ui surface
+### `invalidateCache`
+Mark this element's cache and its ancestor caches for redraw.
 
 
-### `updateMainUiFlex`
-Update main ui flex
+### `requestFlexLayout`
+Request a Flex layout pass for the UI.
 
 
 ### `isMouseHovered`
 Returns true if the mouse is hovered over this element
 
 
-### `isMouseHoveredExc`
-Returns true if the mouse is hovered over this element, excluding all elements above it
+### `isPointerInsideBounds`
+Test the pointer against this visible element's own bounds.
 
 
-### `isMouseHoveredParents`
-Returns true if the mouse is hovered over this element and its parent
+### `isPointerInsideClippedBounds`
+Test the pointer against this element and all its clipping ancestors.
 
 
 ### `isInsideParents`

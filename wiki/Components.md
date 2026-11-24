@@ -249,7 +249,7 @@ Main UI container which would control and render your UI.
 Create animation for any variables of target element
 
 
-### `displayFocusedElement`
+### `showFocusFrame`
 Set flag to display or not display white rectangle on focused element
 
 **Parameters:**  
@@ -479,7 +479,7 @@ Add LuiTab's
 Switch tab to another
 
 
-### `tabDeactivateAll`
+### `deactivateAllTabs`
 Deactivate all tabs
 
 

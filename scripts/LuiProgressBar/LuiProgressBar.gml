@@ -30,7 +30,7 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		self.min_value = _min_value;
 		self.set(self._calculateValue(self.get()));
 		self._updateBarTarget();
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 	
@@ -40,7 +40,7 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 		self.max_value = _max_value;
 		self.set(self._calculateValue(self.get()));
 		self._updateBarTarget();
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 	
@@ -56,7 +56,7 @@ function LuiProgressBar(_params = {}) : LuiBase(_params) constructor {
 	static setRounding = function(_rounding) {
 		self.rounding = _rounding;
 		self._updateBarTarget();
-		self.updateMainUiSurface();
+		self.invalidateCache();
 		return self;
 	}
 	

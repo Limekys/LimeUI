@@ -139,7 +139,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 		}
 		_e._initHeader();
 		_e._initWindowContainer();
-		_e.addContentOriginal([
+		_e.addContentDirect([
 			_e.window_header,
 			_e.window_container
 		]);
@@ -174,7 +174,7 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 	///@ignore
 	static _initTitle = function() {
 		self.text_title = new LuiText({value: self.title}).setMouseIgnore(true);
-		self.addContentOriginal(self.text_title);
+		self.addContentDirect(self.text_title);
 	}
 
 	///@ignore
@@ -189,7 +189,7 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 		_minimize_button.addEvent(LUI_EV_CLICK, function(_e) {
 			_e.parent.parent_window.toggleWindow();
 		});
-		self.addContentOriginal([_minimize_button, _close_button]);
+		self.addContentDirect([_minimize_button, _close_button]);
 	}
 
 	// DRAW
