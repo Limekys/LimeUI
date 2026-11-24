@@ -86,7 +86,6 @@ function LuiBase(_params = {}) constructor {
 	self.content = [];
 	self.delayed_content = [];
 	self.container = self; 								//Sometimes the container may not be the element itself, but the element inside it (for example: LuiTab, LuiScrollPanel...)
-	self.container_original = self; 					//Original self container
 
 	// Visibility and input state
 	self.deactivated = false;
@@ -96,7 +95,6 @@ function LuiBase(_params = {}) constructor {
 	self._keyboard_focusable = undefined;
 	self._shortcut_key = undefined;
 	self._tags = [];
-	self.inside_parent = 2;
 	self.ignore_mouse = false;
 	self.ignore_mouse_all = undefined;
 	self.need_to_update_content = false;
@@ -128,10 +126,6 @@ function LuiBase(_params = {}) constructor {
 
 	// Screen grid system
 	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
-	self.grid_previous_x1 = -1;						//Previous floor(x / LUI_GRID_ACCURACY) left position on the grid
-	self.grid_previous_y1 = -1;						//Previous floor(y / LUI_GRID_ACCURACY) top position on the grid
-	self.grid_previous_x2 = -1;						//Previous floor((x + width) / LUI_GRID_ACCURACY) right position on the grid
-	self.grid_previous_y2 = -1;						//Previous floor((y + width) / LUI_GRID_ACCURACY) bottom position on the grid
 	// View region system
 	self.view_region = {
 		x1: 0,
