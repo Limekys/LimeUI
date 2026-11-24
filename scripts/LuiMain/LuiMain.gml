@@ -413,11 +413,7 @@ function LuiMain() : LuiBase() constructor {
 
 		//luiProf("3_anim", _t);
 
-		// Update debug mode states
-		if self.current_debug_mode != global.lui_debug_mode {
-			self.invalidateCache();
-			self.current_debug_mode = global.lui_debug_mode;
-		}
+		self.current_debug_mode = global.lui_debug_mode;
 
 		//_t = get_timer();
 
@@ -525,15 +521,6 @@ function LuiMain() : LuiBase() constructor {
 				_metrics.draw_us = get_timer() - _draw_start;
 			}
 
-			// Draw debug rectangles of elements
-			if global.lui_debug_mode != 0 {
-				for (var i = 0, n = array_length(self.content); i < n; i++) {
-					var _element = self.content[i];
-					if !_element._intersects_clip_region || !_element.visible || _element.is_destroyed continue;
-					_element._renderDebug(_element.x, _element.y, true);
-				}
-			}
-
 			if self._show_focus_frame {
 				self._drawFocusFrame(_identity_matrix);
 			}
@@ -569,26 +556,9 @@ function LuiMain() : LuiBase() constructor {
 			}
 		}
 
-		if global.lui_debug_render_grid {
-			self._drawScreenGrid();
+		if global.lui_debug_mode != 0 || global.lui_debug_render_grid {
+			_luiDrawDiagnostics(self);
 		}
-
-		if global.lui_debug_mode != 0 && !is_undefined(_element) {
-			var _mouse_x = device_mouse_x_to_gui(0) + 32;
-			var _mouse_y = device_mouse_y_to_gui(0) + 32;
-			_element._renderDebugInfo(_mouse_x, _mouse_y);
-		}
-
-		//luiProfFrameEnd(is_undefined(self.topmost_hovered_element) ? "-" : self.topmost_hovered_element.name);
-		//
-		//if keyboard_check_pressed(vk_f10) {
-			//clipboard_set_text(global.lui_spike_log);
-			//show_debug_message("Spike log copied");
-		//}
-		//if keyboard_check_pressed(vk_f9) {
-			//global.lui_prof = {};
-			//global.lui_spike_log = "";
-		//}
 
 		if !LUI_FORCE_ALPHA_1 {
 			draw_set_alpha(_prev_alpha);
@@ -1426,57 +1396,6 @@ function LuiMain() : LuiBase() constructor {
 		}
 		self._backdrop_blur_surface = -1;
 	}
-
-	// DEBUG
-
-	///@desc Draw debug grid info
-	///@ignore
-	static _drawScreenGrid = function() {
-		draw_set_alpha(1);
-		draw_set_color(c_red);
-		draw_set_halign(fa_left);
-		draw_set_valign(fa_top);
-		draw_set_font(fDebug);
-
-		var _gui_width = display_get_gui_width();
-		var _gui_height = display_get_gui_height();
-
-		var _width = ceil(_gui_width / LUI_GRID_SIZE);
-		var _height = ceil(_gui_height / LUI_GRID_SIZE);
-
-		for (var _x = 0; _x <= _width; ++_x) {
-			var _x_pos = _x * LUI_GRID_SIZE;
-			draw_line(_x_pos, 0, _x_pos, _gui_height);
-
-			for (var _y = 0; _y <= _height; ++_y) {
-				var _y_pos = _y * LUI_GRID_SIZE;
-
-				if _x == 0 {
-					draw_line(0, _y_pos, _gui_width, _y_pos);
-				}
-
-				var _array = [];
-				if _x < array_length(self._screen_grid) && _y < array_length(self._screen_grid[_x]) {
-					_array = self._screen_grid[_x][_y];
-				}
-				draw_text(_x_pos + 2, _y_pos + 1, $"{_x}_{_y}");
-
-				var _elements_in_cell = array_length(_array);
-				for (var i = 0, n = min(18, _elements_in_cell); i < n; ++i) {
-					if i mod 2 == 0 {
-						draw_set_color(c_orange);
-					} else {
-						draw_set_color(c_red);
-					}
-					draw_text(_x_pos + 2, _y_pos + 1 + 12 + 6 * i, string_copy(_array[i].name, 0, 18));
-				}
-				draw_set_color(c_red);
-				if _elements_in_cell > 18 {
-					draw_text(_x_pos + 2, _y_pos + 1 + 12 + 6 * 18, $"and {_elements_in_cell - 18} elements...");
-				}
-			}
-		}
-	};
 
 	// CLEANUP
 

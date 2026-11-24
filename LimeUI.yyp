@@ -71,6 +71,7 @@
     {"id":{"name":"LimekysResolutionManager","path":"scripts/LimekysResolutionManager/LimekysResolutionManager.yy",},},
     {"id":{"name":"LimekysUsefulFunctions","path":"scripts/LimekysUsefulFunctions/LimekysUsefulFunctions.yy",},},
     {"id":{"name":"LuiAdditional","path":"scripts/LuiAdditional/LuiAdditional.yy",},},
+    {"id":{"name":"LuiDiagnostics","path":"scripts/LuiDiagnostics/LuiDiagnostics.yy",},},
     {"id":{"name":"LuiBase","path":"scripts/LuiBase/LuiBase.yy",},},
     {"id":{"name":"LuiBox","path":"scripts/LuiBox/LuiBox.yy",},},
     {"id":{"name":"LuiButton","path":"scripts/LuiButton/LuiButton.yy",},},

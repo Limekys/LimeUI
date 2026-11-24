@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"LuiDiagnostics",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"LuiDiagnostics",
+  "parent":{
+    "name":"Core",
+    "path":"folders/Limekys/LimeUI/Core.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
