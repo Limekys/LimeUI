@@ -190,17 +190,18 @@ function LuiTabs(_params = {}) : LuiBase(_params) constructor {
 
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		//Base
 		if !is_undefined(_style.sprite_tabs) {
 			var _blend_color = _style.color_primary;//self.nesting_level == 0 ? _style.color_primary : merge_color(_style.color_primary, _style.color_secondary, 0.25);
 			if self.deactivated {
 				_blend_color = merge_color(_blend_color, c_black, 0.5);
 			}
-			draw_sprite_stretched_ext(_style.sprite_tabs, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_tabs, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _blend_color, _alpha);
 		}
 		//Border
 		if !is_undefined(_style.sprite_tabs_border) {
-			draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_tabs_border, 0, self.x, self.y + self.tab_height + self.tab_indent, self.width, self.height - self.tab_height - self.tab_indent, _style.color_border, _alpha);
 		}
 	}
 
@@ -314,6 +315,7 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		// Calculate colors
 		var _blend_color = self.button_color ?? _style.color_primary;
 		var _blend_text = _style.color_text;
@@ -336,7 +338,7 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 
 		// Base
 		if !is_undefined(_style.sprite_tab) {
-			draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, 1);
+			draw_sprite_stretched_ext(_style.sprite_tab, 0, self.x, self.y, self.width, self.height, _blend_color, _alpha);
 		}
 
 		// Icon and text
@@ -344,7 +346,7 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 
 		// Border
 		if !is_undefined(_style.sprite_tab_border) {
-			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, 1);
+			draw_sprite_stretched_ext(_style.sprite_tab_border, 0, self.x, self.y, self.width, self.height, _style.color_border, _alpha);
 		}
 	}
 

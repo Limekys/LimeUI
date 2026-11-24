@@ -1477,7 +1477,7 @@ function LuiBase(_params = {}) constructor {
 		delete self.prev_view_region; self.prev_view_region = undefined;
 		delete self._value_binding; self._value_binding = undefined;
 		delete self.data; self.data = undefined;
-		self.event_listeners = {}
+		self.event_listeners = {};
 		if !is_undefined(self.main_ui) {
 			self.main_ui.element_count--;
 		}

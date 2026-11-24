@@ -28,8 +28,10 @@ function LuiBox(_params = {}) : LuiBase(_params) constructor {
 	// DRAW
 
 	self.draw = function() {
-		draw_set_alpha(self.alpha);
+		var _alpha = draw_get_alpha();
+		draw_set_alpha(self.alpha * _alpha);
 		draw_set_color(self.color);
 		draw_rectangle(self.x, self.y, self.x + self.width, self.y + self.height, false);
+		draw_set_alpha(_alpha);
 	}
 }

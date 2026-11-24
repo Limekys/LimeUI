@@ -148,9 +148,9 @@ function LuiWindow(_params = {}) : LuiBase(_params) constructor {
 		_e.visual_alpha = 0;
 		_e.visual_scale_x = 0.75;
 		_e.visual_scale_y = 0.75;
-		self.main_ui.animate(_e, "visual_alpha", 1, 0.25);
-		self.main_ui.animate(_e, "visual_scale_x", 1, 0.25, global.Ease.OutBack);
-		self.main_ui.animate(_e, "visual_scale_y", 1, 0.25, global.Ease.OutBack);
+		_e.main_ui.animate(_e, "visual_alpha", 1, 0.25);
+		_e.main_ui.animate(_e, "visual_scale_x", 1, 0.25, global.Ease.OutBack);
+		_e.main_ui.animate(_e, "visual_scale_y", 1, 0.25, global.Ease.OutBack);
 
 		// Window settings
 		if _e.auto_width {
@@ -193,6 +193,7 @@ function LuiWindow(_params = {}) : LuiBase(_params) constructor {
 ///@desc Header for LuiWindow, handles dragging and contains title/buttons
 /// Available parameters:
 /// title
+/// show_controls
 ///@arg {Struct} [_params] Struct with parameters
 function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 	// STATE
