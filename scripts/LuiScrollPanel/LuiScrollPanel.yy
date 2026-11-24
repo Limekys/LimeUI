@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"LuiScrollPanel",
   "parent":{
-    "name":"Widgets",
-    "path":"folders/Limekys/LimeUI/Widgets.yy",
+    "name":"Layout",
+    "path":"folders/Limekys/LimeUI/Components/Layout.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
