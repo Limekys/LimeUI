@@ -125,7 +125,8 @@ function LuiBase(_params = {}) constructor {
 	self._tc_result = "";
 
 	// Screen grid system
-	self._grid_location = []; 						//Screen grid to optimize the search for items under the mouse cursor
+	self._grid_location = []; //Screen grid to optimize the search for items under the mouse cursor
+	
 	// View region system
 	self.view_region = {
 		x1: 0,
@@ -133,18 +134,21 @@ function LuiBase(_params = {}) constructor {
 		x2: 10000,
 		y2: 10000
 	};
-	self.prev_view_region = {
+	self.prev_view_region = { //???// Can be used for some events
 		x1: 0,
 		y1: 0,
 		x2: 10000,
 		y2: 10000
 	};
+	
 	// Region to which children are cropped (differs from view_region only for non-clipping parents)
 	self.child_region = { x1: 0, y1: 0, x2: 10000, y2: 10000 };
 	self.is_visible_in_region = false;
+	
 	// Depth system
 	self.nesting_level = 0;
 	self.depth_array = [];
+	
 	// Dragging system
 	self.can_drag = false;
 	self.is_dragging = false;
