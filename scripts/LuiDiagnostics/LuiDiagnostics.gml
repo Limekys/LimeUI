@@ -16,9 +16,10 @@ function _luiDrawDiagnostics(_ui) {
 	if global.lui_debug_render_grid {
 		_luiDrawScreenGrid(_ui);
 	}
-	var _hovered = _ui.topmost_hovered_element;
-	if global.lui_debug_mode != 0 && !is_undefined(_hovered) && !_hovered.is_destroyed {
-		_luiRenderDebugInfo(_hovered, device_mouse_x_to_gui(0) + 32, device_mouse_y_to_gui(0) + 32);
+	if _ui.visible && global.lui_debug_mode != 0 {
+		_luiDrawCursorInspector(_ui);
+	} else {
+		_ui._debug_cursor_index = 0;
 	}
 
 	draw_set_font(_font);
@@ -30,8 +31,6 @@ function _luiDrawDiagnostics(_ui) {
 
 
 ///@desc Renders debug info for the element (rectangles and text)
-///@arg {real} _x X-coordinate for rendering (default 0)
-///@arg {real} _y Y-coordinate for rendering (default 0)
 ///@ignore
 function _luiRenderDebug(_node) {
 
@@ -51,64 +50,153 @@ function _luiRenderDebug(_node) {
 	_luiRenderDebugRectangles(_node, _x, _y);
 
 	// Margin, border, padding
-	if global.lui_debug_mode == 2 {
+	if global.lui_debug_mode >= 2 {
 		_luiRenderDebugRectMargin(_node, _x, _y);
 		_luiRenderDebugRectBorder(_node, _x, _y);
 		_luiRenderDebugRectPadding(_node, _x, _y);
 	}
 
-	// Draw debug text info
-	if global.lui_debug_mode == 3 {
-		_luiRenderDebugInfo(_node, _x, _y);
-	}
 
 	for (var i = 0, n = array_length(_node.content); i < n; i++) {
 		_luiRenderDebug(_node.content[i]);
 	}
 }
 
-///@desc Renders debug text information for the element
-///@arg {real} _x X-coordinate for rendering (default 0)
-///@arg {real} _y Y-coordinate for rendering (default 0)
 ///@ignore
-function _luiRenderDebugInfo(_node, _x = 0, _y = 0) {
-	var _style = _node.getStyle();
-	// Set font if defined
-	if !is_undefined(_style) && !is_undefined(_style.font_debug) {
-		draw_set_font(_style.font_debug);
+function _luiDrawCursorInspector(_ui) {
+	var _mouse_x = device_mouse_x_to_gui(0);
+	var _mouse_y = device_mouse_y_to_gui(0);
+	var _grid = _ui._screen_grid;
+	var _cx = floor(_mouse_x / LUI_GRID_SIZE);
+	var _cy = floor(_mouse_y / LUI_GRID_SIZE);
+	if _cx < 0 || _cx >= array_length(_grid) return;
+	var _column = _grid[_cx];
+	if _cy < 0 || _cy >= array_length(_column) return;
+
+	var _hits = [];
+	var _cell = _column[_cy];
+	for (var i = 0, n = array_length(_cell); i < n; i++) {
+		var _element = _cell[i];
+		if _element.is_destroyed || !_element.visible || !_element._intersects_clip_region continue;
+		var _bounds = _element._visible_bounds;
+		if _mouse_x < _bounds.x1 || _mouse_y < _bounds.y1 || _mouse_x >= _bounds.x2 || _mouse_y >= _bounds.y2 continue;
+		var _modal_depth = -1;
+		for (var j = array_length(_ui._modal_stack) - 1; j >= 0; j--) {
+			if _ui._isInSubtree(_element, _ui._modal_stack[j].dialog) {
+				_modal_depth = j;
+				break;
+			}
+		}
+		array_push(_hits, {element: _element, modal_depth: _modal_depth});
 	}
 
-	// Remember previous colors
-	var _prev_color = draw_get_color();
-	var _prev_alpha = draw_get_alpha();
+	var _count = array_length(_hits);
+	if _count == 0 {
+		_ui._debug_cursor_index = 0;
+		return;
+	}
+	array_sort(_hits, function(_a, _b) {
+		var _modal_order = _b.modal_depth - _a.modal_depth;
+		if _modal_order != 0 return _modal_order;
+		return _a.element._compareDepthArrays(_b.element._z_order_path, _a.element._z_order_path);
+	});
 
-	// Set colors based on mouse hover
-	if _node.isMouseHovered() {
-		draw_set_alpha(1);
-		draw_set_color(c_red);
-	} else {
-		draw_set_alpha(0.5);
-		draw_set_color(make_color_hsv(_node.element_id * 20 % 255, 255, 255));
+	var _direction = keyboard_check_pressed(vk_pagedown) - keyboard_check_pressed(vk_pageup);
+	var _index = clamp(_ui._debug_cursor_index + _direction, 0, _count - 1);
+	_ui._debug_cursor_index = _index;
+	var _first = clamp(_index - 2, 0, max(0, _count - 5));
+	var _end = min(_first + 5, _count);
+	var _text = "Under cursor " + string(_index + 1) + "/" + string(_count);
+	if _count > 1 {
+		_text += "   PgUp / PgDn";
+	}
+	for (var i = _first; i < _end; i++) {
+		var _element = _hits[i].element;
+		var _prefix = i == _index ? "> " : "  ";
+		_text += "\n" + _prefix + instanceof(_element) + " #" + string(_element.element_id)
+			+ " " + string_copy(string(_element.name), 1, 28);
+	}
+	var _selected = _hits[_index].element;
+	draw_set_font(fDebug);
+	draw_set_alpha(0.95);
+	draw_set_halign(fa_left);
+	draw_set_valign(fa_top);
+	var _detail = _luiGetDebugInfo(_ui, _selected);
+	if global.lui_debug_mode == 3 {
+		draw_set_color(c_yellow);
+		var _bounds = _selected._visible_bounds;
+		draw_rectangle(_bounds.x1, _bounds.y1, _bounds.x2, _bounds.y2, true);
+	}
+	_luiDrawDebugText(_mouse_x + 24, _mouse_y + 24, _text + "\n\n" + _detail);
+}
+
+///@desc Builds detailed information for the selected element
+///@ignore
+function _luiGetDebugInfo(_ui, _node) {
+	var _path = "";
+	var _ancestor = _node;
+	while !is_undefined(_ancestor) && _ancestor != _ui {
+		var _segment = _ancestor.name == LUI_AUTO_NAME ? instanceof(_ancestor) : string(_ancestor.name);
+		_path = _path == "" ? _segment : _segment + " > " + _path;
+		_ancestor = _ancestor.parent;
 	}
 
-	// Draw debug text
-	_luiDrawDebugText(_x, _y,
-		"id: " + string(_node.element_id) + "\n" +
-		"name: " + string(_node.name) + "\n" +
-		"class: " + instanceof(_node) + "\n" +
-		"x: " + string(_node.x) + (_node.auto_x ? " (auto)" : "") + " y: " + string(_node.y) + (_node.auto_y ? " (auto)" : "") + "\n" +
-		"w: " + string(_node.width) + (_node.auto_width ? " (auto)" : "") + " h: " + string(_node.height) + (_node.auto_height ? " (auto)" : "") + "\n" +
-		"min_w: " + string(_node.min_width) + " min_h: " + string(_node.min_height) + " max_w: " + string(_node.max_width) + " max_h: " + string(_node.max_height) + "\n" +
-		"v: " + string(_node.value) + "\n" +
-		"content: " + string(array_length(_node.content)) + "/" + string(array_length(_node.delayed_content)) + "\n" +
-		"parent: " + (is_undefined(_node.parent) ? "undefined" : _node.parent.name) + "\n" +
-		"z: " + string(_node.z) + " " + string(_node._z_order_path) + "\n" +
-		"nesting_level: " + string(_node.nesting_level)
-	);
+	var _bounds = _node._visible_bounds;
+	var _visible_w = max(0, _bounds.x2 - _bounds.x1);
+	var _visible_h = max(0, _bounds.y2 - _bounds.y1);
+	var _visibility = _visible_w < _node.width || _visible_h < _node.height ? " (clipped)" : "";
+	var _flex = _node.flex_node;
+	var _width = _luiFormatDebugDimension(flexpanel_node_style_get_width(_flex), "auto");
+	var _height = _luiFormatDebugDimension(flexpanel_node_style_get_height(_flex), "auto");
+	var _min_w = _luiFormatDebugDimension(flexpanel_node_style_get_min_width(_flex), "-");
+	var _min_h = _luiFormatDebugDimension(flexpanel_node_style_get_min_height(_flex), "-");
+	var _max_w = _luiFormatDebugDimension(flexpanel_node_style_get_max_width(_flex), "-");
+	var _max_h = _luiFormatDebugDimension(flexpanel_node_style_get_max_height(_flex), "-");
+	var _grow = flexpanel_node_style_get_flex_grow(_flex);
+	var _shrink = flexpanel_node_style_get_flex_shrink(_flex);
 
-	// Reset colors
-	draw_set_color(_prev_color);
-	draw_set_alpha(_prev_alpha);
+	var _target = _ui.topmost_hovered_element;
+	var _target_text = "none";
+	if !is_undefined(_target) && !_target.is_destroyed {
+		_target_text = _target == _node ? "selected element" : instanceof(_target) + " #" + string(_target.element_id);
+	}
+	var _input = "allowed";
+	if _node.deactivated || _ui.deactivated {
+		_input = "disabled";
+	} else if !_ui.isInputAllowed(_node) {
+		_input = "outside active modal";
+	}
+
+	var _info = instanceof(_node) + " #" + string(_node.element_id) + "  " + string(_node.name)
+		+ "\nPath: " + _path
+		+ $"\nGUI: ({_node.x}, {_node.y})  {_node.width} x {_node.height}"
+		+ $"\nVisible: {_visible_w} x {_visible_h}" + _visibility
+		+ $"\nRequested: {_width} x {_height}"
+		+ $"\nMin: {_min_w} x {_min_h}   Max: {_max_w} x {_max_h}"
+		+ $"\nFlex grow: {_grow}   shrink: {_shrink}"
+		+ "\nPointer target: " + _target_text
+		+ "\nInput: " + _input + (_node.ignore_mouse ? "   Pointer: pass-through" : "")
+		+ "\nFocus: " + (_node.has_focus ? "yes" : "no")
+		+ "   Pressed: " + (_node.is_pressed ? "yes" : "no");
+
+	if global.lui_debug_mode == 3 {
+		var _cache = "off";
+		if _node.cache_as_surface {
+			_cache = _node._is_cache_dirty ? "dirty" : "clean";
+		}
+		_info += "\nZ path: " + string(_node._z_order_path)
+			+ "\nChildren: " + string(array_length(_node.content))
+			+ "   Pending batches: " + string(array_length(_node.delayed_content))
+			+ "   Explicit cache: " + _cache;
+	}
+	return _info;
+}
+
+///@ignore
+function _luiFormatDebugDimension(_size, _fallback) {
+	if _size.unit == flexpanel_unit.percent return string(_size.value) + "%";
+	if _size.unit == flexpanel_unit.point && !is_nan(_size.value) return string(_size.value);
+	return _fallback;
 }
 
 ///@desc Renders debug rectangles for element boundaries and view region
@@ -272,16 +360,58 @@ function _luiRenderDebugRectMargin(_node, _x = 0, _y = 0) {
 ///@desc Draw debug text
 ///@ignore
 function _luiDrawDebugText(_x, _y, _text) {
-	var _text_width = string_width(_text);
-	var _text_height = string_height(_text);
-	_x = clamp(_x, 0, display_get_gui_width() - _text_width);
-	_y = clamp(_y, 0, display_get_gui_height() - _text_height);
+	var _padding = 8;
+	var _wrap_width = max(1, min(400, display_get_gui_width()) - 2 * _padding);
+	var _lines = [];
+	var _text_width = 0;
+	var _in_details = false;
+	var _source_lines = string_split(_text, "\n");
+	for (var i = 0, n = array_length(_source_lines); i < n; i++) {
+		var _remaining = _source_lines[i];
+		var _color = c_white;
+		if i == 0 {
+			_color = #8FD8FF;
+		} else if !_in_details {
+			_color = string_char_at(_remaining, 1) == ">" ? #FFD580 : #ADB9CA;
+		}
+		if _remaining == "" {
+			_in_details = true;
+		}
+
+		while string_width(_remaining) > _wrap_width {
+			var _split = 1;
+			var _space = 0;
+			for (var j = 2, _length = string_length(_remaining); j <= _length; j++) {
+				if string_width(string_copy(_remaining, 1, j)) > _wrap_width {
+					break;
+				}
+				_split = j;
+				if string_char_at(_remaining, j) == " " {
+					_space = j;
+				}
+			}
+			var _line = string_copy(_remaining, 1, _space > 0 ? _space - 1 : _split);
+			array_push(_lines, {text: _line, color: _color});
+			_text_width = max(_text_width, string_width(_line));
+			_remaining = string_delete(_remaining, 1, _space > 0 ? _space : _split);
+		}
+		array_push(_lines, {text: _remaining, color: _color});
+		_text_width = max(_text_width, string_width(_remaining));
+	}
+
+	var _line_height = string_height("Ag") + 2;
+	var _card_width = min(_wrap_width, _text_width) + 2 * _padding;
+	var _card_height = array_length(_lines) * _line_height + 2 * _padding;
+	_x = clamp(_x, 0, max(0, display_get_gui_width() - _card_width));
+	_y = clamp(_y, 0, max(0, display_get_gui_height() - _card_height));
 	draw_set_color(c_black);
-	draw_rectangle(_x, _y, _x + _text_width + 1, _y + _text_height + 1, false);
+	draw_rectangle(_x, _y, _x + _card_width, _y + _card_height, false);
 	draw_set_halign(fa_left);
 	draw_set_valign(fa_top);
-	draw_set_color(c_white);
-	draw_text(_x + 1, _y + 1, _text);
+	for (var i = 0, n = array_length(_lines); i < n; i++) {
+		draw_set_color(_lines[i].color);
+		draw_text(_x + _padding, _y + _padding + i * _line_height, _lines[i].text);
+	}
 }
 
 

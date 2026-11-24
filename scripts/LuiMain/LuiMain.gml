@@ -29,6 +29,7 @@ function LuiMain() : LuiBase() constructor {
 	self._text_input_active = false;
 	self._flex_layout_dirty = true;
 	self.current_debug_mode = 0;
+	self._debug_cursor_index = 0;
 	self.active_animations = [];
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
