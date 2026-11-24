@@ -929,7 +929,7 @@ function LuiBase(_params = {}) constructor {
 		var _flex_node = self.flex_node;
 		if flexpanel_node_style_get_display(_flex_node) != _flex_display {
 			flexpanel_node_style_set_display(_flex_node, _flex_display);
-			self.updateMainUiFlex(true);
+			self.updateMainUiFlex();
 			self.requestContentUpdate(true);
 		}
 		return self;
@@ -994,7 +994,7 @@ function LuiBase(_params = {}) constructor {
 		self._style_dirty = true;
 		self._propagateStyleToChildren();
 		self._applyStyles();
-		self.updateMainUiFlex(!is_undefined(self.parent));
+		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -1013,7 +1013,7 @@ function LuiBase(_params = {}) constructor {
 		}
 		self._style_dirty = true;
 		self._applyStyles();
-		self.updateMainUiFlex(!is_undefined(self.parent));
+		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -1024,7 +1024,7 @@ function LuiBase(_params = {}) constructor {
 		self._style_dirty = true;
 		self._applyStyles(true);
 		self._propagateStyleToChildren(true);
-		self.updateMainUiFlex(!is_undefined(self.parent));
+		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		return self;
 	}
@@ -1422,7 +1422,7 @@ function LuiBase(_params = {}) constructor {
 		if !is_undefined(self.parent) {
 			self.parent.requestContentUpdate(true);
 		}
-		self.updateMainUiFlex(true);
+		self.updateMainUiFlex();
 		self.updateMainUiSurface();
 		// Delete flex_node
 		if !is_undefined(self.flex_node) {
@@ -1869,19 +1869,13 @@ function LuiBase(_params = {}) constructor {
 		}
 	}
 
-	///@desc Add element to main ui list for update flex
+	///@desc Requests a Flex layout pass for the UI.
+	///@arg {Bool} [_update_parent] Legacy argument retained for compatibility
+	///@return {Struct} This element
 	static updateMainUiFlex = function(_update_parent = false) {
-		if is_undefined(self.main_ui) return self;
-
-		var _element_to_update = self;
-
-		if _update_parent {
-			if !is_undefined(_element_to_update) {
-				_element_to_update = _element_to_update.parent;
-			}
+		if !is_undefined(self.main_ui) {
+			self.main_ui.needs_update_flex = true;
 		}
-
-		self.main_ui._addFlexUpdate(_element_to_update);
 		return self;
 	}
 

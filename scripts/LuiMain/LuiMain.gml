@@ -29,7 +29,6 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
 	self._screen_grid = [];
-	self.elements_to_update_flex = [];
 	self._scroll_updates = [];
 	self._layout_revision = 0;
 	self._baking = false;
@@ -64,11 +63,15 @@ function LuiMain() : LuiBase() constructor {
 		return self;
 	}
 
-	///@desc Add element to list for update flex node
+	///@desc Calculates and applies each requested Flex layout from the root.
 	///@ignore
-	static _addFlexUpdate = function(_element) {
-		array_push(self.elements_to_update_flex, _element);
-		self.elements_to_update_flex = array_unique(self.elements_to_update_flex);
+	static _flushFlexLayout = function() {
+		// Allow one follow-up pass for requests raised by layout callbacks.
+		for (var _pass = 0; _pass < 2 && self.needs_update_flex; _pass++) {
+			self.needs_update_flex = false;
+			self._calculateLayout();
+			self._updateFlex();
+		}
 	}
 
 	self._recalculateScreenGrid();
@@ -437,25 +440,7 @@ function LuiMain() : LuiBase() constructor {
 
 		var _layout_start = _measure ? get_timer() : 0;
 
-		// Update layout and all flex data
-		if self.needs_update_flex {
-			self.needs_update_flex = false;
-			self._calculateLayout();
-			self._updateFlex();
-		}
-
-		// Apply callback-generated requests only after recalculating their layout.
-		// Allow one follow-up pass in the same frame and keep any remaining requests queued.
-		for (var _pass = 0; _pass < 2 && array_length(self.elements_to_update_flex) > 0; _pass++) {
-			var _pending = self.elements_to_update_flex;
-			self.elements_to_update_flex = [];
-			self._calculateLayout();
-			while array_length(_pending) > 0 {
-				var _e = array_pop(_pending);
-				if is_undefined(_e) || _e.is_destroyed continue;
-				_e._updateFlex();
-			}
-		}
+		self._flushFlexLayout();
 
 		var _scrolled = self._scroll_updates;
 		self._scroll_updates = [];
@@ -501,10 +486,8 @@ function LuiMain() : LuiBase() constructor {
 		if self.visible {
 
 			// Force initial layout if it was not calculated yet
-			if self.needs_update_flex {
-				self.needs_update_flex = false;
-				self._calculateLayout();
-				self._updateFlex();
+			if self._layout_revision == 0 {
+				self._flushFlexLayout();
 			}
 
 			// Root container is always visible
