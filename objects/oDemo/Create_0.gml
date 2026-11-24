@@ -167,11 +167,10 @@ createNewScrollWindow = function() {
 			new LuiToggleSwitch({text: "Bottom right"})
 		])
 	]);
-	var _panel = new LuiPanel({scroll_x: true, scroll_y: true}).setPadding(8).addContent(_content);
 	my_ui.addContent(
 		new LuiWindow({x: 500 + irandom(100), y: 340 + irandom(100), width: 300, height: 300,
-			min_width: 300, min_height: 300, title: "Two-axis scrolling", allow_resize: true})
-			.setCacheAsSurface(true).addContent(_panel)
+			min_width: 300, min_height: 300, title: "Two-axis scrolling", allow_resize: true, scroll_x: true, scroll_y: true})
+			.setCacheAsSurface(true).setPadding(8).addContent(_content)
 	);
 }
 

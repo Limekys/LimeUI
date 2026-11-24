@@ -2,8 +2,10 @@
 /// Available parameters:
 /// tab_height
 /// tab_indent
+/// scroll_x
+/// scroll_y
 ///@arg {Struct} [_params] Struct with parameters
-function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
+function LuiTabs(_params = {}) : LuiBase(_params) constructor {
 	// STATE
 
 	self.tab_height = _params[$ "tab_height"] ?? LUI_AUTO;
@@ -11,10 +13,19 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 
 	self.tabs = [];
 	self.tabs_header = undefined;
+	self._pages_host = undefined;
+	self._page_scroll_x = _params[$ "scroll_x"] ?? false;
+	self._page_scroll_y = _params[$ "scroll_y"] ?? false;
 	self.active_tab = undefined;
 	self._viewport_resize_handler = undefined;
 
 	// PUBLIC API
+
+	///@desc Returns the container that holds the tab pages.
+	self.getContainer = function() {
+		self._initPagesHost();
+		return self._pages_host.getContainer();
+	}
 
 	///@desc Set tabs height
 	///@arg {real} _tab_height
@@ -30,7 +41,8 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	///@arg {real} _tab_indent
 	static setTabIndent = function(_tab_indent) {
 		self.tab_indent = _tab_indent;
-		self.setGap(self.tab_indent);
+		flexpanel_node_style_set_gap(self.flex_node, flexpanel_gutter.all_gutters, self.tab_indent);
+		self.requestFlexLayout();
 		if !is_undefined(self.tabs_header) {
 			self.tabs_header.setGap(self.tab_indent);
 		}
@@ -129,10 +141,18 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	// INTERNALS
 
 	///@ignore
+	static _initPagesHost = function() {
+		if !is_undefined(self._pages_host) return;
+		self._pages_host = new LuiScrollArea({scroll_x: self._page_scroll_x, scroll_y: self._page_scroll_y});
+		self._pages_host.setFlexGrow(1).setLocalStyle({margin: 0, padding: 0, border: 0, gap: 0});
+		self.setContainer(self._pages_host);
+	}
+
+	///@ignore
 	static _attachTab = function(_tab) {
 		if _tab.is_destroyed || !is_undefined(_tab.main_ui) return;
 		_tab._initContainer();
-		self.addContentDirect(_tab.tab_container);
+		self.addContent(_tab.tab_container);
 		self.tabs_header.addContent(_tab);
 		if is_undefined(self.active_tab) {
 			self.switchTab(_tab);
@@ -187,10 +207,10 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	// EVENT HANDLERS
 
 	self.addEvent(LUI_EV_CREATE, function(_e) {
-		// Setting up padding for tabs
-		_e.setPadding(0).setGap(_e.tab_indent);
+		flexpanel_node_style_set_gap(_e.flex_node, flexpanel_gutter.all_gutters, _e.tab_indent);
 		_e.tabs_header = new LuiRow({height: _e.tab_height}).setGap(_e.tab_indent).setMinHeight(_e.tab_height);
-		_e.addContentDirect(_e.tabs_header);
+		_e._initPagesHost();
+		_e.addContentDirect([_e.tabs_header, _e._pages_host]);
 		var _tabs = _e.tabs;
 		for (var i = 0, n = array_length(_tabs); i < n; i++) {
 			_e._attachTab(_tabs[i]);
@@ -227,6 +247,9 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		for (var i = 0, n = array_length(_e.tabs); i < n; i++) {
 			_e.tabs[i].destroy();
 		}
+		if !is_undefined(_e._pages_host) && !_e._pages_host.is_destroyed {
+			_e._pages_host.destroy();
+		}
 		_e.tabs = [];
 		_e.active_tab = undefined;
 	});
@@ -250,13 +273,6 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 	self.getContainer = function() {
 		self._initContainer();
 		return self.container;
-	}
-
-	///@desc Works like usual addContent, but redirect add content to tab_container of this tab
-	self.addContent = function(elements) {
-		self._initContainer();
-		self.tab_container.addContent(elements);
-		return self;
 	}
 
 	///@desc Set active state of tab
@@ -287,6 +303,9 @@ function LuiTab(_params = {}) : LuiButton(_params) constructor {
 	static _initContainer = function() {
 		if is_undefined(self.tab_container) {
 			self.tab_container = new LuiContainer({x: 0, y: 0}).setVisible(false).setFlexDisplay(flexpanel_display.none).setFlexGrow(1);
+			self.tab_container.addEvent(LUI_EV_DESTROY, method(self, function(_body) {
+				self.destroy();
+			}));
 			self.setContainer(self.tab_container);
 		}
 	}

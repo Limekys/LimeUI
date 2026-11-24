@@ -1,6 +1,5 @@
 ///@desc A panel with vertical scrolling enabled by default.
 /// Available parameters:
-/// allow_resize
 /// scroll_x
 /// scroll_y
 ///@arg {Struct} [_params] Panel parameters

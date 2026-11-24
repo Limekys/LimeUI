@@ -456,7 +456,7 @@ function LuiMain() : LuiBase() constructor {
 				_container._scroll_owner._applyPendingFocusReveal();
 				_container.invalidateCache();
 				_container._applyLayoutGeometry(true);
-				_container._scroll_owner._updateScrollThumbs();
+				_container._scroll_owner._updateScrollBars();
 			}
 		}
 

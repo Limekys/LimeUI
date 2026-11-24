@@ -304,17 +304,25 @@ my_ui.alert({
 
 # LuiPanel
 
-A visually visible container for placing elements in it.  
-**Available parameters:**  
-allow_resize  
+A framed `LuiScrollArea`. Both scroll axes are disabled by default.
 
-## Methods
-### `setAllowResize`
-Set allow to resize panel or not
+**Available parameters**
 
-**Parameters:**  
-- `{bool} _allow`  
+- `scroll_x`
+- `scroll_y`
 
+# LuiScrollArea
+
+A transparent viewport. Enable either axis to scroll content added with `addContent()`. With both axes disabled, children are attached directly and empty space passes pointer input through.
+
+**Available parameters**
+
+- `scroll_x`
+- `scroll_y`
+
+# LuiScrollBar
+
+`LuiScrollArea` creates one bar for each enabled axis. The bar becomes visible when the content overflows. Click its track to scroll one page or drag its child `LuiScrollThumb` for continuous scrolling.
 
 # LuiProgressBar
 
@@ -565,11 +573,22 @@ Set display text (render right of element)
 
 # LuiWindow
 
-A draggable window with a header, similar to Windows windows  
-**Available parameters:**  
-title  
+A draggable window with a fixed header and an optional scrollable body.
+
+**Available parameters**
+
+- `title`
+- `show_controls`
+- `scroll_x`
+- `scroll_y`
+- `allow_resize`
 
 ## Methods
+
+### `setAllowResize(_allow)`
+
+Enable or disable the bottom-right resize handle. The `resize_handle_size` style sets its width and height (16 by default).
+
 ### `setTitle`
 Set window title
 

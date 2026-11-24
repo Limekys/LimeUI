@@ -22,6 +22,8 @@ LimeUI includes a variety of UI components to build flexible interfaces:
 - LuiColumn
 - LuiRow
 - LuiPanel
+- LuiScrollArea
+- LuiScrollBar
 - LuiScrollPanel
 - LuiTabs
 - LuiWindow

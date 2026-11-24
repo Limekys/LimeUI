@@ -52,6 +52,7 @@
     {"name":"LuiProgressBar","order":1,"path":"scripts/LuiProgressBar/LuiProgressBar.yy",},
     {"name":"LuiProgressRing","order":2,"path":"scripts/LuiProgressRing/LuiProgressRing.yy",},
     {"name":"LuiRenderUtils","order":6,"path":"scripts/LuiRenderUtils/LuiRenderUtils.yy",},
+    {"name":"LuiScrollArea","order":5,"path":"scripts/LuiScrollArea/LuiScrollArea.yy",},
     {"name":"LuiScrollPanel","order":4,"path":"scripts/LuiScrollPanel/LuiScrollPanel.yy",},
     {"name":"LuiSettings","order":3,"path":"scripts/LuiSettings/LuiSettings.yy",},
     {"name":"LuiSlider","order":4,"path":"scripts/LuiSlider/LuiSlider.yy",},

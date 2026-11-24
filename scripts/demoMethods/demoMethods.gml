@@ -166,6 +166,70 @@ function demoBuildListBenchmark(_tab) {
 	return _panel;
 }
 
+///@desc Checks content routing and destruction for composite widgets.
+///@arg {Struct} _ui Demo UI root
+function demoCheckContentContracts(_ui) {
+	var _tab = new LuiTab({text: "Contract check"});
+	var _tabs = new LuiTabs({scroll_y: true}).addTab(_tab);
+	var _window = new LuiWindow({width: 300, height: 300, scroll_x: true, scroll_y: true, allow_resize: true});
+	var _plain_area = new LuiScrollArea();
+	var _scroll_area = new LuiScrollArea({scroll_x: true, scroll_y: true});
+	var _fixtures = [new LuiPanel(), new LuiPanel({scroll_y: true}), _window, _tab, _plain_area, _scroll_area];
+	var _passed = true;
+
+	for (var i = 0, n = array_length(_fixtures); i < n; i++) {
+		var _widget = _fixtures[i];
+		var _first = new LuiBox();
+		var _last = new LuiBox();
+		var _direct = new LuiBox();
+		_widget.addContent(_first).addContentDirect(_direct);
+		_ui.addContent(_widget == _tab ? _tabs : _widget);
+		_widget.addContent(_last);
+
+		var _container = _widget.getContainer();
+		var _direct_is_content = _container == _widget;
+		var _content = _widget.getContent();
+		var _valid = _first.parent == _container && _last.parent == _container && _direct.parent == _widget
+			&& _widget.getFirst() == _first && _widget.getLast() == _last
+			&& array_contains(_content, _direct) == _direct_is_content;
+		_widget.destroyContent();
+		_valid = _valid && _first.is_destroyed && _last.is_destroyed
+			&& _direct.is_destroyed == _direct_is_content && array_length(_widget.getContent()) == 0;
+		if _widget == _window {
+			var _handle = _window.resizer;
+			_valid = _valid && !_window.window_header.is_destroyed && !_window.window_container.is_destroyed
+				&& is_instanceof(_window.window_container, LuiScrollArea)
+				&& !is_undefined(_handle) && _handle.parent == _window && _handle.z > _window.window_container.z;
+			_window.setAllowResize(false);
+			_valid = _valid && !is_undefined(_handle) && _handle.is_destroyed && is_undefined(_window.resizer);
+			_window.setAllowResize(true);
+			_valid = _valid && !is_undefined(_window.resizer) && _window.resizer != _handle;
+		}
+		if _widget == _plain_area {
+			_valid = _valid && _direct_is_content && _plain_area.ignore_mouse && is_undefined(_plain_area.step);
+		}
+		if _widget == _scroll_area {
+			_valid = _valid && !_direct_is_content && !_scroll_area.ignore_mouse
+				&& _container._scroll_owner == _scroll_area && _scroll_area._scroll_bar_x.parent == _scroll_area
+				&& _scroll_area._scroll_bar_y.parent == _scroll_area
+				&& is_instanceof(_scroll_area._scroll_bar_x.getFirst(), LuiScrollThumb)
+				&& is_instanceof(_scroll_area._scroll_bar_y.getFirst(), LuiScrollThumb);
+		}
+		if _widget == _tab {
+			_tabs.destroyContent();
+			_valid = _valid && _tab.is_destroyed && !_tabs.tabs_header.is_destroyed
+				&& is_instanceof(_tabs._pages_host, LuiScrollArea) && !_tabs._pages_host.is_destroyed
+				&& array_length(_tabs.tabs) == 0 && is_undefined(_tabs.active_tab);
+			_tabs.destroy();
+		} else {
+			_widget.destroy();
+		}
+		show_debug_message($"LimeUI content check {i + 1}: " + (_valid ? "PASS" : "FAIL"));
+		_passed = _passed && _valid;
+	}
+	show_debug_message("LimeUI content contracts: " + (_passed ? "PASS" : "FAIL"));
+}
+
 ///@desc Creates the mixed-widget stress test in its own scroll panel.
 ///@arg {Struct} _tab Tab that hosts the stress test
 ///@return {Struct} The stress test panel

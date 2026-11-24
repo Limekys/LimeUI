@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"LuiScrollArea",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"LuiScrollArea",
+  "parent":{
+    "name":"Layout",
+    "path":"folders/Limekys/LimeUI/Components/Layout.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

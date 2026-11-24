@@ -1,5 +1,9 @@
 LIME_RESOLUTION.update();
 
+if keyboard_check_pressed(vk_f9) {
+	demoCheckContentContracts(my_ui);
+}
+
 if tabs.active_tab == tab_stress_test && is_undefined(stress_test_panel) {
 	stress_test_panel = demoStressTest(tab_stress_test);
 }

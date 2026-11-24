@@ -2,9 +2,15 @@
 /// Available parameters:
 /// title
 /// show_controls
+/// allow_resize
+/// scroll_x
+/// scroll_y
 ///@arg {Struct} [_params] Struct with parameters
-function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
+function LuiWindow(_params = {}) : LuiBase(_params) constructor {
 	// STATE
+
+	self.allow_resize = _params[$ "allow_resize"] ?? false;
+	self.resizer = undefined;
 
 	self.setPositionAbsolute();
 
@@ -14,10 +20,30 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	self.is_minimized = false;
 	self.window_header = undefined;
 	self.window_container = undefined;
+	self._body_scroll_x = _params[$ "scroll_x"] ?? false;
+	self._body_scroll_y = _params[$ "scroll_y"] ?? false;
 	self._viewport_align_right = true;
 	self.setKeepInViewport();
 
 	// PUBLIC API
+
+	///@desc Enables or disables resizing with the bottom-right handle.
+	///@arg {Bool} _allow Allow pointer resizing
+	///@return {Struct} This element
+	static setAllowResize = function(_allow) {
+		self.allow_resize = _allow;
+		if is_undefined(self.main_ui) || self.is_destroyed return self;
+
+		if _allow && is_undefined(self.resizer) {
+			self.resizer = new LuiResizeHandle(self);
+			self.resizer._applySize(self.getStyle());
+			self.addContentDirect(self.resizer);
+		} else if !_allow && !is_undefined(self.resizer) {
+			self.resizer.destroy();
+			self.resizer = undefined;
+		}
+		return self;
+	}
 
 	///@desc Set window title
 	///@arg {string} _title
@@ -45,14 +71,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	///@desc Change getContainer function for compatibility with setFlex... functions
 	self.getContainer = function() {
 		self._initWindowContainer();
-		return self.container;
-	}
-
-	///@desc Redirect addContent
-	self.addContent = function(elements) {
-		self._initWindowContainer();
-		self.window_container.addContent(elements);
-		return self;
+		return self.window_container.getContainer();
 	}
 
 	///@desc Toggle window show or hide
@@ -83,7 +102,7 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 	///@ignore
 	static _initWindowContainer = function() {
 		if is_undefined(self.window_container) {
-			self.window_container = new LuiContainer().setFlexGrow(1);
+			self.window_container = new LuiScrollArea({scroll_x: self._body_scroll_x, scroll_y: self._body_scroll_y}).setFlexGrow(1);
 			self.setContainer(self.window_container);
 		}
 	}
@@ -143,13 +162,26 @@ function LuiWindow(_params = {}) : LuiPanel(_params) constructor {
 			_e.window_header,
 			_e.window_container
 		]);
+		_e.setAllowResize(_e.allow_resize);
 		_e.bringToFront();
+	});
+
+	self.addEvent(LUI_EV_STYLE_UPDATE, function(_e, _style) {
+		if !is_undefined(_e.resizer) {
+			_e.resizer._applySize(_style);
+		}
 	});
 
 	self.addEvent(LUI_EV_POINTER_DOWN, function(_e, _data) {
 		if _data.button == mb_left {
 			_e.bringToFront();
 			_e.main_ui._raiseOwnedPopups(_e);
+		}
+	});
+
+	self.addEvent(LUI_EV_DESTROY, function(_e) {
+		if !is_undefined(_e.window_container) && !_e.window_container.is_destroyed {
+			_e.window_container.destroy();
 		}
 	});
 }
@@ -223,4 +255,43 @@ function LuiWindowHeader(_params = {}) : LuiBase(_params) constructor {
 			_window._moveInViewport(_window.x + _data.new_x - _e.x, _window.y + _data.new_y - _e.y);
 		}
 	});
+}
+
+///@ignore
+function LuiResizeHandle(_owner) : LuiBase({r: 0, b: 0}) constructor {
+	// STATE
+
+	self._owner = _owner;
+	self._drag_start = undefined;
+	self.can_drag = true;
+	self.setPositionAbsolute().setLocalStyle({padding: 0, border: 0, margin: 0});
+
+	// INTERNALS
+
+	///@ignore
+	static _applySize = function(_style) {
+		var _size = max(1, round(_style.resize_handle_size));
+		self.setMinWidth(_size).setMinHeight(_size).setSize(_size, _size);
+	}
+
+	// EVENT HANDLERS
+
+	self.addEvent(LUI_EV_DRAG_START, function(_e) {
+		_e._drag_start = {x: _e.x, y: _e.y, width: _e._owner.width, height: _e._owner.height};
+	});
+	self.addEvent(LUI_EV_DRAGGING, function(_e, _data) {
+		var _owner = _e._owner;
+		var _start = _e._drag_start;
+		var _width = max(_start.width + _data.new_x - _start.x, _owner.min_width);
+		var _height = max(_start.height + _data.new_y - _start.y, _owner.min_height);
+		_owner.setSize(_width, _height);
+	});
+	if LUI_ALLOW_CHANGE_CURSOR {
+		self.addEvent(LUI_EV_MOUSE_ENTER, function() {
+			window_set_cursor(cr_size_nwse);
+		});
+		self.addEvent(LUI_EV_MOUSE_LEAVE, function() {
+			window_set_cursor(cr_default);
+		});
+	}
 }

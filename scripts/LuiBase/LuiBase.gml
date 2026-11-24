@@ -359,19 +359,27 @@ function LuiBase(_params = {}) constructor {
 		return self.getContainer().content;
 	}
 
-	///@desc Get first element in content array
+	///@desc Returns the first user content element.
 	static getFirst = function() {
-		return array_first(self.content);
+		return array_first(self.getContent());
 	};
 
-	///@desc Get last element in content array
+	///@desc Returns the last user content element.
 	static getLast = function() {
-		return array_last(self.content);
+		return array_last(self.getContent());
 	};
 
 	///@desc Added elements into container of these element
 	///@arg {Any} elements
 	self.addContent = function(elements) {
+		if self.is_destroyed return self;
+		self.getContainer().addContentDirect(elements);
+		return self;
+	}
+
+	///@desc Adds content directly to this element, bypassing its redirected content container.
+	///@arg {Any} elements Element or array of elements
+	self.addContentDirect = function(elements) {
 
 		// Convert to array if one element
 		if !is_array(elements) {
@@ -383,10 +391,7 @@ function LuiBase(_params = {}) constructor {
 
 		// Update array with delayed content for unordered adding
 		if is_undefined(self.main_ui) {
-			if !is_array(self.delayed_content) {
-				self.delayed_content = [];
-			}
-			self.delayed_content = array_concat(self.delayed_content, elements);
+			array_push(self.delayed_content, elements);
 			return self;
 		}
 
@@ -507,10 +512,6 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 
-	///@desc Adds content directly to this element, bypassing its redirected content container.
-	///@arg {Any} elements Element or array of elements
-	self.addContentDirect = method(self, addContent);
-
 	///@desc Use addContentDirect() to add content directly.
 	///@deprecated
 	self.addContentOriginal = function(elements) {
@@ -519,13 +520,8 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Destroys all elements from real element container
 	self.destroyContent = function() {
-		var _content = self.getContent();
-		while (array_length(_content) > 0) {
-			var _element = array_pop(_content);
-			if !is_undefined(_element) {
-				_element.destroy();
-			}
-		}
+		if self.is_destroyed return;
+		self.getContainer()._destroyAllNestedElements();
 	}
 
 	///@desc Requests a content update. Optionally also requests updates on all ancestors.
@@ -1384,9 +1380,10 @@ function LuiBase(_params = {}) constructor {
 	///@desc Adds elements from a delayed array
 	///@ignore
 	static _addDelayedContent = function() {
-		if is_array(self.delayed_content) && array_length(self.delayed_content) > 0 {
-			self.getContainer().addContent(self.delayed_content);
-			self.delayed_content = -1;
+		var _batches = self.delayed_content;
+		self.delayed_content = [];
+		for (var i = 0, n = array_length(_batches); i < n; i++) {
+			self.addContentDirect(_batches[i]);
 		}
 	}
 
@@ -1497,6 +1494,17 @@ function LuiBase(_params = {}) constructor {
 	///@desc Destroys all nested elements
 	///@ignore
 	static _destroyAllNestedElements = function() {
+		var _pending = self.delayed_content;
+		self.delayed_content = [];
+		for (var i = 0, n = array_length(_pending); i < n; i++) {
+			var _batch = _pending[i];
+			for (var j = 0, m = array_length(_batch); j < m; j++) {
+				var _child = _batch[j];
+				if is_struct(_child) && is_instanceof(_child, LuiBase) && is_undefined(_child.main_ui) {
+					_child.destroy();
+				}
+			}
+		}
 		while (array_length(self.content) > 0) {
 			var _element = array_pop(self.content);
 			if !is_undefined(_element) {

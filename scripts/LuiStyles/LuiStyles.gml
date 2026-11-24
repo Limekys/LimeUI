@@ -72,6 +72,7 @@ function LuiStyleDefaults() {
 		border: 0,
 		scroll_step: 32,
 		scroll_slider_width: 16,
+		resize_handle_size: 16,
 		render_region_offset: { left: 0, right: 0, top: 0, bottom: 0 },
 		input_cursor: "|",
 		input_password: "•",
@@ -473,6 +474,14 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
+	///@desc Sets the square resize handle size in GUI units.
+	///@arg {Real} _size Handle size
+	///@return {Struct} This style
+	static setResizeHandleSize = function(_size) {
+		self.resize_handle_size = max(1, round(_size));
+		return self;
+	}
+
 	///@desc Set default render region offset for elements
 	///@arg {struct, array} _region struct{left, right, top, bottom} or array [left, right, top, bottom]
 	static setRenderRegionOffset = function(_region = {left : 0, right : 0, top : 0, bottom : 0}) {
