@@ -105,10 +105,12 @@ tab_search = new LuiTab({text: "Search"});
 tab_sprites = new LuiTab({text: "Sprites"});
 tab_inventory = new LuiTab({text: "Inventory"});
 tab_list_benchmark = new LuiTab({text: "Benchmark"});
+tab_stress_test = new LuiTab({text: "Stress Test"});
+stress_test_panel = undefined;
 tab_about = new LuiTab({text: "About"});
 
 // Add tab's to Tabs
-tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_inventory, tab_list_benchmark, tab_about]);
+tabs.addTabs([tab_panels, tab_search, tab_sprites, tab_inventory, tab_list_benchmark, tab_stress_test, tab_about]);
 demoBuildInventory(tab_inventory);
 my_ui.bindShortcut(ord("I"), function(_ui) {
 	oDemo.tabs.switchTab(oDemo.tab_inventory);
@@ -518,8 +520,6 @@ my_ui.addContent([
 		})
 	])
 ]);
-
-demoStressTest();
 
 // Compare cache modes on the opaque first panel.
 render_benchmark_panel = my_panel;

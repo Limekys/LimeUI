@@ -166,7 +166,10 @@ function demoBuildListBenchmark(_tab) {
 	return _panel;
 }
 
-function demoStressTest() {
+///@desc Creates the mixed-widget stress test in its own scroll panel.
+///@arg {Struct} _tab Tab that hosts the stress test
+///@return {Struct} The stress test panel
+function demoStressTest(_tab) {
 	makeRandomColor = function() {
 		return make_color_hsv(irandom(255), irandom_range(128,255), 255);
 	}
@@ -175,7 +178,7 @@ function demoStressTest() {
 		var _rnd = irandom(7);
 		switch (_rnd) {
 			case 0:	return new LuiButton({height: irandom_range(32, 128), text: "button_" + string(_number)}).setColor(makeRandomColor());
-			case 1:	return new LuiImageButton({height: irandom_range(32, 128), value: sLogoDemo, color: makeRandomColor(), alpha: choose(0.5, 1), maintain_spect: choose(true, false)}).addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeImageButtonColor(_e)});
+			case 1:	return new LuiImageButton({height: irandom_range(32, 128), value: sLogoDemo, color: makeRandomColor(), alpha: choose(0.5, 1), maintain_aspect: choose(true, false)}).addEvent(LUI_EV_CLICK, function(_e) {oDemo.changeImageButtonColor(_e)});
 			case 2:	return new LuiSlider({height: irandom_range(32, 128), max_value: _number, value: random(_number), rounding: choose(25,10,5,2,1,0.5,0.1,0.01)});
 			case 3:	return new LuiInput({height: irandom_range(32, 128), placeholder: choose("", "input_" + string(_number))}).setIncorrect(choose(true, false));
 			case 4:	return new LuiProgressRing({height: irandom_range(32, 128), max_value: _number, value: random(_number), rounding: choose(25,10,5,2,1,0.5,0.1,0.01), display_value: choose(true, false), color: makeRandomColor()});
@@ -184,13 +187,19 @@ function demoStressTest() {
 			case 7:	return new LuiToggleButton({height: irandom_range(32, 128), value: choose(true, false), text: "toggleButton_" + string(_number)}).setColor(makeRandomColor());
 		}
 	}
-	repeat (250) {
-		my_ui.getElement("firstScrollPanel").addContent([
-			new LuiRow().addContent([
-				_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++), [random_range(0.1, 0.3), random_range(0.1, 0.3), random_range(0.1, 0.3)]
-			])
-		])
+	var _rows = array_create(250);
+	for (var i = 0, n = array_length(_rows); i < n; i++) {
+		var _a = random_range(0.1, 0.3);
+		var _b = random_range(0.1, 0.3);
+		var _c = random_range(0.1, 0.3);
+		_rows[i] = new LuiRow().setFlexShrink(0).addContent([
+			_random_element(numb++), _random_element(numb++), _random_element(numb++), _random_element(numb++),
+			[_a, _b, _c, 1 - _a - _b - _c]
+		]);
 	}
+	var _panel = new LuiPanel({scroll_y: true}).addContent(_rows);
+	_tab.addContent(_panel);
+	return _panel;
 }
 
 function demoTestAnim1() {

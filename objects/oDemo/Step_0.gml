@@ -1,5 +1,9 @@
 LIME_RESOLUTION.update();
 
+if tabs.active_tab == tab_stress_test && is_undefined(stress_test_panel) {
+	stress_test_panel = demoStressTest(tab_stress_test);
+}
+
 if !is_undefined(inventory_inspect_message) && inventory_inspect_message.is_destroyed {
 	inventory_inspect_message = undefined;
 }
