@@ -10,6 +10,7 @@ function LuiScrollArea(_params = {}) : LuiBase(_params) constructor {
 
 	self.scroll_x = _params[$ "scroll_x"] ?? false;
 	self.scroll_y = _params[$ "scroll_y"] ?? false;
+	self.ignore_mouse = !self.scroll_x && !self.scroll_y;
 	
 	if self.scroll_x || self.scroll_y {
 		self._clip_children = true;
@@ -73,10 +74,30 @@ function LuiScrollArea(_params = {}) : LuiBase(_params) constructor {
 
 	///@ignore
 	static _requestScrollUpdate = function() {
-		var _queue = self.main_ui._pending_scroll_containers;
-		if !array_contains(_queue, self.scroll_container) {
-			array_push(self.main_ui._pending_scroll_containers, self.scroll_container);
+		var _queue = self.main_ui._pending_scroll_areas;
+		if !array_contains(_queue, self) {
+			array_push(self.main_ui._pending_scroll_areas, self);
 		}
+	}
+
+	///@ignore
+	static _applyScrollUpdate = function() {
+		var _container = self.scroll_container;
+		if _container.is_destroyed return;
+		self._applyPendingFocusReveal();
+		_container.invalidateCache();
+		_container._applyLayoutGeometry(true);
+		self._updateScrollBars();
+	}
+
+	///@ignore
+	static _getLayoutOffset = function() {
+		return {x: self.scroll_offset_x, y: self.scroll_offset_y};
+	}
+
+	///@ignore
+	static _needsScrollBoundsRefresh = function() {
+		return self.scroll_y && !self.scroll_x && self._scroll_layout_revision != self.main_ui._layout_revision;
 	}
 
 	///@ignore
@@ -112,7 +133,12 @@ function LuiScrollArea(_params = {}) : LuiBase(_params) constructor {
 	}
 
 	///@ignore
-	static _updateScrollRows = function(_reuse_bounds, _offset_x, _offset_y) {
+	static _updateScrollChildren = function(_reuse_bounds, _offset_x, _offset_y) {
+		if self.scroll_x || !self.scroll_y {
+			self.scroll_container._applyChildLayoutGeometry(_reuse_bounds, _offset_x, _offset_y);
+			return;
+		}
+
 		var _container = self.scroll_container;
 		var _children = _container.content;
 		var _count = array_length(_children);

@@ -4,6 +4,7 @@
 /// scroll_y
 ///@arg {Struct} [_params] Panel parameters
 function LuiPanel(_params = {}) : LuiScrollArea(_params) constructor {
+	self.ignore_mouse = false;
 
 	// DRAW
 

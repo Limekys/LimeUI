@@ -569,8 +569,9 @@ function LuiBase(_params = {}) constructor {
 		var _node = self;
 		while !is_undefined(_node) {
 			if !is_undefined(_node._scroll_owner) {
-				_bounds.left += _node._scroll_owner.scroll_offset_x;
-				_bounds.top += _node._scroll_owner.scroll_offset_y;
+				var _offset = _node._scroll_owner._getLayoutOffset();
+				_bounds.left += _offset.x;
+				_bounds.top += _offset.y;
 			}
 			if _relative return _bounds;
 			_node = _node.parent;
@@ -1954,20 +1955,21 @@ function LuiBase(_params = {}) constructor {
 			var _ancestor = self.parent;
 			while !is_undefined(_ancestor) {
 				if !is_undefined(_ancestor._scroll_owner) {
-					_offset_x += _ancestor._scroll_owner.scroll_offset_x;
-					_offset_y += _ancestor._scroll_owner.scroll_offset_y;
+					var _ancestor_offset = _ancestor._scroll_owner._getLayoutOffset();
+					_offset_x += _ancestor_offset.x;
+					_offset_y += _ancestor_offset.y;
 				}
 				_ancestor = _ancestor.parent;
 			}
 		}
 		if !is_undefined(self._scroll_owner) {
-			_offset_x += self._scroll_owner.scroll_offset_x;
-			_offset_y += self._scroll_owner.scroll_offset_y;
+			var _offset = self._scroll_owner._getLayoutOffset();
+			_offset_x += _offset.x;
+			_offset_y += _offset.y;
 		}
 		var _scroll_owner = self._scroll_owner;
-		var _vertical_scroll = !is_undefined(_scroll_owner) && _scroll_owner.scroll_y && !_scroll_owner.scroll_x;
 		if !_scroll_only || is_undefined(self._flex_bounds)
-			|| (_vertical_scroll && _scroll_owner._scroll_layout_revision != self.main_ui._layout_revision) {
+			|| (!is_undefined(_scroll_owner) && _scroll_owner._needsScrollBoundsRefresh()) {
 			self._flex_bounds = flexpanel_node_layout_get_position(self.flex_node, false);
 		}
 		var _pos = self._flex_bounds;
@@ -2045,10 +2047,15 @@ function LuiBase(_params = {}) constructor {
 
 		var _reuse_children = _scroll_only && !self._child_bounds_stale;
 		self._child_bounds_stale = false;
-		if _vertical_scroll {
-			_scroll_owner._updateScrollRows(_reuse_children, _offset_x, _offset_y);
-			return;
+		if !is_undefined(_scroll_owner) {
+			_scroll_owner._updateScrollChildren(_reuse_children, _offset_x, _offset_y);
+		} else {
+			self._applyChildLayoutGeometry(_reuse_children, _offset_x, _offset_y);
 		}
+	}
+
+	///@ignore
+	static _applyChildLayoutGeometry = function(_reuse_children, _offset_x, _offset_y) {
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
 			self.content[i]._applyLayoutGeometry(_reuse_children, _offset_x, _offset_y);
 		}

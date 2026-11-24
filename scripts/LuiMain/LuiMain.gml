@@ -29,7 +29,7 @@ function LuiMain() : LuiBase() constructor {
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
 	self._screen_grid = [];
-	self._pending_scroll_containers = [];
+	self._pending_scroll_areas = [];
 	self._layout_revision = 0;
 	self._is_rendering_to_surface = false;
 	self._backdrop_surface = -1;
@@ -448,16 +448,12 @@ function LuiMain() : LuiBase() constructor {
 
 		self._flushFlexLayout();
 
-		var _scrolled = self._pending_scroll_containers;
-		self._pending_scroll_containers = [];
+		var _scrolled = self._pending_scroll_areas;
+		self._pending_scroll_areas = [];
 		for (var i = 0; i < array_length(_scrolled); i++) {
-			var _container = _scrolled[i];
-			if !_container.is_destroyed {
-				_container._scroll_owner._applyPendingFocusReveal();
-				_container.invalidateCache();
-				_container._applyLayoutGeometry(true);
-				_container._scroll_owner._updateScrollBars();
-			}
+			var _area = _scrolled[i];
+			if _area.is_destroyed continue;
+			_area._applyScrollUpdate();
 		}
 
 		if _measure {
