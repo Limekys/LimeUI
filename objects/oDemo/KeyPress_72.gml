@@ -15,7 +15,7 @@ if !my_ui.isInteractingKeyboard() {
 	
 	//var _element = my_ui.getElement("firstScrollPanel");
 	//if _element != -1 {
-		//print("x: ", _element.x, " y: ", _element.y, " view_region: ", _element.view_region.toString());
+		//print("x: ", _element.x, " y: ", _element.y, " _visible_bounds: ", _element._visible_bounds.toString());
 		//print("cx: ", _element.content[0].x, " cy: ", _element.content[0].y);
 	//}
 	
@@ -30,5 +30,5 @@ if !my_ui.isInteractingKeyboard() {
 	}
 	
 	var _surface_element = my_ui.getElement("LuiSurface");
-	print(_surface_element.view_region);
+	print(_surface_element._visible_bounds);
 }

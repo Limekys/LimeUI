@@ -29,12 +29,12 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
 	self.allowed_chars = _params[$ "allowed_chars"] ?? "";
     
 	self.is_incorrect = false;
-	self.cursor_pointer = "";
+	self._caret_text = "";
 	self.cursor_timer = time_source_create(time_source_game, 0.5, time_source_units_seconds, function() {
-		if self.cursor_pointer == "" {
-			self.cursor_pointer = self.getStyle().input_cursor;
+		if self._caret_text == "" {
+			self._caret_text = self.getStyle().input_cursor;
 		} else {
-			self.cursor_pointer = "";
+			self._caret_text = "";
 		}
 		self.updateMainUiSurface();
 	}, [], -1);
@@ -240,7 +240,7 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
         
 		//Draw final text
 		if _display_text != "" || self.has_focus {
-			draw_text(_txt_x, _txt_y, _display_text + self.cursor_pointer);
+			draw_text(_txt_x, _txt_y, _display_text + self._caret_text);
 		}
         
 		draw_set_alpha(_prev_alpha);
@@ -266,9 +266,9 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
 	self.addEvent(LUI_EV_FOCUS_SET, function(_e) {
 		time_source_start(_e.cursor_timer);
-		_e.cursor_pointer = _e.getStyle().input_cursor;
+		_e._caret_text = _e.getStyle().input_cursor;
 		keyboard_string = get();
-		_e.main_ui.waiting_for_keyboard_input = true;
+		_e.main_ui._text_input_active = true;
 		//Touch compatibility
 		if os_type == os_android || os_type == os_ios {
 			keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, false);
@@ -278,8 +278,8 @@ function LuiInput(_params = {}) : LuiBase(_params) constructor {
     
 	self.addEvent(LUI_EV_FOCUS_REMOVE, function(_e) {
 		time_source_stop(_e.cursor_timer);
-		_e.cursor_pointer = "";
-		_e.main_ui.waiting_for_keyboard_input = false;
+		_e._caret_text = "";
+		_e.main_ui._text_input_active = false;
 		//Touch compatibility
 		if os_type == os_android || os_type == os_ios {
 			keyboard_virtual_hide();

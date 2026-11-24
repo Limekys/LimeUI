@@ -8,7 +8,7 @@ function LuiMain() : LuiBase() constructor {
 	self.name = "_LUI_MAIN_UI";
 	self.width = display_get_gui_width();
 	self.height = display_get_gui_height();
-	self.is_visible_in_region = true;
+	self._intersects_clip_region = true;
 	self.pre_draw_list = [];
 	self.element_names = {};
 	self._elements_by_tag = {};
@@ -16,22 +16,22 @@ function LuiMain() : LuiBase() constructor {
 	self.element_in_focus = undefined;
 	self.topmost_hovered_element = undefined;
 	self.dragging_element = undefined;
-	self.display_focused_element = false;
+	self._show_focus_frame = false;
 	self._keyboard_navigation_active = false;
 	self._keyboard_edit_target = undefined;
 	self._keyboard_shortcuts = [];
 	self._shortcut_elements = [];
 	self._focus_frame_bounds = undefined;
-	self.waiting_for_keyboard_input = false;
-	self.needs_update_flex = true;
+	self._text_input_active = false;
+	self._flex_layout_dirty = true;
 	self.current_debug_mode = 0;
 	self.active_animations = [];
 	self.prev_mouse_x = -1;
 	self.prev_mouse_y = -1;
 	self._screen_grid = [];
-	self._scroll_updates = [];
+	self._pending_scroll_containers = [];
 	self._layout_revision = 0;
-	self._baking = false;
+	self._is_rendering_to_surface = false;
 	self._backdrop_surface = -1;
 	self._backdrop_blur_surface = -1;
 	self._modal_stack = [];
@@ -67,8 +67,8 @@ function LuiMain() : LuiBase() constructor {
 	///@ignore
 	static _flushFlexLayout = function() {
 		// Allow one follow-up pass for requests raised by layout callbacks.
-		for (var _pass = 0; _pass < 2 && self.needs_update_flex; _pass++) {
-			self.needs_update_flex = false;
+		for (var _pass = 0; _pass < 2 && self._flex_layout_dirty; _pass++) {
+			self._flex_layout_dirty = false;
 			self._calculateLayout();
 			self._updateFlex();
 		}
@@ -149,7 +149,7 @@ function LuiMain() : LuiBase() constructor {
 	///@return {bool}
 	static isInteractingKeyboard = function() {
 		return self.visible && !self.deactivated
-			&& (self.waiting_for_keyboard_input || (self._keyboard_navigation_active && !is_undefined(self.element_in_focus))
+			&& (self._text_input_active || (self._keyboard_navigation_active && !is_undefined(self.element_in_focus))
 				|| !is_undefined(self._activeModal()));
 	}
 
@@ -192,7 +192,7 @@ function LuiMain() : LuiBase() constructor {
 	///@desc Controls the focus rectangle. Arrow keys show it and a mouse press hides it.
 	///@arg {bool} _display
 	static displayFocusedElement = function(_display) {
-		self.display_focused_element = _display;
+		self._show_focus_frame = _display;
 		if !_display {
 			self._focus_frame_bounds = undefined;
 		}
@@ -442,8 +442,8 @@ function LuiMain() : LuiBase() constructor {
 
 		self._flushFlexLayout();
 
-		var _scrolled = self._scroll_updates;
-		self._scroll_updates = [];
+		var _scrolled = self._pending_scroll_containers;
+		self._pending_scroll_containers = [];
 		for (var i = 0; i < array_length(_scrolled); i++) {
 			var _container = _scrolled[i];
 			if !_container.is_destroyed {
@@ -491,7 +491,7 @@ function LuiMain() : LuiBase() constructor {
 			}
 
 			// Root container is always visible
-			self.is_visible_in_region = true;
+			self._intersects_clip_region = true;
 
 			var _cache_start = _measure ? get_timer() : 0;
 
@@ -550,12 +550,12 @@ function LuiMain() : LuiBase() constructor {
 			if global.lui_debug_mode != 0 {
 				for (var i = 0, n = array_length(self.content); i < n; i++) {
 					var _element = self.content[i];
-					if !_element.is_visible_in_region || !_element.visible || _element.is_destroyed continue;
+					if !_element._intersects_clip_region || !_element.visible || _element.is_destroyed continue;
 					_element._renderDebug(_element.x, _element.y, true);
 				}
 			}
 
-			if self.display_focused_element {
+			if self._show_focus_frame {
 				self._drawFocusFrame(_identity_matrix);
 			}
 		}
@@ -665,7 +665,7 @@ function LuiMain() : LuiBase() constructor {
 		var _best = undefined;
 		for (var i = array_length(self._shortcut_elements) - 1; i >= 0; i--) {
 			var _element = self._shortcut_elements[i];
-			if !keyboard_check_pressed(_element._shortcut_key) || !_element.is_visible_in_region
+			if !keyboard_check_pressed(_element._shortcut_key) || !_element._intersects_clip_region
 				|| !self.isInputAllowed(_element) || !self._isInModal(_element, _root)
 				|| !self._hasFocusListener(_element, LUI_EV_CLICK) continue;
 			var _parent = _element.parent;
@@ -673,7 +673,7 @@ function LuiMain() : LuiBase() constructor {
 				_parent = _parent.parent;
 			}
 			if !is_undefined(_parent) continue;
-			if is_undefined(_best) || _compareDepthArrays(_element.depth_array, _best.depth_array) > 0 {
+			if is_undefined(_best) || _compareDepthArrays(_element._z_order_path, _best._z_order_path) > 0 {
 				_best = _element;
 			}
 		}
@@ -780,7 +780,7 @@ function LuiMain() : LuiBase() constructor {
 	///@ignore
 	static _findKeyboardFocus = function(_element, _inside_scroll, _search) {
 		if !_element.visible || _element.is_destroyed || _element.deactivated return;
-		if !_element.is_visible_in_region && (!_inside_scroll || is_undefined(_search.origin)) return;
+		if !_element._intersects_clip_region && (!_inside_scroll || is_undefined(_search.origin)) return;
 		if _element != self && self._isKeyboardFocusable(_element) {
 			var _bounds = _element.getLayoutBounds();
 			if _bounds.width > 0 && _bounds.height > 0 {
@@ -841,7 +841,7 @@ function LuiMain() : LuiBase() constructor {
 		var _focused = self.element_in_focus;
 		if is_undefined(_focused) || !self.isInputAllowed(_focused) return;
 
-		if _focused.is_visible_in_region {
+		if _focused._intersects_clip_region {
 			var _matrix = _identity_matrix;
 			var _element = _focused;
 			while !is_undefined(_element) && _element != self {
@@ -904,7 +904,7 @@ function LuiMain() : LuiBase() constructor {
 	static _updatePopups = function() {
 		for (var i = array_length(self._open_popups) - 1; i >= 0; i--) {
 			var _popup = self._open_popups[i];
-			if _popup.panel.is_destroyed || !self.isInputAllowed(_popup.owner) || !_popup.owner.is_visible_in_region {
+			if _popup.panel.is_destroyed || !self.isInputAllowed(_popup.owner) || !_popup.owner._intersects_clip_region {
 				_popup.close();
 			} else {
 				_popup.place();
@@ -1004,11 +1004,11 @@ function LuiMain() : LuiBase() constructor {
 		for (var i = array_length(_cell) - 1; i >= 0; --i) {
 			var _e = _cell[i];
 			if !_e.visible || _e.is_destroyed || _e.ignore_mouse continue;
-			var _region = _e.view_region;
+			var _region = _e._visible_bounds;
 			if _mouse_x < _region.x1 || _mouse_x >= _region.x2 || _mouse_y < _region.y1 || _mouse_y >= _region.y2 continue;
 			if !is_undefined(_modal) && !self._isInModal(_e, _modal) continue;
 			// Not above the current best: skip without the expensive hover checks
-			if !is_undefined(_best) && _compareDepthArrays(_e.depth_array, _best.depth_array) <= 0 continue;
+			if !is_undefined(_best) && _compareDepthArrays(_e._z_order_path, _best._z_order_path) <= 0 continue;
 			if !_e.isMouseHoveredExc() || !_e.isMouseHoveredParents() continue;
 			_best = _e;
 		}
@@ -1110,7 +1110,7 @@ function LuiMain() : LuiBase() constructor {
 	/// Invariant on entry: matrix_world == _pm, scissor == _clip. Restored on exit.
 	///@ignore
 	static _drawTree = function(_el, _pm, _pa, _clip) {
-		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
+		if !_el.visible || _el.is_destroyed || !_el._intersects_clip_region return;
 
 		var _a = _pa * _el.visual_alpha;
 		if _a <= 0 return;
@@ -1157,7 +1157,7 @@ function LuiMain() : LuiBase() constructor {
 		if _n == 0 return;
 
 		var _child_clip = _clip;
-		var _clipping = _el.draw_content_in_cutted_region;
+		var _clipping = _el._clip_children;
 		if _clipping {
 			_child_clip = self._pushClip(_clip, _el, _m);
 			if _child_clip[2] <= _child_clip[0] || _child_clip[3] <= _child_clip[1] {
@@ -1195,7 +1195,7 @@ function LuiMain() : LuiBase() constructor {
 	/// Cache is used for: explicit cache_as_surface, group alpha (visual_alpha < 1 with children), group material.
 	///@ignore
 	static _prepareCaches = function(_el) {
-		if !_el.visible || _el.is_destroyed || !_el.is_visible_in_region return;
+		if !_el.visible || _el.is_destroyed || !_el._intersects_clip_region return;
 
 		if _el._last_visual_alpha != _el.visual_alpha {
 			_el._last_visual_alpha = _el.visual_alpha;
@@ -1260,7 +1260,7 @@ function LuiMain() : LuiBase() constructor {
 		}
 
 		draw_clear_alpha(c_black, 0);
-		self._baking = true;
+		self._is_rendering_to_surface = true;
 		_luiBlendBake();
 
 		var _m = matrix_build(_pad - _ox, _pad - _oy, 0, 0, 0, 0, 1, 1, 1);
@@ -1270,7 +1270,7 @@ function LuiMain() : LuiBase() constructor {
 		self._drawSelfAndChildren(_el, _m, 1, _clip);
 
 		_luiBlendReset();
-		self._baking = false;
+		self._is_rendering_to_surface = false;
 		surface_reset_target();
 		gpu_set_scissor(_prev_scissor);
 		matrix_set(matrix_world, _prev_matrix);
@@ -1302,7 +1302,7 @@ function LuiMain() : LuiBase() constructor {
 		if _group_mat {
 			shader_reset();
 		}
-		if self._baking {
+		if self._is_rendering_to_surface {
 			_luiBlendBake();
 		} else {
 			_luiBlendReset();
@@ -1318,7 +1318,7 @@ function LuiMain() : LuiBase() constructor {
 		var _radius = 0;
 		for (var i = array_length(_children) - 1; i >= max(1, _modal_start); i--) {
 			var _child = _children[i];
-			if !_child.visible || _child.is_destroyed || !_child.is_visible_in_region || _child.visual_alpha <= 0 continue;
+			if !_child.visible || _child.is_destroyed || !_child._intersects_clip_region || _child.visual_alpha <= 0 continue;
 			if _child.backdrop_blur > 0 {
 				_index = i;
 				_radius = _child.backdrop_blur;
@@ -1363,12 +1363,12 @@ function LuiMain() : LuiBase() constructor {
 		matrix_set(matrix_world, _matrix);
 		_luiApplyClip(_clip);
 		draw_clear_alpha(c_black, 0);
-		self._baking = true;
+		self._is_rendering_to_surface = true;
 		_luiBlendBake();
 		for (var i = 0; i < _index; i++) {
 			self._drawTree(_children[i], _matrix, 1, _clip);
 		}
-		self._baking = false;
+		self._is_rendering_to_surface = false;
 		surface_reset_target();
 		matrix_set(matrix_world, _matrix);
 		_luiApplyClip(_clip);

@@ -90,24 +90,24 @@ function LuiBase(_params = {}) constructor {
 	// Visibility and input state
 	self.deactivated = false;
 	self.visible = true;
-	self.visibility_switching = true;
+	self._allows_visibility_changes = true;
 	self.has_focus = false;
 	self._keyboard_focusable = undefined;
 	self._shortcut_key = undefined;
 	self._tags = [];
 	self.ignore_mouse = false;
 	self.ignore_mouse_all = undefined;
-	self.need_to_update_content = false;
+	self._content_update_pending = false;
 	self.main_ui = undefined;
 	self.tooltip = "";
-	self.binded_variable = undefined;
+	self._value_binding = undefined;
 	self.is_pressed = false;
 	self.is_mouse_hovered = false;
 	self.is_adding = false;
 	self.is_destroyed = false;
 	self._is_modal = false;
 	self.is_initialized = false;
-	self.draw_content_in_cutted_region = false;
+	self._clip_children = false;
 	self.render_region_offset = { //???// it may still be useful
 		left : 0,
 		right : 0,
@@ -125,10 +125,10 @@ function LuiBase(_params = {}) constructor {
 	self._tc_result = "";
 
 	// Screen grid system
-	self._grid_location = []; //Screen grid to optimize the search for items under the mouse cursor
+	self._screen_grid_cell_ids = []; //Screen grid to optimize the search for items under the mouse cursor
 	
 	// View region system
-	self.view_region = {
+	self._visible_bounds = {
 		x1: 0,
 		y1: 0,
 		x2: 10000,
@@ -141,13 +141,13 @@ function LuiBase(_params = {}) constructor {
 		y2: 10000
 	};
 	
-	// Region to which children are cropped (differs from view_region only for non-clipping parents)
-	self.child_region = { x1: 0, y1: 0, x2: 10000, y2: 10000 };
-	self.is_visible_in_region = false;
+	// Region to which children are cropped (differs from _visible_bounds only for non-clipping parents)
+	self._child_clip_bounds = { x1: 0, y1: 0, x2: 10000, y2: 10000 };
+	self._intersects_clip_region = false;
 	
 	// Depth system
 	self.nesting_level = 0;
-	self.depth_array = [];
+	self._z_order_path = [];
 	
 	// Dragging system
 	self.can_drag = false;
@@ -232,7 +232,7 @@ function LuiBase(_params = {}) constructor {
 		if self.value != _value {
 			var _redraw = self._valueAffectsRender(self.value, _value);
 			self.value = _value;
-			if !is_undefined(self.binded_variable) {
+			if !is_undefined(self._value_binding) {
 				self._updateToBindedVariable();
 			}
 			self._dispatchEvent(LUI_EV_VALUE_UPDATE);
@@ -322,7 +322,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Binds the object/struct variable to the element value
 	static bindVariable = function(_source, _variable) {
 		if _source != noone && _variable != "" {
-			self.binded_variable = {
+			self._value_binding = {
 				source : _source,
 				variable : _variable
 			}
@@ -434,7 +434,7 @@ function LuiBase(_params = {}) constructor {
 			// Init depth
 			_element.nesting_level = self.nesting_level + 1;
 			_element.z = global.lui_max_z++;
-			_element.depth_array = array_concat(self.depth_array, [_element.z]);
+			_element._z_order_path = array_concat(self._z_order_path, [_element.z]);
 
 			// Inherit variables
 			_element.parent = self;
@@ -519,7 +519,7 @@ function LuiBase(_params = {}) constructor {
 	///@arg {Bool} [_update_parent] Include ancestors
 	///@return {Struct} This element
 	static requestContentUpdate = function(_update_parent = false) {
-		self.need_to_update_content = true;
+		self._content_update_pending = true;
 		if _update_parent {
 			if is_undefined(self.parent) return self;
 			self.parent.requestContentUpdate(true);
@@ -1031,7 +1031,7 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Set element visibility (only visibility not flex display)
 	static setVisible = function(_visible) {
-		if self.visibility_switching {
+		if self._allows_visibility_changes {
 			if self.visible != _visible {
 				// Change visible
 				self.visible = _visible;
@@ -1068,7 +1068,7 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Enable or disable visibility switching by function setVisible()
 	static setVisibilitySwitching = function(_allow) {
-		self.visibility_switching = _allow;
+		self._allows_visibility_changes = _allow;
 		return self;
 	}
 
@@ -1169,7 +1169,7 @@ function LuiBase(_params = {}) constructor {
 		if !self.isMouseHoveredExc() return false;
 		var _p = self.parent;
 		while (!is_undefined(_p)) {
-			if _p.draw_content_in_cutted_region && !_p.isMouseHoveredExc() return false;
+			if _p._clip_children && !_p.isMouseHoveredExc() return false;
 			_p = _p.parent;
 		}
 		return true;
@@ -1198,7 +1198,7 @@ function LuiBase(_params = {}) constructor {
 
 	// Draw order and cache settings
 
-	///@desc Sets a new depth value for the element and recalculates depth_array for itself and its children
+	///@desc Sets a new depth value for the element and recalculates _z_order_path for itself and its children
 	static setDepth = function(_new_z) {
 		self.z = _new_z;
 		if !is_undefined(self.parent) {
@@ -1349,7 +1349,7 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc This function updates all nested elements
 	static update = function() {
-		if !self.is_visible_in_region || !self.visible || self.deactivated return false;
+		if !self._intersects_clip_region || !self.visible || self.deactivated return false;
 
 		// Define the list of items to be processed
 		var _elements = self.content;
@@ -1366,17 +1366,17 @@ function LuiBase(_params = {}) constructor {
 			}
 
 			// Skip the invisible elements
-			if !_element.is_visible_in_region || !_element.visible || self.deactivated continue;
+			if !_element._intersects_clip_region || !_element.visible || self.deactivated continue;
 
 			// Updating the bound variables
-			if !is_undefined(_element.binded_variable) && _element.get() != variable_instance_get(_element.binded_variable.source, _element.binded_variable.variable) {
+			if !is_undefined(_element._value_binding) && _element.get() != variable_instance_get(_element._value_binding.source, _element._value_binding.variable) {
 				_element._updateFromBindedVariable();
 			}
 
 			// Update content if required
-			if _element.need_to_update_content {
+			if _element._content_update_pending {
 				_element._dispatchEvent(LUI_EV_CONTENT_UPDATE);
-				_element.need_to_update_content = false;
+				_element._content_update_pending = false;
 			}
 
 			// Execute custom step and recursive update
@@ -1433,18 +1433,18 @@ function LuiBase(_params = {}) constructor {
 		self._dispatchEvent(LUI_EV_DESTROY);
 		// Clean all arrays and structs
 		self.content = -1;
-		self.depth_array = -1;
+		self._z_order_path = -1;
 		// Do not use delete here: _cached_style may reference a shared style object
 		self.local_style = undefined;
 		self._cached_style = undefined;
 		self._applied_style = undefined;
 		self._style_delta = undefined;
 		delete self.render_region_offset; self.render_region_offset = undefined;
-		delete self.view_region; self.view_region = undefined;
-		delete self.child_region; self.child_region = undefined;
+		delete self._visible_bounds; self._visible_bounds = undefined;
+		delete self._child_clip_bounds; self._child_clip_bounds = undefined;
 		self._draw_children = [];
 		delete self.prev_view_region; self.prev_view_region = undefined;
-		delete self.binded_variable; self.binded_variable = undefined;
+		delete self._value_binding; self._value_binding = undefined;
 		delete self.data; self.data = undefined;
 		self.event_listeners = {}
 		// Decrement global counter
@@ -1564,28 +1564,28 @@ function LuiBase(_params = {}) constructor {
 	///@desc Update element value from binded variable
 	///@ignore
 	static _updateFromBindedVariable = function() {
-		var _source = self.binded_variable.source;
-		var _variable = self.binded_variable.variable;
+		var _source = self._value_binding.source;
+		var _variable = self._value_binding.variable;
 		if _source != noone && variable_instance_exists(_source, _variable) {
 			var _source_value = variable_instance_get(_source, _variable);
 			self.set(_source_value);
 		} else {
 			_luiPrintError($"Binded variable is wrong or no longer available!");
-			self.binded_variable = undefined;
+			self._value_binding = undefined;
 		}
 	}
 
 	///@desc Update binded variable from element value
 	///@ignore
 	static _updateToBindedVariable = function() {
-		var _source = self.binded_variable.source;
-		var _variable = self.binded_variable.variable;
+		var _source = self._value_binding.source;
+		var _variable = self._value_binding.variable;
 		if _source != noone && variable_instance_exists(_source, _variable) {
 			var _element_value = self.get();
 			variable_instance_set(_source, _variable, _element_value);
 		} else {
 			_luiPrintError($"Binded variable is wrong or no longer available!");
-			self.binded_variable = undefined;
+			self._value_binding = undefined;
 		}
 	}
 
@@ -1872,7 +1872,7 @@ function LuiBase(_params = {}) constructor {
 	///@return {Struct} This element
 	static updateMainUiFlex = function(_update_parent = false) {
 		if !is_undefined(self.main_ui) {
-			self.main_ui.needs_update_flex = true;
+			self.main_ui._flex_layout_dirty = true;
 		}
 		return self;
 	}
@@ -1943,10 +1943,10 @@ function LuiBase(_params = {}) constructor {
 			self.start_y = self.y;
 		}
 
-		var _was_visible = self.is_visible_in_region;
+		var _was_visible = self._intersects_clip_region;
 		self._updateViewRegion();
 
-		if _was_visible || self.is_visible_in_region {
+		if _was_visible || self._intersects_clip_region {
 			self._updateScreenGrid();
 		}
 
@@ -1971,12 +1971,12 @@ function LuiBase(_params = {}) constructor {
 		}
 
 		// Update previous view region
-		self.prev_view_region.x1 = self.view_region.x1;
-		self.prev_view_region.x2 = self.view_region.x2;
-		self.prev_view_region.y1 = self.view_region.y1;
-		self.prev_view_region.y2 = self.view_region.y2;
+		self.prev_view_region.x1 = self._visible_bounds.x1;
+		self.prev_view_region.x2 = self._visible_bounds.x2;
+		self.prev_view_region.y1 = self._visible_bounds.y1;
+		self.prev_view_region.y2 = self._visible_bounds.y2;
 
-		if !self.is_visible_in_region {
+		if !self._intersects_clip_region {
 			if !_scroll_only {
 				self._child_bounds_stale = true;
 			}
@@ -2015,33 +2015,33 @@ function LuiBase(_params = {}) constructor {
 		// Prevent this element from being updated if it has just been added
 		if is_undefined(self._flex_bounds) return false;
 
-		self.view_region.x1 = self.x;
-		self.view_region.y1 = self.y;
-		self.view_region.x2 = self.x + self.width;
-		self.view_region.y2 = self.y + self.height;
+		self._visible_bounds.x1 = self.x;
+		self._visible_bounds.y1 = self.y;
+		self._visible_bounds.x2 = self.x + self.width;
+		self._visible_bounds.y2 = self.y + self.height;
 
-		var _cr = self.child_region;
+		var _cr = self._child_clip_bounds;
 
 		// Root
 		if self.parent == undefined {
-			self.is_visible_in_region = true;
-			_cr.x1 = self.view_region.x1; _cr.y1 = self.view_region.y1;
-			_cr.x2 = self.view_region.x2; _cr.y2 = self.view_region.y2;
+			self._intersects_clip_region = true;
+			_cr.x1 = self._visible_bounds.x1; _cr.y1 = self._visible_bounds.y1;
+			_cr.x2 = self._visible_bounds.x2; _cr.y2 = self._visible_bounds.y2;
 			return;
 		}
 
 		// Crop to the region the parent allows for its children
-		var _pr = self.parent.child_region;
-		self.view_region.x1 = max(_pr.x1, self.view_region.x1);
-		self.view_region.y1 = max(_pr.y1, self.view_region.y1);
-		self.view_region.x2 = min(_pr.x2, self.view_region.x2);
-		self.view_region.y2 = min(_pr.y2, self.view_region.y2);
+		var _pr = self.parent._child_clip_bounds;
+		self._visible_bounds.x1 = max(_pr.x1, self._visible_bounds.x1);
+		self._visible_bounds.y1 = max(_pr.y1, self._visible_bounds.y1);
+		self._visible_bounds.x2 = min(_pr.x2, self._visible_bounds.x2);
+		self._visible_bounds.y2 = min(_pr.y2, self._visible_bounds.y2);
 
-		self.is_visible_in_region = (self.view_region.x2 - self.view_region.x1 > 0)
-								 && (self.view_region.y2 - self.view_region.y1 > 0);
+		self._intersects_clip_region = (self._visible_bounds.x2 - self._visible_bounds.x1 > 0)
+								 && (self._visible_bounds.y2 - self._visible_bounds.y1 > 0);
 
 		// Region for own children
-		if self.draw_content_in_cutted_region {
+		if self._clip_children {
 			var _o = self._getClipInsets();
 			_cr.x1 = max(_pr.x1, self.x + _o.left);
 			_cr.y1 = max(_pr.y1, self.y + _o.top);
@@ -2055,9 +2055,9 @@ function LuiBase(_params = {}) constructor {
 	///@desc Recursively forces an invisible state onto itself and all descendants
 	///@ignore
 	static _propagateVisibleRegionState = function() {
-		if self.is_destroyed || !self.is_visible_in_region return;
+		if self.is_destroyed || !self._intersects_clip_region return;
 
-		self.is_visible_in_region = false;
+		self._intersects_clip_region = false;
 
 		self._updateScreenGrid();
 
@@ -2076,7 +2076,7 @@ function LuiBase(_params = {}) constructor {
 	///@desc Add element in system ui grid
 	///@ignore
 	static _addToScreenGrid = function() {
-		if !self.is_visible_in_region || !self.visible {
+		if !self._intersects_clip_region || !self.visible {
 			return;
 		}
 
@@ -2084,10 +2084,10 @@ function LuiBase(_params = {}) constructor {
 		var _cols = array_length(_grid);
 
 		// Cells that the element intersects, restricted to the existing grid
-		var _x_start = max(0, floor(self.view_region.x1 / LUI_GRID_SIZE));
-		var _y_start = max(0, floor(self.view_region.y1 / LUI_GRID_SIZE));
-		var _x_end = min(_cols - 1, floor(self.view_region.x2 / LUI_GRID_SIZE));
-		var _y_end = floor(self.view_region.y2 / LUI_GRID_SIZE);
+		var _x_start = max(0, floor(self._visible_bounds.x1 / LUI_GRID_SIZE));
+		var _y_start = max(0, floor(self._visible_bounds.y1 / LUI_GRID_SIZE));
+		var _x_end = min(_cols - 1, floor(self._visible_bounds.x2 / LUI_GRID_SIZE));
+		var _y_end = floor(self._visible_bounds.y2 / LUI_GRID_SIZE);
 
 		for (var _x = _x_start; _x <= _x_end; ++_x) {
 			var _col = _grid[_x];
@@ -2095,7 +2095,7 @@ function LuiBase(_params = {}) constructor {
 			for (var _y = _y_start; _y <= _y_last; ++_y) {
 				var _cell = _col[_y];
 				array_push(_cell, self);
-				array_push(self._grid_location, _x * LUI_GRID_STRIDE + _y);
+				array_push(self._screen_grid_cell_ids, _x * LUI_GRID_STRIDE + _y);
 			}
 		}
 	};
@@ -2104,12 +2104,12 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _deleteFromScreenGrid = function() {
 		if is_undefined(self.main_ui) || !is_array(self.main_ui._screen_grid) {
-			self._grid_location = [];
+			self._screen_grid_cell_ids = [];
 			return;
 		}
 		var _grid = self.main_ui._screen_grid;
-		for (var i = 0, n = array_length(self._grid_location); i < n; i++) {
-			var _loc = self._grid_location[i];
+		for (var i = 0, n = array_length(self._screen_grid_cell_ids); i < n; i++) {
+			var _loc = self._screen_grid_cell_ids[i];
 			var _cx = _loc div LUI_GRID_STRIDE;
 			var _cy = _loc mod LUI_GRID_STRIDE;
 			if _cx < array_length(_grid) && _cy < array_length(_grid[_cx]) {
@@ -2122,14 +2122,14 @@ function LuiBase(_params = {}) constructor {
 				}
 			}
 		}
-		self._grid_location = [];
+		self._screen_grid_cell_ids = [];
 	}
 
 	///@desc Delete element from grid and clean up array
 	///@ignore
 	static _cleanupScreenGrid = function() {
 		self._deleteFromScreenGrid();
-		self._grid_location = -1;
+		self._screen_grid_cell_ids = -1;
 	}
 
 	// Draw order and transforms
@@ -2151,7 +2151,7 @@ function LuiBase(_params = {}) constructor {
 		return 0;
 	}
 
-	///@desc Recalculates depth_array for the element and all its children
+	///@desc Recalculates _z_order_path for the element and all its children
 	///@ignore
 	static _recalculateDepthArray = function() {
 		self._rebuildDepthArrayRec();
@@ -2162,9 +2162,9 @@ function LuiBase(_params = {}) constructor {
 	///@ignore
 	static _rebuildDepthArrayRec = function() {
 		if self.parent != undefined {
-			self.depth_array = array_concat(self.parent.depth_array, [self.z]);
+			self._z_order_path = array_concat(self.parent._z_order_path, [self.z]);
 		} else {
-			self.depth_array = [self.z];
+			self._z_order_path = [self.z];
 		}
 		if !is_array(self.content) return;
 		for (var i = 0, n = array_length(self.content); i < n; i++) {
@@ -2314,7 +2314,7 @@ function LuiBase(_params = {}) constructor {
 	static _renderDebug = function(_x = 0, _y = 0, _recursive = false) {
 
 		// Restriction
-		if self.is_destroyed || !self.is_visible_in_region return;
+		if self.is_destroyed || !self._intersects_clip_region return;
 
 		// Set font
 		var _style = self.getStyle();
@@ -2383,7 +2383,7 @@ function LuiBase(_params = {}) constructor {
 			"v: " + string(self.value) + "\n" +
 			"content: " + string(array_length(self.content)) + "/" + string(array_length(self.delayed_content)) + "\n" +
 			"parent: " + (is_undefined(self.parent) ? "undefined" : self.parent.name) + "\n" +
-			"z: " + string(self.z) + " " + string(self.depth_array) + "\n" +
+			"z: " + string(self.z) + " " + string(self._z_order_path) + "\n" +
 			"nesting_level: " + string(self.nesting_level)
 		);
 
@@ -2419,7 +2419,7 @@ function LuiBase(_params = {}) constructor {
 
 		// Draw view region rectangle
 		draw_set_color(make_color_hsv(self.element_id * 20 % 255, 255, 255));
-		draw_rectangle(self.view_region.x1, self.view_region.y1, self.view_region.x2, self.view_region.y2, true);
+		draw_rectangle(self._visible_bounds.x1, self._visible_bounds.y1, self._visible_bounds.x2, self._visible_bounds.y2, true);
 
 		// Reset colors
 		draw_set_color(_prev_color);

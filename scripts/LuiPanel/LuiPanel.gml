@@ -15,7 +15,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	self.scroll_x = _params[$ "scroll_x"] ?? false;
 	self.scroll_y = _params[$ "scroll_y"] ?? false;
 	if self.scroll_x || self.scroll_y {
-		self.draw_content_in_cutted_region = true;
+		self._clip_children = true;
 		self.scroll_offset_x = 0;
 		self.scroll_offset_y = 0;
 		self.scroll_target_offset_x = 0;
@@ -29,14 +29,14 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		self._scroll_layout_revision = -1;
 		self._scroll_row_count = 0;
 		self._scroll_rows = undefined;
-		self._scroll_first_row = 0;
-		self._scroll_end_row = 0;
-		self.scroll_pin_edge_offset = 4;
+		self._visible_row_start = 0;
+		self._visible_row_end_exclusive = 0;
+		self._scrollbar_edge_inset = 4;
 		self.scroll_smoothness = 0.02;
 		self.scroll_container = new LuiAbsoluteContainer({x: 0, y: 0});
 		self.scroll_container._scroll_owner = self;
 		// Keep the viewport fixed while the content moves beneath it.
-		self.scroll_container.draw_content_in_cutted_region = true;
+		self.scroll_container._clip_children = true;
 		self.setContainer(self.scroll_container);
 		self._scroll_insets = {left: 0, top: 0, right: 0, bottom: 0};
 		self.addContent = function(elements) {
@@ -103,7 +103,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 	static _getScrollInsets = function() {
 		var _style = self.getStyle();
 		var _o = self._getStyleClipInsets(_style);
-		var _gutter = is_undefined(_style) ? 0 : _style.scroll_slider_width + self.scroll_pin_edge_offset;
+		var _gutter = is_undefined(_style) ? 0 : _style.scroll_slider_width + self._scrollbar_edge_inset;
 		var _insets = self._scroll_insets;
 		_insets.left = _o.left;
 		_insets.top = _o.top;
@@ -126,9 +126,9 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 
 	///@ignore
 	static _applyScroll = function() {
-		var _queue = self.main_ui._scroll_updates;
+		var _queue = self.main_ui._pending_scroll_containers;
 		if !array_contains(_queue, self.scroll_container) {
-			array_push(self.main_ui._scroll_updates, self.scroll_container);
+			array_push(self.main_ui._pending_scroll_containers, self.scroll_container);
 		}
 	}
 
@@ -183,12 +183,12 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 
 		var _rows = self._scroll_rows;
 		if is_undefined(_rows) return;
-		var _clip = _container.child_region;
+		var _clip = _container._child_clip_bounds;
 		var _first = self._findScrollRow(_rows, _clip.y1 - _container.y, true);
 		var _end = max(_first, self._findScrollRow(_rows, _clip.y2 - _container.y, false));
 		if !_rebuild {
 			// Clear rows leaving the viewport before refreshing the new range.
-			for (var i = self._scroll_first_row; i < self._scroll_end_row; i++) {
+			for (var i = self._visible_row_start; i < self._visible_row_end_exclusive; i++) {
 				if i >= _first && i < _end continue;
 				_rows[i].element._propagateVisibleRegionState();
 			}
@@ -196,8 +196,8 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 				_rows[i].element._updateFlex(true, _offset_x, _offset_y);
 			}
 		}
-		self._scroll_first_row = _first;
-		self._scroll_end_row = _end;
+		self._visible_row_start = _first;
+		self._visible_row_end_exclusive = _end;
 	}
 
 	///@ignore
@@ -254,7 +254,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 		var _limit = self._getMinScrollOffset(_horizontal);
 		if _limit >= 0 return undefined;
 
-		var _edge = self.scroll_pin_edge_offset;
+		var _edge = self._scrollbar_edge_inset;
 		var _size = _style.scroll_slider_width;
 		var _o = self._getScrollInsets();
 		var _span = _horizontal ? self.width - _o.right : self.height - _o.bottom;
@@ -455,7 +455,7 @@ function LuiPanel(_params = {}) : LuiBase(_params) constructor {
 			if _e.auto_height {
 				flexpanel_node_style_set_flex(_e.flex_node, 1);
 			}
-			var _gutter = _e.getStyle().scroll_slider_width + _e.scroll_pin_edge_offset;
+			var _gutter = _e.getStyle().scroll_slider_width + _e._scrollbar_edge_inset;
 			if _e.scroll_x {
 				if _e.scroll_container.auto_width {
 					flexpanel_node_style_set_width(_e.scroll_container.flex_node, 0, flexpanel_unit.auto);

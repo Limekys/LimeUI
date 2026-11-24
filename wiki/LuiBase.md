@@ -332,7 +332,7 @@ Enables/Disables mouse ignore mode for this and all nested elements
 
 
 ### `setDepth`
-Sets a new depth value for the element and recalculates depth_array for itself and its children
+Sets a new depth value for the element and recalculates _z_order_path for itself and its children
 
 
 ### `bringToFront`

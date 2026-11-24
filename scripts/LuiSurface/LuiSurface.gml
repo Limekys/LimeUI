@@ -49,7 +49,7 @@ function LuiSurface(_params = {}) : LuiBase(_params) constructor {
 	
 	///@desc Update surface if visible (should be called from main object where you draw surface)
 	static updateSurface = function() {
-		if self.is_visible_in_region && self.visible && !self.deactivated {
+		if self._intersects_clip_region && self.visible && !self.deactivated {
 			self.updateMainUiSurface();
 		}
 	}

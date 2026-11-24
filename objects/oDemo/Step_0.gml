@@ -17,7 +17,7 @@ if _list_open {
 	if keyboard_check_pressed(vk_f8) {
 		list_benchmark_scroll = !list_benchmark_scroll;
 	}
-	if list_benchmark_scroll && list_benchmark_panel.is_visible_in_region {
+	if list_benchmark_scroll && list_benchmark_panel._intersects_clip_region {
 		var _min_offset = list_benchmark_panel._getMinScrollOffset();
 		var _offset = list_benchmark_panel.scroll_offset_y;
 		if _offset <= _min_offset {

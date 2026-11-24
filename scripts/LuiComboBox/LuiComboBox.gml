@@ -10,7 +10,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	self.items = undefined;
 	self._selected_item = undefined;
 	self.is_open = false;
-	self.combobox_panel = undefined;
+	self._popup_panel = undefined;
 	self._popup_row_height = undefined;
 	self.text_width = self.width;
 
@@ -31,7 +31,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		}
 		if is_undefined(self.items) || is_undefined(self.main_ui) || !self.main_ui.isInputAllowed(self) return self;
 
-		if is_undefined(self.combobox_panel) {
+		if is_undefined(self._popup_panel) {
 			self._initComboBoxPanel();
 			self._initItems();
 		}
@@ -41,8 +41,8 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		self._placePopup();
 		if !self.is_open return self;
 
-		self.combobox_panel.setVisibilitySwitching(true).show().bringToFront().setVisibilitySwitching(false);
-		self.main_ui._registerPopup(self, self.combobox_panel, method(self, self._closePopup), method(self, self._placePopup));
+		self._popup_panel.setVisibilitySwitching(true).show().bringToFront().setVisibilitySwitching(false);
+		self.main_ui._registerPopup(self, self._popup_panel, method(self, self._closePopup), method(self, self._placePopup));
 		self._focusPopupItem();
 		self.updateMainUiSurface();
 		return self;
@@ -68,9 +68,9 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	///@ignore
 	static _initComboBoxPanel = function() {
 		var _host = self.main_ui._activeModal() ?? self.main_ui;
-		self.combobox_panel = new LuiScrollPanel({x: 0, y: 0, width: 1, height: 1, min_width: 1, min_height: 1})
+		self._popup_panel = new LuiScrollPanel({x: 0, y: 0, width: 1, height: 1, min_width: 1, min_height: 1})
 			.setPositionAbsolute().setPadding(4).setGap(0).hide().setVisibilitySwitching(false);
-		_host.addContentOriginal(self.combobox_panel);
+		_host.addContentOriginal(self._popup_panel);
 	}
 
 	///@ignore
@@ -84,13 +84,13 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 			_item.combobox_parent = self;
 			_item.setHeight(self._popup_row_height).setFlexShrink(0);
 		}
-		self.combobox_panel.addContent(self.items);
+		self._popup_panel.addContent(self.items);
 	}
 
 	///@ignore
 	static _placePopup = function() {
 		var _ui = self.main_ui;
-		var _panel = self.combobox_panel;
+		var _panel = self._popup_panel;
 		var _width = min(_ui.width, max(1, self.width));
 		var _top = clamp(self.y, 0, _ui.height);
 		var _bottom = clamp(self.y + self.height, 0, _ui.height);
@@ -127,7 +127,7 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 	///@ignore
 	static _focusPopupItem = function() {
 		var _ui = self.main_ui;
-		var _panel = self.combobox_panel;
+		var _panel = self._popup_panel;
 		var _items = _panel.getContent();
 		var _item = self._selected_item;
 		if is_undefined(_item) || !array_contains(_items, _item)
@@ -165,20 +165,20 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 		if !self.is_open return;
 		self.is_open = false;
 		var _ui = self.main_ui;
-		_ui._unregisterPopup(self.combobox_panel);
+		_ui._unregisterPopup(self._popup_panel);
 		var _focused = _ui.element_in_focus;
-		if _ui._isInModal(_focused, self.combobox_panel) {
+		if _ui._isInModal(_focused, self._popup_panel) {
 			_ui.element_in_focus = undefined;
 			if !_focused.is_destroyed {
 				_focused.removeFocus();
 			}
-			if _ui.isInputAllowed(self) && self.is_visible_in_region {
+			if _ui.isInputAllowed(self) && self._intersects_clip_region {
 				_ui.element_in_focus = self;
 				self.setFocus();
 			}
 		}
-		if !self.combobox_panel.is_destroyed {
-			self.combobox_panel.setVisibilitySwitching(true).hide().setVisibilitySwitching(false);
+		if !self._popup_panel.is_destroyed {
+			self._popup_panel.setVisibilitySwitching(true).hide().setVisibilitySwitching(false);
 		}
 		self.updateMainUiSurface();
 	}
@@ -276,8 +276,8 @@ function LuiComboBox(_params = {}) : LuiButton(_params) constructor {
 
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		_e._closePopup();
-		if !is_undefined(_e.combobox_panel) {
-			_e.combobox_panel.destroy();
+		if !is_undefined(_e._popup_panel) {
+			_e._popup_panel.destroy();
 		} else if !is_undefined(_e.items) {
 			var _items = is_array(_e.items) ? _e.items : [_e.items];
 			for (var i = 0; i < array_length(_items); i++) {
