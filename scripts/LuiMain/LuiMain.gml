@@ -13,6 +13,10 @@ function LuiMain() : LuiBase() constructor {
 	self.element_names = {};
 	self._elements_by_tag = {};
 	self.main_ui = self;
+	self.element_id = 0;
+	self.element_count = 1;
+	self._next_element_id = 1;
+	self._next_z = 1;
 	self.element_in_focus = undefined;
 	self.topmost_hovered_element = undefined;
 	self.dragging_element = undefined;
@@ -1487,8 +1491,5 @@ function LuiMain() : LuiBase() constructor {
 		_e._screen_grid = undefined;
 		delete _e.element_names;
 		_e._elements_by_tag = {};
-		global.lui_element_count = 0;
-		global.lui_id_count = 0;
-		global.lui_max_z = 0;
 	});
 }

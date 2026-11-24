@@ -166,6 +166,29 @@ function demoBuildListBenchmark(_tab) {
 	return _panel;
 }
 
+///@desc Checks root-local IDs, registration, element counts and draw order.
+///@arg {Struct} _style Demo style
+function demoCheckRootIsolation(_style) {
+	var _a = new LuiMain().setStyle(_style);
+	var _b = new LuiMain().setStyle(_style);
+	var _first = new LuiBox({name: "shared"});
+	var _second = new LuiBox({name: "shared"});
+	_a.addContent(_first);
+	_b.addContent(_second);
+	var _valid = _first.element_id == _second.element_id && _first.z == _second.z
+		&& _a.getElement("shared") == _first && _b.getElement("shared") == _second
+		&& _a.element_count == 2 && _b.element_count == 2;
+	_first.setDepth(100).bringToFront();
+	_a.destroy();
+	var _next = new LuiBox();
+	_b.addContent(_next);
+	_valid = _valid && _a.element_count == 0 && _b.element_count == 3
+		&& _b.getElement("shared") == _second && _next.element_id == _second.element_id + 1
+		&& _next.z == _second.z + 1;
+	_b.destroy();
+	show_debug_message("LimeUI root isolation: " + (_valid && _b.element_count == 0 ? "PASS" : "FAIL"));
+}
+
 ///@desc Checks content routing and destruction for composite widgets.
 ///@arg {Struct} _ui Demo UI root
 function demoCheckContentContracts(_ui) {

@@ -2,6 +2,7 @@ LIME_RESOLUTION.update();
 
 if keyboard_check_pressed(vk_f9) {
 	demoCheckContentContracts(my_ui);
+	demoCheckRootIsolation(my_ui.getMainStyle());
 }
 
 if tabs.active_tab == tab_stress_test && is_undefined(stress_test_panel) {

@@ -17,18 +17,7 @@
 function LuiBase(_params = {}) constructor {
 	// STATE AND PARAMETERS
 
-	if !variable_global_exists("lui_element_count") {
-		variable_global_set("lui_element_count", 0);
-	}
-	if !variable_global_exists("lui_id_count") {
-		variable_global_set("lui_id_count", 0);
-	}
-	if !variable_global_exists("lui_max_z") {
-		variable_global_set("lui_max_z", 0);
-	}
-
-	global.lui_element_count++;
-	self.element_id = global.lui_id_count++;
+	self.element_id = undefined; // Assigned when attached to a UI root.
 	self.name = LUI_AUTO_NAME;							//Unique element identifier
 	self.value = undefined;								//Value
 	self.data = undefined;								//Different user data for personal use
@@ -445,7 +434,9 @@ function LuiBase(_params = {}) constructor {
 
 			// Init depth
 			_element.nesting_level = self.nesting_level + 1;
-			_element.z = global.lui_max_z++;
+			_element.element_id = self.main_ui._next_element_id++;
+			self.main_ui.element_count++;
+			_element.z = self.main_ui._next_z++;
 			_element._z_order_path = array_concat(self._z_order_path, [_element.z]);
 
 			// Inherit variables
@@ -1232,6 +1223,9 @@ function LuiBase(_params = {}) constructor {
 	///@desc Sets a new depth value for the element and recalculates _z_order_path for itself and its children
 	static setDepth = function(_new_z) {
 		self.z = _new_z;
+		if !is_undefined(self.main_ui) {
+			self.main_ui._next_z = max(self.main_ui._next_z, _new_z + 1);
+		}
 		if !is_undefined(self.parent) {
 			self.parent._draw_order_dirty = true;
 		}
@@ -1242,13 +1236,8 @@ function LuiBase(_params = {}) constructor {
 
 	///@desc Brings the element to the front by setting a new maximum z value
 	static bringToFront = function() {
-		// Increment global.lui_max_z to get a new maximum z
-		global.lui_max_z++;
-
-		// Set the new depth using setDepth
-		self.setDepth(global.lui_max_z);
-
-		return self;
+		if is_undefined(self.main_ui) return self;
+		return self.setDepth(self.main_ui._next_z);
 	}
 
 	///@desc Set offset region for render content
@@ -1489,8 +1478,9 @@ function LuiBase(_params = {}) constructor {
 		delete self._value_binding; self._value_binding = undefined;
 		delete self.data; self.data = undefined;
 		self.event_listeners = {}
-		// Decrement global counter
-		global.lui_element_count--;
+		if !is_undefined(self.main_ui) {
+			self.main_ui.element_count--;
+		}
 	}
 
 	///@desc Destroys all nested elements
