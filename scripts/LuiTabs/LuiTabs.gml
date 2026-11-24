@@ -152,11 +152,16 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 	}
 
 	///@ignore
-	static _setTabHeightFloor = function(_height) {
+	static _setTabHeightFloor = function(_height, _update_root = false) {
 		self._content_min_height = _height;
 		if !is_undefined(self.main_ui) {
 			self._applyStyleMinSize(self.getStyle());
-			self.updateMainUiFlex(!is_undefined(self.parent));
+			if _update_root {
+				// A viewport resize can redistribute space across sibling branches.
+				self.main_ui.updateMainUiFlex();
+			} else {
+				self.updateMainUiFlex(!is_undefined(self.parent));
+			}
 		}
 	}
 
@@ -196,7 +201,7 @@ function LuiTabs(_params = {}) : LuiPanel(_params) constructor {
 		}
 		_e._viewport_resize_handler = method(_e, function(_ui) {
 			if !self.is_destroyed && self._content_min_height > 0 {
-				self._setTabHeightFloor(0);
+				self._setTabHeightFloor(0, true);
 			}
 		});
 		_e.main_ui.addEvent(LUI_EV_SIZE_UPDATE, _e._viewport_resize_handler);
