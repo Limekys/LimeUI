@@ -35,6 +35,7 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 
 	self.draw = function() {
 		var _style = self.getStyle();
+		var _alpha = draw_get_alpha();
 		// Calculate colors
 		var _blend_back = _style.color_back;
 		var _blend_accent = !is_undefined(self.bar_color) ? self.bar_color : _style.color_accent;
@@ -53,17 +54,17 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 		
 		// Base
 		if !is_undefined(_style.sprite_progress_ring) {
-			draw_sprite_ext(_style.sprite_progress_ring, 0, _x, _y, _scale, _scale, 0, _blend_back, 1);
+			draw_sprite_ext(_style.sprite_progress_ring, 0, _x, _y, _scale, _scale, 0, _blend_back, _alpha);
 		}
 		
 		// Bar value
 		if !is_undefined(_style.sprite_progress_ring_value) {
-			drawSpriteRadial(_style.sprite_progress_ring_value, 0, self.bar_value, _x, _y, _scale, _scale, _blend_accent, 1);
+			drawSpriteRadial(_style.sprite_progress_ring_value, 0, self.bar_value, _x, _y, _scale, _scale, _blend_accent, _alpha);
 		}
 		
 		// Border
 		if !is_undefined(_style.sprite_progress_ring_border) {
-			draw_sprite_ext(_style.sprite_progress_ring_border, 0, _x, _y, _scale, _scale, 0, _blend_border, 1);
+			draw_sprite_ext(_style.sprite_progress_ring_border, 0, _x, _y, _scale, _scale, 0, _blend_border, _alpha);
 		}
 		
 		// Text value
@@ -92,6 +93,10 @@ function LuiProgressRing(_params = {}) : LuiProgressBar(_params) constructor {
 		_e._calcSpritePos(_e.getStyle().sprite_progress_ring);
 	});
 	
+	self.addEvent(LUI_EV_STYLE_UPDATE, function(_e, _style) {
+		_e._calcSpritePos(_style.sprite_progress_ring);
+	});
+
 	self.addEvent(LUI_EV_DESTROY, function(_e) {
 		delete _e.sprite_pos;
 	});

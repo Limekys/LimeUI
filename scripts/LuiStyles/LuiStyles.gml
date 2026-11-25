@@ -122,7 +122,10 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	/// Set border overrides for the specified classes.
+	///@desc Sets the border for the specified classes.
+	///@arg {Real} value Border in pixels
+	///@arg {Array<String>} class_names Component class names
+	///@return {Struct} This style
 	static setBorderFor = function(value, class_names) {
 		for (var i = 0; i < array_length(class_names); i++) {
 			var _class_name = class_names[i];
@@ -134,7 +137,10 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	/// Set margin overrides for the specified classes.
+	///@desc Sets the margin for the specified classes.
+	///@arg {Real} value Margin in pixels
+	///@arg {Array<String>} class_names Component class names
+	///@return {Struct} This style
 	static setMarginFor = function(value, class_names) {
 		for (var i = 0; i < array_length(class_names); i++) {
 			var _class_name = class_names[i];
@@ -146,7 +152,10 @@ function LuiStyle(_style = {}) constructor {
 		return self;
 	}
 	
-	/// Set gap overrides for the specified classes.
+	///@desc Sets the gap for the specified classes.
+	///@arg {Real} value Gap in pixels
+	///@arg {Array<String>} class_names Component class names
+	///@return {Struct} This style
 	static setGapFor = function(value, class_names) {
 		for (var i = 0; i < array_length(class_names); i++) {
 			var _class_name = class_names[i];

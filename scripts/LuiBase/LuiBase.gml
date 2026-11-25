@@ -352,12 +352,12 @@ function LuiBase(_params = {}) constructor {
 	///@desc Returns the first user content element.
 	static getFirst = function() {
 		return array_first(self.getContent());
-	};
+	}
 
 	///@desc Returns the last user content element.
 	static getLast = function() {
 		return array_last(self.getContent());
-	};
+	}
 
 	///@desc Added elements into container of these element
 	///@arg {Any} elements
@@ -2153,7 +2153,7 @@ function LuiBase(_params = {}) constructor {
 				array_push(self._screen_grid_cell_ids, _x * LUI_GRID_STRIDE + _y);
 			}
 		}
-	};
+	}
 
 	///@desc Delete element from system ui grid
 	///@ignore
@@ -2304,7 +2304,7 @@ function LuiBase(_params = {}) constructor {
 			self._tc_font = _font;
 		}
 		draw_text(_x, _y, self._tc_result);
-	};
+	}
 
 	///@desc Returns text fit to width
 	///@return {string}
@@ -2347,5 +2347,5 @@ function LuiBase(_params = {}) constructor {
 
 		// Return the final text
 		return _str_to_draw;
-	};
+	}
 }
