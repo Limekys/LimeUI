@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"LimeUI",
-    "path":"folders/Limekys/LimeUI.yy",
+    "name":"DEMO",
+    "path":"folders/DEMO.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

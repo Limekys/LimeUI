@@ -216,8 +216,7 @@ function LuiMain() : LuiBase() constructor {
 	self.update = function(_metrics = undefined) {
 		var _measure = is_struct(_metrics);
 		var _tree_start = _measure ? get_timer() : 0;
-
-		//var _t = get_timer();
+		
 		// Update all elements
 		self.base_update();
 		if _measure {
@@ -231,8 +230,7 @@ function LuiMain() : LuiBase() constructor {
 			self._keyboard_edit_target = undefined;
 			self.showFocusFrame(false);
 		}
-		//luiProf("1_base_update", _t);
-
+		
 		// Mouse position
 		var _mouse_x = device_mouse_x_to_gui(0);
 		var _mouse_y = device_mouse_y_to_gui(0);
@@ -244,13 +242,11 @@ function LuiMain() : LuiBase() constructor {
 		if !is_undefined(_drag) && (!self.isInputAllowed(_drag) || (!_left_held && (!_inside_ui || !_left_released))) {
 			self._cancelPointerDrag();
 		}
-
-		//_t = get_timer();
-
+		
 		// Mouse events
 		if _inside_ui {
 			var _previous_hovered_element = self.topmost_hovered_element;
-
+			
 			// Prioritize dragging element if it exists and mouse is held
 			if !is_undefined(self.dragging_element) && (_left_held || _left_released) {
 				self.topmost_hovered_element = self.dragging_element;
@@ -261,20 +257,20 @@ function LuiMain() : LuiBase() constructor {
 				self._closePopupsOutside(self.topmost_hovered_element);
 			}
 			self._updateRightPointer(_mouse_x, _mouse_y);
-
+			
 			// Update mouse hover state
 			if !is_undefined(_previous_hovered_element) && _previous_hovered_element != self.topmost_hovered_element {
 				_previous_hovered_element.is_mouse_hovered = false;
 				_previous_hovered_element.is_pressed = false;
 				_previous_hovered_element._dispatchEvent(LUI_EV_MOUSE_LEAVE);
 			}
-
+			
 			if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) {
 				if self.topmost_hovered_element.is_mouse_hovered == false {
 					self.topmost_hovered_element.is_mouse_hovered = true;
 					self.topmost_hovered_element._dispatchEvent(LUI_EV_MOUSE_ENTER);
 				}
-
+				
 				// Handle on mouse pressed
 				if !is_undefined(self.topmost_hovered_element) && mouse_check_button_pressed(mb_left) {
 					var _pressed_element = self.topmost_hovered_element;
@@ -300,7 +296,7 @@ function LuiMain() : LuiBase() constructor {
 						_pressed_element._dispatchEvent(LUI_EV_DRAG_START);
 					}
 				}
-
+				
 				// Handle on mouse left
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && mouse_check_button(mb_left) {
 					// Call LUI_EV_MOUSE_LEFT event
@@ -317,7 +313,7 @@ function LuiMain() : LuiBase() constructor {
 						self.prev_mouse_y = _mouse_y;
 					}
 				}
-
+				
 				// Handle on mouse released
 				if !is_undefined(self.topmost_hovered_element) && self.isInputAllowed(self.topmost_hovered_element) && mouse_check_button_released(mb_left) {
 					var _released_element = self.topmost_hovered_element;
@@ -384,13 +380,9 @@ function LuiMain() : LuiBase() constructor {
 				_hovered._dispatchEvent(LUI_EV_MOUSE_LEAVE);
 			}
 		}
-
-		//luiProf("2_mouse", _t);
-
+		
 		self._updateKeyboardInput(_mouse_pressed);
-
-		//_t = get_timer();
-
+		
 		// Update animations
 		if array_length(self.active_animations) > 0 {
 			for (var i = array_length(self.active_animations) - 1; i >= 0; --i) {
@@ -411,17 +403,13 @@ function LuiMain() : LuiBase() constructor {
 				}
 			}
 		}
-
-		//luiProf("3_anim", _t);
-
+		
 		self.current_debug_mode = global.lui_debug_mode;
-
-		//_t = get_timer();
-
+		
 		var _layout_start = _measure ? get_timer() : 0;
-
+		
 		self._flushFlexLayout();
-
+		
 		var _scrolled = self._pending_scroll_areas;
 		self._pending_scroll_areas = [];
 		for (var i = 0; i < array_length(_scrolled); i++) {
@@ -429,7 +417,7 @@ function LuiMain() : LuiBase() constructor {
 			if _area.is_destroyed continue;
 			_area._applyScrollUpdate();
 		}
-
+		
 		if _measure {
 			_metrics.layout_us = get_timer() - _layout_start;
 		}
@@ -450,7 +438,7 @@ function LuiMain() : LuiBase() constructor {
 		if LUI_FORCE_ALPHA_1 {
 			draw_set_alpha(1);
 		}
-
+		
 		// Pre draw events
 		for (var i = 0, n = array_length(self.pre_draw_list); i < n; ++i) {
 			var _element = self.pre_draw_list[i];
@@ -458,40 +446,40 @@ function LuiMain() : LuiBase() constructor {
 				_element.preDraw();
 			}
 		}
-
+		
 		if self.visible {
-
+			
 			// Force initial layout if it was not calculated yet
 			if self._layout_revision == 0 {
 				self._flushFlexLayout();
 			}
-
+			
 			// Root container is always visible
 			self._intersects_clip_region = true;
-
+			
 			var _cache_start = _measure ? get_timer() : 0;
-
+			
 			// 1. Update cache surfaces (bottom-up)
 			for (var i = 0, n = array_length(self.content); i < n; i++) {
 				self._prepareCaches(self.content[i]);
 			}
-
+			
 			var _draw_start = _measure ? get_timer() : 0;
 			if _measure {
 				_metrics.cache_us = _draw_start - _cache_start;
 				_metrics.bakes = self._cache_bakes;
 			}
-
+			
 			// 2. Draw the tree directly (children are already in z order)
 			var _gui_w = display_get_gui_width();
 			var _gui_h = display_get_gui_height();
 			var _identity_matrix = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
 			var _root_clip = [0, 0, _gui_w, _gui_h];
-
+			
 			matrix_set(matrix_world, _identity_matrix);
 			gpu_set_scissor(0, 0, _gui_w, _gui_h);
 			_luiBlendReset();
-
+			
 			var _kids = self._getDrawChildren();
 			var _first = 0;
 			if array_length(self._modal_stack) > 0 {
@@ -513,23 +501,23 @@ function LuiMain() : LuiBase() constructor {
 			for (var i = _first, n = array_length(_kids); i < n; i++) {
 				self._drawTree(_kids[i], _identity_matrix, 1, _root_clip);
 			}
-
+			
 			draw_set_alpha(LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 			gpu_set_scissor(0, 0, _gui_w, _gui_h);
 			matrix_set(matrix_world, _identity_matrix);
-
+			
 			if _measure {
 				_metrics.draw_us = get_timer() - _draw_start;
 			}
-
+			
 			if self._show_focus_frame {
 				self._drawFocusFrame(_identity_matrix);
 			}
 		}
-
+		
 		// Reset matrix for tooltips and overlays
 		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
-
+		
 		// Get topmost element
 		var _element = self.topmost_hovered_element;
 		// Draw tooltip text
@@ -543,7 +531,7 @@ function LuiMain() : LuiBase() constructor {
 				var _height = string_height(_element.tooltip) + _padding_text*2;
 				var _mouse_x = clamp(device_mouse_x_to_gui(0) + 16, _padding, self.width - _width - _padding);
 				var _mouse_y = clamp(device_mouse_y_to_gui(0) + 16, _padding, self.height - _height - _padding);
-
+				
 				if !is_undefined(_style.sprite_tooltip) {
 					draw_sprite_stretched_ext(_style.sprite_tooltip, 0, _mouse_x, _mouse_y, _width, _height, _style.color_primary, LUI_FORCE_ALPHA_1 ? 1 : _prev_alpha);
 				}
@@ -556,11 +544,11 @@ function LuiMain() : LuiBase() constructor {
 				draw_text(_mouse_x + _padding_text, _mouse_y + _padding_text, _element.tooltip);
 			}
 		}
-
+		
 		if global.lui_debug_mode != 0 || global.lui_debug_render_grid {
 			_luiDrawDiagnostics(self);
 		}
-
+		
 		if !LUI_FORCE_ALPHA_1 {
 			draw_set_alpha(_prev_alpha);
 		}

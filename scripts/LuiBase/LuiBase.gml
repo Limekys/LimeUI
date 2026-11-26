@@ -280,12 +280,6 @@ function LuiBase(_params = {}) constructor {
 		return self;
 	}
 
-	///@desc Use addTag() to add a tag.
-	///@deprecated
-	static setTag = function(_tag) {
-		return self.addTag(_tag);
-	}
-
 	///@desc Removes a tag from this element.
 	///@arg {String} _tag Tag to remove
 	///@return {Struct} This element

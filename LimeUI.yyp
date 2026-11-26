@@ -43,7 +43,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2026.1.0.27",
+    "IDEVersion":"2026.1.1.34",
   },
   "name":"LimeUI",
   "resources":[
@@ -67,7 +67,6 @@
     {"id":{"name":"rMemTest","path":"rooms/rMemTest/rMemTest.yy",},},
     {"id":{"name":"_LuiPrivate","path":"scripts/_LuiPrivate/_LuiPrivate.yy",},},
     {"id":{"name":"demoMethods","path":"scripts/demoMethods/demoMethods.yy",},},
-    {"id":{"name":"helpersss","path":"scripts/helpersss/helpersss.yy",},},
     {"id":{"name":"LimekysResolutionManager","path":"scripts/LimekysResolutionManager/LimekysResolutionManager.yy",},},
     {"id":{"name":"LimekysUsefulFunctions","path":"scripts/LimekysUsefulFunctions/LimekysUsefulFunctions.yy",},},
     {"id":{"name":"LuiAdditional","path":"scripts/LuiAdditional/LuiAdditional.yy",},},

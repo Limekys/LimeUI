@@ -1,8 +1,8 @@
 //Info
-#macro LIMEUI_VERSION "2026.11.24"
+#macro LIMEUI_VERSION "2026.11.26"
 
 //Globals
-global.lui_debug_mode =	0;						// Debug mode (0 - (off), 1 - (element boxes), 2 - (1 + margin,border,padding), 3 - (1 + element info))
+global.lui_debug_mode =	0;						// Debug mode (0 - (off), 1 - (element boxes), 2 - (1 + margin,border,padding), 3 - (1 + 2 + advanced element info))
 global.lui_debug_render_grid = false;			// Enable/Disable render of debug grid
 
 //System (Do not change!)
